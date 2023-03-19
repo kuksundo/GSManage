@@ -17,7 +17,7 @@ uses
   UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData, Generics.Collections,
   UnitCertManager2, UnitJHPFileData, UnitCertManageConfigClass2, FrmCertManageConfig,
   UnitVesselMasterRecord2, UnitElecMasterData,
-  FormAboutDefs, EasterEgg;
+  FormAboutDefs, EasterEgg, UnitCertManagerCLO;
 
 type
   TCertManageF = class(TForm)

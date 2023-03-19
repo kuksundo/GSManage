@@ -200,7 +200,7 @@ object CertEditF: TCertEditF
     Width = 826
     Height = 632
     Align = alClient
-    ActivePage = CertInfoPage
+    ActivePage = QRCodePage
     ButtonSettings.CloseButtonPicture.Data = {
       424DA20400000000000036040000280000000900000009000000010008000000
       00006C000000C30E0000C30E00000001000000010000427B8400DEEFEF00FFFF
@@ -3507,7 +3507,7 @@ object CertEditF: TCertEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800640410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C0101300098006C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5311,79 +5311,17 @@ object CertEditF: TCertEditF
         ExplicitTop = 2
         ExplicitHeight = 600
         inherited pbPreview: TPaintBox
-          Left = 0
-          Top = 81
-          Width = 320
           Height = 519
-          Align = alClient
-          PopupMenu = QRCodeFrame1.PopupMenu1
           OnPaint = QRCodeFrame1pbPreviewPaint
+          ExplicitLeft = 0
+          ExplicitTop = 81
+          ExplicitWidth = 320
           ExplicitHeight = 130
         end
         inherited Panel1: TPanel
-          Left = 0
-          Top = 0
-          Width = 320
-          Height = 81
-          Align = alTop
-          TabOrder = 0
           inherited Label2: TLabel
             Left = 12
-            Top = 5
-            Width = 43
-            Height = 13
-            Caption = 'Encoding'
             ExplicitLeft = 12
-          end
-          inherited Label3: TLabel
-            Left = 157
-            Top = 5
-            Width = 52
-            Height = 13
-            Caption = 'Quiet zone'
-          end
-          inherited cmbEncoding: TComboBox
-            Left = 8
-            Top = 24
-            Width = 145
-            Height = 21
-            Style = csDropDownList
-            ImeName = 'Microsoft IME 2010'
-            ItemIndex = 0
-            TabOrder = 0
-            Text = 'Auto'
-            Items.Strings = (
-              'Auto'
-              'Numeric'
-              'Alphanumeric'
-              'ISO-8859-1'
-              'UTF-8 without BOM'
-              'UTF-8 with BOM')
-          end
-          inherited edtQuietZone: TEdit
-            Left = 157
-            Top = 24
-            Width = 52
-            Height = 21
-            Alignment = taCenter
-            ImeName = 'Microsoft IME 2010'
-            TabOrder = 1
-            Text = '4'
-          end
-          inherited edtText: TEdit
-            Left = 8
-            Top = 51
-            Width = 305
-            Height = 21
-            ImeName = 'Microsoft IME 2010'
-            TabOrder = 2
-            Text = 'Hello world'
-          end
-        end
-        inherited PopupMenu1: TPopupMenu
-          inherited CopyBitmaptoClipboard1: TMenuItem
-            Bitmap.Data = {00000000}
-            Caption = 'C&opy Bitmap to Clipboard'
           end
         end
       end
@@ -5543,7 +5481,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800D40510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800DC0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -7140,7 +7078,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400B40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400BC0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63

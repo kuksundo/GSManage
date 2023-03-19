@@ -78,13 +78,16 @@ uses
   UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas',
   UnitJHPFileData in '..\..\..\Common\DataType\UnitJHPFileData.pas',
   UnitJHPFileRecord in '..\..\..\Common\DataType\UnitJHPFileRecord.pas',
-  UnitOrmFileClient in '..\..\HiMECS2\Utility\HiMECS_Watch2\UnitOrmFileClient.pas';
+  UnitOrmFileClient in '..\..\HiMECS2\Utility\HiMECS_Watch2\UnitOrmFileClient.pas',
+  UnitCertManagerCLO in 'UnitCertManagerCLO.pas',
+  UnitHGSLicenseRecord in 'UnitHGSLicenseRecord.pas',
+  UnitHGSBaseRecord in 'UnitHGSBaseRecord.pas';
 
 {$R *.res}
 
-const
+//const
   //UnitCryptUtil.EncryptString_Syn3('{AF700786-5B91-4FB5-A506-C12C0BC44339}')
-  OriginalProductCode = '1J/fftLlv4d035HPSC3FFEDaRLtt/q/28oOO9GUQIi7oQWfd+Ryez8cNm7NWnsTe';
+//  OriginalProductCode = '1J/fftLlv4d035HPSC3FFEDaRLtt/q/28oOO9GUQIi7oQWfd+Ryez8cNm7NWnsTe';
 
 begin
   {$IfDef USE_REGCODE}

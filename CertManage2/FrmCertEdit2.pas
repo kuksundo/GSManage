@@ -262,7 +262,7 @@ type
     function MakeZip4LicDoc(AFileKind: TJHPFileFormat; ADeleteTempFile: Boolean;
       AShowCompletionMsg: Boolean=false): string;
     procedure MakeLicenseListXls;
-    procedure MakeLicenseDoc(ACertType: THGSCertType; AIsSaveFile: Boolean=False;
+    procedure MakeLicenseDoc(ACertType: integer; AIsSaveFile: Boolean=False;
       ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False);
     function CheckIfExistATRFileFromDB(AImoNo: string; var AFilName: string):Boolean;
     function GetZipFileName4Doc: string;
@@ -1894,7 +1894,7 @@ begin
   end;
 end;
 
-procedure TCertEditF.MakeLicenseDoc(ACertType: THGSCertType;
+procedure TCertEditF.MakeLicenseDoc(ACertType: integer;
   AIsSaveFile: Boolean; ASaveFileKind: TJHPFileFormat; AIsWordClose: Boolean);
 var
   LFileName: string;
@@ -1909,9 +1909,9 @@ begin
 
   //c:\temp\ ø° License list ø¢ºø ∆ƒ¿œ ¿˙¿Â«‘(CertNo + LicenseList.ods)
   LFileName := GetTempAttendantListFN;
-  GetGridColNamesFromForm4LicenseList;
-  AddNextGridColumnFromVariant;
-  MakeLicenseListXls;
+//  GetGridColNamesFromForm4LicenseList;
+//  AddNextGridColumnFromVariant;
+//  MakeLicenseListXls;
 end;
 
 procedure TCertEditF.MakeLicenseListXls;
