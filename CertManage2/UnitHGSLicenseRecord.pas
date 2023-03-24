@@ -3,10 +3,10 @@ unit UnitHGSLicenseRecord;
 interface
 
 uses
-  Classes,
+  Classes, SysUtils, Forms,
   mormot.core.base, mormot.core.variants, mormot.core.datetime, mormot.orm.core,
   mormot.orm.base, mormot.rest.sqlite3,
-  UnitCertManager2, UnitVesselData2, UnitHGSCertData, UnitHGSCurriculumData,
+  UnitCertManager2, UnitVesselData2, UnitHGSCertData2, UnitHGSCurriculumData2,
   UnitHGSVDRData, UnitJHPFileData, UnitHGSBaseRecord;
 
 type
@@ -25,6 +25,9 @@ type
 
     fMailCount: integer;
     FImageData: RawBlob;//교육생 사진
+  public
+    fIsLicense: Boolean;
+    property IsLicense: Boolean read fIsLicense write fIsLicense;
   published
     property TraineeName: RawUTF8 read fTraineeName write fTraineeName;
     property TraineeNation: RawUTF8 read fTraineeNation write fTraineeNation;
@@ -33,17 +36,111 @@ type
     property CourseLevel: TAcademyCourseLevel read fCourseLevel write fCourseLevel;
     property TrainedBeginDate: TTimeLog read fTrainedBeginDate write fTrainedBeginDate;
     property TrainedEndDate: TTimeLog read fTrainedEndDate write fTrainedEndDate;
-  end;
+    property MailCount: integer read fMailCount write fMailCount;
+    property ImageData: RawBlob read FImageData write FImageData;
+  end;
+
+  TOrmHGSLicenseFiles = class(TSQLRecord)
+  private
+    fTaskId  : TID;
+    fGSDocType, //UnitHGSCertData.THGSCertDocType
+    fFileCount: integer;
+    fFiles: TJHPFileRecs;
+    fUpdateDate: TTimeLog;
+  public
+    fIsUpdate: Boolean;
+  published
+    property TaskId: TID read fTaskId write fTaskId;
+    property GSDocType: integer read fGSDocType write fGSDocType;
+    property FileCount: integer read fFileCount write fFileCount;
+    property Files: TJHPFileRecs read fFiles write fFiles;
+    property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
+  end;
 
 procedure InitHGSLicenseClient(ADBName: string = '');
 function CreateHGSLicenseModel: TSQLModel;
 procedure DestroyHGSLicenseClient;
+
+procedure AddOrUpdateHGSLicense(AOrm: TOrmHGSTrainLicense);
+procedure AddOrUpdateHGSLicensePhoto(const AImageData: RawBlob; AOrm: TOrmHGSTrainLicense);
+function AddOrUpdateHGSLicenseFromVariant(ADoc: variant; AIsOnlyAdd: Boolean = False): integer;
+
+procedure DeleteHGSLicense(const ACertNo: string);
+
+procedure LoadHGSLicenseFromVariant(AOrm: TOrmHGSTrainLicense; ADoc: variant);
+
+function GetHGSLicenseFromCertNo(const ACertNo: string): TOrmHGSTrainLicense;
+function GetVariantFromHGSLicenseRecord(AOrm:TOrmHGSTrainLicense): variant;
+function GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec: TCertSearchParamRec): TOrmHGSTrainLicense;
+function CheckIfExistHGSLicenseNo(const ACertNo: string): Boolean;
+function GetImagePhotoFromHGSLicenseRecord(AImage: TStream; const AOrm:TOrmHGSTrainLicense): Boolean;
+
+///////////////////////////
+function GetTempPhotoFileName(ACertNo: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//증명사진 파일 이름
+function GetTempQRFileName(ACertNo: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//QRCode 파일 이름
+function GetTempAttendantListFN(ACompanyName: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//참석자 명단 리스트 파일 이름(xls)
 
 var
   g_HGSLicenseDB: TRestClientDB;
   HGSLicenseModel: TSQLModel;
 
 implementation
+
+uses VarRecUtils, UnitStringUtil, UnitFolderUtil2, UnitRttiUtil2, DateUtils, UnitGSCommonUtil;
+
+function GetTempPhotoFileName(ACertNo: string;
+  ASaveFileKind: TJHPFileFormat=gfkNull): string;//증명사진 파일 이름
+var
+  LExt: string;
+begin
+  Result := 'c:\temp\'+ ACertNo + '_' + PHOTO_FILENAME;
+
+  case ASaveFileKind of
+    gfkPng: LExt := '.png';
+    gfkJpg : LExt := '.jpg';
+  else
+    Lext := '';
+  end;
+
+  if Lext <> '' then
+    Result := ChangeFileExt(Result, Lext);
+end;
+
+function GetTempQRFileName(ACertNo: string; ASaveFileKind:
+  TJHPFileFormat=gfkNull): string;//QRCode 파일 이름
+var
+  LExt: string;
+begin
+  Result := 'c:\temp\'+ ACertNo +'_'+QRCODE_FILENAME;
+
+  case ASaveFileKind of
+    gfkPng: LExt := '.png';
+    gfkJpg : LExt := '.jpg';
+  else
+    Lext := '';
+  end;
+
+  if Lext <> '' then
+    Result := ChangeFileExt(Result, Lext);
+end;
+
+function GetTempAttendantListFN(ACompanyName: string;
+  ASaveFileKind: TJHPFileFormat=gfkNull): string;//참석자 명단 리스트 파일 이름(xls)
+var
+  LExt: string;
+begin
+  Result := 'c:\temp\'+ACompanyName+'_'+LICLIST_FILENAME;
+
+  case ASaveFileKind of
+    gfkEXCEL: LExt := '.ods';
+    gfkPDF : LExt := '.pdf';
+  else
+    Lext := '';
+  end;
+
+  if Lext <> '' then
+    Result := ChangeFileExt(Result, Lext);
+end;
 
 procedure InitHGSLicenseClient(ADBName: string = '');
 var
@@ -52,11 +149,11 @@ begin
   if Assigned(g_HGSLicenseDB) then
     exit;
 
-  if AHGSLicenseDBName = '' then
-    AHGSLicenseDBName := ChangeFileExt(ExtractFilePath(Application.ExeName),'.sqlite');
+  if ADBName = '' then
+    ADBName := ChangeFileExt(ExtractFilePath(Application.ExeName),'.sqlite');
 
   LStr := GetDefaultDBPath;
-  LStr := LStr + AHGSLicenseDBName;
+  LStr := LStr + ADBName;
   HGSLicenseModel:= CreateHGSLicenseModel;
   g_HGSLicenseDB:= TSQLRestClientDB.Create(HGSLicenseModel, CreateHGSLicenseModel,
     LStr, TSQLRestServerDB);
@@ -65,7 +162,7 @@ end;
 
 function CreateHGSLicenseModel: TSQLModel;
 begin
-  result := TSQLModel.Create([TSQLHGSLicenseRecord, TSQLHGSLicenseFiles]);
+  result := TSQLModel.Create([TOrmHGSTrainLicense, TOrmHGSLicenseFiles]);
 end;
 
 procedure DestroyHGSLicenseClient;
@@ -77,4 +174,417 @@ begin
     FreeAndNil(g_HGSLicenseDB);
 end;
 
+procedure AddOrUpdateHGSLicense(AOrm: TOrmHGSTrainLicense);
+begin
+  if AOrm.IsUpdate then
+  begin
+    g_HGSLicenseDB.Update(AOrm);
+  end
+  else
+  begin
+    g_HGSLicenseDB.Add(AOrm, true);
+  end;
+end;
+
+procedure AddOrUpdateHGSLicensePhoto(const AImageData: RawBlob; AOrm: TOrmHGSTrainLicense);
+begin
+  g_HGSLicenseDB.UpdateBlob(TOrmHGSTrainLicense, AOrm.ID, 'ImageData', AImageData);
+end;
+
+function AddOrUpdateHGSLicenseFromVariant(ADoc: variant; AIsOnlyAdd: Boolean = False): integer;
+var
+  LSQLHGSLicenseRecord: TOrmHGSTrainLicense;
+  LIsUpdate: Boolean;
+begin
+  LSQLHGSLicenseRecord := GetHGSLicenseFromCertNo(ADoc.CertNo);
+  LIsUpdate := LSQLHGSLicenseRecord.IsUpdate;
+  try
+    if AIsOnlyAdd then
+    begin
+      if not LSQLHGSLicenseRecord.IsUpdate then
+      begin
+        LoadHGSLicenseFromVariant(LSQLHGSLicenseRecord, ADoc);
+        LSQLHGSLicenseRecord.IsUpdate := LIsUpdate;
+
+        AddOrUpdateHGSLicense(LSQLHGSLicenseRecord);
+        Inc(Result);
+      end;
+    end
+    else
+    begin
+      if LSQLHGSLicenseRecord.IsUpdate then
+        Inc(Result);
+
+      LoadHGSLicenseFromVariant(LSQLHGSLicenseRecord, ADoc);
+      LSQLHGSLicenseRecord.IsUpdate := LIsUpdate;
+
+      AddOrUpdateHGSLicense(LSQLHGSLicenseRecord);
+    end;
+  finally
+    FreeAndNil(LSQLHGSLicenseRecord);
+  end;
+end;
+
+procedure DeleteHGSLicense(const ACertNo: string);
+var
+  LOrm: TOrmHGSTrainLicense;
+begin
+  LOrm := GetHGSLicenseFromCertNo(ACertNo);
+  try
+    if LOrm.IsUpdate then
+      g_HGSLicenseDB.Delete(TOrmHGSTrainLicense, LOrm.ID);
+  finally
+    LOrm.Free;
+  end;
+end;
+
+procedure LoadHGSLicenseFromVariant(AOrm: TOrmHGSTrainLicense; ADoc: variant);
+begin
+  if ADoc = null then
+    exit;
+
+  LoadRecordPropertyFromVariant(AOrm, ADoc);
+end;
+
+function GetHGSLicenseFromCertNo(const ACertNo: string): TOrmHGSTrainLicense;
+begin
+  if ACertNo = '' then
+  begin
+    Result := TOrmHGSTrainLicense.Create;
+    Result.IsUpdate := False;
+  end
+  else
+  begin
+    Result := TOrmHGSTrainLicense.CreateAndFillPrepare(g_HGSLicenseDB.Orm,
+      'CertNo LIKE ?', ['%'+ACertNo+'%']);
+
+    if Result.FillOne then
+      Result.IsUpdate := True
+    else
+      Result.IsUpdate := False;
+  end;
+
+  Result.IsLicense := True;
+end;
+
+function GetVariantFromHGSLicenseRecord(AOrm:TOrmHGSTrainLicense): variant;
+begin
+  TDocVariant.New(Result);
+  LoadRecordPropertyToVariant(AOrm, Result);
+end;
+
+function GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec: TCertSearchParamRec): TOrmHGSTrainLicense;
+var
+  ConstArray: TConstArray;
+  LWhere, LStr: string;
+  LFrom, LTo: TTimeLog;
+  LStrList: TStringList;
+  i: integer;
+  LIsCertTypesIncluded: Boolean;
+begin
+  LWhere := '';
+  ConstArray := CreateConstArray([]);
+  LStrList := TStringList.Create;
+  try
+    if ACertSearchParamRec.fQueryDate <> cqdtNull then
+    begin
+      if ACertSearchParamRec.FFrom <= ACertSearchParamRec.FTo then
+      begin
+        LFrom := TimeLogFromDateTime(ACertSearchParamRec.FFrom);
+        LTo := TimeLogFromDateTime(ACertSearchParamRec.FTo);
+
+//        if ACertSearchParamRec.FQueryDate <> cqdtNull then
+//        begin
+          case ACertSearchParamRec.FQueryDate of
+            cqdtTrainedPeriod: LWhere := 'TrainedBeginDate >= ? and TrainedEndDate <= ? ';
+            cqdtValidityUntilDate: LWhere := 'UntilValidity  >= ? and UntilValidity <= ? ';
+            cqdtCertIssueDate: LWhere := 'IssueDate  >= ? and IssueDate <= ? ';
+            cqdtInvoiceIssueDate: LWhere := 'InvoiceIssueDate  >= ? and InvoiceIssueDate <= ? ';
+            cqdtInvoiceConfirmDate: LWhere := 'InvoiceConfirmDate  >= ? and InvoiceConfirmDate <= ? ';
+            cqdtBillPaidDate: LWhere := 'BillPaidDate  >= ? and BillPaidDate <= ? ';
+          end;
+
+          if LWhere <> '' then
+            AddConstArray(ConstArray, [LFrom, LTo]);
+//        end;
+      end;
+    end;
+
+    if ACertSearchParamRec.fCertNo <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fCertNo+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'CertNo LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fTraineeName <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fTraineeName+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'TraineeName LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fCompanyName <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fCompanyName+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'CompanyName LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fTrainedSubject <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fTrainedSubject+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'TrainedSubject LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fTrainedCourse <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fTrainedCourse+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'TrainedCourse LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fPICEmail <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fPICEmail+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'PICEmail LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fPICPhone <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ACertSearchParamRec.fPICPhone+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'PICPhone LIKE ? ';
+    end;
+
+    if ACertSearchParamRec.fProductType <> shptNull then
+    begin
+      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fProductType)]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'ProductType = ? ';
+    end;
+
+    if ACertSearchParamRec.fCertTypes <> [] then
+    begin
+      if LWhere <> '' then
+        LWhere := LWhere + ' and (';
+
+      if hctLicBasic in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctLicBasic)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      if hctLicInter in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctLicInter)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      if hctLicAdv in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctLicAdv)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      LWhere := LWhere + ' ) ';
+    end;
+
+    if ACertSearchParamRec.fIsIgnoreInvoice then
+    begin
+      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'IsIgnoreInvoice = ? ';
+    end
+    else
+    begin
+      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + '((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?)) ';
+    end;
+
+    if (ACertSearchParamRec.fIsInvoiceIssued) and
+      (ACertSearchParamRec.fIsNotInvoiceIssued) then
+    begin
+    end
+    else
+    if ACertSearchParamRec.fIsInvoiceIssued then
+    begin
+      AddConstArray(ConstArray, [127489752310]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'InvoiceIssueDate > ? ';
+    end
+    else
+    if ACertSearchParamRec.fIsNotInvoiceIssued then
+    begin
+      AddConstArray(ConstArray, [127489800000]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + '((InvoiceIssueDate IS NULL) or (InvoiceIssueDate < ?)) ';
+    end;
+
+
+    if (ACertSearchParamRec.fIsInvoiceConfirmed) and
+      (ACertSearchParamRec.fIsNotInvoiceConfirmed) then
+    begin
+
+    end
+    else
+    if ACertSearchParamRec.fIsInvoiceConfirmed then
+    begin
+      AddConstArray(ConstArray, [127489752310]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'InvoiceConfirmDate > ? ';
+    end
+    else
+    if ACertSearchParamRec.fIsNotInvoiceConfirmed then
+    begin
+      AddConstArray(ConstArray, [127489800000]);//SQLITE_NULL
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + '((InvoiceConfirmDate IS NULL) or (InvoiceConfirmDate < ?)) ';
+    end;
+
+    if (ACertSearchParamRec.fIsBillPaid) and
+      (ACertSearchParamRec.fIsNotBillPaid) then
+    begin
+
+    end
+    else
+    if ACertSearchParamRec.fIsBillPaid then
+    begin
+      AddConstArray(ConstArray, [127489752310]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'BillPaidDate > ? ';
+    end
+    else
+    if ACertSearchParamRec.fIsNotBillPaid then
+    begin
+      AddConstArray(ConstArray, [127489800000]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + '((BillPaidDate IS NULL) or (BillPaidDate < ?)) ';
+    end;
+
+    if LWhere = '' then
+    begin
+      AddConstArray(ConstArray, [-1]);
+      LWhere := 'ID <> ? ';
+    end;
+
+    if ACertSearchParamRec.fOrderBy <> '' then
+      LWhere := LWhere + ' ' + ACertSearchParamRec.fOrderBy;
+
+    Result := TOrmHGSTrainLicense.CreateAndFillPrepare(g_HGSLicenseDB.Orm, Lwhere, ConstArray);
+
+    if Result.FillOne then
+    begin
+      Result.IsUpdate := True;
+    end
+    else
+    begin
+      Result.IsUpdate := False;
+    end
+  finally
+    LStrList.Free;
+    FinalizeConstArray(ConstArray);
+  end;
+end;
+
+function CheckIfExistHGSLicenseNo(const ACertNo: string): Boolean;
+var
+  LCertSearchRec: TCertSearchParamRec;
+  LSQLHGSLicenseRecord: TOrmHGSTrainLicense;
+begin
+  LCertSearchRec := Default(TCertSearchParamRec);
+  LCertSearchRec.fCertNo := ACertNo;
+  LSQLHGSLicenseRecord := GetHGSLicenseRecordFromSearchRec(LCertSearchRec);
+
+  try
+    Result := LSQLHGSLicenseRecord.IsUpdate;
+  finally
+    LSQLHGSLicenseRecord.Free;
+  end;
+end;
+
+function GetImagePhotoFromHGSLicenseRecord(AImage: TStream; const AOrm:TOrmHGSTrainLicense): Boolean;
+var
+  tmpData: RawBlob;
+begin
+  Result := False;
+
+  if g_HGSLicenseDB.RetrieveBlob(TOrmHGSTrainLicense, AOrm.ID, 'ImageData', tmpData) then
+    Result := (AImage.Write(Pointer(tmpData)^, Length(tmpData)) = Length(tmpData));
+end;
+
+initialization
+
+finalization
+  DestroyHGSLicenseClient;
 end.

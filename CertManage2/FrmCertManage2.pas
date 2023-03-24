@@ -14,9 +14,9 @@ uses
   mormot.core.base, mormot.core.data, mormot.core.variants, mormot.core.unicode,
   mormot.core.json, mormot.core.datetime, mormot.orm.base,
   UnitGSTariffRecord2, FrmDisplayTariff2,
-  UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData, Generics.Collections,
+  UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData2, Generics.Collections,
   UnitCertManager2, UnitJHPFileData, UnitCertManageConfigClass2, FrmCertManageConfig,
-  UnitVesselMasterRecord2, UnitElecMasterData,
+  UnitVesselMasterRecord2, UnitElecMasterData, UnitHGSLicenseRecord,
   FormAboutDefs, EasterEgg, UnitCertManagerCLO;
 
 type
@@ -191,10 +191,8 @@ type
     F21: TMenuItem;
     EducationEntrustCheck: TCheckBox;
     FormAbout1: TFormAbout;
-    LicBasicCheck: TCheckBox;
-    LicIntCheck: TCheckBox;
-    LicAdvCheck: TCheckBox;
     CreateLicenseFromSelected1: TMenuItem;
+    LicenseCheckGrp: TAdvOfficeCheckGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
@@ -255,6 +253,7 @@ type
     procedure PopupMenu1Popup(Sender: TObject);
     procedure CertListGridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure LicenseCheckGrpGroupCheckClick(Sender: TObject);
   private
     FIniFileName: string;
     FDisplayCreateInvoceMenuItem: Boolean;
@@ -265,6 +264,7 @@ type
     procedure ShowCertEditFormFromGrid(ARow: integer; AAttachPageView: Boolean=false);
     procedure GetCertList2Grid(AIsFromRemote: Boolean = False);
     procedure GetCertListFromVariant2Grid(ADoc: Variant);
+    procedure GetLIcListFromVariant2Grid(ADoc: Variant);
     procedure SetCertListVisibleColumn;
     function GetCertSearchParam2Rec(var ACertSearchParamRec: TCertSearchParamRec): Boolean;
     procedure GetCertListFromLocal(ACertSearchParamRec: TCertSearchParamRec);
@@ -308,6 +308,8 @@ type
     function GetCustInfoFromVar(ADoc: variant): string;
     function GetCertListFromGrid2StrList(AIsOnlySelected: Boolean): TStringList;
     procedure GetCertFilesFromDocType2Grid;
+    function GetEduCertTypeFromForm:THGSCertType;
+    procedure CreateZipFile4LicenseFromSelected;
   end;
 
 function CreateCertManagerFormFromDB: string;
@@ -320,7 +322,7 @@ implementation
 uses DateUtils, UnitEnumHelper, FrmCertEdit2, UnitExcelUtil,
   UnitMakeXls2, FrmCertNoFormat2, UnitHGSVDRRecord2, FrmSearchCustomer2, CommonData2,
   FrmCourseManage2, FrmSearchVessel2, UnitHGSVDRData, UnitDateUtil, UnitMakeReport2,
-  UnitHGSCurriculumData,
+  UnitHGSCurriculumData2,
   {$IFDEF GAMANAGER}
   UnitGAMasterRecord2, UnitJHPFileRecord,
   {$ELSE}
@@ -408,7 +410,7 @@ procedure TCertManageF.Add1Click(Sender: TObject);
 var
   LMailList: string;
 begin
-  if CreateCertEditFormFromDB('','',True, LMailList) = mrOK then
+  if CreateCertEditFormFromDB('','',True, LMailList, GetEduCertTypeFromForm()) = mrOK then
     GetCertList2Grid;
 end;
 
@@ -643,7 +645,7 @@ begin
 
   IMONoEdit.Text := System.SysUtils.Trim(IMONoEdit.Text);
 
-  if CreateCertEditFormFromDB('', IMONoEdit.Text, True, LMailList, hctAPTService) = mrOK then
+  if CreateCertEditFormFromDB('', IMONoEdit.Text, True, LMailList) = mrOK then
     GetCertList2Grid;
 end;
 
@@ -657,10 +659,7 @@ var
   LMailList: string;
   LHGSCertType: THGSCertType;
 begin
-  if EducationCheck.Checked then
-    LHGSCertType := hctEducation
-  else if EducationEntrustCheck.Checked then
-    LHGSCertType := hctEducation_Entrust;
+  LHGSCertType := GetEduCertTypeFromForm();
 
   if CreateCertEditFormFromDB('', '', True,LMailList, LHGSCertType) = mrOK then
     GetCertList2Grid;
@@ -712,6 +711,7 @@ var
   LCertNo,
   LProdCode,
   LEMailDBName: string;
+  LCertType: THGSCertType;
 begin
   if CertListGrid.SelectedRow = -1 then
     exit;
@@ -724,8 +724,19 @@ begin
 
   if LCertNo <> '' then
   begin
-    DeleteHGSCert(LCertNo);
+    LCertType := GetEduCertTypeFromForm;
+
+    if LCertType = hctNull then
+    begin
+      DeleteHGSCert(LCertNo);
+    end
+    else
+    begin
+      DeleteHGSLicense(LCertNo);
+    end;
+
     DeleteHGSFileDB(CertListGrid.SelectedRow);
+
     LProdCode := CertListGrid.CellsByName['ProductType', CertListGrid.SelectedRow];
     LProdCode := GetProdCodeFromProdType(LProdCode);
     LEMailDBName := GetEMailDBName(Application.ExeName, LProdCode);
@@ -736,6 +747,7 @@ begin
     finally
       DestroyOLEmailMsg;
     end;
+
     GetCertList2Grid;
     CertListGrid.ScrollToRow(CertListGrid.SelectedRow);
   end;
@@ -781,6 +793,7 @@ procedure TCertManageF.FormCreate(Sender: TObject);
 begin
   InitEnum;
   InitHGSCertClient(HGS_CERT_DB_NAME);
+  InitHGSLicenseClient(HGS_LIC_DB_NAME);
   InitClient4GSTariff(Application.ExeName);
 
   FIniFileName := ChangeFileExt(Application.ExeName, '.ini');
@@ -934,26 +947,53 @@ procedure TCertManageF.GetCertListFromLocal(
   ACertSearchParamRec: TCertSearchParamRec);
 var
   LSQLHGSCertRecord: TSQLHGSCertRecord;
+  LSQLHGSLicRecord: TOrmHGSTrainLicense;
   LDoc: Variant;
+  LIsLicense: Boolean;
 begin
-  LSQLHGSCertRecord := GetHGSCertRecordFromSearchRec(ACertSearchParamRec);
-  try
-    if LSQLHGSCertRecord.IsUpdate then
-    begin
-      LSQLHGSCertRecord.FillRewind;
+  LIsLicense := (hctLicBasic in ACertSearchParamRec.fCertTypes) or
+                            (hctLicInter in ACertSearchParamRec.fCertTypes) or
+                            (hctLicAdv in ACertSearchParamRec.fCertTypes);
 
-      while LSQLHGSCertRecord.FillOne do
+  if LIsLicense then
+  begin
+    LSQLHGSLicRecord := GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec);
+    try
+      if LSQLHGSLicRecord.IsUpdate then
       begin
-        LDoc := GetVariantFromHGSCertRecord(LSQLHGSCertRecord);
-//        LDoc.EmailCount := GetEmailCountFromDBKey(LDoc.CertNo);
-        GetCertListFromVariant2Grid(LDoc);
-      end;//while
+        LSQLHGSLicRecord.FillRewind;
 
-      StatusBarPro1.Panels[1].Text := IntToStr(CertListGrid.RowCount);
+        while LSQLHGSLicRecord.FillOne do
+        begin
+          LDoc := GetVariantFromHGSLicenseRecord(LSQLHGSLicRecord);
+          GetLIcListFromVariant2Grid(LDoc);
+        end;//while
+      end;
+    finally
+      LSQLHGSLicRecord.Free;
     end;
-  finally
-    LSQLHGSCertRecord.Free;
+  end
+  else
+  begin
+    LSQLHGSCertRecord := GetHGSCertRecordFromSearchRec(ACertSearchParamRec);
+    try
+      if LSQLHGSCertRecord.IsUpdate then
+      begin
+        LSQLHGSCertRecord.FillRewind;
+
+        while LSQLHGSCertRecord.FillOne do
+        begin
+          LDoc := GetVariantFromHGSCertRecord(LSQLHGSCertRecord);
+  //        LDoc.EmailCount := GetEmailCountFromDBKey(LDoc.CertNo);
+          GetCertListFromVariant2Grid(LDoc);
+        end;//while
+      end;
+    finally
+      LSQLHGSCertRecord.Free;
+    end;
   end;
+
+  StatusBarPro1.Panels[1].Text := IntToStr(CertListGrid.RowCount);
 end;
 
 procedure TCertManageF.GetCertListFromVariant2Grid(ADoc: Variant);
@@ -1086,30 +1126,52 @@ begin
   ACertSearchParamRec.fIsAPTResult_Failed := FailedCheck.Checked;
   ACertSearchParamRec.fIsIgnoreInvoice := InvoiceIgnoreCheck.Checked;
 
-  if not(EducationCheck.Checked and APTServiceCheck.Checked and APTApprovalCheck.Checked and
-    EducationEntrustCheck.Checked and LicBasicCheck.Checked and LicIntCheck.Checked and LicAdvCheck.Checked) then
-  begin
-    if EducationCheck.Checked then
-      ACertSearchParamRec.fCertType := hctEducation
-    else
-    if APTServiceCheck.Checked then
-      ACertSearchParamRec.fCertType := hctAPTService
-    else
-    if APTApprovalCheck.Checked then
-      ACertSearchParamRec.fCertType := hctProductApproval
-    else
-    if EducationEntrustCheck.Checked then
-      ACertSearchParamRec.fCertType := hctEducation_Entrust
-    else
-    if LicBasicCheck.Checked then
-      ACertSearchParamRec.fCertType := hctLicBasic
-    else
-    if LicIntCheck.Checked then
-      ACertSearchParamRec.fCertType := hctLicInter
-    else
-    if LicAdvCheck.Checked then
-      ACertSearchParamRec.fCertType := hctLicAdv;
-  end;
+//  if not(EducationCheck.Checked and APTServiceCheck.Checked and APTApprovalCheck.Checked and
+//    EducationEntrustCheck.Checked and LicBasicCheck.Checked and LicIntCheck.Checked and LicAdvCheck.Checked) then
+//  begin
+//    if EducationCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctEducation
+//    else
+//    if APTServiceCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctAPTService
+//    else
+//    if APTApprovalCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctProductApproval
+//    else
+//    if EducationEntrustCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctEducation_Entrust
+//    else
+//    if LicBasicCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctLicBasic
+//    else
+//    if LicIntCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctLicInter
+//    else
+//    if LicAdvCheck.Checked then
+//      ACertSearchParamRec.fCertType := hctLicAdv;
+//  end;
+
+  if EducationCheck.Checked then
+    Include(ACertSearchParamRec.fCertTypes, hctEducation);
+//    ACertSearchParamRec.fCertTypes := ACertSearchParamRec.fCertTypes + hctEducation;
+
+  if APTServiceCheck.Checked then
+    Include(ACertSearchParamRec.fCertTypes, hctAPTService);
+
+  if APTApprovalCheck.Checked then
+    Include(ACertSearchParamRec.fCertTypes, hctProductApproval);
+
+  if EducationEntrustCheck.Checked then
+    Include(ACertSearchParamRec.fCertTypes, hctEducation_Entrust);
+
+  if LicenseCheckGrp.Checked[0] then
+    Include(ACertSearchParamRec.fCertTypes, hctLicBasic);
+
+  if LicenseCheckGrp.Checked[1] then
+    Include(ACertSearchParamRec.fCertTypes, hctLicInter);
+
+  if LicenseCheckGrp.Checked[2] then
+    Include(ACertSearchParamRec.fCertTypes, hctLicAdv);
 
   if ProdTypeCB.ItemIndex = -1 then
     ACertSearchParamRec.fProductType := g_ShipProductType.ToType(0)
@@ -1132,6 +1194,88 @@ var
 begin
   LQuarter := QuarterOf(AAPTDate);
   Result := ACompanyCode + '_' + IntToStr(YearOf(AAPTDate)) + 'Q' + IntToStr(LQuarter);
+end;
+
+function TCertManageF.GetEduCertTypeFromForm: THGSCertType;
+begin
+  if EducationCheck.Checked then
+    Result := hctEducation
+  else if EducationEntrustCheck.Checked then
+    Result := hctEducation_Entrust
+  else
+  if LicenseCheckGrp.Checked[0] then
+    Result := hctLicBasic
+  else
+  if LicenseCheckGrp.Checked[1] then
+    Result := hctLicInter
+  else
+  if LicenseCheckGrp.Checked[2] then
+    Result := hctLicAdv
+  else
+    Result := hctNull;
+end;
+
+procedure TCertManageF.GetLIcListFromVariant2Grid(ADoc: Variant);
+var
+  LRow: integer;
+  LShipProductTypes,
+  LAPTResult: integer;
+begin
+  with CertListGrid do
+  begin
+    LRow := AddRow;
+
+    CellsByName['CertNo', LRow] := ADoc.CertNo;
+    CellsByName['TraineeName', LRow] := ADoc.TraineeName;
+    CellsByName['CompanyName', LRow] := ADoc.CompanyName;
+    CellsByName['CompanyCode', LRow] := ADoc.CompanyCode;
+    CellsByName['CompanyNation', LRow] := ADoc.CompanyNatoin;
+    CellsByName['OrderNo', LRow] := ADoc.OrderNo;
+    CellsByName['SalesAmount', LRow] := ADoc.SalesAmount;
+    CellsByName['TrainedSubject', LRow] := ADoc.TrainedSubject;
+    CellsByName['TrainedCourse', LRow] := ADoc.TrainedCourse;
+    CellsByName['CertFileDBPath', LRow] := ADoc.CertFileDBPath;
+    CellsByName['CertFileDBName', LRow] := ADoc.CertFileDBName;
+    CellByName['IsIgnoreInvoice', LRow].AsBoolean := StrToBool(ADoc.IsIgnoreInvoice);
+    CellsByName['Notes', LRow] := ADoc.Notes;
+
+//    CellsByName['PICEmail', LRow] := ADoc.PICEmail;
+//    CellsByName['PICPhone', LRow] := ADoc.PICPhone;
+    CellsByName['OrderNo', LRow] := ADoc.OrderNo;
+    CellsByName['SalesAmount', LRow] := ADoc.SalesAmount;
+
+    CellsByName['InvoiceCompanyName', LRow] := ADoc.InvoiceCompanyName;
+    CellsByName['InvoiceCompanyCode', LRow] := ADoc.InvoiceCompanyCode;
+    CellsByName['InvoiceCompanyNatoin', LRow] := ADoc.InvoiceCompanyNatoin;
+
+    if ADoc.MailCount > 0 then
+      CellByName['EmailCount', LRow].AsInteger := ADoc.MailCount;
+
+    if ADoc.InvoiceIssueDate > 127489752310 then
+      CellsByName['InvoiceIssueDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.InvoiceIssueDate));
+
+    if ADoc.InvoiceConfirmDate > 127489752310 then
+      CellsByName['InvoiceConfirmDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.InvoiceConfirmDate));
+
+    if ADoc.BillPaidDate > 127489752310 then
+      CellsByName['BillPaidDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.BillPaidDate));
+
+    LShipProductTypes := ADoc.ProductType;
+    CellsByName['ProductType', LRow] := g_ShipProductType.ToString(LShipProductTypes);
+    CellsByName['CertType', LRow] := g_HGSCertType.ToString(ADoc.CertType);
+
+    if ADoc.TrainedBeginDate > 127489752310 then
+      CellsByName['TrainedBeginDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.TrainedBeginDate));
+    if ADoc.TrainedEndDate > 127489752310 then
+      CellsByName['TrainedEndDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.TrainedEndDate));
+    if ADoc.UntilValidity > 127489752310 then
+      CellsByName['UntilValidity', LRow] := DateToStr(TimeLogToDateTime(ADoc.UntilValidity));
+    if ADoc.UpdateDate > 127489752310 then
+      CellsByName['UpdateDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.UpdateDate));
+
+    CellByName['Attachments', LRow].AsInteger := ADoc.FileCount;
+//    High(TIDList4Invoice(AGrid.Row[i].Data).fInvoiceFile.Files)+1;
+  end;
 end;
 
 procedure TCertManageF.GetVesselListByExcludeAPTDate(ACertSearchParamRec: TCertSearchParamRec);
@@ -1328,6 +1472,22 @@ end;
 procedure TCertManageF.iSwitchLed4Change(Sender: TObject);
 begin
   InoiceConfirmGroup.Enabled := iSwitchLed4.Active;
+end;
+
+procedure TCertManageF.LicenseCheckGrpGroupCheckClick(Sender: TObject);
+begin
+  if LicenseCheckGrp.CheckBox.Checked then
+  begin
+    LicenseCheckGrp.Checked[0] := True;
+    LicenseCheckGrp.Checked[1] := True;
+    LicenseCheckGrp.Checked[2] := True;
+  end
+  else
+  begin
+    LicenseCheckGrp.Checked[0] := False;
+    LicenseCheckGrp.Checked[1] := False;
+    LicenseCheckGrp.Checked[2] := False;
+  end;
 end;
 
 procedure TCertManageF.LoadConfig2Form(AForm: TCertManageConfigF);
@@ -1786,7 +1946,7 @@ var
 begin
   LCertNo := CertListGrid.CellsByName['CertNo', ARow];
 
-  if CreateCertEditFormFromDB(LCertNo, '', True, LMailList, hctNull, AAttachPageView) = mrOK then
+  if CreateCertEditFormFromDB(LCertNo, '', True, LMailList, GetEduCertTypeFromForm(), AAttachPageView) = mrOK then
   begin
     GetCertList2Grid;
     NextGridScrollToRow(CertListGrid);

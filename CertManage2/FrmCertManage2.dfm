@@ -1196,29 +1196,23 @@ object CertManageF: TCertManageF
           Caption = 'Edu Entrust'
           TabOrder = 3
         end
-        object LicBasicCheck: TCheckBox
-          Left = 93
-          Top = 19
-          Width = 97
-          Height = 17
-          Caption = 'Licence Basic'
+        object LicenseCheckGrp: TAdvOfficeCheckGroup
+          Left = 92
+          Top = 6
+          Width = 103
+          Height = 75
+          CaptionPosition = cpTopCenter
+          CheckBox.Visible = True
+          Version = '1.3.8.5'
+          Caption = 'License'
+          ParentBackground = False
           TabOrder = 4
-        end
-        object LicIntCheck: TCheckBox
-          Left = 93
-          Top = 36
-          Width = 97
-          Height = 17
-          Caption = 'Licence Inter'
-          TabOrder = 5
-        end
-        object LicAdvCheck: TCheckBox
-          Left = 93
-          Top = 52
-          Width = 97
-          Height = 17
-          Caption = 'Licence Adv'
-          TabOrder = 6
+          Items.Strings = (
+            'Basic'
+            'Intermediate'
+            'Advanced')
+          Ellipsis = False
+          OnGroupCheckClick = LicenseCheckGrpGroupCheckClick
         end
       end
     end
@@ -2427,7 +2421,7 @@ object CertManageF: TCertManageF
     Left = 8
     Top = 232
     Bitmap = {
-      494C010101007000080518001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000200518001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2737,7 +2731,7 @@ object CertManageF: TCertManageF
     Left = 80
     Top = 232
     Bitmap = {
-      494C010102005402180510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402300510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2999,7 +2993,7 @@ object CertManageF: TCertManageF
       end
     end
     object CreateLicenseFromSelected1: TMenuItem
-      Caption = 'Create License From Selected'
+      Caption = 'Create zip 4 License From Selected'
     end
     object N6: TMenuItem
       Caption = '-'
@@ -3055,7 +3049,7 @@ object CertManageF: TCertManageF
     Left = 40
     Top = 232
     Bitmap = {
-      494C01010400C8006C0620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010400C800840620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

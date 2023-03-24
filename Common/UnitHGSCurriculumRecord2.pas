@@ -5,7 +5,7 @@ interface
 uses
   Classes,
   mormot.core.base, mormot.orm.core, mormot.rest.sqlite3, mormot.core.variants,
-  UnitHGSCurriculumData, UnitVesselData2;
+  UnitHGSCurriculumData2, UnitVesselData2;
 
 type
   TCurriculumSearchParamRec = record

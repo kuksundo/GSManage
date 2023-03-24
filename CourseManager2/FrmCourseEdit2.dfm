@@ -945,29 +945,39 @@ object CourseEditF: TCourseEditF
         TabOrder = 0
         ExplicitLeft = 88
         ExplicitTop = 40
+        ExplicitWidth = 820
+        ExplicitHeight = 186
         inherited JvLabel13: TJvLabel
           Height = 142
+          ExplicitHeight = 142
         end
         inherited fileGrid: TNextGrid
           Width = 722
           Height = 148
+          ExplicitWidth = 722
+          ExplicitHeight = 148
           inherited FileName: TNxTextColumn
+            DefaultWidth = 608
             Width = 608
           end
         end
         inherited Panel2: TPanel
           Top = 148
           Width = 820
+          ExplicitTop = 148
+          ExplicitWidth = 820
           inherited CloseButton: TAdvGlowButton
             Left = 691
+            ExplicitLeft = 691
           end
           inherited ApplyButton: TAdvGlowButton
             Left = 560
+            ExplicitLeft = 560
           end
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800540410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800580410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2698,7 +2708,7 @@ object CourseEditF: TCourseEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C0101300098002C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800300410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -4426,7 +4436,7 @@ object CourseEditF: TCourseEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010110001400000110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400040110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

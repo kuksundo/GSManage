@@ -37,11 +37,11 @@ begin
     Result := g_CertEditF.MakeZip4APTDoc(g_JHPFileFormat.ToType(AContext.FOLEmailActionRec.FFileKind), True)//gfkPDF
   else
   if AContext.FOLEmailActionRec.FMailKind = MAILKIND_VDRAPT_REPLY_WITHNOMAKEZIP then
-    Result := g_CertEditF.GetZipFileName4APTDoc
+    Result := g_CertEditF.GetZipFileName4Doc
   else
   if AContext.FOLEmailActionRec.FMailKind = MAILKIND_VDRAPT_REPLY_IFZIPEXIST then
   begin
-    Result := g_CertEditF.GetZipFileName4APTDoc;
+    Result := g_CertEditF.GetZipFileName4Doc;
 
     if Result <> '' then
     begin

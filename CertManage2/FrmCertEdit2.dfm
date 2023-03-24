@@ -200,7 +200,7 @@ object CertEditF: TCertEditF
     Width = 826
     Height = 632
     Align = alClient
-    ActivePage = QRCodePage
+    ActivePage = CertInfoPage
     ButtonSettings.CloseButtonPicture.Data = {
       424DA20400000000000036040000280000000900000009000000010008000000
       00006C000000C30E0000C30E00000001000000010000427B8400DEEFEF00FFFF
@@ -3507,7 +3507,7 @@ object CertEditF: TCertEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C0101300098006C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800840410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5431,21 +5431,12 @@ object CertEditF: TCertEditF
       TabAppearance.BackGround.Color = 16767935
       TabAppearance.BackGround.ColorTo = clNone
       TabAppearance.BackGround.Direction = gdHorizontal
-      object Button4: TButton
-        Left = 199
-        Top = 457
-        Width = 105
-        Height = 41
-        Caption = 'Load Photo'
-        TabOrder = 0
-        OnClick = Button4Click
-      end
       object Panel2: TPanel
         Left = 15
         Top = 22
         Width = 290
         Height = 429
-        TabOrder = 1
+        TabOrder = 0
         object PhotoImage: TAdvOfficeImage
           Left = 8
           Top = 56
@@ -5462,8 +5453,8 @@ object CertEditF: TCertEditF
           Align = alTop
           TabOrder = 0
           object StretchCheck: TCheckBox
-            Left = 40
-            Top = 16
+            Left = 18
+            Top = 19
             Width = 97
             Height = 17
             Caption = 'Stretch'
@@ -5471,6 +5462,15 @@ object CertEditF: TCertEditF
             State = cbChecked
             TabOrder = 0
             OnClick = StretchCheckClick
+          end
+          object Button4: TButton
+            Left = 170
+            Top = 3
+            Width = 105
+            Height = 41
+            Caption = 'Load Photo'
+            TabOrder = 1
+            OnClick = Button4Click
           end
         end
       end
@@ -5481,7 +5481,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800DC0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800F40510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -7078,7 +7078,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400BC0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400D40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63

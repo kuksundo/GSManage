@@ -6,7 +6,7 @@ uses
   Classes,
   mormot.core.base, mormot.core.variants, mormot.core.datetime, mormot.orm.core,
   mormot.orm.base, mormot.rest.sqlite3,
-  UnitCertManager2, UnitVesselData2, UnitHGSCertData, UnitHGSCurriculumData,
+  UnitCertManager2, UnitVesselData2, UnitHGSCertData2, UnitHGSCurriculumData2,
   UnitHGSVDRData, UnitJHPFileData;
 
 type
@@ -82,5 +82,7 @@ type
   end;
 
 implementation
+
+uses VarRecUtils, UnitStringUtil, UnitFolderUtil2, UnitRttiUtil2, DateUtils, UnitGSCommonUtil;
 
 end.

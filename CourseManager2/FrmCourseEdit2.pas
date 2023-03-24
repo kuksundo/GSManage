@@ -63,7 +63,7 @@ implementation
 
 uses UnitVesselData2,  DragDropInternet, DragDropFormats, DateUtils,
   UnitCryptUtil2, System.StrUtils, UnitFolderUtil2, UnitExcelUtil,
-  UnitStringUtil, UnitHGSCurriculumData;//, Excel2000;
+  UnitStringUtil, UnitHGSCurriculumData2;//, Excel2000;
 
 {$R *.dfm}
 

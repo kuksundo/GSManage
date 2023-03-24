@@ -828,7 +828,7 @@ procedure DeleteCompany4InvoiceFromCode(ACompanyCode: string);
 var
   g_ProjectDB,
   g_ProjectDetailDB,
-  g_MasterDB,
+  g_MasterDB, //CompanyMasterDB
   g_InvoiceFileDB,
   g_SubConInvoiceDB,
   g_InvoiceProjectDB,
@@ -882,6 +882,10 @@ procedure InitCompanyMasterClient(ADBName: string);
 var
   LStr: string;
 begin
+  if Assigned(g_MasterDB) then
+    if g_MasterDB.DB.FileNameWithoutPath = ADBName then
+      exit;
+
   if ADBName = '' then
     ADBName := ChangeFileExt(ExtractFilePath(Application.ExeName),'.sqlite');
 

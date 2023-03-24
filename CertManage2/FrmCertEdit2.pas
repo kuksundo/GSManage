@@ -6,31 +6,17 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Winapi.ActiveX,
   TypInfo, Vcl.ImgList, Vcl.Mask, Vcl.ComCtrls, Vcl.ExtCtrls, Word2010, PowerPoint2010,
-  NxColumnClasses, NxColumns, NxScrollControl,
-  NxCustomGridControl, NxCustomGrid, NxGrid, AdvGlowButton,
-  NxEdit, JvExControls, JvLabel, AdvOfficePager, AeroButtons,
-  Vcl.Menus, AdvEdit, AdvEdBtn,
-  JvDatePickerEdit, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
+  NxColumnClasses, NxColumns, NxScrollControl, AdvOfficeImage,
+  NxCustomGridControl, NxCustomGrid, NxGrid, AdvGlowButton, NxEdit, JvExControls,
+  JvLabel, AdvOfficePager, AeroButtons, Vcl.Menus, AdvEdit, AdvEdBtn, JvDatePickerEdit,
+  JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
   DropSource, DragDrop, DropTarget, DragDropFile,
   mormot.core.zip, mormot.core.variants, mormot.core.base, mormot.core.json,
   mormot.core.os, mormot.core.datetime, mormot.core.text,
-  UnitHGSCertData, UnitHGSVDRRecord2, UnitQRCodeFrame, UnitHGSCertRecord2,
+  UnitHGSCertData2, UnitHGSVDRRecord2, UnitQRCodeFrame, UnitHGSCertRecord2,
   UnitJHPFileRecord, UnitFrameFileList2, UnitHGSSerialRecord2,
   UnitJHPFileData, AdvToolBtn, W7Classes, W7Buttons, FrameOLEmailList2, UnitOLEmailRecord2,
-  AdvOfficeImage;
-
-const
-  ATR_FILENAME = 'ANNUAL_TEST_REPORT.pjh';
-  COC_FILENAME = 'Certificate_of_compliance_with_field.pjh';
-  EDU_FILENAME = 'Education_Cert.pjh';
-  EDU_FILENAME2 = 'Education_Cert.pjh2';
-  PROD_APPROVAL_FILENAME = 'APT_Approval_Certificate.pjh';
-  VDRConfigFileName = 'VDRConfig.ini';
-  LRCHECKLISTFileName = 'LR_Survey_Checklist_VDR.pjh';
-  ABSCHECKLISTFileName = 'ABS_Check_List_VDR.pjh';
-  LICLIST_FILENAME = 'LicenseList.ods';
-  PHOTO_FILENAME = 'Photo.jpg';
-  QRCODE_FILENAME = 'QRCode.png';
+  UnitHGSLicenseRecord;
 
 type
   TCertEditF = class(TForm)
@@ -150,7 +136,6 @@ type
     Button3: TButton;
     GSFileFrame: TJHPFileListFrame;
     AdvOfficePage2: TAdvOfficePage;
-    Button4: TButton;
     Panel2: TPanel;
     Panel4: TPanel;
     StretchCheck: TCheckBox;
@@ -161,6 +146,7 @@ type
     MenuItem4: TMenuItem;
     JvLabel37: TJvLabel;
     TraineeNationEdit: TEdit;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -211,13 +197,15 @@ type
     procedure InitEnum;
     procedure InitNetwork;
     procedure GetCertDetailFromCertRecord(ASQLHGSCertRecord: TSQLHGSCertRecord);
+    procedure GetLicDetailFromLictRecord(AOrm: TOrmHGSTrainLicense);
     procedure GetCertFileList2FileGrid(const AFileDBName: string);
     procedure GetCertEmailList2EmailGrid(const ADBName: string);
-    procedure GetPhotoImageFromDB(AOrm: TSQLHGSCertRecord);
+    procedure GetPhotoImageFromDB(AOrm: TOrmHGSTrainLicense);
     procedure SaveGSFile2DB;
     function SaveEmail2DB: string;
-    procedure SavePhotoImage2DB(AOrm: TSQLHGSCertRecord);
+    procedure SavePhotoImage2DB(AOrm: TOrmHGSTrainLicense);
     function LoadCertDetail2CertRecordFromForm(var ACertRecord: TSQLHGSCertRecord): Boolean;
+    function LoadLicDetail2LicRecordFromForm(var AOrm: TOrmHGSTrainLicense): Boolean;
     procedure CreateQRCode;
     procedure CreateVDRTestReportNo;
     function CheckQRCodeIsValid: Boolean;
@@ -241,9 +229,6 @@ type
     function GetTempVDRConfigFileName: string;
     function GetLRCheckListFileName: string;
     function GetABSCheckListFileName: string;
-    function GetTempPhotoFileName(ASaveFileKind: TJHPFileFormat=gfkNull): string;//증명사진 파일 이름
-    function GetTempQRFileName(ASaveFileKind: TJHPFileFormat=gfkNull): string;//QRCode 파일 이름
-    function GetTempAttendantListFN(ASaveFileKind: TJHPFileFormat=gfkNull): string;//참석자 명단 리스트 파일 이름(xls)
 
     //Variant array return
     function GetGridColNamesFromForm4LicenseList: variant;
@@ -261,11 +246,14 @@ type
       AShowCompletionMsg: Boolean=false): string;
     function MakeZip4LicDoc(AFileKind: TJHPFileFormat; ADeleteTempFile: Boolean;
       AShowCompletionMsg: Boolean=false): string;
-    procedure MakeLicenseListXls;
+    procedure MakeLicenseListXls(AColList: Variant; AFileName: string='');
     procedure MakeLicenseDoc(ACertType: integer; AIsSaveFile: Boolean=False;
       ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False);
     function CheckIfExistATRFileFromDB(AImoNo: string; var AFilName: string):Boolean;
-    function GetZipFileName4Doc: string;
+    function GetZipFileName4Doc(ACertNo: string=''): string;
+    function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
+    function GetFormattedTrainedPeriodFromForm: string;
+    procedure AddVarOfLic2Grid(AGrid: TNextGrid; AVar: Variant);
   end;
 
 function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
@@ -279,8 +267,8 @@ implementation
 
 uses UnitVesselData2,  DragDropInternet, DragDropFormats, DateUtils,
   UnitCryptUtil2, QRGraphics, System.StrUtils, iniFiles,
-  UnitFolderUtil2, UnitExcelUtil,
-  UnitStringUtil, UnitHGSCurriculumData, FrmCourseManage2, UnitMSPPTUtil,
+  UnitFolderUtil2, UnitExcelUtil, UnitNextGridUtil2,
+  UnitStringUtil, UnitHGSCurriculumData2, FrmCourseManage2, UnitMSPPTUtil,
   UnitMSWordUtil, FrmSearchCustomer2, CommonData2, FrmSearchVessel2, FrmSearchVDR2,
   UnitFormUtil, UnitHGSVDRData, UnitVesselMasterRecord2, UnitGAServiceData,
   FrmEmailListView2, UnitStrategy4VDRAPTCert2, UnitCertManageConfigClass2;
@@ -293,122 +281,212 @@ var
 //  LCertEditF: TCertEditF;
   LSQLHGSCertRecord,
   LSQLHGSCertRecord2: TSQLHGSCertRecord;
+  LHGSLicRecord: TOrmHGSTrainLicense;
   LDoc: variant;
   LYear: integer;
+  LIsLicense: Boolean;
 begin
   g_CertEditF := TCertEditF.Create(nil);
   try
     with g_CertEditF do
     begin
-//      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
+      if AAttachPageView then
+        AdvOfficePage1.ActivePageIndex := 2
+      else
+        AdvOfficePage1.ActivePageIndex := 0;
+
+      if ACertType <> hctNull then
+      begin
+        CertTypeCB.ItemIndex := Ord(ACertType);
+        CertTypeCBChange(nil);
+      end;
+
+      LIsLicense := (hctLicBasic = THGSCertType(CertTypeCB.ItemIndex)) or
+                    (hctLicInter = THGSCertType(CertTypeCB.ItemIndex)) or
+                    (hctLicAdv = THGSCertType(CertTypeCB.ItemIndex));
+
+                    //      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
       GSFileFrame.InitDocTypeList2Combo(g_HGSCertDocType.GetTypeLabels);
       GSFileFrame.AddButton.Align :=alLeft;
       GSFileFrame.ApplyButton.Visible := False;
       GSFileFrame.CloseButton.Visible := False;
 
-      LSQLHGSCertRecord := GetHGSCertFromCertNo(ACertNo);
+      if LIsLicense then
+      begin
+        LHGSLicRecord := GetHGSLicenseFromCertNo(ACertNo);
+        try
+          GetLicDetailFromLictRecord(LHGSLicRecord);
 
-      try
-        GetCertDetailFromCertRecord(LSQLHGSCertRecord);
+          if AIsShowForm then
+          begin
+            while True do
+            begin
+              Result := ShowModal;
 
-        if AAttachPageView then
-          AdvOfficePage1.ActivePageIndex := 2
-        else
-          AdvOfficePage1.ActivePageIndex := 0;
+              if Result = mrOK then
+              begin
+                //CertNo <> ''이면 DB에 저장
+                if LoadLicDetail2LicRecordFromForm(LHGSLicRecord) then
+                begin
+                  if not FrameOLEmailList.FIsSaveEmail2DBWhenDropped then
+                  begin
+                    AEmailList := SaveEmail2DB;
+                    LHGSLicRecord.InvoiceEmail := AEmailList + LHGSLicRecord.InvoiceEmail;
+                  end;
 
-        if ACertType <> hctNull then
-        begin
-          CertTypeCB.ItemIndex := Ord(ACertType);
-          CertTypeCBChange(nil);
+                  AddOrUpdateHGSLicense(LHGSLicRecord);
+                  SavePhotoImage2DB(LHGSLicRecord);
+                  SaveGSFile2DB();
+
+                  if not LHGSLicRecord.IsUpdate then
+                  begin
+                    LHGSLicRecord.NextSerialNo := GetSerialNoFromCertNo(LHGSLicRecord.CertNo, LYear);
+                    AddOrUpdateNextHGSSerial(LYear, Ord(LHGSLicRecord.ProductType),
+                      Ord(LHGSLicRecord.CertType), StrToIntDef(LHGSLicRecord.NextSerialNo, 0));
+
+                    ShowMessage('Data Save(Add) Is OK!');
+                  end
+                  else
+                    ShowMessage('Data Save(Update) Is OK!');
+                end;
+              end
+              else
+              if Result = mrYes then
+              begin
+                if not CheckBox1.Checked then
+                begin
+                  ShowMessage('Please Change Cert. No.');
+                  Continue;
+                end;
+
+                LHGSLicRecord := TOrmHGSTrainLicense.Create;
+                try
+                  if LoadLicDetail2LicRecordFromForm(LHGSLicRecord) then
+                  begin
+                    if CheckIfExistHGSLicenseNo(LHGSLicRecord.CertNo) then
+                    begin
+                      ShowMessage('Please Change Cert. No.');
+                      Continue;
+                    end;
+
+                    AddOrUpdateHGSLicense(LHGSLicRecord);
+                    LHGSLicRecord.NextSerialNo := GetSerialNoFromCertNo(LHGSLicRecord.CertNo, LYear);
+                    AddOrUpdateNextHGSSerial(LYear,Ord(LHGSLicRecord.ProductType),
+                      Ord(LHGSLicRecord.CertType), StrToIntDef(LHGSLicRecord.NextSerialNo, 0));
+
+                    SaveGSFile2DB();
+
+                    ShowMessage('Data Add is successful!');
+                  end;
+                finally
+                  LHGSLicRecord.Free;
+                end;
+              end;
+
+              System.Break;
+            end;//while true
+          end
+          else
+          begin
+            Result := ShowEMailListFromCertNo(ACertNo, HullNoEdit.Text, ProductTypeCB.Text, FSettings.OLFolderListFileName);
+          end;
+        finally
+          LHGSLicRecord.Free;
+        end;
+      end
+      else
+      begin
+        LSQLHGSCertRecord := GetHGSCertFromCertNo(ACertNo);
+        try
+          GetCertDetailFromCertRecord(LSQLHGSCertRecord);
 
           if ACertType = hctAPTService then
           begin
             ProductTypeCB.ItemIndex := ORd(shptVDR);
             ProductTypeCBChange(nil);
           end;
-        end;
 
-        if AIMONo <> '' then
-        begin
-          SetVesselInfoFromIMONo(AIMONo);
-        end;
-
-        if AIsShowForm then
-        begin
-          while True do
+          if AIMONo <> '' then
           begin
-            Result := ShowModal;
+            SetVesselInfoFromIMONo(AIMONo);
+          end;
 
-            if Result = mrOK then
+          if AIsShowForm then
+          begin
+            while True do
             begin
-              //CertNo <> ''이면 DB에 저장
-              if LoadCertDetail2CertRecordFromForm(LSQLHGSCertRecord) then
+              Result := ShowModal;
+
+              if Result = mrOK then
               begin
-                if not FrameOLEmailList.FIsSaveEmail2DBWhenDropped then
+                //CertNo <> ''이면 DB에 저장
+                if LoadCertDetail2CertRecordFromForm(LSQLHGSCertRecord) then
                 begin
-                  AEmailList := SaveEmail2DB;
-                  LSQLHGSCertRecord.InvoiceEmail := AEmailList + LSQLHGSCertRecord.InvoiceEmail;
-                end;
-
-                AddOrUpdateHGSCert(LSQLHGSCertRecord);
-                SavePhotoImage2DB(LSQLHGSCertRecord);
-                SaveGSFile2DB();
-
-
-                if not LSQLHGSCertRecord.IsUpdate then
-                begin
-                  LSQLHGSCertRecord.NextSerialNo := GetSerialNoFromCertNo(LSQLHGSCertRecord.CertNo, LYear);
-                  AddOrUpdateNextHGSSerial(LYear, Ord(LSQLHGSCertRecord.ProductType),
-                    Ord(LSQLHGSCertRecord.CertType), StrToIntDef(LSQLHGSCertRecord.NextSerialNo, 0));
-
-                  ShowMessage('Data Save(Add) Is OK!');
-                end
-                else
-                  ShowMessage('Data Save(Update) Is OK!');
-              end;
-            end
-            else
-            if Result = mrYes then
-            begin
-              if not CheckBox1.Checked then
-              begin
-                ShowMessage('Please Change Cert. No.');
-                Continue;
-              end;
-
-              LSQLHGSCertRecord2 := TSQLHGSCertRecord.Create;
-              try
-                if LoadCertDetail2CertRecordFromForm(LSQLHGSCertRecord2) then
-                begin
-                  if CheckIfExistHGSCertNo(LSQLHGSCertRecord2.CertNo) then
+                  if not FrameOLEmailList.FIsSaveEmail2DBWhenDropped then
                   begin
-                    ShowMessage('Please Change Cert. No.');
-                    Continue;
+                    AEmailList := SaveEmail2DB;
+                    LSQLHGSCertRecord.InvoiceEmail := AEmailList + LSQLHGSCertRecord.InvoiceEmail;
                   end;
 
-                  AddOrUpdateHGSCert(LSQLHGSCertRecord2);
-                  LSQLHGSCertRecord2.NextSerialNo := GetSerialNoFromCertNo(LSQLHGSCertRecord2.CertNo, LYear);
-                  AddOrUpdateNextHGSSerial(LYear,Ord(LSQLHGSCertRecord2.ProductType),
-                    Ord(LSQLHGSCertRecord2.CertType), StrToIntDef(LSQLHGSCertRecord2.NextSerialNo, 0));
-
+                  AddOrUpdateHGSCert(LSQLHGSCertRecord);
+                  SavePhotoImage2DB(TOrmHGSTrainLicense(LSQLHGSCertRecord));
                   SaveGSFile2DB();
 
-                  ShowMessage('Data Add is successful!');
-                end;
-              finally
-                LSQLHGSCertRecord2.Free;
-              end;
-            end;
+                  if not LSQLHGSCertRecord.IsUpdate then
+                  begin
+                    LSQLHGSCertRecord.NextSerialNo := GetSerialNoFromCertNo(LSQLHGSCertRecord.CertNo, LYear);
+                    AddOrUpdateNextHGSSerial(LYear, Ord(LSQLHGSCertRecord.ProductType),
+                      Ord(LSQLHGSCertRecord.CertType), StrToIntDef(LSQLHGSCertRecord.NextSerialNo, 0));
 
-            System.Break;
-          end;//while true
-        end
-        else
-        begin
-          Result := ShowEMailListFromCertNo(ACertNo, HullNoEdit.Text, ProductTypeCB.Text, FSettings.OLFolderListFileName);
+                    ShowMessage('Data Save(Add) Is OK!');
+                  end
+                  else
+                    ShowMessage('Data Save(Update) Is OK!');
+                end;
+              end
+              else
+              if Result = mrYes then
+              begin
+                if not CheckBox1.Checked then
+                begin
+                  ShowMessage('Please Change Cert. No.');
+                  Continue;
+                end;
+
+                LSQLHGSCertRecord2 := TSQLHGSCertRecord.Create;
+                try
+                  if LoadCertDetail2CertRecordFromForm(LSQLHGSCertRecord2) then
+                  begin
+                    if CheckIfExistHGSCertNo(LSQLHGSCertRecord2.CertNo) then
+                    begin
+                      ShowMessage('Please Change Cert. No.');
+                      Continue;
+                    end;
+
+                    AddOrUpdateHGSCert(LSQLHGSCertRecord2);
+                    LSQLHGSCertRecord2.NextSerialNo := GetSerialNoFromCertNo(LSQLHGSCertRecord2.CertNo, LYear);
+                    AddOrUpdateNextHGSSerial(LYear,Ord(LSQLHGSCertRecord2.ProductType),
+                      Ord(LSQLHGSCertRecord2.CertType), StrToIntDef(LSQLHGSCertRecord2.NextSerialNo, 0));
+
+                    SaveGSFile2DB();
+
+                    ShowMessage('Data Add is successful!');
+                  end;
+                finally
+                  LSQLHGSCertRecord2.Free;
+                end;
+              end;
+
+              System.Break;
+            end;//while true
+          end
+          else
+          begin
+            Result := ShowEMailListFromCertNo(ACertNo, HullNoEdit.Text, ProductTypeCB.Text, FSettings.OLFolderListFileName);
+          end;
+        finally
+          LSQLHGSCertRecord.Free;
         end;
-      finally
-        LSQLHGSCertRecord.Free;
       end;
     end;
   finally
@@ -427,6 +505,21 @@ end;
 procedure TCertEditF.ProductTypeCBChange(Sender: TObject);
 begin
   DisplayEditPosition;
+end;
+
+procedure TCertEditF.AddVarOfLic2Grid(AGrid: TNextGrid; AVar: Variant);
+var
+  i, j: integer;
+begin
+  with AGrid do
+  begin
+    j := AddRow;
+
+    for i := 0 to TDocVariantData(AVar).Count - 1 do
+    begin
+      CellsByName[i, j] := TDocVariantData(AVar).Names[i];
+    end;
+  end;
 end;
 
 procedure TCertEditF.APTServiceDatePickerChange(Sender: TObject);
@@ -549,7 +642,7 @@ const
   DefaultHeight = 744;//650;
 begin
   case g_HGSCertType.ToType(CertTypeCB.ItemIndex) of
-    hctEducation, hctEducation_Entrust: begin
+    hctEducation, hctEducation_Entrust, hctLicBasic, hctLicInter, hctLicAdv: begin
       EducationPanel.Visible := True;
       APTPanel.Visible := False;
       Self.Height := DefaultHeight - APTPanel.Height;
@@ -965,24 +1058,6 @@ begin
     Result := ChangeFileExt(Result, Lext);
 end;
 
-function TCertEditF.GetTempAttendantListFN(
-  ASaveFileKind: TJHPFileFormat): string;
-var
-  LExt: string;
-begin
-  Result := 'c:\temp\'+CertNoButtonEdit.Text+'_'+LICLIST_FILENAME;
-
-  case ASaveFileKind of
-    gfkEXCEL: LExt := '.xls';
-    gfkPDF : LExt := '.pdf';
-  else
-    Lext := '';
-  end;
-
-  if Lext <> '' then
-    Result := ChangeFileExt(Result, Lext);
-end;
-
 function TCertEditF.GetABSCheckListFileName: string;
 begin
   Result := '.\db\files\' + ABSCHECKLISTFileName;
@@ -1171,6 +1246,26 @@ begin
   Result := _JSON(LDoc);
 end;
 
+function TCertEditF.GetFormattedTrainedPeriodFromForm: string;
+var
+  Lyear: string;
+begin
+  if TrainedEndDatePicker.IsEmpty then
+    Result := FormatDateTime('mmm. dd, yyyy' ,TrainedBeginDatePicker.Date)
+  else
+  begin
+    LYear := FormatDateTime('yyyy' ,TrainedBeginDatePicker.Date);
+
+    if LYear <> FormatDateTime('yyyy' ,TrainedEndDatePicker.Date) then
+      Result := FormatDateTime('mmm. dd, yyyy' ,TrainedBeginDatePicker.Date)
+    else
+      Result := FormatDateTime('mmm. dd' ,TrainedBeginDatePicker.Date);
+
+    Result := Result + FormatDateTime(' ~ mmm. dd, yyyy' ,TrainedEndDatePicker.Date);
+  end;
+
+end;
+
 function TCertEditF.GetJsonFromQRCode: string;
 var
   LDocType: THGSCertType;
@@ -1179,23 +1274,123 @@ begin
   Result := GetCertInfo2Json(LDocType);
 end;
 
+function TCertEditF.GetLicCardColorFromCertType(
+  ACertType: THGSCertType): string;
+begin
+  case ACertType of
+    hctLicBasic: Result := '노랑';
+    hctLicInter: Result := '초록';
+    hctLicAdv:   Result := '파랑';
+    else Result := '';
+  end;
+end;
+
+procedure TCertEditF.GetLicDetailFromLictRecord(AOrm: TOrmHGSTrainLicense);
+var
+  LEmailDBName: string;
+begin
+  FDisableEditPosition := True;
+  try
+    if AOrm.IsUpdate then
+    begin
+      with AOrm do
+      begin
+        CertTypeCB.ItemIndex := Ord(CertType);
+        CertTypeCBChange(nil);
+        CertNoButtonEdit.Text := CertNo;
+        SubCompanyEdit.Text := CompanyName;
+        SubCompanyEdit2.Text := CompanyName2;
+        CompanyCodeEdit.Text := CompanyCode;
+        CompanyNationEdit.Text := CompanyNatoin;
+        OrderNoEdit.Text := OrderNo;
+        SalesAmountEdit.Text := SalesAmount;
+
+        CertFileDBPathEdit.Text := CertFileDBPath;
+        CertFileDBNameEdit.Text := CertFileDBName;
+        NotesMemo.Text := Notes;
+
+        PrevCertNoEdit.Text := PrevCertNo;
+        ProductTypeCB.ItemIndex := Ord(ProductType);
+        IssueDatePicker.Date := TimeLogToDateTime(IssueDate);
+        UntilValidityDatePicker.Date := TimeLogToDateTime(UntilValidity);
+        IgnoreInvoice.Checked := IsIgnoreInvoice;
+        InvoiceCompanyEdit.Text := InvoiceCompanyName;
+        InvoiceCompanyCodeEdit.Text := InvoiceCompanyCode;
+        InvoiceCompanyNationEdit.Text := InvoiceCompanyNatoin;
+        InvoiceEmailEdit.Text := InvoiceEmail;
+        InvoiceIssueDatePicker.Date := TimeLogToDateTime(InvoiceIssueDate);
+        InvoiceConfirmDatePicker.Date := TimeLogToDateTime(InvoiceConfirmDate);
+        BillPaidDatePicker.Date := TimeLogToDateTime(BillPaidDate);
+
+        TrainedSubjectEdit.Text := TrainedSubject;
+        TrainedCourseEdit.Text := TrainedCourse;
+        TraineeNameEdit.Text := TraineeName;
+        TraineeNationEdit.Text := TraineeNation;
+        CourseLevelCB.ItemIndex := Ord(CourseLevel);
+        TrainedBeginDatePicker.Date := TimeLogToDateTime(TrainedBeginDate);
+        TrainedEndDatePicker.Date := TimeLogToDateTime(TrainedEndDate);
+
+        if CertFileDBName <> '' then
+        begin
+          FGSFileDBName := 'files\'+CertFileDBName;
+          FGSFileDBPath := CertFileDBPath;
+
+          if FileExists(FGSFileDBName) then
+            GetCertFileList2FileGrid(FGSFileDBName);
+//          else
+//            ShowMessage('FileDB('+FGSFileDBName+' is not exist');
+        end;
+
+        LEmailDBName := GetEMailDBName(Application.ExeName, ProductTypeCB.Text);
+        GetCertEmailList2EmailGrid(LEmailDBName);
+        CreateQRCode;
+        GetPhotoImageFromDB(AOrm);
+      end;
+    end
+    else
+    begin//Create Cert.(신규) 인 경우
+      CertFileDBPathEditButtonClick(nil);
+      CertNoButtonEdit.Enabled := True;
+      CheckBox1.Checked := True;
+      IssueDatePicker.Date := now;
+      APTServiceDatePicker.Date := now;
+    end;
+  finally
+    FDisableEditPosition := False;
+  end;
+end;
+
 function TCertEditF.GetLRCheckListFileName: string;
 begin
   Result := '.\db\files\' + LRCHECKLISTFileName;
 end;
 
-procedure TCertEditF.GetPhotoImageFromDB(AOrm: TSQLHGSCertRecord);
+procedure TCertEditF.GetPhotoImageFromDB(AOrm: TOrmHGSTrainLicense);
 var
   LStream: TMemoryStream;
 begin
   LStream := TMemoryStream.Create;
   try
-    if GetImagePhotoFromHGSCertRecord(LStream, AOrm) then
+    if AOrm.IsLicense then
     begin
-      LStream.Position := 0;
-      try
-        PhotoImage.Picture.LoadFromStream(LStream);
-      except
+      if GetImagePhotoFromHGSLicenseRecord(LStream, AOrm) then
+      begin
+        LStream.Position := 0;
+        try
+          PhotoImage.Picture.LoadFromStream(LStream);
+        except
+        end;
+      end;
+    end
+    else
+    begin
+      if GetImagePhotoFromHGSCertRecord(LStream, TSQLHGSCertRecord(AOrm)) then
+      begin
+        LStream.Position := 0;
+        try
+          PhotoImage.Picture.LoadFromStream(LStream);
+        except
+        end;
       end;
     end;
   finally
@@ -1203,7 +1398,7 @@ begin
   end;
 end;
 
-procedure TCertEditF.SavePhotoImage2DB(AOrm: TSQLHGSCertRecord);
+procedure TCertEditF.SavePhotoImage2DB(AOrm: TOrmHGSTrainLicense);
 var
   LImgData: RawBlob;
   LStream: TRawByteStringStream;
@@ -1215,7 +1410,10 @@ begin
   try
     PhotoImage.Picture.SaveToStream(LStream);
 
-    AddOrUpdateHGSCertPhoto(LStream.DataString, AOrm);
+    if AOrm.IsLicense then
+      AddOrUpdateHGSLicensePhoto(LStream.DataString, AOrm)
+    else
+      AddOrUpdateHGSCertPhoto(LStream.DataString, TSQLHGSCertRecord(AOrm));
   finally
     LStream.Free;
   end;
@@ -1231,40 +1429,6 @@ begin
   case ASaveFileKind of
     gfkWORD: LExt := '.doc';
     gfkPDF : LExt := '.pdf';
-  else
-    Lext := '';
-  end;
-
-  if Lext <> '' then
-    Result := ChangeFileExt(Result, Lext);
-end;
-
-function TCertEditF.GetTempPhotoFileName(ASaveFileKind: TJHPFileFormat): string;
-var
-  LExt: string;
-begin
-  Result := 'c:\temp\'+CertNoButtonEdit.Text+'_'+PHOTO_FILENAME;
-
-  case ASaveFileKind of
-    gfkPng: LExt := '.png';
-    gfkJpg : LExt := '.jpg';
-  else
-    Lext := '';
-  end;
-
-  if Lext <> '' then
-    Result := ChangeFileExt(Result, Lext);
-end;
-
-function TCertEditF.GetTempQRFileName(ASaveFileKind: TJHPFileFormat): string;
-var
-  LExt: string;
-begin
-  Result := 'c:\temp\'+CertNoButtonEdit.Text+'_'+QRCODE_FILENAME;
-
-  case ASaveFileKind of
-    gfkPng: LExt := '.png';
-    gfkJpg : LExt := '.jpg';
   else
     Lext := '';
   end;
@@ -1303,16 +1467,16 @@ function TCertEditF.GetGridRowDataFromForm4LicenseList: variant;
 begin
   TDocVariant.New(Result);
 
-  TDocVariantData(Result).AddValue('카드색상', '1');
+  TDocVariantData(Result).AddValue(GetLicCardColorFromCertType(THGSCertType(CertTypeCB.ItemIndex)), '1');
   TDocVariantData(Result).AddValue(TraineeNameEdit.Text, '2');
   TDocVariantData(Result).AddValue(TraineeNationEdit.Text, '3');
-  TDocVariantData(Result).AddValue('Company', '4');
-  TDocVariantData(Result).AddValue('Trained Period', '5');
-  TDocVariantData(Result).AddValue('Course', '6');
-  TDocVariantData(Result).AddValue('Cert. No.', '7');
-  TDocVariantData(Result).AddValue('Validity Date', '8');
-  TDocVariantData(Result).AddValue('사진파일명', '9');
-  TDocVariantData(Result).AddValue('QRCode 파일명', '10');
+  TDocVariantData(Result).AddValue(SubCompanyEdit.Text, '4');
+  TDocVariantData(Result).AddValue(GetFormattedTrainedPeriodFromForm, '5');
+  TDocVariantData(Result).AddValue(TrainedCourseEdit.Text, '6');
+  TDocVariantData(Result).AddValue(CertNoButtonEdit.Text, '7');
+  TDocVariantData(Result).AddValue(FormatDateTime('Until mmm. dd, yyyy' ,UntilValidityDatePicker.Date), '8');
+  TDocVariantData(Result).AddValue(ExtractFileName(GetTempPhotoFileName(CertNoButtonEdit.Text)), '9');
+  TDocVariantData(Result).AddValue(ExtractFileName(GetTempQRFileName(CertNoButtonEdit.Text)), '10');
 end;
 
 function TCertEditF.GetVDRConfigFromIMONo(AIMONo: string): string;
@@ -1335,11 +1499,14 @@ begin
   end;
 end;
 
-function TCertEditF.GetZipFileName4Doc: string;
+function TCertEditF.GetZipFileName4Doc(ACertNo: string): string;
 var
   LTempDir: string;
 begin
-  Result := ReportNoEdit.Text;
+  if ACertNo = '' then
+    Result := ReportNoEdit.Text
+  else
+    Result := ACertNo;
 
   if Result = '' then
   begin
@@ -1505,6 +1672,66 @@ begin
     VDRType := VDRTypeEdit.Text;
     APTServiceDate := TimeLogFromDateTime(APTServiceDatePicker.Date);
     APTResult := g_VDRAPTResult.ToType(APTResultRG.ItemIndex);
+  end;
+end;
+
+function TCertEditF.LoadLicDetail2LicRecordFromForm(
+  var AOrm: TOrmHGSTrainLicense): Boolean;
+var
+  LOrm: TOrmHGSTrainLicense;
+begin
+  Result := CertNoButtonEdit.Text <> '';
+
+  if not Result then
+  begin
+    ShowMessage('Cert. No. is invalid!');
+    exit;
+  end;
+
+  with AOrm do
+  begin
+    CertNo := CertNoButtonEdit.Text;
+
+    try
+      LOrm := GetHGSLicenseFromCertNo(CertNo);
+      IsUpdate := LOrm.IsUpdate;
+    finally
+      LOrm.Free;
+    end;
+
+    CertType := g_HGSCertType.ToType(CertTypeCB.ItemIndex);
+    CompanyName := SubCompanyEdit.Text;
+    CompanyName2 := SubCompanyEdit2.Text;
+    CompanyCode := CompanyCodeEdit.Text;
+    CompanyNatoin := CompanyNationEdit.Text;
+    OrderNo := OrderNoEdit.Text;
+    SalesAmount := SalesAmountEdit.Text;
+    ProductType := g_ShipProductType.ToType(ProductTypeCB.ItemIndex);
+    CertFileDBPath := CertFileDBPathEdit.Text;
+    CertFileDBName := CertFileDBNameEdit.Text;
+    PrevCertNo := PrevCertNoEdit.Text;
+    FileCount := GSFileFrame.fileGrid.RowCount;
+    UntilValidity := TimeLogFromDateTime(UntilValidityDatePicker.Date);
+    UpdateDate := TimeLogFromDateTime(now);
+    IssueDate := TimeLogFromDateTime(IssueDatePicker.Date);
+    IsIgnoreInvoice := IgnoreInvoice.Checked;
+    InvoiceCompanyName := InvoiceCompanyEdit.Text;
+    InvoiceCompanyCode := InvoiceCompanyCodeEdit.Text;
+    InvoiceCompanyNatoin := InvoiceCompanyNationEdit.Text;
+    InvoiceEmail := InvoiceEmailEdit.Text;
+    InvoiceIssueDate := TimeLogFromDateTime(InvoiceIssueDatePicker.Date);
+    InvoiceConfirmDate := TimeLogFromDateTime(InvoiceConfirmDatePicker.Date);
+    BillPaidDate := TimeLogFromDateTime(BillPaidDatePicker.Date);
+    Notes := NotesMemo.Text;
+
+    TrainedSubject := TrainedSubjectEdit.Text;
+    TrainedCourse := TrainedCourseEdit.Text;
+    TraineeName := TraineeNameEdit.Text;
+    TraineeNation := TraineeNationEdit.Text;
+    if CourseLevelCB.ItemIndex <> -1 then
+      CourseLevel := g_AcademyCourseLevel.ToType(CourseLevelCB.ItemIndex);
+    TrainedBeginDate := TimeLogFromDateTime(TrainedBeginDatePicker.Date);
+    TrainedEndDate := TimeLogFromDateTime(TrainedEndDatePicker.Date);
   end;
 end;
 
@@ -1898,73 +2125,41 @@ procedure TCertEditF.MakeLicenseDoc(ACertType: integer;
   AIsSaveFile: Boolean; ASaveFileKind: TJHPFileFormat; AIsWordClose: Boolean);
 var
   LFileName: string;
+  LVar: Variant;
 begin
   //c:\temp\ 에 PhotoFile 저장함(CertNo + Photo.jpg)
-  LFileName := GetTempPhotoFileName;
+  LFileName := GetTempPhotoFileName(CertNoButtonEdit.Text);
   PhotoImage.Picture.SaveToFile(LFileName);
 
   //c:\temp\ 에 QRCodeFile 저장함(CertNo + QRCode.png)
-  LFileName := GetTempQRFileName;
+  LFileName := GetTempQRFileName(CertNoButtonEdit.Text);
   QRCodeFrame1.SaveToFile(LFileName);
 
   //c:\temp\ 에 License list 엑셀 파일 저장함(CertNo + LicenseList.ods)
-  LFileName := GetTempAttendantListFN;
-//  GetGridColNamesFromForm4LicenseList;
-//  AddNextGridColumnFromVariant;
-//  MakeLicenseListXls;
+  LFileName := GetTempAttendantListFN(SubCompanyEdit.Text, ASaveFileKind);
+  LVar := GetGridColNamesFromForm4LicenseList;
+  MakeLicenseListXls(LVar, LFileName);
 end;
 
-procedure TCertEditF.MakeLicenseListXls;
+procedure TCertEditF.MakeLicenseListXls(AColList: Variant; AFileName: string);
 var
-  LExcel: OleVariant;
-  LWorkBook: OleVariant;
-  LRange: OleVariant;
-  LWorksheet: OleVariant;
-  LPicture: OleVariant;
-  LStr, LStr2, LCellNo: string;
+  LStr: string;
+  LNextGrid: TNextGrid;
+  LVar: variant;
 begin
   LStr := CertFileDBPathEdit.Text;
 
-  LExcel := GetActiveExcelOleObject(True);
+  LNextGrid := TNextGrid.Create(nil);
+  LNextGrid.Parent := TWinControl(Self);
   try
-    LWorkBook := LExcel.Workbooks.Open(LStr + LICLIST_FILENAME);
-    LWorksheet := LExcel.ActiveSheet;
-
-    LStr := CertNoButtonEdit.Text;
-    strToken(LStr, '-'); //CertNo에서 HGA 제거
-    LStr2 := strToken(LStr, '-'); //년도
-    LRange := LWorksheet.range['Q2'];
-    LRange.FormulaR1C1 := LStr2;
-    LRange := LWorksheet.range['U2'];
-    LRange.Value := '''' + LStr;
-    LRange := LWorksheet.range['Z29'];
-    LRange.FormulaR1C1 := TrainedSubjectEdit.Text;
-    LRange := LWorksheet.range['Z34'];
-    LRange.FormulaR1C1 := TraineeNameEdit.Text;
-    LRange := LWorksheet.range['Z38'];
-    LRange.FormulaR1C1 := SubCompanyEdit.Text;
-    LRange := LWorksheet.range['Z41'];
-    LRange.FormulaR1C1 := FormatDateTime('mmm.dd', TrainedBeginDatePicker.Date) + ' ~ ' +
-      FormatDateTime('mmm.dd,yyyy', TrainedEndDatePicker.Date);
-    LRange := LWorksheet.range['Z45'];
-    LRange.FormulaR1C1 := TrainedSubjectEdit.Text;
-    LRange := LWorksheet.range['Z48'];
-    LRange.FormulaR1C1 := TrainedCourseEdit.Text;
-    LRange := LWorksheet.range['AP52'];
-    LRange.FormulaR1C1 := FormatDateTime('mmm',UntilValidityDatePicker.Date);
-    LRange := LWorksheet.range['AT52'];
-    LRange.FormulaR1C1 := FormatDateTime('yyyy',UntilValidityDatePicker.Date);
-    QRCodeFrame1.CopyBitmapToClipboard;
-    LRange := LWorksheet.range['AS55'];
-    LRange.Select;
-    LWorksheet.Paste;
-//    LPicture := LRange.ColumnWidth;
-//    LPicture := LRange.RowHeight;
-    LExcel.Selection.ShapeRange.Width := LRange.ColumnWidth*6;
-    LExcel.Selection.ShapeRange.Height := LRange.RowHeight*6;
+    //Grid에 Column Name 생성
+    AddNextGridColumnFromVariant(LNextGrid, AColList, False, True);
+    //Form으로부터 틴 Xls 작성에 필요한 Item을 Variant로 가져옴
+    LVar := GetGridRowDataFromForm4LicenseList;
+    AddVarOfLic2Grid(LNextGrid, LVar);
+    NextGridToExcel(LNextGrid, '', AFileName);
   finally
-//    LWorkBook.Close;
-//    LExcel.Quit;
+    LNextGrid.Free;
   end;
 end;
 
@@ -2060,7 +2255,7 @@ var
 begin
   Result := '';
 
-  LZipFileName := GetZipFileName4Doc;
+  LZipFileName := GetZipFileName4Doc(CertNoButtonEdit.Text);
 
   if LZipFileName = '' then
   begin
@@ -2080,7 +2275,7 @@ begin
 //      LZip.AddDeflated(LFileName, True, 6, LFileName2);
 //    end;
 
-    LFileName := GetTempPhotoFileName;
+    LFileName := GetTempPhotoFileName(CertNoButtonEdit.Text);
 
     if FileExists(LFileName) then
     begin
@@ -2089,12 +2284,12 @@ begin
 //      LZip.AddDeflated(LFileName, True, 6, LFileName2);
     end;
 
-    LFileName := GetTempQRFileName;
+    LFileName := GetTempQRFileName(CertNoButtonEdit.Text);
 
     if FileExists(LFileName) then
       LZip.AddDeflated(LFileName);
 
-    LFileName := GetTempAttendantListFN;
+    LFileName := GetTempAttendantListFN(SubCompanyEdit.Text);
 
     if FileExists(LFileName) then
       LZip.AddDeflated(LFileName);
@@ -2107,9 +2302,9 @@ begin
 
   if ADeleteTempFile then
   begin
-    DeleteFile(GetTempPhotoFileName);
-    DeleteFile(GetTempQRFileName);
-    DeleteFile(GetTempAttendantListFN);
+    DeleteFile(GetTempPhotoFileName(CertNoButtonEdit.Text));
+    DeleteFile(GetTempQRFileName(CertNoButtonEdit.Text));
+    DeleteFile(GetTempAttendantListFN(SubCompanyEdit.Text));
   end;
 
   if AShowCompletionMsg then

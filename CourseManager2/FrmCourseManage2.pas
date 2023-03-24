@@ -10,7 +10,7 @@ uses
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, SBPro,
   AdvOfficeTabSet, AeroButtons, JvExControls, JvLabel, CurvyControls,
   mormot.core.datetime,
-  UnitHGSCurriculumRecord2, UnitHGSCurriculumData, UnitVesselData2;
+  UnitHGSCurriculumRecord2, UnitHGSCurriculumData2, UnitVesselData2;
 
 type
   TCourseManageF = class(TForm)

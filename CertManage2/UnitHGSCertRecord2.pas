@@ -16,7 +16,7 @@ uses
   Classes,
   mormot.core.base, mormot.core.variants, mormot.core.datetime, mormot.orm.core,
   mormot.orm.base, mormot.rest.sqlite3,
-  UnitCertManager2, UnitVesselData2, UnitHGSCertData, UnitHGSCurriculumData,
+  UnitCertManager2, UnitVesselData2, UnitHGSCertData2, UnitHGSCurriculumData2,
   UnitHGSVDRData, UnitJHPFileData, UnitHGSLicenseRecord;
 
 type
@@ -51,10 +51,8 @@ type
     property HullNo: RawUTF8 read fHullNo write fHullNo;
     property PICEmail: RawUTF8 read fPICEmail write fPICEmail;
     property PICPhone: RawUTF8 read fPICPhone write fPICPhone;
-    property MailCount: integer read fMailCount write fMailCount;
     property APTServiceDate: TTimeLog read fAPTServiceDate write fAPTServiceDate;
     property APTResult: TVDRAPTResult read fAPTResult write fAPTResult;
-    property ImageData: RawBlob read FImageData write FImageData;
   end;
 
   TSQLHGSCertFiles = class(TSQLRecord)
@@ -266,7 +264,7 @@ var
   LFrom, LTo: TTimeLog;
   LStrList: TStringList;
   i: integer;
-  LIsAPTResult: Boolean;
+  LIsAPTResult, LIsCertTypesIncluded: Boolean;
 begin
   LWhere := '';
   LIsAPTResult := False;
@@ -426,211 +424,258 @@ begin
       LWhere := LWhere + 'ProductType = ? ';
     end;
 
-    if ACertSearchParamRec.fCertType <> hctNull then
-    begin
-      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fCertType)]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + 'CertType = ? ';
-    end;
-
-    if ACertSearchParamRec.fIsAPTResult_NoResult then
-    begin
-      AddConstArray(ConstArray, [Ord(vdrarNull)]);
-      LStrList.Add('((APTResult IS NULL) or (APTResult = ?)) ');
-      LIsAPTResult := True;
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + 'APTResult IS NULL ';
-    end;
-
-    if ACertSearchParamRec.fIsAPTResult_Successed then
-    begin
-      AddConstArray(ConstArray, [Ord(vdrarSuccessed)]);
-      LStrList.Add('APTResult = ? ');
-      LIsAPTResult := True;
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + 'APTResult = ? ';
-    end;
-
-    if ACertSearchParamRec.fIsAPTResult_Canceled then
-    begin
-      AddConstArray(ConstArray, [Ord(vdrarCancelled)]);
-      LStrList.Add('APTResult = ? ');
-      LIsAPTResult := True;
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + 'APTResult = ? ';
-    end;
-
-    if ACertSearchParamRec.fIsAPTResult_Failed then
-    begin
-      AddConstArray(ConstArray, [Ord(vdrarFailed)]);
-      LStrList.Add('APTResult = ? ');
-      LIsAPTResult := True;
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + 'APTResult = ? ';
-    end;
-
-    if LIsAPTResult then
-    begin
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-
-      LWhere := LWhere + ' (' ;
-      for i := 0 to LStrList.Count - 2 do
-        LWhere := LWhere + LStrList.Strings[i] + ' or ';
-      LWhere := LWhere + LStrList.Strings[LStrList.Count - 1] + ') ';
-    end;
-
-    if ACertSearchParamRec.fIsIgnoreInvoice then
-    begin
-      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + 'IsIgnoreInvoice = ? ';
-    end
-    else
-    begin
-      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + '((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?)) ';
-    end;
-
-    if (ACertSearchParamRec.fIsInvoiceIssued) and
-      (ACertSearchParamRec.fIsNotInvoiceIssued) then
-    begin
-    end
-    else
-    if ACertSearchParamRec.fIsInvoiceIssued then
-    begin
-      AddConstArray(ConstArray, [127489752310]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + 'InvoiceIssueDate > ? ';
-    end
-    else
-    if ACertSearchParamRec.fIsNotInvoiceIssued then
-    begin
-      AddConstArray(ConstArray, [127489800000]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + '((InvoiceIssueDate IS NULL) or (InvoiceIssueDate < ?)) ';
-    end;
-
-//    if (ACertSearchParamRec.fIsInvoiceIssued) and
-//      (ACertSearchParamRec.fIsNotInvoiceIssued) and
-//      (ACertSearchParamRec.fIsIgnoreInvoice) then
+//    if ACertSearchParamRec.fCertType <> hctNull then
 //    begin
-//
-//    end
-//    else
-//    if (ACertSearchParamRec.fIsInvoiceIssued) and
-//      (ACertSearchParamRec.fIsNotInvoiceIssued) then
-//    begin
-//      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
+//      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fCertType)]);
 //      if LWhere <> '' then
 //        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?)) ';
-//    end
-//    else
-//    if (ACertSearchParamRec.fIsInvoiceIssued) and
-//      (ACertSearchParamRec.fIsIgnoreInvoice) then
-//    begin
-//      AddConstArray(ConstArray, [127489752310, Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '((InvoiceIssueDate > ?) or (IsIgnoreInvoice = ?)) ';
-//
-//    end
-//    else
-//    if (ACertSearchParamRec.fIsNotInvoiceIssued) and
-//      (ACertSearchParamRec.fIsIgnoreInvoice) then
-//    begin
-//      AddConstArray(ConstArray, [127489800000, Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '(((InvoiceIssueDate IS NULL) or (InvoiceIssueDate < ?))  or (IsIgnoreInvoice = ?)) ';
-//    end
-//    else
-//    if ACertSearchParamRec.fIsInvoiceIssued then
-//    begin
-//      AddConstArray(ConstArray, [127489752310]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '((InvoiceIssueDate > ?) and ((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?))) ';
-//    end
-//    else
-//    if ACertSearchParamRec.fIsNotInvoiceIssued then
-//    begin
-//      AddConstArray(ConstArray, [127489800000]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '(((InvoiceIssueDate IS NULL) or (InvoiceIssueDate < ?)) and ((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?))) ';
-//    end
-//    else
-//    if ACertSearchParamRec.fIsIgnoreInvoice then
-//    begin
-//      AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + 'IsIgnoreInvoice = ? ';
+//      LWhere := LWhere + 'CertType = ? ';
 //    end;
 
-    if (ACertSearchParamRec.fIsInvoiceConfirmed) and
-      (ACertSearchParamRec.fIsNotInvoiceConfirmed) then
-    begin
+    LIsCertTypesIncluded := False;
 
-    end
-    else
-    if ACertSearchParamRec.fIsInvoiceConfirmed then
+    if ACertSearchParamRec.fCertTypes <> [] then
     begin
-      AddConstArray(ConstArray, [127489752310]);
       if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + 'InvoiceConfirmDate > ? ';
-    end
-    else
-    if ACertSearchParamRec.fIsNotInvoiceConfirmed then
-    begin
-      AddConstArray(ConstArray, [127489800000]);//SQLITE_NULL
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + '((InvoiceConfirmDate IS NULL) or (InvoiceConfirmDate < ?)) ';
+        LWhere := LWhere + ' and (';
+
+      if hctEducation in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctEducation)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      if hctAPTService in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctAPTService)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      if hctProductApproval in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctProductApproval)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      if hctEducation_Entrust in ACertSearchParamRec.fCertTypes then
+      begin
+        if not LIsCertTypesIncluded then
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' and ('
+          else
+            LWhere := ' ( ';
+        end
+        else
+        begin
+          if LWhere <> '' then
+            LWhere := LWhere + ' or '
+          else
+            LWhere := ' or ';
+        end;
+
+        LWhere := LWhere + ' CertType = ? ';
+
+        AddConstArray(ConstArray, [Ord(hctEducation_Entrust)]);
+        LIsCertTypesIncluded := True;
+      end;
+
+      LWhere := LWhere + ' ) ';
     end;
 
-    if (ACertSearchParamRec.fIsBillPaid) and
-      (ACertSearchParamRec.fIsNotBillPaid) then
+    //License는 ATP 필요 없으므로 skip
+    if not LIsCertTypesIncluded then
     begin
-//      AddConstArray(ConstArray, [127489752310]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + '(BillPaidDate > ? ';
-//
-//      AddConstArray(ConstArray, [127489752310]);
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' or ';
-//      LWhere := LWhere + 'BillPaidDate <= ?) ';
-    end
-    else
-    if ACertSearchParamRec.fIsBillPaid then
-    begin
-      AddConstArray(ConstArray, [127489752310]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + 'BillPaidDate > ? ';
-    end
-    else
-    if ACertSearchParamRec.fIsNotBillPaid then
-    begin
-      AddConstArray(ConstArray, [127489800000]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + '((BillPaidDate IS NULL) or (BillPaidDate < ?)) ';
-    end;
+      if ACertSearchParamRec.fIsAPTResult_NoResult then
+      begin
+        AddConstArray(ConstArray, [Ord(vdrarNull)]);
+        LStrList.Add('((APTResult IS NULL) or (APTResult = ?)) ');
+        LIsAPTResult := True;
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' and ';
+  //      LWhere := LWhere + 'APTResult IS NULL ';
+      end;
+
+      if ACertSearchParamRec.fIsAPTResult_Successed then
+      begin
+        AddConstArray(ConstArray, [Ord(vdrarSuccessed)]);
+        LStrList.Add('APTResult = ? ');
+        LIsAPTResult := True;
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' and ';
+  //      LWhere := LWhere + 'APTResult = ? ';
+      end;
+
+      if ACertSearchParamRec.fIsAPTResult_Canceled then
+      begin
+        AddConstArray(ConstArray, [Ord(vdrarCancelled)]);
+        LStrList.Add('APTResult = ? ');
+        LIsAPTResult := True;
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' and ';
+  //      LWhere := LWhere + 'APTResult = ? ';
+      end;
+
+      if ACertSearchParamRec.fIsAPTResult_Failed then
+      begin
+        AddConstArray(ConstArray, [Ord(vdrarFailed)]);
+        LStrList.Add('APTResult = ? ');
+        LIsAPTResult := True;
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' and ';
+  //      LWhere := LWhere + 'APTResult = ? ';
+      end;
+
+      if LIsAPTResult then
+      begin
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+
+        LWhere := LWhere + ' (' ;
+        for i := 0 to LStrList.Count - 2 do
+          LWhere := LWhere + LStrList.Strings[i] + ' or ';
+        LWhere := LWhere + LStrList.Strings[LStrList.Count - 1] + ') ';
+      end;
+
+      if ACertSearchParamRec.fIsIgnoreInvoice then
+      begin
+        AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + 'IsIgnoreInvoice = ? ';
+      end
+      else
+      begin
+        AddConstArray(ConstArray, [Ord(ACertSearchParamRec.fIsIgnoreInvoice)]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + '((IsIgnoreInvoice IS NULL) or (IsIgnoreInvoice = ?)) ';
+      end;
+
+      if (ACertSearchParamRec.fIsInvoiceIssued) and
+        (ACertSearchParamRec.fIsNotInvoiceIssued) then
+      begin
+      end
+      else
+      if ACertSearchParamRec.fIsInvoiceIssued then
+      begin
+        AddConstArray(ConstArray, [127489752310]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + 'InvoiceIssueDate > ? ';
+      end
+      else
+      if ACertSearchParamRec.fIsNotInvoiceIssued then
+      begin
+        AddConstArray(ConstArray, [127489800000]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + '((InvoiceIssueDate IS NULL) or (InvoiceIssueDate < ?)) ';
+      end;
+
+      if (ACertSearchParamRec.fIsInvoiceConfirmed) and
+        (ACertSearchParamRec.fIsNotInvoiceConfirmed) then
+      begin
+
+      end
+      else
+      if ACertSearchParamRec.fIsInvoiceConfirmed then
+      begin
+        AddConstArray(ConstArray, [127489752310]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + 'InvoiceConfirmDate > ? ';
+      end
+      else
+      if ACertSearchParamRec.fIsNotInvoiceConfirmed then
+      begin
+        AddConstArray(ConstArray, [127489800000]);//SQLITE_NULL
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + '((InvoiceConfirmDate IS NULL) or (InvoiceConfirmDate < ?)) ';
+      end;
+
+      if (ACertSearchParamRec.fIsBillPaid) and
+        (ACertSearchParamRec.fIsNotBillPaid) then
+      begin
+  //      AddConstArray(ConstArray, [127489752310]);
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' and ';
+  //      LWhere := LWhere + '(BillPaidDate > ? ';
+  //
+  //      AddConstArray(ConstArray, [127489752310]);
+  //      if LWhere <> '' then
+  //        LWhere := LWhere + ' or ';
+  //      LWhere := LWhere + 'BillPaidDate <= ?) ';
+      end
+      else
+      if ACertSearchParamRec.fIsBillPaid then
+      begin
+        AddConstArray(ConstArray, [127489752310]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + 'BillPaidDate > ? ';
+      end
+      else
+      if ACertSearchParamRec.fIsNotBillPaid then
+      begin
+        AddConstArray(ConstArray, [127489800000]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + '((BillPaidDate IS NULL) or (BillPaidDate < ?)) ';
+      end;
+    end;//if not LIsCertTypesIncluded then
 
     if LWhere = '' then
     begin
