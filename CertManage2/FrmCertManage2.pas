@@ -12,7 +12,7 @@ uses
   AdvOfficeButtons, NxEdit, AdvEdit, AdvEdBtn, iComponent, iVCLComponent,
   iCustomComponent, iSwitchLed, Vcl.AppEvnts, PJAbout, PJVersionInfo,
   mormot.core.base, mormot.core.data, mormot.core.variants, mormot.core.unicode,
-  mormot.core.json, mormot.core.datetime, mormot.orm.base,
+  mormot.core.json, mormot.core.datetime, mormot.orm.base, mormot.core.zip,
   UnitGSTariffRecord2, FrmDisplayTariff2,
   UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData2, Generics.Collections,
   UnitCertManager2, UnitJHPFileData, UnitCertManageConfigClass2, FrmCertManageConfig,
@@ -254,6 +254,7 @@ type
     procedure CertListGridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure LicenseCheckGrpGroupCheckClick(Sender: TObject);
+    procedure CreateLicenseFromSelected1Click(Sender: TObject);
   private
     FIniFileName: string;
     FDisplayCreateInvoceMenuItem: Boolean;
@@ -306,7 +307,9 @@ type
     procedure SetInvoiceConfirmDateFromSelected;
     procedure SetPaidBillDateFromSelected;
     function GetCustInfoFromVar(ADoc: variant): string;
-    function GetCertListFromGrid2StrList(AIsOnlySelected: Boolean): TStringList;
+    function GetVDRAPTCertListFromGrid2StrList(AIsOnlySelected: Boolean): TStringList;
+    //마지막 Select된 Item의 Company Name을 반환 함(Zip File Name에 사용함)
+    function GetLicListFromGrid2StrList(var AList: TStringList): string;
     procedure GetCertFilesFromDocType2Grid;
     function GetEduCertTypeFromForm:THGSCertType;
     procedure CreateZipFile4LicenseFromSelected;
@@ -356,7 +359,7 @@ begin
       if ShowModal = mrOK then
       begin
         InitCompanyMasterClient(Application.ExeName);
-        LCompanyList := GetCertListFromGrid2StrList(True);
+        LCompanyList := GetVDRAPTCertListFromGrid2StrList(True);
         LDynArr.Init(TypeInfo(TRawUTF8DynArray), LDynUtf8);
         TDocVariant.New(LDoc);
 
@@ -678,7 +681,7 @@ begin
   InitMasterClient(Application.ExeName);
   {$ENDIF}
   try
-    LCompanyList := GetCertListFromGrid2StrList(AIsOnlySelected);
+    LCompanyList := GetVDRAPTCertListFromGrid2StrList(AIsOnlySelected);
     MakeDocInvoice4VDRAPT(LCompanyList, AFileKind);
   finally
     for i := 0 to LCompanyList.Count - 1 do
@@ -688,11 +691,68 @@ begin
   end;
 end;
 
+procedure TCertManageF.CreateLicenseFromSelected1Click(Sender: TObject);
+begin
+  CreateZipFile4LicenseFromSelected;
+end;
+
 procedure TCertManageF.CreateNewCertClick(Sender: TObject);
 var
   LMailList: string;
 begin
   CreateCertEditFormFromDB('', '', True, LMailList);
+end;
+
+procedure TCertManageF.CreateZipFile4LicenseFromSelected;
+var
+  LZip: TZipWrite;
+  LZipFileName, LFileName, LCertNo, LCompanyName: string;
+  LHGSLicRecord: TOrmHGSTrainLicense;
+  LLicDataList: TStringList;
+  i: integer;
+  LVar: variant;
+  LNextGrid: TNextGrid;
+begin
+  //
+  DOC_DIR := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)+ 'db\files');
+  InitHGSLicenseClient(HGS_LIC_DB_NAME);
+  LCompanyName := GetLicListFromGrid2StrList(LLicDataList);
+
+  LZipFileName := GetZipFileName4Doc(LCompanyName);
+  LNextGrid := TNextGrid.Create(Self);
+  LNextGrid.Parent := TWinControl(Self);
+  LVar := GetGridColNames4LicenseList;
+  //Grid에 Column Name 생성
+  AddNextGridColumnFromVariant(LNextGrid, LVar, False, True);
+
+  LZip := TZipWrite.Create(LZipFileName);//LTempDir+
+  try
+    for i := 0 to LLicDataList.Count - 1 do
+    begin
+      LVar := _JSON(LLicDataList.Strings[i]);
+      AddNextGridRowFromVariant2(LNextGrid, LVar);
+      LCertNo := VariantToString(LVar.CertNo);
+
+      LFileName := GetTempPhotoFileName(LCertNo);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
+
+      LFileName := GetTempQRFileName(LCertNo);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
+    end;//for
+
+    LFileName := GetTempAttendantListFN(LCompanyName);
+    NextGridToExcel(LNextGrid, '', LFileName);
+
+    if FileExists(LFileName) then
+      LZip.AddDeflated(LFileName);
+  finally
+    FreeAndNil(LZip);
+    LNextGrid.Free;
+  end;
 end;
 
 procedure TCertManageF.DeleteHGSFileDB(ARow: integer);
@@ -848,7 +908,7 @@ begin
   end;
 end;
 
-function TCertManageF.GetCertListFromGrid2StrList(
+function TCertManageF.GetVDRAPTCertListFromGrid2StrList(
   AIsOnlySelected: Boolean): TStringList;
 var
   i, LIdx, LCount, LMonth: integer;
@@ -1213,6 +1273,31 @@ begin
     Result := hctLicAdv
   else
     Result := hctNull;
+end;
+
+function TCertManageF.GetLicListFromGrid2StrList(var AList: TStringList): string;
+var
+  i: integer;
+  LCertNo: string;
+  LLicData4Xls: variant;
+begin
+  Result := '';
+  AList := TStringList.Create;
+
+  for i := 0 to CertListGrid.RowCount - 1 do
+  begin
+    if not CertListGrid.Row[i].Selected then
+      continue;
+
+    LCertNo := CertListGrid.CellsByName['CertNo', i];
+
+    if CheckIsLicenseFromLicNo(LCertNo) then
+    begin
+      LLicData4Xls := GetLicenseData4XlsFromCertNo(LCertNo);
+      AList.Add(VariantToString(LLicData4Xls));
+      Result := CertListGrid.CellsByName['CompanyName', i];
+    end;
+  end;
 end;
 
 procedure TCertManageF.GetLIcListFromVariant2Grid(ADoc: Variant);

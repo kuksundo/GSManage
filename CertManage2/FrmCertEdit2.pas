@@ -215,6 +215,7 @@ type
     function CheckCertInfoFromJson(const AJson1, AJson2: string; AHGSCertType:THGSCertType): Boolean;
     function GetCertInfo2Json(AHGSCertType:THGSCertType=hctNull): string;
     function GetSerialNoFromCertNo(ACertNo: string; var AYear: integer): string;
+    function GetFormattedTrainedPeriodFromForm: string;
     function GetVDRConfigFromIMONo(AIMONo: string): string;
     procedure ShowSearchVesselForm(Sender: TObject);
     procedure ShowSearchVDRForm;
@@ -231,7 +232,6 @@ type
     function GetABSCheckListFileName: string;
 
     //Variant array return
-    function GetGridColNamesFromForm4LicenseList: variant;
     function GetGridRowDataFromForm4LicenseList: variant;
   public
     function CreateCertNo(AProdType, ACertType: integer; IsCryptSerial: Boolean): string;
@@ -250,10 +250,6 @@ type
     procedure MakeLicenseDoc(ACertType: integer; AIsSaveFile: Boolean=False;
       ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False);
     function CheckIfExistATRFileFromDB(AImoNo: string; var AFilName: string):Boolean;
-    function GetZipFileName4Doc(ACertNo: string=''): string;
-    function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
-    function GetFormattedTrainedPeriodFromForm: string;
-    procedure AddVarOfLic2Grid(AGrid: TNextGrid; AVar: Variant);
   end;
 
 function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
@@ -505,21 +501,6 @@ end;
 procedure TCertEditF.ProductTypeCBChange(Sender: TObject);
 begin
   DisplayEditPosition;
-end;
-
-procedure TCertEditF.AddVarOfLic2Grid(AGrid: TNextGrid; AVar: Variant);
-var
-  i, j: integer;
-begin
-  with AGrid do
-  begin
-    j := AddRow;
-
-    for i := 0 to TDocVariantData(AVar).Count - 1 do
-    begin
-      CellsByName[i, j] := TDocVariantData(AVar).Names[i];
-    end;
-  end;
 end;
 
 procedure TCertEditF.APTServiceDatePickerChange(Sender: TObject);
@@ -1247,23 +1228,13 @@ begin
 end;
 
 function TCertEditF.GetFormattedTrainedPeriodFromForm: string;
-var
-  Lyear: string;
 begin
   if TrainedEndDatePicker.IsEmpty then
-    Result := FormatDateTime('mmm. dd, yyyy' ,TrainedBeginDatePicker.Date)
-  else
-  begin
-    LYear := FormatDateTime('yyyy' ,TrainedBeginDatePicker.Date);
+    TrainedEndDatePicker.Date := 0;
 
-    if LYear <> FormatDateTime('yyyy' ,TrainedEndDatePicker.Date) then
-      Result := FormatDateTime('mmm. dd, yyyy' ,TrainedBeginDatePicker.Date)
-    else
-      Result := FormatDateTime('mmm. dd' ,TrainedBeginDatePicker.Date);
-
-    Result := Result + FormatDateTime(' ~ mmm. dd, yyyy' ,TrainedEndDatePicker.Date);
-  end;
-
+  Result := GetFormattedTrainedPeriod(
+    TrainedBeginDatePicker.Date,
+    TrainedEndDatePicker.Date);
 end;
 
 function TCertEditF.GetJsonFromQRCode: string;
@@ -1272,17 +1243,6 @@ var
 begin
   LDocType := g_HGSCertType.ToType(CertTypeCB.ItemIndex);
   Result := GetCertInfo2Json(LDocType);
-end;
-
-function TCertEditF.GetLicCardColorFromCertType(
-  ACertType: THGSCertType): string;
-begin
-  case ACertType of
-    hctLicBasic: Result := '노랑';
-    hctLicInter: Result := '초록';
-    hctLicAdv:   Result := '파랑';
-    else Result := '';
-  end;
 end;
 
 procedure TCertEditF.GetLicDetailFromLictRecord(AOrm: TOrmHGSTrainLicense);
@@ -1447,22 +1407,6 @@ begin
 
 end;
 
-function TCertEditF.GetGridColNamesFromForm4LicenseList: variant;
-begin
-  TDocVariant.New(Result);
-
-  TDocVariantData(Result).AddValue('카드색상', '1');
-  TDocVariantData(Result).AddValue('Name', '2');
-  TDocVariantData(Result).AddValue('Nationality', '3');
-  TDocVariantData(Result).AddValue('Company', '4');
-  TDocVariantData(Result).AddValue('Trained Period', '5');
-  TDocVariantData(Result).AddValue('Course', '6');
-  TDocVariantData(Result).AddValue('Cert. No.', '7');
-  TDocVariantData(Result).AddValue('Validity Date', '8');
-  TDocVariantData(Result).AddValue('사진파일명', '9');
-  TDocVariantData(Result).AddValue('QRCode 파일명', '10');
-end;
-
 function TCertEditF.GetGridRowDataFromForm4LicenseList: variant;
 begin
   TDocVariant.New(Result);
@@ -1497,27 +1441,6 @@ begin
   finally
     DestroyHGSVDR;
   end;
-end;
-
-function TCertEditF.GetZipFileName4Doc(ACertNo: string): string;
-var
-  LTempDir: string;
-begin
-  if ACertNo = '' then
-    Result := ReportNoEdit.Text
-  else
-    Result := ACertNo;
-
-  if Result = '' then
-  begin
-    ShowMessage('Please check the Report No.');
-    exit;
-  end;
-
-  LTempDir := 'c:\temp\';
-  EnsureDirectoryExists(LTempDir);
-  Result := LTempDir+Result;
-  Result := ChangeFileExt(Result, '.zip');
 end;
 
 function TCertEditF.GetSerialNoFromCertNo(ACertNo: string; var AYear: integer): string;
@@ -2137,7 +2060,7 @@ begin
 
   //c:\temp\ 에 License list 엑셀 파일 저장함(CertNo + LicenseList.ods)
   LFileName := GetTempAttendantListFN(SubCompanyEdit.Text, ASaveFileKind);
-  LVar := GetGridColNamesFromForm4LicenseList;
+  LVar := GetGridColNames4LicenseList;
   MakeLicenseListXls(LVar, LFileName);
 end;
 
@@ -2146,7 +2069,7 @@ var
   LStr: string;
   LNextGrid: TNextGrid;
   LVar: variant;
-begin
+begin      //
   LStr := CertFileDBPathEdit.Text;
 
   LNextGrid := TNextGrid.Create(nil);
@@ -2156,7 +2079,7 @@ begin
     AddNextGridColumnFromVariant(LNextGrid, AColList, False, True);
     //Form으로부터 틴 Xls 작성에 필요한 Item을 Variant로 가져옴
     LVar := GetGridRowDataFromForm4LicenseList;
-    AddVarOfLic2Grid(LNextGrid, LVar);
+    AddNextGridRowFromVariant2(LNextGrid, LVar);
     NextGridToExcel(LNextGrid, '', AFileName);
   finally
     LNextGrid.Free;
@@ -2259,7 +2182,7 @@ begin
 
   if LZipFileName = '' then
   begin
-//    ShowMessage('Please check the Report No.');
+    ShowMessage('Please check the Cert No.');
     exit;
   end;
 

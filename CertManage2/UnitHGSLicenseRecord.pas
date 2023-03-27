@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, Forms,
   mormot.core.base, mormot.core.variants, mormot.core.datetime, mormot.orm.core,
-  mormot.orm.base, mormot.rest.sqlite3,
+  mormot.orm.base, mormot.rest.sqlite3, mormot.core.os,
   UnitCertManager2, UnitVesselData2, UnitHGSCertData2, UnitHGSCurriculumData2,
   UnitHGSVDRData, UnitJHPFileData, UnitHGSBaseRecord;
 
@@ -71,9 +71,15 @@ procedure LoadHGSLicenseFromVariant(AOrm: TOrmHGSTrainLicense; ADoc: variant);
 
 function GetHGSLicenseFromCertNo(const ACertNo: string): TOrmHGSTrainLicense;
 function GetVariantFromHGSLicenseRecord(AOrm:TOrmHGSTrainLicense): variant;
+function GetLicenseData4XlsFromCertNo(const ACertNo: string): variant;
 function GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec: TCertSearchParamRec): TOrmHGSTrainLicense;
-function CheckIfExistHGSLicenseNo(const ACertNo: string): Boolean;
 function GetImagePhotoFromHGSLicenseRecord(AImage: TStream; const AOrm:TOrmHGSTrainLicense): Boolean;
+function GetZipFileName4Doc(ACertNo: string=''): string;
+function GetFormattedTrainedPeriod(const ABeginDate, AEndDate: TDate): string;
+function GetGridColNames4LicenseList: variant;
+
+function CheckIfExistHGSLicenseNo(const ACertNo: string): Boolean;
+function CheckIsLicenseFromLicNo(const ACertNo: string): Boolean;
 
 ///////////////////////////
 function GetTempPhotoFileName(ACertNo: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//증명사진 파일 이름
@@ -271,6 +277,32 @@ function GetVariantFromHGSLicenseRecord(AOrm:TOrmHGSTrainLicense): variant;
 begin
   TDocVariant.New(Result);
   LoadRecordPropertyToVariant(AOrm, Result);
+end;
+
+function GetLicenseData4XlsFromCertNo(const ACertNo: string): variant;
+var
+  LOrm: TOrmHGSTrainLicense;
+begin
+  LOrm := GetHGSLicenseFromCertNo(ACertNo);
+  try
+    if LOrm.IsUpdate then
+    begin
+      TDocVariant.New(Result);
+
+      TDocVariantData(Result).AddValue(GetLicCardColorFromCertType(LOrm.CertType), '1');
+      TDocVariantData(Result).AddValue(LOrm.TraineeName, '2');
+      TDocVariantData(Result).AddValue(LOrm.TraineeNation, '3');
+      TDocVariantData(Result).AddValue(LOrm.CompanyName, '4');
+      TDocVariantData(Result).AddValue(GetFormattedTrainedPeriod(TimelogToDateTime(LOrm.TrainedBeginDate), TimelogToDateTime(LOrm.TrainedEndDate)), '5');
+      TDocVariantData(Result).AddValue(LOrm.TrainedCourse, '6');
+      TDocVariantData(Result).AddValue(LOrm.CertNo, '7');
+      TDocVariantData(Result).AddValue(FormatDateTime('Until mmm. dd, yyyy', TimeLogToDateTime(LOrm.UntilValidity)), '8');
+      TDocVariantData(Result).AddValue(ExtractFileName(GetTempPhotoFileName(LOrm.CertNo)), '9');
+      TDocVariantData(Result).AddValue(ExtractFileName(GetTempQRFileName(LOrm.CertNo)), '10');
+    end;
+  finally
+    LOrm.Free;
+  end;
 end;
 
 function GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec: TCertSearchParamRec): TOrmHGSTrainLicense;
@@ -573,6 +605,33 @@ begin
   end;
 end;
 
+function CheckIsLicenseFromLicNo(const ACertNo: string): Boolean;
+var
+  LCode: string;
+begin//
+  Result := False;
+
+  g_HGSCertTypeCode.InitArrayRecord(R_HGSCertTypeCode);
+
+  LCode := '-' + g_HGSCertTypeCode.ToString(hctLicBasic) + '-';
+  Result := Pos(LCode, ACertNo) > 0;
+
+  if Result then
+    exit;
+
+  LCode := '-' + g_HGSCertTypeCode.ToString(hctLicInter) + '-';
+  Result := Pos(LCode, ACertNo) > 0;
+
+  if Result then
+    exit;
+
+  LCode := '-' + g_HGSCertTypeCode.ToString(hctLicAdv) + '-';
+  Result := Pos(LCode, ACertNo) > 0;
+
+  if Result then
+    exit;
+end;
+
 function GetImagePhotoFromHGSLicenseRecord(AImage: TStream; const AOrm:TOrmHGSTrainLicense): Boolean;
 var
   tmpData: RawBlob;
@@ -581,6 +640,51 @@ begin
 
   if g_HGSLicenseDB.RetrieveBlob(TOrmHGSTrainLicense, AOrm.ID, 'ImageData', tmpData) then
     Result := (AImage.Write(Pointer(tmpData)^, Length(tmpData)) = Length(tmpData));
+end;
+
+function GetZipFileName4Doc(ACertNo: string): string;
+var
+  LTempDir: string;
+begin
+  LTempDir := 'c:\temp\';
+  EnsureDirectoryExists(LTempDir);
+  Result := LTempDir+ACertNo;
+  Result := ChangeFileExt(Result, '.zip');
+end;
+
+function GetFormattedTrainedPeriod(const ABeginDate, AEndDate: TDate): string;
+var
+  Lyear: string;
+begin
+  if AEndDate = 0 then
+    Result := FormatDateTime('mmm. dd, yyyy' ,ABeginDate)
+  else
+  begin
+    LYear := FormatDateTime('yyyy' ,ABeginDate);
+
+    if LYear <> FormatDateTime('yyyy' ,AEndDate) then
+      Result := FormatDateTime('mmm. dd, yyyy' ,ABeginDate)
+    else
+      Result := FormatDateTime('mmm. dd' ,ABeginDate);
+
+    Result := Result + FormatDateTime(' ~ mmm. dd, yyyy' ,AEndDate);
+  end;
+end;
+
+function GetGridColNames4LicenseList: variant;
+begin
+  TDocVariant.New(Result);
+
+  TDocVariantData(Result).AddValue('카드색상', '1');
+  TDocVariantData(Result).AddValue('Name', '2');
+  TDocVariantData(Result).AddValue('Nationality', '3');
+  TDocVariantData(Result).AddValue('Company', '4');
+  TDocVariantData(Result).AddValue('Trained Period', '5');
+  TDocVariantData(Result).AddValue('Course', '6');
+  TDocVariantData(Result).AddValue('Cert. No.', '7');
+  TDocVariantData(Result).AddValue('Validity Date', '8');
+  TDocVariantData(Result).AddValue('사진파일명', '9');
+  TDocVariantData(Result).AddValue('QRCode 파일명', '10');
 end;
 
 initialization
