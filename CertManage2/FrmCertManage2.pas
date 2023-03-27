@@ -713,7 +713,6 @@ var
   LVar: variant;
   LNextGrid: TNextGrid;
 begin
-  //
   DOC_DIR := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)+ 'db\files');
   InitHGSLicenseClient(HGS_LIC_DB_NAME);
   LCompanyName := GetLicListFromGrid2StrList(LLicDataList);
