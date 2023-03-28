@@ -20,7 +20,7 @@ type
 
 implementation
 
-uses FrmCertEdit2;
+uses FrmCertEdit2, UnitHGSLicenseRecord;
 
 { TOLEmail4VDRAPTCert }
 
@@ -37,11 +37,11 @@ begin
     Result := g_CertEditF.MakeZip4APTDoc(g_JHPFileFormat.ToType(AContext.FOLEmailActionRec.FFileKind), True)//gfkPDF
   else
   if AContext.FOLEmailActionRec.FMailKind = MAILKIND_VDRAPT_REPLY_WITHNOMAKEZIP then
-    Result := g_CertEditF.GetZipFileName4Doc
+    Result := GetZipFileName4Doc
   else
   if AContext.FOLEmailActionRec.FMailKind = MAILKIND_VDRAPT_REPLY_IFZIPEXIST then
   begin
-    Result := g_CertEditF.GetZipFileName4Doc;
+    Result := GetZipFileName4Doc;
 
     if Result <> '' then
     begin

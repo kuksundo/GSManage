@@ -60,6 +60,8 @@ const
       '±≥¿∞ ºˆ∑·¡ı(¿ß≈π)',
     '');
 
+function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
+
 var
   g_CertQueryDateType: TLabelledEnum<TCertQueryDateType>;
   g_HGSCertType: TLabelledEnum<THGSCertType>;
@@ -68,6 +70,17 @@ var
   g_HGSCertDocType: TLabelledEnum<THGSCertDocType>;
 
 implementation
+
+function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
+begin
+  case ACertType of
+    hctLicBasic: Result := '≥Î∂˚';
+    hctLicInter: Result := '√ ∑œ';
+    hctLicAdv: Result := '¡÷»≤';
+  else
+    Result := '';
+  end;
+end;
 
 initialization
 //  g_CertQueryDateType.InitArrayRecord(R_CertQueryDateType);

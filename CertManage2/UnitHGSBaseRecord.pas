@@ -83,6 +83,6 @@ type
 
 implementation
 
-uses VarRecUtils, UnitStringUtil, UnitFolderUtil2, UnitRttiUtil2, DateUtils, UnitGSCommonUtil;
+//uses VarRecUtils, UnitStringUtil, UnitFolderUtil2, UnitRttiUtil2, DateUtils, UnitGSCommonUtil;
 
 end.
