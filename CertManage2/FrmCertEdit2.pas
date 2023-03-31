@@ -30,10 +30,6 @@ type
     CheckBox1: TCheckBox;
     IsCryptSerialCheck: TCheckBox;
     QRCodePage: TAdvOfficePage;
-    QRCodeFrame1: TQRCodeFrame;
-    btnCopy: TButton;
-    Button1: TButton;
-    HashStringEdit: TEdit;
     AeroButton3: TAeroButton;
     AeroButton1: TAeroButton;
     btn_Close: TAeroButton;
@@ -131,9 +127,6 @@ type
     FrameOLEmailList: TFrame2;
     JvLabel36: TJvLabel;
     InvoiceEmailEdit: TEdit;
-    Label2: TLabel;
-    Button2: TButton;
-    Button3: TButton;
     GSFileFrame: TJHPFileListFrame;
     AdvOfficePage2: TAdvOfficePage;
     Panel2: TPanel;
@@ -147,12 +140,18 @@ type
     JvLabel37: TJvLabel;
     TraineeNationEdit: TEdit;
     Button4: TButton;
+    QRCodeFrame1: TQRCodeFrame;
+    Panel5: TPanel;
+    Button2: TButton;
+    Label2: TLabel;
+    HashStringEdit: TEdit;
+    Button1: TButton;
+    Button3: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure CertNoButtonEditButtonClick(Sender: TObject);
     procedure QRCodeFrame1pbPreviewPaint(Sender: TObject);
-    procedure btnCopyClick(Sender: TObject);
     procedure CertFileDBPathEditButtonClick(Sender: TObject);
     procedure CertFileDBNameEditButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -206,7 +205,7 @@ type
     procedure SavePhotoImage2DB(AOrm: TOrmHGSTrainLicense);
     function LoadCertDetail2CertRecordFromForm(var ACertRecord: TSQLHGSCertRecord): Boolean;
     function LoadLicDetail2LicRecordFromForm(var AOrm: TOrmHGSTrainLicense): Boolean;
-    procedure CreateQRCode;
+    procedure CreateQRCode(ACertType: integer);
     procedure CreateVDRTestReportNo;
     function CheckQRCodeIsValid: Boolean;
     function GetJsonFromQRCode: string;
@@ -234,6 +233,7 @@ type
     //Variant array return
     function GetGridRowDataFromForm4LicenseList: variant;
   public
+    class function GetCertInfo2Json2(ACertNo, ATraineeName: string): variant;
     function CreateCertNo(AProdType, ACertType: integer; IsCryptSerial: Boolean): string;
     procedure MakeCertXls;
     procedure MakeCertDoc(ACertType: integer; AIsSaveFile: Boolean=False;
@@ -518,11 +518,6 @@ begin
   MakeZip4APTDoc(gfkPDF, True);
 end;
 
-procedure TCertEditF.btnCopyClick(Sender: TObject);
-begin
-  QRCodeFrame1.CopyBitmapToClipboard;
-end;
-
 procedure TCertEditF.Button1Click(Sender: TObject);
 var
   LIsValid: Boolean;
@@ -537,7 +532,7 @@ end;
 
 procedure TCertEditF.Button2Click(Sender: TObject);
 begin
-  HashStringEdit.Text := QRCodeFrame1.edtText.Text;
+  HashStringEdit.Text := QRCodeFrame1.mmoText.Text;
 end;
 
 procedure TCertEditF.Button3Click(Sender: TObject);
@@ -604,7 +599,7 @@ begin
 
   if CertNoButtonEdit.Text <> '' then
   begin
-    CreateQRCode;
+    CreateQRCode(LCertType);
 
 //    if CertFileDBNameEdit.Text = '' then
 //      CertFileDBNameEditButtonClick(nil);
@@ -793,17 +788,18 @@ begin
   end;
 end;
 
-procedure TCertEditF.CreateQRCode;
+procedure TCertEditF.CreateQRCode(ACertType: integer);
 var
   LJson: string;
   LDocType: THGSCertType;
 begin
-  LDocType := g_HGSCertType.ToType(CertTypeCB.ItemIndex);
+  LDocType := g_HGSCertType.ToType(ACertType);
+
   LJson := GetCertInfo2Json(LDocType);
 
 //  LJson := UnitCryptUtil.GetHashStringFromSCrypt(LJson);
   LJson := UnitCryptUtil2.EncryptString_Syn3(LJson);
-  QRCodeFrame1.edtText.Text := LJson;
+  QRCodeFrame1.mmoText.Text := LJson;
   QRCodeFrame1.RemakeQR;
 end;
 
@@ -990,7 +986,7 @@ begin
   InitEnum;
   InitNetwork;
   g_CertEditF := Self;
-  QRCodeFrame1.Panel1.Visible := False;
+//  QRCodeFrame1.Panel1.Visible := False;
   g_ShipProductType.SetType2Combo(ProductTypeCB);
   g_AcademyCourseLevelDesc.SetType2Combo(CourseLevelCB);
   g_HGSCertType.SetType2Combo(CertTypeCB);
@@ -1118,7 +1114,7 @@ begin
 
         LEmailDBName := GetEMailDBName(Application.ExeName, ProductTypeCB.Text);
         GetCertEmailList2EmailGrid(LEmailDBName);
-        CreateQRCode;
+        CreateQRCode(Ord(CertType));
         GetPhotoImageFromDB(ASQLHGSCertRecord);
       end;
     end
@@ -1219,11 +1215,23 @@ begin
 
   end
   else
+  if (AHGSCertType = hctLicBasic) or (AHGSCertType = hctLicInter) or (AHGSCertType = hctLicAdv) then
   begin
-
+    GetCertInfo2Json2(CertNoButtonEdit.Text, TraineeNameEdit.Text);
+    exit;
   end;
-//  LDoc.CertFileDBPath := CertFileDBPathEdit.Text;
 
+  Result := _JSON(LDoc);
+end;
+
+class function TCertEditF.GetCertInfo2Json2(ACertNo, ATraineeName: string): variant;
+var
+  LDoc: Variant;
+begin
+  TDocVariant.New(LDoc);
+
+  LDoc.CertNo := ACertNo;
+  LDoc.TraineeName := ATraineeName;
   Result := _JSON(LDoc);
 end;
 
@@ -1303,7 +1311,7 @@ begin
 
         LEmailDBName := GetEMailDBName(Application.ExeName, ProductTypeCB.Text);
         GetCertEmailList2EmailGrid(LEmailDBName);
-        CreateQRCode;
+        CreateQRCode(Ord(CertType));
         GetPhotoImageFromDB(AOrm);
       end;
     end

@@ -17,7 +17,7 @@ uses
   UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData2, Generics.Collections,
   UnitCertManager2, UnitJHPFileData, UnitCertManageConfigClass2, FrmCertManageConfig,
   UnitVesselMasterRecord2, UnitElecMasterData, UnitHGSLicenseRecord,
-  FormAboutDefs, EasterEgg, UnitCertManagerCLO;
+  FormAboutDefs, EasterEgg, UnitCertManagerCLO, UnitQRCodeFrame;
 
 type
   TCertManageF = class(TForm)
@@ -313,6 +313,7 @@ type
     procedure GetCertFilesFromDocType2Grid;
     function GetEduCertTypeFromForm:THGSCertType;
     procedure CreateZipFile4LicenseFromSelected;
+    procedure SaveImageQRCodeFromFrame(AFileName: string; AOrm: TOrmHGSTrainLicense);
   end;
 
 function CreateCertManagerFormFromDB: string;
@@ -322,7 +323,7 @@ var
 
 implementation
 
-uses DateUtils, UnitEnumHelper, FrmCertEdit2, UnitExcelUtil,
+uses DateUtils, UnitEnumHelper, FrmCertEdit2, UnitExcelUtil, UnitCryptUtil2,
   UnitMakeXls2, FrmCertNoFormat2, UnitHGSVDRRecord2, FrmSearchCustomer2, CommonData2,
   FrmCourseManage2, FrmSearchVessel2, UnitHGSVDRData, UnitDateUtil, UnitMakeReport2,
   UnitHGSCurriculumData2,
@@ -705,8 +706,8 @@ end;
 
 procedure TCertManageF.CreateZipFile4LicenseFromSelected;
 var
-  LZip: TZipWrite;
-  LZipFileName, LFileName, LCertNo, LCompanyName: string;
+  LZip, LSubZip: TZipWrite;
+  LZipFileName, LSubZipFileName, LPhotoFileName, LQRFileName, LXlsFileName, LCertNo, LCompanyName: string;
   LHGSLicRecord: TOrmHGSTrainLicense;
   LLicDataList: TStringList;
   i: integer;
@@ -730,24 +731,63 @@ begin
     begin
       LVar := _JSON(LLicDataList.Strings[i]);
       AddNextGridRowFromVariant2(LNextGrid, LVar);
-      LCertNo := VariantToString(LVar.CertNo);
+      LCertNo := VariantToString(TDocVariantData(LVar).Names[6]);
+      LHGSLicRecord := GetHGSLicenseFromCertNo(LCertNo);
 
-      LFileName := GetTempPhotoFileName(LCertNo);
+      if LHGSLicRecord.IsUpdate then
+      begin
+        LPhotoFileName := GetTempPhotoFileName(LCertNo);
+        SaveImagePhotoFromHGSLicenseRecord(LPhotoFileName, LHGSLicRecord);
 
-      if FileExists(LFileName) then
-        LZip.AddDeflated(LFileName);
+        LQRFileName := GetTempQRFileName(LCertNo);
+        SaveImageQRCodeFromFrame(LQRFileName, LHGSLicRecord);
 
-      LFileName := GetTempQRFileName(LCertNo);
 
-      if FileExists(LFileName) then
-        LZip.AddDeflated(LFileName);
+        LXlsFileName := GetTempAttendantListFN(LCertNo);
+        NextGridToExcel(LNextGrid, '', LXlsFileName);
+
+        if LLicDataList.Count = 1 then
+        begin
+          if FileExists(LPhotoFileName) then
+            LZip.AddDeflated(LPhotoFileName);
+
+          if FileExists(LQRFileName) then
+            LZip.AddDeflated(LQRFileName);
+
+          if FileExists(LXlsFileName) then
+            LZip.AddDeflated(LXlsFileName);
+        end
+        else
+        begin
+          LSubZipFileName := ChangeFileExt(LXlsFileName, '.zip');
+          LSubZip := TZipWrite.Create(LSubZipFileName);//LTempDir+
+          try
+            if FileExists(LPhotoFileName) then
+              LSubZip.AddDeflated(LPhotoFileName);
+
+            if FileExists(LQRFileName) then
+              LSubZip.AddDeflated(LQRFileName);
+
+            if FileExists(LXlsFileName) then
+              LSubZip.AddDeflated(LXlsFileName);
+          finally
+            LSubZip.Free;
+
+            if FileExists(LSubZipFileName) then
+              LZip.AddDeflated(LSubZipFileName);
+
+            DeleteFile(LSubZipFileName);
+          end;
+        end;
+
+        if True then
+        begin
+          DeleteFile(GetTempPhotoFileName(LCertNo));
+          DeleteFile(GetTempQRFileName(LCertNo));
+          DeleteFile(GetTempAttendantListFN(LCertNo));
+        end;
+      end;
     end;//for
-
-    LFileName := GetTempAttendantListFN(LCompanyName);
-    NextGridToExcel(LNextGrid, '', LFileName);
-
-    if FileExists(LFileName) then
-      LZip.AddDeflated(LFileName);
   finally
     FreeAndNil(LZip);
     LNextGrid.Free;
@@ -1692,6 +1732,27 @@ begin
         dt_begin.Enabled := True;
         dt_end.Enabled := True;
       end;
+  end;
+end;
+
+procedure TCertManageF.SaveImageQRCodeFromFrame(AFileName: string;
+  AOrm: TOrmHGSTrainLicense);
+var
+  LFrame: TQRCodeFrame;
+  LJson: string;
+begin
+  LFrame := TQRCodeFrame.Create(nil);
+  try
+    with LFrame do
+    begin
+      LJson := TCertEditF.GetCertInfo2Json2(AOrm.CertNo, AOrm.TraineeName);
+      LJson := UnitCryptUtil2.EncryptString_Syn3(LJson);
+      mmoText.Text := LJson;
+      RemakeQR;
+      SaveToFile(AFileName);
+    end;
+  finally
+    LFrame.Free;
   end;
 end;
 

@@ -200,7 +200,7 @@ object CertEditF: TCertEditF
     Width = 826
     Height = 632
     Align = alClient
-    ActivePage = CertInfoPage
+    ActivePage = QRCodePage
     ButtonSettings.CloseButtonPicture.Data = {
       424DA20400000000000036040000280000000900000009000000010008000000
       00006C000000C30E0000C30E00000001000000010000427B8400DEEFEF00FFFF
@@ -3507,7 +3507,7 @@ object CertEditF: TCertEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800840410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800B40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5293,81 +5293,101 @@ object CertEditF: TCertEditF
       TabAppearance.BackGround.Color = 16767935
       TabAppearance.BackGround.ColorTo = clNone
       TabAppearance.BackGround.Direction = gdHorizontal
-      object Label2: TLabel
-        Left = 338
-        Top = 86
-        Width = 90
-        Height = 13
-        Caption = 'Enter Hash string: '
-      end
       inline QRCodeFrame1: TQRCodeFrame
         Left = 2
         Top = 2
-        Width = 320
+        Width = 491
         Height = 600
-        Align = alLeft
+        Align = alClient
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 2
-        ExplicitHeight = 600
-        inherited pbPreview: TPaintBox
-          Height = 519
-          OnPaint = QRCodeFrame1pbPreviewPaint
-          ExplicitLeft = 0
-          ExplicitTop = 81
-          ExplicitWidth = 320
-          ExplicitHeight = 130
+        ExplicitLeft = 8
+        ExplicitTop = 8
+        inherited splTop: TSplitter
+          Top = 294
+          Width = 491
         end
-        inherited Panel1: TPanel
-          inherited Label2: TLabel
-            Left = 12
-            ExplicitLeft = 12
+        inherited pnlTop: TPanel
+          Width = 491
+          Height = 294
+          inherited lblText: TLabel
+            Width = 475
+          end
+          inherited mmoText: TMemo
+            Width = 475
+            Height = 265
+          end
+        end
+        inherited pnlDetails: TPanel
+          Top = 299
+          Width = 491
+          inherited pgcQRDetails: TPageControl
+            inherited tsPreview: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 24
+              ExplicitWidth = 225
+              ExplicitHeight = 261
+              inherited lblQRMetrics: TLabel
+                Width = 225
+              end
+            end
+            inherited tsEncodedData: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 24
+              ExplicitWidth = 225
+              ExplicitHeight = 261
+            end
           end
         end
       end
-      object btnCopy: TButton
-        Left = 329
-        Top = 18
-        Width = 249
-        Height = 25
-        Caption = 'C&opy Bitmap to Clipboard'
+      object Panel5: TPanel
+        Left = 493
+        Top = 2
+        Width = 329
+        Height = 600
+        Align = alRight
         TabOrder = 1
-        OnClick = btnCopyClick
-      end
-      object Button1: TButton
-        Left = 328
-        Top = 135
-        Width = 217
-        Height = 25
-        Caption = 'Check QR Code'
-        TabOrder = 2
-        OnClick = Button1Click
-      end
-      object HashStringEdit: TEdit
-        Left = 328
-        Top = 105
-        Width = 490
-        Height = 21
-        ImeName = 'Microsoft IME 2010'
-        TabOrder = 3
-      end
-      object Button2: TButton
-        Left = 328
-        Top = 49
-        Width = 249
-        Height = 25
-        Caption = 'Copy Encrypted QR Code string To Hash Edit'
-        TabOrder = 4
-        OnClick = Button2Click
-      end
-      object Button3: TButton
-        Left = 576
-        Top = 137
-        Width = 217
-        Height = 25
-        Caption = 'Show JSON from QR Code'
-        TabOrder = 5
-        OnClick = Button3Click
+        object Label2: TLabel
+          Left = 15
+          Top = 61
+          Width = 90
+          Height = 13
+          Caption = 'Enter Hash string: '
+        end
+        object Button2: TButton
+          Left = 16
+          Top = 26
+          Width = 249
+          Height = 25
+          Caption = 'Copy Encrypted QR Code string To Hash Edit'
+          TabOrder = 0
+          OnClick = Button2Click
+        end
+        object HashStringEdit: TEdit
+          Left = 15
+          Top = 80
+          Width = 314
+          Height = 21
+          ImeName = 'Microsoft IME 2010'
+          TabOrder = 1
+        end
+        object Button1: TButton
+          Left = 16
+          Top = 108
+          Width = 217
+          Height = 25
+          Caption = 'Check QR Code'
+          TabOrder = 2
+          OnClick = Button1Click
+        end
+        object Button3: TButton
+          Left = 16
+          Top = 140
+          Width = 217
+          Height = 25
+          Caption = 'Show JSON from QR Code'
+          TabOrder = 3
+          OnClick = Button3Click
+        end
       end
     end
     object AdvOfficePage2: TAdvOfficePage
@@ -5481,7 +5501,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800F40510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800240610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -7078,7 +7098,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400D40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400040310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63

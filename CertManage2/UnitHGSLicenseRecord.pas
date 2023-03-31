@@ -74,6 +74,7 @@ function GetVariantFromHGSLicenseRecord(AOrm:TOrmHGSTrainLicense): variant;
 function GetLicenseData4XlsFromCertNo(const ACertNo: string): variant;
 function GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec: TCertSearchParamRec): TOrmHGSTrainLicense;
 function GetImagePhotoFromHGSLicenseRecord(AImage: TStream; const AOrm:TOrmHGSTrainLicense): Boolean;
+function SaveImagePhotoFromHGSLicenseRecord(AFileName: string; const AOrm:TOrmHGSTrainLicense): Boolean;
 function GetZipFileName4Doc(ACertNo: string=''): string;
 function GetFormattedTrainedPeriod(const ABeginDate, AEndDate: TDate): string;
 function GetGridColNames4LicenseList: variant;
@@ -640,6 +641,31 @@ begin
 
   if g_HGSLicenseDB.RetrieveBlob(TOrmHGSTrainLicense, AOrm.ID, 'ImageData', tmpData) then
     Result := (AImage.Write(Pointer(tmpData)^, Length(tmpData)) = Length(tmpData));
+end;
+
+function SaveImagePhotoFromHGSLicenseRecord(AFileName: string; const AOrm:TOrmHGSTrainLicense): Boolean;
+var
+  LStream: TMemoryStream;
+begin
+  Result := False;
+
+  LStream := TMemoryStream.Create;
+  try
+    if AOrm.IsLicense then
+    begin
+      if GetImagePhotoFromHGSLicenseRecord(LStream, AOrm) then
+      begin
+        LStream.Position := 0;
+        try
+          LStream.SaveToFile(AFileName);
+          Result := True;
+        except
+        end;
+      end;
+    end;
+  finally
+    LStream.Free;
+  end;
 end;
 
 function GetZipFileName4Doc(ACertNo: string): string;

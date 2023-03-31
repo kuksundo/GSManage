@@ -23,7 +23,7 @@ type
     class function CommandLineParse(var AWatchCLO: TCommandLineOption4CertManage;
       var AErrMsg: string): boolean;
 
-    [CLPLongName('rip'), CLPDescription('/rip:"xx.xx.xx.xx"'), CLPDefault('127.0.0.1')]
+    [CLPLongName('rip'), CLPDescription('/rip:"xx.xx.xx.xx"'), CLPDefault('')]
     property RCSIPAddress: string read FRCSIPAddress write FRCSIPAddress;
     [CLPLongName('rport'), CLPDescription('Reg Code Server Port No'), CLPDefault('')]
     property RCSPort: string read FRCSPort write FRCSPort;
