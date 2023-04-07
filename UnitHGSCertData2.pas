@@ -33,6 +33,9 @@ const
   LICLIST_FILENAME = 'LicenseList.ods';
   PHOTO_FILENAME = 'Photo.jpg';
   QRCODE_FILENAME = 'QRCode.png';
+  LICCARD_BASIC_FILENAME = 'LicenseCard_Basic.pjh2';
+  LICCARD_INTERM_FILENAME = 'LicenseCard_Interm.pjh2';
+  LICCARD_ADVANCED_FILENAME = 'LicenseCard_Advanced.pjh2';
 
   R_CertQueryDateType : array[Low(TCertQueryDateType)..High(TCertQueryDateType)] of string =
     ('', 'Trained Period', 'Validity Until Date', 'Cert. Issue Date',

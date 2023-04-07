@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Winapi.ActiveX,
   TypInfo, Vcl.ImgList, Vcl.Mask, Vcl.ComCtrls, Vcl.ExtCtrls, Word2010, PowerPoint2010,
-  NxColumnClasses, NxColumns, NxScrollControl, AdvOfficeImage,
+  NxColumnClasses, NxColumns, NxScrollControl, AdvOfficeImage, Clipbrd,
   NxCustomGridControl, NxCustomGrid, NxGrid, AdvGlowButton, NxEdit, JvExControls,
   JvLabel, AdvOfficePager, AeroButtons, Vcl.Menus, AdvEdit, AdvEdBtn, JvDatePickerEdit,
   JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
@@ -133,7 +133,7 @@ type
     Panel4: TPanel;
     StretchCheck: TCheckBox;
     PhotoImage: TAdvOfficeImage;
-    AdvToolButton1: TAdvToolButton;
+    MakeLicButton: TAdvToolButton;
     MakeLicZipPopup: TPopupMenu;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -185,6 +185,7 @@ type
     procedure Button4Click(Sender: TObject);
     procedure StretchCheckClick(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
   private
     FGSFileDBName,
     FGSFileDBPath: string;
@@ -215,6 +216,7 @@ type
     function GetCertInfo2Json(AHGSCertType:THGSCertType=hctNull): string;
     function GetSerialNoFromCertNo(ACertNo: string; var AYear: integer): string;
     function GetFormattedTrainedPeriodFromForm: string;
+    function GetFormattedValidDateFromForm: string;
     function GetVDRConfigFromIMONo(AIMONo: string): string;
     procedure ShowSearchVesselForm(Sender: TObject);
     procedure ShowSearchVDRForm;
@@ -247,9 +249,11 @@ type
     function MakeZip4LicDoc(AFileKind: TJHPFileFormat; ADeleteTempFile: Boolean;
       AShowCompletionMsg: Boolean=false): string;
     procedure MakeLicenseListXls(AColList: Variant; AFileName: string='');
+    procedure MakeLicenseCard2Ppt(ACertType: integer; ATempFileName: string);
     procedure MakeLicenseDoc(ACertType: integer; AIsSaveFile: Boolean=False;
       ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False);
     function CheckIfExistATRFileFromDB(AImoNo: string; var AFilName: string):Boolean;
+    procedure Photo2Clipboard();
   end;
 
 function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
@@ -492,6 +496,22 @@ end;
 
 { TCertEditF }
 
+procedure TCertEditF.Photo2Clipboard;
+var
+  LBmp: TBitmap;
+begin
+  LBmp := TBitmap.Create;
+  try
+    LBmp.Width := PhotoImage.Picture.Width;
+    LBmp.Height := PhotoImage.Picture.Height;
+    //Picture format이 Jpg 또는 Png인 경우 LoadFromStream이 에러 발생하므로 직접 Bitmap에 Draw 해줌
+    LBmp.Canvas.Draw(0,0,PhotoImage.Picture);
+    Clipboard.Assign(LBmp);
+  finally
+    LBmp.Free;
+  end;
+end;
+
 procedure TCertEditF.PlaceOfSurveyEditKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = Chr(VK_RETURN) then
@@ -618,23 +638,33 @@ const
   DefaultHeight = 744;//650;
 begin
   case g_HGSCertType.ToType(CertTypeCB.ItemIndex) of
-    hctEducation, hctEducation_Entrust, hctLicBasic, hctLicInter, hctLicAdv: begin
+    hctLicBasic, hctLicInter, hctLicAdv: begin
       EducationPanel.Visible := True;
       APTPanel.Visible := False;
       Self.Height := DefaultHeight - APTPanel.Height;
       MakeZipButton.Visible := False;
+      MakeLicButton.Visible := True;
+    end;
+    hctEducation, hctEducation_Entrust: begin
+      EducationPanel.Visible := True;
+      APTPanel.Visible := False;
+      Self.Height := DefaultHeight - APTPanel.Height;
+      MakeZipButton.Visible := False;
+      MakeLicButton.Visible := False;
     end;
     hctAPTService: begin
       EducationPanel.Visible := False;
       APTPanel.Visible := True;
       Self.Height := DefaultHeight - EducationPanel.Height;
       MakeZipButton.Visible := True;
+      MakeLicButton.Visible := False;
     end;
     hctProductApproval: begin
       EducationPanel.Visible := False;
       APTPanel.Visible := False;
       Self.Height := DefaultHeight - EducationPanel.Height - APTPanel.Height;
       MakeZipButton.Visible := False;
+      MakeLicButton.Visible := False;
     end;
   end;
 
@@ -1245,6 +1275,11 @@ begin
     TrainedEndDatePicker.Date);
 end;
 
+function TCertEditF.GetFormattedValidDateFromForm: string;
+begin
+  Result := 'Until ' + FormatDateTime('mmm. dd, yyyy' ,UntilValidityDatePicker.Date)
+end;
+
 function TCertEditF.GetJsonFromQRCode: string;
 var
   LDocType: THGSCertType;
@@ -1426,7 +1461,7 @@ begin
   TDocVariantData(Result).AddValue(GetFormattedTrainedPeriodFromForm, '5');
   TDocVariantData(Result).AddValue(TrainedCourseEdit.Text, '6');
   TDocVariantData(Result).AddValue(CertNoButtonEdit.Text, '7');
-  TDocVariantData(Result).AddValue(FormatDateTime('Until mmm. dd, yyyy' ,UntilValidityDatePicker.Date), '8');
+  TDocVariantData(Result).AddValue(GetFormattedValidDateFromForm, '8');
   TDocVariantData(Result).AddValue(ExtractFileName(GetTempPhotoFileName(CertNoButtonEdit.Text)), '9');
   TDocVariantData(Result).AddValue(ExtractFileName(GetTempQRFileName(CertNoButtonEdit.Text)), '10');
 end;
@@ -1669,7 +1704,7 @@ end;
 procedure TCertEditF.MakeCert2MSPPT(ACertType: integer; AOriginalFileName: string;
   ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose: Boolean);
 var
-  PptApp, PptApp2: PowerPointApplication;
+  PptApp: PowerPointApplication;
   LWordDocument: OLEVariant;
   LTable, LTable2, LCell: OLEVariant;
   LCompanyName, LDate: string;
@@ -1680,8 +1715,8 @@ var
 begin
   PptApp := GetActiveMSPPTClass(AOriginalFileName, True);
 
-  case ACertType of
-    1,4: begin
+  case THGSCertType(ACertType) of
+    hctEducation,hctEducation_Entrust,hctLicBasic,hctLicInter,hctLicAdv: begin
       PPT_StringReplace(PptApp, 'Cert_No', CertNoButtonEdit.Text);
 
 //      if  TrainedCourseEdit.Text = 'HIMSEN PRACTICAL ADVANCED' then
@@ -1718,11 +1753,11 @@ begin
       LDate := FormatDateTime('yyyy', UntilValidityDatePicker.Date);
       LStr := LStr + LDate;
       PPT_StringReplace(PptApp, 'V_Date', LStr);
-      PPT_InsertImageToPPTFromClipboard(PptApp);
+      PPT_InsertImageToPPTFromClipboard(PptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
     end;
-    2: begin
+    hctAPTService: begin
     end;
-    3: begin
+    hctProductApproval: begin
     end;
   end;
 end;
@@ -1958,7 +1993,9 @@ begin
   //Cert 원본 파일 이름 가져옴
   case THGSCertType(ACertType) of
     hctEducation,hctEducation_Entrust: LStr2 := EDU_FILENAME2; //Education, Enthrust Edu
-    hctLicBasic, hctLicInter, hctLicAdv: LStr2 := EDU_FILENAME2;//LICLIST_FILENAME;
+    hctLicBasic, hctLicInter, hctLicAdv: begin
+      LStr2 := EDU_FILENAME2;//LICLIST_FILENAME;
+    end;
     hctAPTService: begin //APT
       if IMONoEdit.Text = '' then
       begin
@@ -2052,24 +2089,90 @@ begin
   end;
 end;
 
+procedure TCertEditF.MakeLicenseCard2Ppt(ACertType: integer; ATempFileName: string);
+var
+  PptApp: PowerPointApplication;
+  LPPtPresentation: PowerPointPresentation;
+  LStr, LStr2: string;
+  FormatStrings: TFormatSettings;
+  LMonth: integer;
+begin
+  LStr := GetOriginalLicCardFN(ACertType);
+
+  if not CopyFile(LStr, ATempFileName, False) then
+    exit;
+
+  PptApp := GetActiveMSPPTClass(ATempFileName, True);
+  try
+    case THGSCertType(ACertType) of
+      hctLicBasic: LStr2 := 'HiMSEN Service Engineer';
+      hctLicInter: LStr2 := 'HiMSEN Service Engineer';
+      hctLicAdv: LStr2 := 'HiMSEN Service Engineer';
+    end;
+
+    LStr := 'Cert. No. ' + CertNoButtonEdit.Text;
+    PPT_StringReplace(PptApp, '_CertNo', LStr);
+
+    LStr := LStr2;
+    PPT_StringReplace(PptApp, '_EngineerGrade', LStr);
+
+    LStr := TraineeNameEdit.Text;
+    PPT_StringReplace(PptApp, '_TraineeName', LStr);
+
+    LStr := TraineeNationEdit.Text;
+    PPT_StringReplace(PptApp, '_TraineeNation', LStr);
+
+    LStr := SubCompanyEdit.Text;
+    PPT_StringReplace(PptApp, '_TraineeCompany', LStr);
+
+    LStr := GetFormattedTrainedPeriodFromForm;
+    PPT_StringReplace(PptApp, '_TraineePeriod', LStr);
+
+    LStr := GetFormattedValidDateFromForm;
+    PPT_StringReplace(PptApp, '_TraineeValidity', LStr);
+
+    QRCodeFrame1.CopyBitmapToClipboard;
+    PPT_InsertImageToPPTFromClipboard(PptApp, 1, 80.0, 80.0, PPTSlideHeight_A4-205, PPTSlideWidth_A4-110);
+
+    Photo2Clipboard();
+    PPT_InsertImageToPPTFromClipboard(PptApp, 1, 120.0, 160.0, PPTSlideHeight_A4-355, PPTSlideWidth_A4-600);
+
+    LPPtPresentation := PptApp.ActivePresentation;
+    LPPtPresentation.Save;
+  finally
+    PptApp.Quit;
+    LPPtPresentation := nil;
+    PptApp := nil;
+  end;
+end;
+
 procedure TCertEditF.MakeLicenseDoc(ACertType: integer;
   AIsSaveFile: Boolean; ASaveFileKind: TJHPFileFormat; AIsWordClose: Boolean);
 var
   LFileName: string;
   LVar: Variant;
 begin
-  //c:\temp\ 에 PhotoFile 저장함(CertNo + Photo.jpg)
-  LFileName := GetTempPhotoFileName(CertNoButtonEdit.Text);
-  PhotoImage.Picture.SaveToFile(LFileName);
+  if ASaveFileKind = gfkEXCEL then
+  begin
+    //c:\temp\ 에 PhotoFile 저장함(CertNo + Photo.jpg)
+    LFileName := GetTempPhotoFileName(CertNoButtonEdit.Text);
+    PhotoImage.Picture.SaveToFile(LFileName);
 
-  //c:\temp\ 에 QRCodeFile 저장함(CertNo + QRCode.png)
-  LFileName := GetTempQRFileName(CertNoButtonEdit.Text);
-  QRCodeFrame1.SaveToFile(LFileName);
+    //c:\temp\ 에 QRCodeFile 저장함(CertNo + QRCode.png)
+    LFileName := GetTempQRFileName(CertNoButtonEdit.Text);
+    QRCodeFrame1.SaveToFile(LFileName);
 
-  //c:\temp\ 에 License list 엑셀 파일 저장함(CertNo + LicenseList.ods)
-  LFileName := GetTempAttendantListFN(SubCompanyEdit.Text, ASaveFileKind);
-  LVar := GetGridColNames4LicenseList;
-  MakeLicenseListXls(LVar, LFileName);
+    //c:\temp\ 에 License list 엑셀 파일 저장함(CertNo + LicenseList.ods)
+    LFileName := GetTempAttendantListFN(SubCompanyEdit.Text, ASaveFileKind);
+    LVar := GetGridColNames4LicenseList;
+    MakeLicenseListXls(LVar, LFileName);
+  end
+  else
+  if ASaveFileKind = gfkPJH2 then
+  begin
+    LFileName := GetTempLicCardFN(CertNoButtonEdit.Text, ACertType);
+    MakeLicenseCard2Ppt(ACertType, LFileName);
+  end;
 end;
 
 procedure TCertEditF.MakeLicenseListXls(AColList: Variant; AFileName: string);
@@ -2182,11 +2285,14 @@ function TCertEditF.MakeZip4LicDoc(AFileKind: TJHPFileFormat; ADeleteTempFile,
   AShowCompletionMsg: Boolean): string;
 var
   LZip: TZipWrite;
-  LZipFileName, LTempDir, LFileName, LFileName2: string;
+  LZipFileName, LTempDir, LFileName, LFileName2, LCertNo: string;
+  LCertType: integer;
 begin
   Result := '';
+  LCertNo := CertNoButtonEdit.Text;
+  LCertType := CertTypeCB.ItemIndex;
 
-  LZipFileName := GetZipFileName4Doc(CertNoButtonEdit.Text);
+  LZipFileName := GetZipFileName4Doc(LCertNo);
 
   if LZipFileName = '' then
   begin
@@ -2198,32 +2304,31 @@ begin
 
   LZip := TZipWrite.Create(LZipFileName);//LTempDir+
   try
-//    LFileName := GetTempATRFileName; //.pjh가 반환됨
-//
-//    if FileExists(LFileName) then
-//    begin
-//      LFileName2 := ExtractFileName(GetTempATRFileName(AFileKind)); //.doc 또는 .pdf가 반환됨
-//      LZip.AddDeflated(LFileName, True, 6, LFileName2);
-//    end;
-
-    LFileName := GetTempPhotoFileName(CertNoButtonEdit.Text);
-
-    if FileExists(LFileName) then
+    if AFileKind = gfkPJH2 then
     begin
-      LZip.AddDeflated(LFileName);
-//      LFileName2 := ExtractFileName(GetTempCOCFileName(AFileKind));
-//      LZip.AddDeflated(LFileName, True, 6, LFileName2);
+      LFileName := GetTempLicCardFN(LCertNo, LCertType, AFileKind);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
+    end
+    else
+    if AFileKind = gfkEXCEL then
+    begin
+      LFileName := GetTempPhotoFileName(LCertNo);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
+
+      LFileName := GetTempQRFileName(LCertNo);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
+
+      LFileName := GetTempAttendantListFN(SubCompanyEdit.Text);
+
+      if FileExists(LFileName) then
+        LZip.AddDeflated(LFileName);
     end;
-
-    LFileName := GetTempQRFileName(CertNoButtonEdit.Text);
-
-    if FileExists(LFileName) then
-      LZip.AddDeflated(LFileName);
-
-    LFileName := GetTempAttendantListFN(SubCompanyEdit.Text);
-
-    if FileExists(LFileName) then
-      LZip.AddDeflated(LFileName);
 
   finally
     FreeAndNil(LZip);
@@ -2233,6 +2338,7 @@ begin
 
   if ADeleteTempFile then
   begin
+    DeleteFile(GetTempLicCardFN(LCertNo, LCertType, AFileKind));
     DeleteFile(GetTempPhotoFileName(CertNoButtonEdit.Text));
     DeleteFile(GetTempQRFileName(CertNoButtonEdit.Text));
     DeleteFile(GetTempAttendantListFN(SubCompanyEdit.Text));
@@ -2254,7 +2360,12 @@ end;
 
 procedure TCertEditF.MenuItem3Click(Sender: TObject);
 begin
-  MakeZip4LicDoc(gfkEXCEL, True);
+  MakeZip4LicDoc(gfkEXCEL, True, True);
+end;
+
+procedure TCertEditF.MenuItem4Click(Sender: TObject);
+begin
+  MakeZip4LicDoc(gfkPJH2, True, True);
 end;
 
 procedure TCertEditF.QRCodeFrame1pbPreviewPaint(Sender: TObject);

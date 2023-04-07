@@ -436,8 +436,8 @@ begin
 
     if ACertSearchParamRec.fCertTypes <> [] then
     begin
-      if LWhere <> '' then
-        LWhere := LWhere + ' and (';
+//      if LWhere <> '' then
+//        LWhere := LWhere + ' and (';
 
       if hctEducation in ACertSearchParamRec.fCertTypes then
       begin
@@ -535,7 +535,7 @@ begin
     end;
 
     //License는 ATP 필요 없으므로 skip
-    if not LIsCertTypesIncluded then
+    if LIsCertTypesIncluded then
     begin
       if ACertSearchParamRec.fIsAPTResult_NoResult then
       begin
@@ -675,7 +675,7 @@ begin
           LWhere := LWhere + ' and ';
         LWhere := LWhere + '((BillPaidDate IS NULL) or (BillPaidDate < ?)) ';
       end;
-    end;//if not LIsCertTypesIncluded then
+    end;//if LIsCertTypesIncluded then
 
     if LWhere = '' then
     begin

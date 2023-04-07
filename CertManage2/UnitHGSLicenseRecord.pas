@@ -86,6 +86,8 @@ function CheckIsLicenseFromLicNo(const ACertNo: string): Boolean;
 function GetTempPhotoFileName(ACertNo: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//증명사진 파일 이름
 function GetTempQRFileName(ACertNo: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//QRCode 파일 이름
 function GetTempAttendantListFN(ACompanyName: string; ASaveFileKind: TJHPFileFormat=gfkNull): string;//참석자 명단 리스트 파일 이름(xls)
+function GetTempLicCardFN(ACertNo: string; ACertType: integer; ASaveFileKind: TJHPFileFormat=gfkNull): string;//카드 파일 이름(ppt)
+function GetOriginalLicCardFN(ACertType: integer): string;//Full Path \db\file\LicenseCard.pjh2
 
 var
   g_HGSLicenseDB: TRestClientDB;
@@ -147,6 +149,40 @@ begin
 
   if Lext <> '' then
     Result := ChangeFileExt(Result, Lext);
+end;
+
+function GetTempLicCardFN(ACertNo: string;  ACertType: integer;
+  ASaveFileKind: TJHPFileFormat=gfkNull): string;
+var
+  LExt: string;
+begin
+  Result := 'c:\temp\'+ ACertNo + '_';
+
+  case THGSCertType(ACertType) of
+    hctLicBasic: Result := Result + LICCARD_BASIC_FILENAME;
+    hctLicInter: Result := Result + LICCARD_INTERM_FILENAME;
+    hctLicAdv: Result := Result + LICCARD_ADVANCED_FILENAME;
+  end;
+
+  case ASaveFileKind of
+    gfkNull, gfkPJH2: LExt := '.pjh2';
+  else
+    Lext := '';
+  end;
+
+  if Lext <> '' then
+    Result := ChangeFileExt(Result, Lext);
+end;
+
+function GetOriginalLicCardFN(ACertType: integer): string;
+begin
+  Result := '.\db\files\';
+
+  case THGSCertType(ACertType) of
+    hctLicBasic: Result := Result + LICCARD_BASIC_FILENAME;
+    hctLicInter: Result := Result + LICCARD_INTERM_FILENAME;
+    hctLicAdv: Result := Result + LICCARD_ADVANCED_FILENAME;
+  end;
 end;
 
 procedure InitHGSLicenseClient(ADBName: string = '');

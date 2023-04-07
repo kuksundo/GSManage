@@ -132,7 +132,7 @@ object CertEditF: TCertEditF
       ExplicitLeft = 3
       ExplicitTop = 2
     end
-    object AdvToolButton1: TAdvToolButton
+    object MakeLicButton: TAdvToolButton
       Left = 267
       Top = 1
       Width = 133
@@ -200,7 +200,7 @@ object CertEditF: TCertEditF
     Width = 826
     Height = 632
     Align = alClient
-    ActivePage = QRCodePage
+    ActivePage = AdvOfficePage2
     ButtonSettings.CloseButtonPicture.Data = {
       424DA20400000000000036040000280000000900000009000000010008000000
       00006C000000C30E0000C30E00000001000000010000427B8400DEEFEF00FFFF
@@ -3507,7 +3507,7 @@ object CertEditF: TCertEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800B40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800C80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5300,36 +5300,37 @@ object CertEditF: TCertEditF
         Height = 600
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 8
-        ExplicitTop = 8
+        ExplicitLeft = 2
+        ExplicitTop = 2
+        ExplicitWidth = 491
+        ExplicitHeight = 600
         inherited splTop: TSplitter
           Top = 294
           Width = 491
+          ExplicitTop = 294
+          ExplicitWidth = 491
         end
         inherited pnlTop: TPanel
           Width = 491
           Height = 294
+          ExplicitWidth = 491
+          ExplicitHeight = 294
           inherited lblText: TLabel
             Width = 475
           end
           inherited mmoText: TMemo
             Width = 475
             Height = 265
+            ExplicitWidth = 475
+            ExplicitHeight = 265
           end
         end
         inherited pnlDetails: TPanel
           Top = 299
           Width = 491
+          ExplicitTop = 299
+          ExplicitWidth = 491
           inherited pgcQRDetails: TPageControl
-            inherited tsPreview: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
-              ExplicitWidth = 225
-              ExplicitHeight = 261
-              inherited lblQRMetrics: TLabel
-                Width = 225
-              end
-            end
             inherited tsEncodedData: TTabSheet
               ExplicitLeft = 4
               ExplicitTop = 24
@@ -5501,7 +5502,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800240610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800380610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -7098,7 +7099,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400040310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400180310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63
@@ -7803,6 +7804,7 @@ object CertEditF: TCertEditF
     end
     object MenuItem4: TMenuItem
       Caption = 'As Ppt'
+      OnClick = MenuItem4Click
     end
   end
 end
