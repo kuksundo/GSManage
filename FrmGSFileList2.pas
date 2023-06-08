@@ -48,6 +48,7 @@ begin
     if LGSFileListF.ShowModal = mrOK then
     begin
       LGSFileListF.GSFileListFrame.DeleteFileFromGrid2DB();
+//      AGSFileRecsJson := MakeGSFileRecs2JSON(LGSFileListF.GSFileListFrame.FJHPFiles_.Files);
       AGSFileRecsJson := MakeJHPFileRecs2JSON(LGSFileListF.GSFileListFrame.FJHPFiles_.Files);
       Result := High(LGSFileListF.GSFileListFrame.FJHPFiles_.Files) + 1;
     end;

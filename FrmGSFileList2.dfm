@@ -21,31 +21,39 @@ object GSFileListF: TGSFileListF
     Height = 384
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 40
-    ExplicitTop = 16
+    ExplicitWidth = 535
+    ExplicitHeight = 384
     inherited JvLabel13: TJvLabel
       Height = 340
+      ExplicitHeight = 340
     end
     inherited fileGrid: TNextGrid
       Width = 437
       Height = 346
+      ExplicitWidth = 437
+      ExplicitHeight = 346
       inherited FileName: TNxTextColumn
+        DefaultWidth = 323
         Width = 323
       end
     end
     inherited Panel2: TPanel
       Top = 346
       Width = 535
+      ExplicitTop = 346
+      ExplicitWidth = 535
       inherited CloseButton: TAdvGlowButton
         Left = 406
+        ExplicitLeft = 406
       end
       inherited ApplyButton: TAdvGlowButton
         Left = 275
+        ExplicitLeft = 275
       end
     end
     inherited ImageList16x16: TImageList
       Bitmap = {
-        494C010130009800540410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+        494C010130009800580410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
         000000000000360000002800000040000000D0000000010020000000000000D0
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

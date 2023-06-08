@@ -183,7 +183,8 @@ begin
         while LSQLHGSVDRRecord.FillOne do
         begin
           LDoc := GetVariantFromHGSVDRRecord(LSQLHGSVDRRecord);
-          LDoc.Attachments := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
+//          LDoc.Attachments := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
+          LDoc.Attachments := MakeGSFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
           LDoc.FileCount := High(LSQLHGSVDRRecord.Attachments) + 1;
           GetVDRListFromVariant2Grid(LDoc);
         end;//while

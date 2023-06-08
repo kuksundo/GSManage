@@ -739,9 +739,8 @@ begin
   try
     if LSQLHGSVDRRecord.IsUpdate then
     begin
-//      LDoc := GetVariantFromHGSVDRRecord(LSQLHGSVDRRecord);
-      LJsonFileList := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
-//      LDoc.FileCount := High(LSQLHGSVDRRecord.Attachments) + 1;
+      LJsonFileList := MakeGSFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
+//      LJsonFileList := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
       LDocData.InitJSON(LJsonFileList);
       for i := 0 to LDocData.Count - 1 do
       begin
@@ -2205,8 +2204,8 @@ var
 begin
   Result := '';
 
-//  LZipFileName := ReportNoEdit.Text;
-  LZipFileName := GetZipFileName4Doc;
+  LZipFileName := ReportNoEdit.Text;
+  LZipFileName := GetZipFileName4Doc(LZipFileName);
 
   if LZipFileName = '' then
   begin
