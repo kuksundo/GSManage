@@ -1202,8 +1202,8 @@ begin
     LCertQueryDateType := g_CertQueryDateType.ToType(ComboBox1.ItemIndex);
 
   ACertSearchParamRec.fQueryDate := LCertQueryDateType;
-  ACertSearchParamRec.FFrom := DateOf(dt_Begin.Date);//DataOf() : 시간 부분을 0으로
-  ACertSearchParamRec.FTo := DateOf(IncDay(dt_end.Date));
+  ACertSearchParamRec.FFrom := DateOf(dt_Begin.Date);//DateOf() : 시간 부분을 0으로
+  ACertSearchParamRec.FTo := GetEndTimeOfTheDay(dt_end.Date);
   ACertSearchParamRec.fCertNo := System.SysUtils.Trim(CertNoEdit.Text);
   ACertSearchParamRec.fTraineeName := TraineeNameEdit.Text;
   ACertSearchParamRec.fCompanyName := CompanyNameEdit.Text;
