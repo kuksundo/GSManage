@@ -14,6 +14,7 @@ type
   private
     //Education
     fTraineeName,
+    fTraineeEmail,
     fTraineeNation,
     fTrainedSubject,
     fTrainedCourse
@@ -30,7 +31,8 @@ type
     property IsLicense: Boolean read fIsLicense write fIsLicense;
   published
     property TraineeName: RawUTF8 read fTraineeName write fTraineeName;
-    property TraineeNation: RawUTF8 read fTraineeNation write fTraineeNation;
+    property TraineeEmail: RawUTF8 read fTraineeEmail write fTraineeEmail;
+    property TraineeNation: RawUTF8 read fTraineeNation write fTraineeNation;
     property TrainedSubject: RawUTF8 read fTrainedSubject write fTrainedSubject;
     property TrainedCourse: RawUTF8 read fTrainedCourse write fTrainedCourse;
     property CourseLevel: TAcademyCourseLevel read fCourseLevel write fCourseLevel;
@@ -743,7 +745,7 @@ begin
   TDocVariantData(Result).AddValue('Company', '4');
   TDocVariantData(Result).AddValue('Trained Period', '5');
   TDocVariantData(Result).AddValue('Course', '6');
-  TDocVariantData(Result).AddValue('Cert. No.', '7');
+  TDocVariantData(Result).AddValue('Cert No', '7');
   TDocVariantData(Result).AddValue('Validity Date', '8');
   TDocVariantData(Result).AddValue('사진파일명', '9');
   TDocVariantData(Result).AddValue('QRCode 파일명', '10');

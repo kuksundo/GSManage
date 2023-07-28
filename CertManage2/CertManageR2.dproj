@@ -71,7 +71,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <Debugger_RunParams>/rip:&quot;10.0.2.15&quot;</Debugger_RunParams>
-        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-Mocks-master\Source;E:\pjh\Dev\Lang\Delphi\Project\GSManage\Common;E:\pjh\Dev\Lang\Delphi\Project\GSManage;E:\pjh\Dev\Lang\Delphi\Project\GSManage\CourseManager2;E:\pjh\Dev\Lang\Delphi\Project\GSManage\TariffManager2;E:\pjh\Dev\Lang\Delphi\Project\GSManage\VesselList;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegisterPas2;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\project\OpenSrc\lib\robstechcorner\rtti;E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\Common;E:\pjh\project\common\Forms\TFormAbout;E:\pjh\project\common\Forms\TFormAbout\Helper3delite;E:\pjh\Dev\Lang\Delphi\Common\Frame;E:\pjh\project\OpenSrc\lib\delphistompclient-master;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\OmniThreadLibrary;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\OmniThreadLibrary\src;E:\pjh\project\common\LKSLEventUnits;E:\pjh\project\OpenSrc\lib\LKSL-master\Source\Lib\Pascal;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\GpDelphiUnit\src;E:\pjh\project\OpenSrc\lib\DelphiZXingQRCodeEx-master\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-Mocks-master\Source;E:\pjh\Dev\Lang\Delphi\Project\GSManage\Common;E:\pjh\Dev\Lang\Delphi\Project\GSManage;E:\pjh\Dev\Lang\Delphi\Project\GSManage\CourseManager2;E:\pjh\Dev\Lang\Delphi\Project\GSManage\TariffManager2;E:\pjh\Dev\Lang\Delphi\Project\GSManage\VesselList;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegisterPas2;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\project\OpenSrc\lib\robstechcorner\rtti;E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\Common;E:\pjh\project\common\Forms\TFormAbout;E:\pjh\project\common\Forms\TFormAbout\Helper3delite;E:\pjh\Dev\Lang\Delphi\Common\Frame;E:\pjh\project\OpenSrc\lib\delphistompclient-master;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\OmniThreadLibrary;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\OmniThreadLibrary\src;E:\pjh\project\common\LKSLEventUnits;E:\pjh\project\OpenSrc\lib\LKSL-master\Source\Lib\Pascal;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\GpDelphiUnit\src;E:\pjh\project\OpenSrc\lib\DelphiZXingQRCodeEx-master\Source;E:\pjh\Dev\Lang\Delphi\Project\HiMECS2\Source\Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Certification ManageR;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -172,7 +172,6 @@
         <DCCReference Include="UnitCertManageConfigClass2.pas"/>
         <DCCReference Include="..\..\..\Common\Frame\FrameOLEmailList2.pas"/>
         <DCCReference Include="..\Common\UnitServerConfigBase2.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\HiMECS\Application\Source\Common\HiMECSConst.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\common\UnitMSPPTUtil.pas"/>
         <DCCReference Include="..\..\..\NoGitHub\RecordUnit2\CertManager2\UnitCertManager2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\common\EasterEgg.pas"/>
@@ -182,10 +181,11 @@
         </DCCReference>
         <DCCReference Include="..\..\..\Common\DataType\UnitJHPFileData.pas"/>
         <DCCReference Include="..\..\..\Common\DataType\UnitJHPFileRecord.pas"/>
-        <DCCReference Include="..\..\HiMECS2\Utility\HiMECS_Watch2\UnitOrmFileClient.pas"/>
+        <DCCReference Include="..\..\..\Common\DataType\UnitOrmFileClient.pas"/>
         <DCCReference Include="UnitCertManagerCLO.pas"/>
         <DCCReference Include="UnitHGSLicenseRecord.pas"/>
         <DCCReference Include="UnitHGSBaseRecord.pas"/>
+        <DCCReference Include="..\..\..\OpenSrc\lib\ArrayHelper-master\ArrayHelper.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

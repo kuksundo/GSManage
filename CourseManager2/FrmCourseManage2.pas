@@ -35,8 +35,8 @@ type
     Subject: TNxTextColumn;
     CourseName: TNxTextColumn;
     TrainDays: TNxTextColumn;
-    CertFileDBPath: TNxTextColumn;
-    CertFileDBName: TNxTextColumn;
+    CourseFileDBPath: TNxTextColumn;
+    CourseFileDBName: TNxTextColumn;
     Attachments: TNxButtonColumn;
     UpdateDate: TNxTextColumn;
     imagelist24x24: TImageList;
@@ -62,6 +62,7 @@ type
     JvLabel2: TJvLabel;
     CourseLevelCB: TComboBox;
     Contents: TNxTextColumn;
+    CourseLevel: TNxTextColumn;
     procedure FormCreate(Sender: TObject);
     procedure Close1Click(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
@@ -78,6 +79,8 @@ type
     procedure GetCourseListFromVariant2Grid(ADoc: Variant);
     procedure ShowCourseEditFormFromGrid(ARow: integer; ASelectMode: Boolean; AAttachPageView: Boolean=false);
     procedure DeleteHGSFileDB(ARow: integer);
+
+    procedure InitEnum;
   public
     FSelectMode: Boolean;
     FSubject,FCourseName,FContents: string;
@@ -209,6 +212,7 @@ end;
 procedure TCourseManageF.FormCreate(Sender: TObject);
 begin
   InitHGSCurriculumClient(HGS_CURRICULUM_DB_NAME);
+  InitEnum;
 
   g_ShipProductType.SetType2Combo(ProdTypeCB);
   g_AcademyCourseLevelDesc.SetType2Combo(CourseLevelCB);
@@ -268,6 +272,7 @@ begin
 
   CourseListGrid.CellsByName['Subject', LRow] := ADoc.Subject;
   CourseListGrid.CellsByName['CourseName', LRow] := ADoc.CourseName;
+  CourseListGrid.CellsByName['CourseLevel', LRow] := g_AcademyCourseLevelDesc.ToString(ADoc.CourseLevel);
   CourseListGrid.CellsByName['Contents', LRow] := ADoc.Contents;
   CourseListGrid.CellsByName['TargetGroup', LRow] := ADoc.TargetGroup;
   CourseListGrid.CellsByName['TrainDays', LRow] := ADoc.TrainDays;
@@ -303,6 +308,12 @@ procedure TCourseManageF.ImportGeneratorMasterFromXlsFile1Click(
 begin
   CreateCourseEditFormFromDB('','');
   GetCourseList2Grid;
+end;
+
+procedure TCourseManageF.InitEnum;
+begin
+  g_ShipProductType.InitArrayRecord(R_ShipProductType);
+  g_AcademyCourseLevelDesc.InitArrayRecord(R_AcademyCourseLevelDesc);
 end;
 
 procedure TCourseManageF.ShowCourseEditFormFromGrid(ARow: integer;

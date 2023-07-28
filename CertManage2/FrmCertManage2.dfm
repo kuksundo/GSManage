@@ -2402,6 +2402,8 @@ object CertManageF: TCertManageF
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      Header.Caption = 'Invoice Email'
+      Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
@@ -2412,6 +2414,94 @@ object CertManageF: TCertManageF
       SortType = stAlphabetic
       Visible = False
     end
+    object TraineeNation: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Trainee Nation'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 42
+      SortType = stAlphabetic
+    end
+    object IssueDate: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Issue Date'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 43
+      SortType = stAlphabetic
+    end
+    object Within6Month: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Within 6 Month'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 44
+      SortType = stAlphabetic
+    end
+    object Within1Year: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Within 1 Year'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 45
+      SortType = stAlphabetic
+    end
+    object TraineeEmail: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Trainee Email'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 46
+      SortType = stAlphabetic
+    end
   end
   object imagelist24x24: TImageList
     ColorDepth = cd32Bit
@@ -2421,7 +2511,7 @@ object CertManageF: TCertManageF
     Left = 8
     Top = 232
     Bitmap = {
-      494C010101007000340518001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000580518001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2731,7 +2821,7 @@ object CertManageF: TCertManageF
     Left = 80
     Top = 232
     Bitmap = {
-      494C010102005402440510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402680510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2996,6 +3086,20 @@ object CertManageF: TCertManageF
       Caption = 'Create zip 4 License From Selected'
       OnClick = CreateLicenseFromSelected1Click
     end
+    object N9: TMenuItem
+      Caption = '-'
+    end
+    object MakePPTCertFromSelectd1: TMenuItem
+      Caption = 'Make Cert From Selectd'
+      object Merge1: TMenuItem
+        Caption = 'Merge'
+        OnClick = Merge1Click
+      end
+      object Splite1: TMenuItem
+        Caption = 'Splite'
+        OnClick = Splite1Click
+      end
+    end
     object N6: TMenuItem
       Caption = '-'
     end
@@ -3033,6 +3137,7 @@ object CertManageF: TCertManageF
     end
     object ReturnCertListFromSelected1: TMenuItem
       Caption = 'Return Cert List From Selected'
+      Hint = 'Popup Mode'#51068#46412' mrOK Return'
       OnClick = ReturnCertListFromSelected1Click
     end
     object N5: TMenuItem
@@ -3050,7 +3155,7 @@ object CertManageF: TCertManageF
     Left = 40
     Top = 232
     Bitmap = {
-      494C01010400C800980620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010400C800BC0620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

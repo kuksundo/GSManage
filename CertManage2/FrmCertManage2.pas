@@ -17,7 +17,7 @@ uses
   UnitVesselData2, UnitHGSCertRecord2, UnitHGSCertData2, Generics.Collections,
   UnitCertManager2, UnitJHPFileData, UnitCertManageConfigClass2, FrmCertManageConfig,
   UnitVesselMasterRecord2, UnitElecMasterData, UnitHGSLicenseRecord,
-  FormAboutDefs, EasterEgg, UnitCertManagerCLO, UnitQRCodeFrame;
+  FormAboutDefs, EasterEgg, UnitCertManagerCLO, UnitQRCodeFrame, ArrayHelper;
 
 type
   TCertManageF = class(TForm)
@@ -193,6 +193,15 @@ type
     FormAbout1: TFormAbout;
     CreateLicenseFromSelected1: TMenuItem;
     LicenseCheckGrp: TAdvOfficeCheckGroup;
+    TraineeNation: TNxTextColumn;
+    IssueDate: TNxTextColumn;
+    Within1Year: TNxTextColumn;
+    Within6Month: TNxTextColumn;
+    TraineeEmail: TNxTextColumn;
+    MakePPTCertFromSelectd1: TMenuItem;
+    N9: TMenuItem;
+    Merge1: TMenuItem;
+    Splite1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
@@ -255,6 +264,8 @@ type
       Shift: TShiftState);
     procedure LicenseCheckGrpGroupCheckClick(Sender: TObject);
     procedure CreateLicenseFromSelected1Click(Sender: TObject);
+    procedure Merge1Click(Sender: TObject);
+    procedure Splite1Click(Sender: TObject);
   private
     FIniFileName: string;
     FDisplayCreateInvoceMenuItem: Boolean;
@@ -312,8 +323,14 @@ type
     function GetLicListFromGrid2StrList(var AList: TStringList): string;
     procedure GetCertFilesFromDocType2Grid;
     function GetEduCertTypeFromForm:THGSCertType;
+    function IsLicenseCheckedFromForm: Boolean;
     procedure CreateZipFile4LicenseFromSelected;
     procedure SaveImageQRCodeFromFrame(AFileName: string; AOrm: TOrmHGSTrainLicense);
+    function GetRemainedValidity(ADate: TDate): integer;
+    procedure NextGridToExcel4License(ANextGrid: TNextGrid);
+    procedure SetColIndexAry4License(var AColIndexAry: TArrayRecord<integer>);
+
+    procedure MakeCertFromSelected(AIsMerge: Boolean);
   end;
 
 function CreateCertManagerFormFromDB: string;
@@ -471,7 +488,10 @@ end;
 
 procedure TCertManageF.AeroButton1Click(Sender: TObject);
 begin
-  NextGridToExcel(CertListGrid);
+  if IsLicenseCheckedFromForm() then
+    NextGridToExcel4License(CertListGrid)
+  else
+    NextGridToExcel(CertListGrid);
 end;
 
 procedure TCertManageF.AsPDF1Click(Sender: TObject);
@@ -720,6 +740,7 @@ begin
 
   LZipFileName := GetZipFileName4Doc(LCompanyName);
   LNextGrid := TNextGrid.Create(Self);
+  LNextGrid.Visible := False;
   LNextGrid.Parent := TWinControl(Self);
   LVar := GetGridColNames4LicenseList;
   //Grid에 Column Name 생성
@@ -1050,9 +1071,7 @@ var
   LDoc: Variant;
   LIsLicense: Boolean;
 begin
-  LIsLicense := (hctLicBasic in ACertSearchParamRec.fCertTypes) or
-                            (hctLicInter in ACertSearchParamRec.fCertTypes) or
-                            (hctLicAdv in ACertSearchParamRec.fCertTypes);
+  LIsLicense := IsLicenseCheckedFromCertTypes(ACertSearchParamRec.fCertTypes);
 
   if LIsLicense then
   begin
@@ -1343,7 +1362,7 @@ procedure TCertManageF.GetLIcListFromVariant2Grid(ADoc: Variant);
 var
   LRow: integer;
   LShipProductTypes,
-  LAPTResult: integer;
+  LValidity: integer;
 begin
   with CertListGrid do
   begin
@@ -1351,6 +1370,7 @@ begin
 
     CellsByName['CertNo', LRow] := ADoc.CertNo;
     CellsByName['TraineeName', LRow] := ADoc.TraineeName;
+    CellsByName['TraineeNation', LRow] := ADoc.TraineeNation;
     CellsByName['CompanyName', LRow] := ADoc.CompanyName;
     CellsByName['CompanyCode', LRow] := ADoc.CompanyCode;
     CellsByName['CompanyNation', LRow] := ADoc.CompanyNatoin;
@@ -1390,16 +1410,40 @@ begin
 
     if ADoc.TrainedBeginDate > 127489752310 then
       CellsByName['TrainedBeginDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.TrainedBeginDate));
+
     if ADoc.TrainedEndDate > 127489752310 then
       CellsByName['TrainedEndDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.TrainedEndDate));
+
     if ADoc.UntilValidity > 127489752310 then
       CellsByName['UntilValidity', LRow] := DateToStr(TimeLogToDateTime(ADoc.UntilValidity));
+
+    if ADoc.IssueDate > 127489752310 then
+      CellsByName['IssueDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.IssueDate));
+
     if ADoc.UpdateDate > 127489752310 then
       CellsByName['UpdateDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.UpdateDate));
 
     CellByName['Attachments', LRow].AsInteger := ADoc.FileCount;
 //    High(TIDList4Invoice(AGrid.Row[i].Data).fInvoiceFile.Files)+1;
+
+    LValidity := GetRemainedValidity(TimeLogToDateTime(ADoc.UntilValidity));
+
+    if LValidity > 0 then
+    begin
+      if LValidity < 180 then
+        CellsByName['Within6Month', LRow] := 'O';
+//        CellByName['Within6Month', LRow].AsInteger := 1;
+
+      if LValidity < 365 then
+        CellsByName['Within1Year', LRow] := 'O';
+//        CellByName['Within1Year', LRow].AsInteger := 1;
+    end;
   end;
+end;
+
+function TCertManageF.GetRemainedValidity(ADate: TDate): integer;
+begin
+  Result := DaysBetween(now, ADate);
 end;
 
 procedure TCertManageF.GetVesselListByExcludeAPTDate(ACertSearchParamRec: TCertSearchParamRec);
@@ -1578,6 +1622,15 @@ begin
   g_AcademyCourseLevelDesc.InitArrayRecord(R_AcademyCourseLevelDesc);
 end;
 
+function TCertManageF.IsLicenseCheckedFromForm: Boolean;
+var
+  LHGSCertType: THGSCertType;
+begin
+  LHGSCertType := GetEduCertTypeFromForm;
+
+  Result := IsLicenseCheckedFromCertType(LHGSCertType);
+end;
+
 procedure TCertManageF.iSwitchLed1Change(Sender: TObject);
 begin
   InvoiceGrp.Enabled := iSwitchLed1.Active;
@@ -1629,6 +1682,33 @@ begin
   FSettings.Load(AFileName);
 end;
 
+procedure TCertManageF.MakeCertFromSelected(AIsMerge: Boolean);
+var
+  LCertNo, LCertType: string;
+  i: integer;
+  LStrList: TStringList;
+begin
+  LStrList := TStringList.Create;
+  try
+    for i := CertListGrid.RowCount - 1 downto 0 do
+    begin
+      LCertNo := CertListGrid.CellsByName['CertNo', i];
+      LCertType := CertListGrid.CellsByName['CertType', i];
+
+      LStrList.Add(LCertNo + '=' + LCertType);
+    end;//for
+
+    i := CreateCertEditFormFromDB4MakeCert(LStrList, AIsMerge);
+
+    if AIsMerge then
+      i := 1;
+
+    ShowMessage(IntToStr(i) + ' files are created at "c:\temp\"');
+  finally
+    LStrList.Free;
+  end;
+end;
+
 procedure TCertManageF.MakeCertXls(ARow: integer);
 //var
 //  LExcel: OleVariant;
@@ -1675,6 +1755,33 @@ begin
 //    LWorkBook.Close;
 //    LExcel.Quit;
 //  end;
+end;
+
+procedure TCertManageF.Merge1Click(Sender: TObject);
+begin
+  MakeCertFromSelected(True);
+end;
+
+procedure TCertManageF.NextGridToExcel4License(ANextGrid: TNextGrid);
+var
+  LTempNextGrid: TNextGrid;
+  LAryColIndex: TArrayRecord<integer>;
+  LVar: Variant;
+begin
+  SetColIndexAry4License(LAryColIndex);
+  //LAryColIndex에 있는 Column Index Data만 LVar에 가져옴
+  LVar := NextGrid2VariantFromColIndexAry(ANextGrid, LAryColIndex);
+
+  LTempNextGrid := TNextGrid.Create(nil);
+  LTempNextGrid.Visible := False;
+
+  try
+    LTempNextGrid.Parent := TWinControl(Self);
+    AddNextGridRowsFromVariant2(LTempNextGrid, LVar, True);
+    NextGridToExcel(LTempNextGrid);
+  finally
+    LTempNextGrid.Free;
+  end;
 end;
 
 procedure TCertManageF.OnEasterEgg(msg: string);
@@ -1760,7 +1867,17 @@ procedure TCertManageF.SetCertListVisibleColumn;
 var
   LBool: Boolean;
 begin
-  LBool := EducationCheck.Checked;
+  LBool := IsLicenseCheckedFromForm();
+
+//  if LBool then
+//    ShowOrHideAllColumn4NextGrid(CertListGrid, False);
+
+  CertListGrid.ColumnByName['TraineeNation'].Visible := LBool;
+  CertListGrid.ColumnByName['IssueDate'].Visible := LBool;
+  CertListGrid.ColumnByName['Within1Year'].Visible := LBool;
+  CertListGrid.ColumnByName['Within6Month'].Visible := LBool;
+
+  LBool := EducationCheck.Checked or IsLicenseCheckedFromForm();
   CertListGrid.ColumnByName['TrainedSubject'].Visible := LBool;
   CertListGrid.ColumnByName['TrainedCourse'].Visible := LBool;
   CertListGrid.ColumnByName['TraineeName'].Visible := LBool;
@@ -1780,6 +1897,26 @@ begin
   CertListGrid.ColumnByName['PICEmail'].Visible := LBool;
   CertListGrid.ColumnByName['PICPhone'].Visible := LBool;
   CertListGrid.ColumnByName['APTServiceDate'].Visible := LBool;
+end;
+
+procedure TCertManageF.SetColIndexAry4License(
+  var AColIndexAry: TArrayRecord<integer>);
+begin
+  AColIndexAry.Add(CertListGrid.ColumnByName['CertNo'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['ProductType'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['CompanyName'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['CompanyNation'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['TraineeEmail'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['TraineeName'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['TraineeNation'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['CertType'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['IssueDate'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['UntilValidity'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['Within1Year'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['Within6Month'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['Attachments'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['UpdateDate'].Index);
+  AColIndexAry.Add(CertListGrid.ColumnByName['Notes'].Index);
 end;
 
 procedure TCertManageF.SetConfig;
@@ -2196,6 +2333,11 @@ begin
   finally
     LSearchVesselF.Free;
   end;
+end;
+
+procedure TCertManageF.Splite1Click(Sender: TObject);
+begin
+  MakeCertFromSelected(False);
 end;
 
 procedure TCertManageF.SubjectEditButtonDown(Sender: TObject);

@@ -66,7 +66,6 @@ uses
   UnitCertManageConfigClass2 in 'UnitCertManageConfigClass2.pas',
   FrameOLEmailList2 in '..\..\..\Common\Frame\FrameOLEmailList2.pas',
   UnitServerConfigBase2 in '..\Common\UnitServerConfigBase2.pas',
-  HiMECSConst in '..\..\..\..\..\..\project\util\HiMECS\Application\Source\Common\HiMECSConst.pas',
   UnitMSPPTUtil in '..\..\..\..\..\..\project\common\UnitMSPPTUtil.pas',
   UnitCertManager2 in '..\..\..\NoGitHub\RecordUnit2\CertManager2\UnitCertManager2.pas',
   EasterEgg in '..\..\..\..\..\..\project\common\EasterEgg.pas',
@@ -74,10 +73,11 @@ uses
   UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas',
   UnitJHPFileData in '..\..\..\Common\DataType\UnitJHPFileData.pas',
   UnitJHPFileRecord in '..\..\..\Common\DataType\UnitJHPFileRecord.pas',
-  UnitOrmFileClient in '..\..\HiMECS2\Utility\HiMECS_Watch2\UnitOrmFileClient.pas',
+  UnitOrmFileClient in '..\..\..\Common\DataType\UnitOrmFileClient.pas',
   UnitCertManagerCLO in 'UnitCertManagerCLO.pas',
   UnitHGSLicenseRecord in 'UnitHGSLicenseRecord.pas',
-  UnitHGSBaseRecord in 'UnitHGSBaseRecord.pas';
+  UnitHGSBaseRecord in 'UnitHGSBaseRecord.pas',
+  ArrayHelper in '..\..\..\OpenSrc\lib\ArrayHelper-master\ArrayHelper.pas';
 
 {$R *.res}
 

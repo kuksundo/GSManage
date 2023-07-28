@@ -5,7 +5,7 @@ interface
 uses System.Classes, UnitEnumHelper;
 
 type
-  TAcademyCourseLevel = (aclNull, aclBasic, aclAdvanced, aclExpert, aclIntermediate,
+  TAcademyCourseLevel = (aclNull, aclBasic, aclIntermediate, aclAdvanced, aclExpert,
     aclFinal);
   TAcademyActivityLevel = (aalNull, aalIntroduction, aalOperation, aalCommissioning,
     aalMaintenance, aalOptimization, aalTroubleShooting, aalFinal);
@@ -14,9 +14,9 @@ const
   HGS_CURRICULUM_DB_NAME = 'HGSCurriculumMaster.sqlite';
 
   R_AcademyCourseLevel : array[Low(TAcademyCourseLevel)..High(TAcademyCourseLevel)] of string =
-    ('', 'B', 'A', 'S', 'I', '');
+    ('', 'B', 'I', 'A', 'E', '');
   R_AcademyCourseLevelDesc : array[Low(TAcademyCourseLevel)..High(TAcademyCourseLevel)] of string =
-    ('', 'Basic', 'Advanced', 'Expert', 'Intermediate', '');
+    ('', 'Basic', 'Intermediate', 'Advanced', 'Expert', '');
   R_AcademyActivityLevel : array[Low(TAcademyActivityLevel)..High(TAcademyActivityLevel)] of string =
     ('', 'A', 'B', 'C', 'D', 'E', 'F', '');
   R_AcademyActivityLevelDesc : array[Low(TAcademyActivityLevel)..High(TAcademyActivityLevel)] of string =

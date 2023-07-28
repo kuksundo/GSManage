@@ -239,11 +239,12 @@ type
     function CreateCertNo(AProdType, ACertType: integer; IsCryptSerial: Boolean): string;
     procedure MakeCertXls;
     procedure MakeCertDoc(ACertType: integer; AIsSaveFile: Boolean=False;
-      ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False);
+      ASaveFileKind: TJHPFileFormat=gfkNull; AIsWordClose: Boolean=False;
+      AIsVisible: Boolean=True; AIsMerged: Boolean=False);
     procedure MakeCert2MSWord(ACertType: integer; AOriginalFileName: string; ASaveFileKind: TJHPFileFormat=gfkNull;
-      AIsSaveFile: Boolean=False; AIsWordClose: Boolean=False);
+      AIsSaveFile: Boolean=False; AIsWordClose: Boolean=False; AIsVisible: Boolean=True);
     procedure MakeCert2MSPPT(ACertType: integer; AOriginalFileName: string; ASaveFileKind: TJHPFileFormat=gfkNull;
-      AIsSaveFile: Boolean=False; AIsWordClose: Boolean=False);
+      AIsSaveFile: Boolean=False; AIsWordClose: Boolean=False; AIsVisible: Boolean=True; AIsMerged: Boolean=False);
     function MakeZip4APTDoc(AFileKind: TJHPFileFormat; ADeleteTempFile: Boolean;
       AShowCompletionMsg: Boolean=false): string;
     function MakeZip4LicDoc(AFileKind: TJHPFileFormat; ADeleteTempFile: Boolean;
@@ -260,8 +261,14 @@ function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
   out AEmailList: string; ACertType: THGSCertType=hctNull; AAttachPageView:
   Boolean=false): integer;
 
+//CertManage Form에서 PPT를 만들떄 사용
+//ACertNoList Value에 CertType이 저장됨
+//ACertNoList = ActualCertNo = CertType
+function CreateCertEditFormFromDB4MakeCert(ACertNoList: TStringList; AIsMerged: Boolean): integer;
+
 var
   g_CertEditF: TCertEditF;
+  g_PptApp: PowerPointApplication;
 
 implementation
 
@@ -278,7 +285,7 @@ uses UnitVesselData2,  DragDropInternet, DragDropFormats, DateUtils,
 function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
   out AEmailList: string; ACertType: THGSCertType; AAttachPageView: Boolean): integer;
 var
-//  LCertEditF: TCertEditF;
+  LCertType: THGSCertType;
   LSQLHGSCertRecord,
   LSQLHGSCertRecord2: TSQLHGSCertRecord;
   LHGSLicRecord: TOrmHGSTrainLicense;
@@ -301,9 +308,9 @@ begin
         CertTypeCBChange(nil);
       end;
 
-      LIsLicense := (hctLicBasic = THGSCertType(CertTypeCB.ItemIndex)) or
-                    (hctLicInter = THGSCertType(CertTypeCB.ItemIndex)) or
-                    (hctLicAdv = THGSCertType(CertTypeCB.ItemIndex));
+      LCertType := THGSCertType(CertTypeCB.ItemIndex);
+
+      LIsLicense := IsLicenseCheckedFromCertType(LCertType);
 
                     //      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
       GSFileFrame.InitDocTypeList2Combo(g_HGSCertDocType.GetTypeLabels);
@@ -490,6 +497,69 @@ begin
       end;
     end;
   finally
+    g_CertEditF.Free;
+  end;
+end;
+
+function CreateCertEditFormFromDB4MakeCert(ACertNoList: TStringList; AIsMerged: Boolean): integer;
+var
+  LCertType: THGSCertType;
+  LSQLHGSCertRecord,
+  LSQLHGSCertRecord2: TSQLHGSCertRecord;
+  LHGSLicRecord: TOrmHGSTrainLicense;
+  LDoc: variant;
+  LIsLicense: Boolean;
+  i: integer;
+  LCertNo: string;
+begin
+  Result := 0;
+
+  g_CertEditF := TCertEditF.Create(nil);
+  try
+    with g_CertEditF do
+    begin
+      for i := 0 to ACertNoList.Count - 1 do
+      begin
+        LCertNo := ACertNoList.Names[i];
+        LCertType := g_HGSCertType.ToType(ACertNoList.ValueFromIndex[i]);
+        LIsLicense := IsLicenseCheckedFromCertType(LCertType);
+
+        if LIsLicense then
+        begin
+          LHGSLicRecord := GetHGSLicenseFromCertNo(LCertNo);
+          try
+            GetLicDetailFromLictRecord(LHGSLicRecord);
+          finally
+            LHGSLicRecord.Free;
+          end;
+        end
+        else
+        begin
+          LSQLHGSCertRecord := GetHGSCertFromCertNo(LCertNo);
+          try
+            GetCertDetailFromCertRecord(LSQLHGSCertRecord);
+
+            if LCertType = hctAPTService then
+            begin
+              ProductTypeCB.ItemIndex := ORd(shptVDR);
+              ProductTypeCBChange(nil);
+            end;
+          finally
+            LSQLHGSCertRecord.Free;
+          end;
+        end;
+
+        MakeCertDoc(CertTypeCB.ItemIndex, True, gfkWORD, False, True, True);
+        Inc(Result);
+      end;//for
+    end;//with
+  finally
+    if Assigned(g_PptApp) then
+    begin
+      g_PptApp.ActivePresentation.Slides.Item(1).Delete;
+      g_PptApp := nil;
+    end;
+
     g_CertEditF.Free;
   end;
 end;
@@ -807,7 +877,7 @@ begin
 //    LeftStr(g_ShipProductCode.ToString(ProductTypeCB.ItemIndex),2) + '-' +
     g_ShipProductCode.ToString(AProdType) + '-' +
     g_HGSCertTypeCode.ToString(ACertType) + '-' +
-    format('%.4d', [LSerialNo]);
+    format('%.3d', [LSerialNo]);
 
   if CheckIfExistHGSCertNo(Result) then
   begin
@@ -1701,9 +1771,8 @@ begin
 end;
 
 procedure TCertEditF.MakeCert2MSPPT(ACertType: integer; AOriginalFileName: string;
-  ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose: Boolean);
+  ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose, AIsVisible, AIsMerged: Boolean);
 var
-  PptApp: PowerPointApplication;
   LWordDocument: OLEVariant;
   LTable, LTable2, LCell: OLEVariant;
   LCompanyName, LDate: string;
@@ -1711,26 +1780,39 @@ var
   FormatStrings: TFormatSettings;
   LMonth: integer;
   LIni: TMemIniFile;
+  LSlide: PowerPointSlide;
+  LSlideHeight, LSlideWidth: Single;
 begin
-  PptApp := GetActiveMSPPTClass(AOriginalFileName, True);
+  if not Assigned(g_PptApp) then
+    g_PptApp := GetActiveMSPPTClass(AOriginalFileName, AIsVisible);
 
   case THGSCertType(ACertType) of
-    hctEducation,hctEducation_Entrust,hctLicBasic,hctLicInter,hctLicAdv: begin
-      PPT_StringReplace(PptApp, 'Cert_No', CertNoButtonEdit.Text);
+    hctEducation,hctEducation_Entrust,hctLicBasic,hctLicInter,hctLicAdv:
+    begin
+      if AIsMerged then
+      begin
+        LSlideHeight := g_PptApp.ActivePresentation.PageSetup.SlideHeight;
+        LSlideWidth := g_PptApp.ActivePresentation.PageSetup.SlideWidth;
+        //첫번째 Slide를 복제함
+        LSlide := PPT_CopySlideFromSlideIndex(g_PptApp, 1);
+        PPT_InsertImageToSlideFromClipboard(LSlide, LSlideHeight, LSlideWidth, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+      end
+      else
+      begin
+        LSlide := g_PptApp.ActivePresentation.Slides.Item(1);
+        PPT_InsertImageToPPTFromClipboard(g_PptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+      end;
 
-//      if  TrainedCourseEdit.Text = 'HIMSEN PRACTICAL ADVANCED' then
-//      begin
-//        Word_StringFindNFontSize(PptApp, 'T_Course2', 14);
-//      end;
+      PPT_StringReplaceFromSlide(LSlide, 'Cert_No', CertNoButtonEdit.Text);
 
-      PPT_StringReplace(PptApp, 'T_Course2', TrainedCourseEdit.Text);
-      PPT_StringReplace(PptApp, 'T_Name', TraineeNameEdit.Text);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Course2', TrainedCourseEdit.Text);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Name', TraineeNameEdit.Text);
       LStr := SubCompanyEdit2.Text;
 
       if LStr = '' then
         LStr := SubCompanyEdit.Text;
 
-      PPT_StringReplace(PptApp, 'C_Name', LStr);
+      PPT_StringReplaceFromSlide(LSlide, 'C_Name', LStr);
       GetLocaleFormatSettings($0409, FormatStrings);
       LMonth := MonthOf(TrainedBeginDatePicker.Date);
       LDate := FormatStrings.ShortMonthNames[LMonth] + '. ';
@@ -1738,21 +1820,22 @@ begin
       LMonth := MonthOf(TrainedEndDatePicker.Date);
       LDate := FormatStrings.ShortMonthNames[LMonth] + '. ';
       LStr := LStr + LDate + FormatDateTime('dd, yyyy', TrainedEndDatePicker.Date);
-      PPT_StringReplace(PptApp, 'T_Period', LStr);
-      PPT_StringReplace(PptApp, 'T_Subject', TrainedSubjectEdit.Text);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Period', LStr);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Subject', TrainedSubjectEdit.Text);
 
       if  TrainedCourseEdit.Text = 'HIMSEN PRACTICAL ADVANCED' then
-        Word_StringFindNFontSize(PptApp, 'T_Course', 17);
+        Word_StringFindNFontSize(g_PptApp, 'T_Course', 17);
 
-      PPT_StringReplace(PptApp, 'T_Course', TrainedSubjectEdit.Text);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Course', TrainedSubjectEdit.Text);
+      PPT_StringReplaceFromSlide(LSlide, 'T_Level', CourseLevelCB.Text);
 
       GetLocaleFormatSettings($0409, FormatStrings);
       LMonth := MonthOf(UntilValidityDatePicker.Date);
       LStr := FormatStrings.ShortMonthNames[LMonth] + ', ';
       LDate := FormatDateTime('yyyy', UntilValidityDatePicker.Date);
       LStr := LStr + LDate;
-      PPT_StringReplace(PptApp, 'V_Date', LStr);
-      PPT_InsertImageToPPTFromClipboard(PptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+      PPT_StringReplaceFromSlide(LSlide, 'V_Date', LStr);
+//      PPT_InsertImageToSlideFromClipboard(LSlide, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
     end;
     hctAPTService: begin
     end;
@@ -1762,7 +1845,7 @@ begin
 end;
 
 procedure TCertEditF.MakeCert2MSWord(ACertType: integer; AOriginalFileName: string;
-  ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose: Boolean);
+  ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose, AIsVisible: Boolean);
 var
   WordApp, WordApp2: WordApplication;
   LWordDocument: OLEVariant;
@@ -1773,7 +1856,7 @@ var
   LMonth: integer;
   LIni: TMemIniFile;
 begin
-  WordApp := GetActiveMSWordClass(AOriginalFileName, True);
+  WordApp := GetActiveMSWordClass(AOriginalFileName, AIsVisible);
   QRCodeFrame1.CopyBitmapToClipboard;
 
   case ACertType of
@@ -1973,10 +2056,11 @@ end;
 //            3 : Product Approval용 Cert
 //            4 : 위탁교육용 Cert
 procedure TCertEditF.MakeCertDoc(ACertType: integer; AIsSaveFile: Boolean;
-  ASaveFileKind: TJHPFileFormat; AIsWordClose: Boolean);
+  ASaveFileKind: TJHPFileFormat; AIsWordClose, AIsVisible, AIsMerged: Boolean);
 var
-  LStr, LStr2: string;
+  LStr, LStr2, LTempFileName, LExt: string;
   LGSFileKind: TJHPFileFormat;
+  LFileCopySuccess: Boolean;
 begin
   SetCurrentDir(ExtractFilePath(Application.exename));
   LStr := CertFileDBPathEdit.Text;
@@ -2027,10 +2111,32 @@ begin
   LStr := ExpandFileName(LStr);
   LGSFileKind := GetJHPFileFormatFromFileName(LStr);
 
-  case LGSFileKind of
-    gfkWORD, gfkPJH: MakeCert2MSWord(ACertType, LStr, ASaveFileKind, AIsSaveFile, AIsWordClose);
-    gfkPDF: ;
-    gfkPPT, gfkPJH2: MakeCert2MSPPT(ACertType, LStr, ASaveFileKind, AIsSaveFile, AIsWordClose);
+  LExt := GetFileExtFromFileFormat(LGSFileKind, True);
+
+  LFileCopySuccess := False;
+
+  if AIsMerged then
+  begin
+    LTempFileName := 'c:\temp\' + ChangeFileExt(ExtractFileName(LStr2), '_$$$' + '.' + LExt);
+
+    LFileCopySuccess := FileExists(LTempFileName);
+
+    if not LFileCopySuccess then
+      LFileCopySuccess := CopyFile(LStr, LTempFileName, False);
+  end
+  else
+  begin
+    LTempFileName := 'c:\temp\' + ChangeFileExt(ExtractFileName(LStr), '_' + TraineeNameEdit.Text + '.' + LExt);
+    LFileCopySuccess := CopyFile(LStr, LTempFileName, False);
+  end;
+
+  if LFileCopySuccess then
+  begin
+    case LGSFileKind of
+      gfkWORD, gfkPJH: MakeCert2MSWord(ACertType, LTempFileName, ASaveFileKind, AIsSaveFile, AIsWordClose, AIsVisible);
+      gfkPDF: ;
+      gfkPPT, gfkPJH2: MakeCert2MSPPT(ACertType, LTempFileName, ASaveFileKind, AIsSaveFile, AIsWordClose, AIsVisible, AIsMerged);
+    end;
   end;
 end;
 
@@ -2136,10 +2242,10 @@ begin
     Photo2Clipboard();
     PPT_InsertImageToPPTFromClipboard(PptApp, 1, 120.0, 160.0, PPTSlideHeight_A4-355, PPTSlideWidth_A4-600);
 
-    LPPtPresentation := PptApp.ActivePresentation;
+    LPPtPresentation := g_PptApp.ActivePresentation;
     LPPtPresentation.Save;
   finally
-    PptApp.Quit;
+    g_PptApp.Quit;
     LPPtPresentation := nil;
     PptApp := nil;
   end;
@@ -2183,6 +2289,7 @@ begin      //
   LStr := CertFileDBPathEdit.Text;
 
   LNextGrid := TNextGrid.Create(nil);
+  LNextGrid.Visible := False;
   LNextGrid.Parent := TWinControl(Self);
   try
     //Grid에 Column Name 생성

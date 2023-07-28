@@ -1,0 +1,17 @@
+CREATE TABLE "Woodward" (
+	"HW_Platform"	TEXT,
+	"SW_Level"	TEXT,
+	"SW_Version"	TEXT,
+	"Package_Version"	TEXT,
+	"Application"	TEXT,
+	"Target_System"	TEXT,
+	"Release_Reason"	TEXT,
+	"Release_Date"	INTEGER,
+	"Predecessor"	TEXT,
+	"PLC_Version"	TEXT,
+	"Revision_History"	TEXT,
+	"News"	TEXT,
+	"Changes"	TEXT,
+	"Validation_Doc"	BLOB,
+	"Software"	BLOB
+)

@@ -64,6 +64,8 @@ const
     '');
 
 function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
+function IsLicenseCheckedFromCertType(ACertType: THGSCertType): Boolean;
+function IsLicenseCheckedFromCertTypes(ACertTypes: THGSCertTypes): Boolean;
 
 var
   g_CertQueryDateType: TLabelledEnum<TCertQueryDateType>;
@@ -83,6 +85,20 @@ begin
   else
     Result := '';
   end;
+end;
+
+function IsLicenseCheckedFromCertType(ACertType: THGSCertType): Boolean;
+begin
+  Result := (hctLicBasic = ACertType) or
+            (hctLicInter = ACertType) or
+            (hctLicAdv = ACertType);
+end;
+
+function IsLicenseCheckedFromCertTypes(ACertTypes: THGSCertTypes): Boolean;
+begin
+ Result := (hctLicBasic in ACertTypes) or
+           (hctLicInter in ACertTypes) or
+           (hctLicAdv in ACertTypes);
 end;
 
 initialization

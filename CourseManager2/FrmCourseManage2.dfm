@@ -703,6 +703,18 @@ object CourseManageF: TCourseManageF
       SortType = stAlphabetic
       Width = 200
     end
+    object CourseLevel: TNxTextColumn
+      Alignment = taCenter
+      Header.Caption = 'Course Level'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 4
+      SortType = stAlphabetic
+    end
     object Contents: TNxTextColumn
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -717,7 +729,7 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 4
+      Position = 5
       SortType = stAlphabetic
     end
     object TargetGroup: TNxTextColumn
@@ -736,7 +748,7 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 5
+      Position = 6
       SortType = stAlphabetic
       Width = 200
     end
@@ -755,10 +767,10 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 6
+      Position = 7
       SortType = stAlphabetic
     end
-    object CertFileDBPath: TNxTextColumn
+    object CourseFileDBPath: TNxTextColumn
       Alignment = taCenter
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -773,11 +785,11 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 7
+      Position = 8
       SortType = stAlphabetic
       Visible = False
     end
-    object CertFileDBName: TNxTextColumn
+    object CourseFileDBName: TNxTextColumn
       Alignment = taCenter
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -792,7 +804,7 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 8
+      Position = 9
       SortType = stAlphabetic
       Visible = False
     end
@@ -812,7 +824,7 @@ object CourseManageF: TCourseManageF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coCanSort, coEditing, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 9
+      Position = 10
       SortType = stAlphabetic
     end
     object UpdateDate: TNxTextColumn
@@ -830,7 +842,7 @@ object CourseManageF: TCourseManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 10
+      Position = 11
       SortType = stAlphabetic
     end
   end
@@ -842,7 +854,7 @@ object CourseManageF: TCourseManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000B00318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000B80318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -1152,7 +1164,7 @@ object CourseManageF: TCourseManageF
     Left = 96
     Top = 208
     Bitmap = {
-      494C010102005402C00310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402C80310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -1349,7 +1361,7 @@ object CourseManageF: TCourseManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010400C800140520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010400C8001C0520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
