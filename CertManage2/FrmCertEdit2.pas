@@ -1567,7 +1567,8 @@ begin
     strToken(LStr, '-');
     LStr := strToken(LStr, '-');
     AYear := StrToIntDef(LStr,0);
-    Result := RightStr(ACertNo,4);
+    Result := strTokenRev(ACertNo, '-');
+//    Result := RightStr(ACertNo,4);
 //  end;
 end;
 
