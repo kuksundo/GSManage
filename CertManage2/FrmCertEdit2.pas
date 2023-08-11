@@ -147,6 +147,7 @@ type
     HashStringEdit: TEdit;
     Button1: TButton;
     Button3: TButton;
+    RenewalCheck: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -549,7 +550,7 @@ begin
           end;
         end;
 
-        MakeCertDoc(CertTypeCB.ItemIndex, True, gfkWORD, False, True, True);
+        MakeCertDoc(CertTypeCB.ItemIndex, True, gfkWORD, False, True, AIsMerged);
         Inc(Result);
       end;//for
     end;//with
@@ -1184,6 +1185,7 @@ begin
         CourseLevelCB.ItemIndex := Ord(CourseLevel);
         TrainedBeginDatePicker.Date := TimeLogToDateTime(TrainedBeginDate);
         TrainedEndDatePicker.Date := TimeLogToDateTime(TrainedEndDate);
+        RenewalCheck.Checked := IsRenewal;
 
         ReportNoEdit.Text := ReportNo;
         VDRSerialNoEdit.Text := VDRSerialNo;
@@ -1281,6 +1283,8 @@ begin
 //  LDoc.OrderNo := OrderNoEdit.Text;
 //  LDoc.SalesAmount := SalesAmountEdit.Text;
 //  LDoc.CertFileDBName := CertFileDBNameEdit.Text;
+
+  LDoc.IsRenewal := RenewalCheck.Checked;
 
   if (AHGSCertType = hctEducation) or (AHGSCertType = hctEducation_Entrust) then
   begin
@@ -1401,6 +1405,7 @@ begin
         CourseLevelCB.ItemIndex := Ord(CourseLevel);
         TrainedBeginDatePicker.Date := TimeLogToDateTime(TrainedBeginDate);
         TrainedEndDatePicker.Date := TimeLogToDateTime(TrainedEndDate);
+        RenewalCheck.Checked := IsRenewal;
 
         if CertFileDBName <> '' then
         begin
@@ -1694,6 +1699,8 @@ begin
       CourseLevel := g_AcademyCourseLevel.ToType(CourseLevelCB.ItemIndex);
     TrainedBeginDate := TimeLogFromDateTime(TrainedBeginDatePicker.Date);
     TrainedEndDate := TimeLogFromDateTime(TrainedEndDatePicker.Date);
+    IsRenewal := RenewalCheck.Checked;
+
 
     ReportNo := ReportNoEdit.Text;
     VDRSerialNo := VDRSerialNoEdit.Text;
@@ -1768,30 +1775,32 @@ begin
       CourseLevel := g_AcademyCourseLevel.ToType(CourseLevelCB.ItemIndex);
     TrainedBeginDate := TimeLogFromDateTime(TrainedBeginDatePicker.Date);
     TrainedEndDate := TimeLogFromDateTime(TrainedEndDatePicker.Date);
+    IsRenewal := RenewalCheck.Checked;
   end;
 end;
 
 procedure TCertEditF.MakeCert2MSPPT(ACertType: integer; AOriginalFileName: string;
   ASaveFileKind: TJHPFileFormat; AIsSaveFile, AIsWordClose, AIsVisible, AIsMerged: Boolean);
 var
+  LPptApp: PowerPointApplication;
   LWordDocument: OLEVariant;
   LTable, LTable2, LCell: OLEVariant;
   LCompanyName, LDate: string;
   LStr, LStr2, LStr3: string;
   FormatStrings: TFormatSettings;
-  LMonth: integer;
+  LMonth, LDaysBetween: integer;
   LIni: TMemIniFile;
   LSlide: PowerPointSlide;
   LSlideHeight, LSlideWidth: Single;
 begin
-  if not Assigned(g_PptApp) then
-    g_PptApp := GetActiveMSPPTClass(AOriginalFileName, AIsVisible);
-
   case THGSCertType(ACertType) of
     hctEducation,hctEducation_Entrust,hctLicBasic,hctLicInter,hctLicAdv:
     begin
       if AIsMerged then
       begin
+        if not Assigned(g_PptApp) then
+          g_PptApp := GetActiveMSPPTClass(AOriginalFileName, AIsVisible);
+
         LSlideHeight := g_PptApp.ActivePresentation.PageSetup.SlideHeight;
         LSlideWidth := g_PptApp.ActivePresentation.PageSetup.SlideWidth;
         //첫번째 Slide를 복제함
@@ -1800,8 +1809,9 @@ begin
       end
       else
       begin
-        LSlide := g_PptApp.ActivePresentation.Slides.Item(1);
-        PPT_InsertImageToPPTFromClipboard(g_PptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+        LPptApp := GetActiveMSPPTClass(AOriginalFileName, AIsVisible);
+        LSlide := LPptApp.ActivePresentation.Slides.Item(1);
+        PPT_InsertImageToPPTFromClipboard(LPptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
       end;
 
       PPT_StringReplaceFromSlide(LSlide, 'Cert_No', CertNoButtonEdit.Text);
@@ -1813,19 +1823,32 @@ begin
       if LStr = '' then
         LStr := SubCompanyEdit.Text;
 
+      LDaysBetween := DaysBetween(TrainedBeginDatePicker.Date, TrainedEndDatePicker.Date);
+
       PPT_StringReplaceFromSlide(LSlide, 'C_Name', LStr);
       GetLocaleFormatSettings($0409, FormatStrings);
       LMonth := MonthOf(TrainedBeginDatePicker.Date);
       LDate := FormatStrings.ShortMonthNames[LMonth] + '. ';
-      LStr := LDate + FormatDateTime('dd', TrainedBeginDatePicker.Date) + ' ~ ';
-      LMonth := MonthOf(TrainedEndDatePicker.Date);
-      LDate := FormatStrings.ShortMonthNames[LMonth] + '. ';
-      LStr := LStr + LDate + FormatDateTime('dd, yyyy', TrainedEndDatePicker.Date);
+      LStr := LDate + FormatDateTime('dd', TrainedBeginDatePicker.Date);// + ' ~ ';
+
+      if LDaysBetween > 0 then
+      begin
+        LMonth := MonthOf(TrainedEndDatePicker.Date);
+        LDate :=  ' ~ ' + FormatStrings.ShortMonthNames[LMonth] + '. ';
+        LDate := LDate + FormatDateTime('dd, yyyy', TrainedEndDatePicker.Date);
+      end
+      else
+        LDate := FormatDateTime(', yyyy', TrainedEndDatePicker.Date);
+
+      if RenewalCheck.Checked then
+        LDate := LDate + ' (Renewal)';
+
+      LStr := LStr + LDate;
       PPT_StringReplaceFromSlide(LSlide, 'T_Period', LStr);
       PPT_StringReplaceFromSlide(LSlide, 'T_Subject', TrainedSubjectEdit.Text);
 
-      if  TrainedCourseEdit.Text = 'HIMSEN PRACTICAL ADVANCED' then
-        Word_StringFindNFontSize(g_PptApp, 'T_Course', 17);
+//      if  UpperCase(TrainedCourseEdit.Text) = 'HIMSEN PRACTICAL ADVANCED' then
+//        PPT_StringFindNFontSize(LSlide, 'T_Course', 50);
 
       PPT_StringReplaceFromSlide(LSlide, 'T_Course', TrainedSubjectEdit.Text);
       PPT_StringReplaceFromSlide(LSlide, 'T_Level', CourseLevelCB.Text);
@@ -2118,7 +2141,8 @@ begin
 
   if AIsMerged then
   begin
-    LTempFileName := 'c:\temp\' + ChangeFileExt(ExtractFileName(LStr2), '_$$$' + '.' + LExt);
+    LTempFileName := 'c:\temp\' + ChangeFileExt(ExtractFileName(LStr2), '_$$$' +
+      FormatDateTime('yyyymmddhhmiss' , now) + '.' + LExt);
 
     LFileCopySuccess := FileExists(LTempFileName);
 

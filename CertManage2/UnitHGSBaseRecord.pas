@@ -33,6 +33,7 @@ type
     fFileCount: integer;
     fQRCodeImage: TSQLRawBlob;//Cert 정보를 암호화 하여 저장함
     fPhoto: TSQLRawBlob;//사진 저장함
+    fIsRenewal,//Cert Renewal 여부 (유효기간 지난 후 재발급할 경우 True)
     fIsCryptSerial,           //시리얼 번호 암호화 여부
     fIsIgnoreInvoice: Boolean;//Invoice 발행 건 아님
     fProductType: TShipProductType;
@@ -66,6 +67,7 @@ type
     property SalesAmount: RawUTF8 read fSalesAmount write fSalesAmount;
     property CertFileDBPath: RawUTF8 read fCertFileDBPath write fCertFileDBPath;
     property CertFileDBName: RawUTF8 read fCertFileDBName write fCertFileDBName;
+    property IsRenewal: Boolean read fIsRenewal write fIsRenewal;
     property IsCryptSerial: Boolean read fIsCryptSerial write fIsCryptSerial;
     property IsIgnoreInvoice: Boolean read fIsIgnoreInvoice write fIsIgnoreInvoice;
     property ProductType: TShipProductType read fProductType write fProductType;

@@ -266,6 +266,7 @@ type
     procedure CreateLicenseFromSelected1Click(Sender: TObject);
     procedure Merge1Click(Sender: TObject);
     procedure Splite1Click(Sender: TObject);
+    procedure EducationCheckClick(Sender: TObject);
   private
     FIniFileName: string;
     FDisplayCreateInvoceMenuItem: Boolean;
@@ -876,6 +877,11 @@ end;
 procedure TCertManageF.EditTariff1Click(Sender: TObject);
 begin
   DisplayTariffEditF;
+end;
+
+procedure TCertManageF.EducationCheckClick(Sender: TObject);
+begin
+//  LicenseCheckGrp.Enabled := EducationCheck.Checked;
 end;
 
 procedure TCertManageF.EmailCountButtonClick(Sender: TObject);
@@ -1692,10 +1698,13 @@ begin
   try
     for i := CertListGrid.RowCount - 1 downto 0 do
     begin
-      LCertNo := CertListGrid.CellsByName['CertNo', i];
-      LCertType := CertListGrid.CellsByName['CertType', i];
+      if CertListGrid.Selected[i] then
+      begin
+        LCertNo := CertListGrid.CellsByName['CertNo', i];
+        LCertType := CertListGrid.CellsByName['CertType', i];
 
-      LStrList.Add(LCertNo + '=' + LCertType);
+        LStrList.Add(LCertNo + '=' + LCertType);
+      end;
     end;//for
 
     i := CreateCertEditFormFromDB4MakeCert(LStrList, AIsMerge);
