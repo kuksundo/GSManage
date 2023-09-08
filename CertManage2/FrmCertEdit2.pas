@@ -1318,9 +1318,10 @@ begin
 
   end
   else
-  if (AHGSCertType = hctLicBasic) or (AHGSCertType = hctLicInter) or (AHGSCertType = hctLicAdv) then
+//  if (AHGSCertType = hctLicBasic) or (AHGSCertType = hctLicInter) or (AHGSCertType = hctLicAdv) then
+  if IsLicenseCheckedFromCertType(AHGSCertType) then
   begin
-    GetCertInfo2Json2(CertNoButtonEdit.Text, TraineeNameEdit.Text);
+    Result := GetCertInfo2Json2(CertNoButtonEdit.Text, TraineeNameEdit.Text);
     exit;
   end;
 
