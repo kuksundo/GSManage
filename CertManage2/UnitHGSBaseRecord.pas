@@ -30,7 +30,8 @@ type
     fNotes
     : RawUTF8;
 
-    fFileCount: integer;
+    fFileCount,
+    fReNewalCount: integer;
     fQRCodeImage: TSQLRawBlob;//Cert 정보를 암호화 하여 저장함
     fPhoto: TSQLRawBlob;//사진 저장함
     fIsRenewal,//Cert Renewal 여부 (유효기간 지난 후 재발급할 경우 True)
@@ -44,6 +45,7 @@ type
     fInvoiceIssueDate,
     fInvoiceConfirmDate,
     fBillPaidDate,
+    fRenewalDate,
     fUpdateDate: TTimeLog;
   public
     FIsUpdate: Boolean;
@@ -77,9 +79,11 @@ type
     property InvoiceIssueDate: TTimeLog read fInvoiceIssueDate write fInvoiceIssueDate;
     property InvoiceConfirmDate: TTimeLog read fInvoiceConfirmDate write fInvoiceConfirmDate;
     property BillPaidDate: TTimeLog read fBillPaidDate write fBillPaidDate;
+    property RenewalDate: TTimeLog read fRenewalDate write fRenewalDate;
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
     property QRCodeImage: TSQLRawBlob read fQRCodeImage write fQRCodeImage;
     property FileCount: integer read fFileCount write fFileCount;
+    property ReNewalCount: integer read fReNewalCount write fReNewalCount;
     property Notes: RawUTF8 read fNotes write fNotes;
   end;
 

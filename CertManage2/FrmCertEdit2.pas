@@ -331,7 +331,7 @@ begin
             begin
               Result := ShowModal;
 
-              if Result = mrOK then
+              if Result = mrOK then  //Save Button Click
               begin
                 //CertNo <> ''이면 DB에 저장
                 if LoadLicDetail2LicRecordFromForm(LHGSLicRecord) then
@@ -359,7 +359,7 @@ begin
                 end;
               end
               else
-              if Result = mrYes then
+              if Result = mrYes then //Renewal Button Click
               begin
                 if not CheckBox1.Checked then
                 begin
@@ -425,7 +425,7 @@ begin
             begin
               Result := ShowModal;
 
-              if Result = mrOK then
+              if Result = mrOK then //Save Button Click
               begin
                 //CertNo <> ''이면 DB에 저장
                 if LoadCertDetail2CertRecordFromForm(LSQLHGSCertRecord) then
@@ -453,7 +453,7 @@ begin
                 end;
               end
               else
-              if Result = mrYes then
+              if Result = mrYes then //Renewal Button Click
               begin
                 if not CheckBox1.Checked then
                 begin
@@ -1647,6 +1647,7 @@ function TCertEditF.LoadCertDetail2CertRecordFromForm(
   var ACertRecord: TSQLHGSCertRecord): Boolean;
 var
   LSQLHGSCertRecord: TSQLHGSCertRecord;
+  LOldDate: TDate;
 begin
   Result := CertNoButtonEdit.Text <> '';
 
@@ -1679,8 +1680,12 @@ begin
     CertFileDBName := CertFileDBNameEdit.Text;
     PrevCertNo := PrevCertNoEdit.Text;
     FileCount := GSFileFrame.fileGrid.RowCount;
-    UntilValidity := TimeLogFromDateTime(UntilValidityDatePicker.Date);
     UpdateDate := TimeLogFromDateTime(now);
+
+    //이전 만료일 임시 저장
+    LOldDate := TimeLogToDateTime(UntilValidity);
+
+    UntilValidity := TimeLogFromDateTime(UntilValidityDatePicker.Date);
     IssueDate := TimeLogFromDateTime(IssueDatePicker.Date);
     IsIgnoreInvoice := IgnoreInvoice.Checked;
     InvoiceCompanyName := InvoiceCompanyEdit.Text;
@@ -1702,6 +1707,14 @@ begin
     TrainedEndDate := TimeLogFromDateTime(TrainedEndDatePicker.Date);
     IsRenewal := RenewalCheck.Checked;
 
+    if IsRenewal then
+    begin
+      if MonthsBetween(LOldDate, UntilValidityDatePicker.Date) >= 11 then
+      begin
+        RenewalDate := TimeLogFromDateTime(now);
+        RenewalCount := RenewalCount + 1;
+      end;
+    end;
 
     ReportNo := ReportNoEdit.Text;
     VDRSerialNo := VDRSerialNoEdit.Text;
