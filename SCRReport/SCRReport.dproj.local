@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.564,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.137,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRSetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.831,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.143,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.748,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.903,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit\UStartUp.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.522,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit\IntfNotifier.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.554,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.419,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Unit\UStatusBarMgrBase.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.516,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.715,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRGESetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.180,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRGESetting.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRAppSetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.243,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Dom\DomSCRParameterType.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.759,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\SCRReport.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.777,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.160,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.158,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.735,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.587,=E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Form\FmBase.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.962,=E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Form\FmHelpAware.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.171,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRMESetting.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRGESetting.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.180,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRGESetting.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRAppSetting.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.537,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRSetting.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRMESetting.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.004,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRMESetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.137,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRSetting.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.554,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.171,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRMESetting.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRGESetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.831,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRReportMain.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.510,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.016,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.393,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.985,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit\UStatusBarMgr.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.579,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.753,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.537,E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRSetting.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRMESetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.112,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\FrmSCRSetting.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.776,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\SCRReport\Unit1.pas</Transaction>
+    <Transaction>2023-10-20 11:36:09.710,E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Form\FmBase.pas=</Transaction>
+    <Transaction>2023-10-20 11:36:27.569,E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Form\FmHelpAware.pas=</Transaction>
+  </Transactions>
+</BorlandProject>
