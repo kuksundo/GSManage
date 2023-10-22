@@ -11,7 +11,13 @@ uses
   FrmSCRGESetting in 'FrmSCRGESetting.pas' {SCRGESettingF},
   FrmSCRMESetting in 'FrmSCRMESetting.pas' {SCRMESettingF},
   FrmSCRSetting in 'FrmSCRSetting.pas' {SCRSettingF},
-  FrmSCRReportMain in 'FrmSCRReportMain.pas';
+  FrmSCRReportMain in 'FrmSCRReportMain.pas' {SCRReportF},
+  UnitDialogUtil in '..\..\..\Common\UnitDialogUtil.pas',
+  IniPersist in '..\..\..\..\..\..\project\OpenSrc\lib\robstechcorner\rtti\IniPersist.pas',
+  USCRParamClass in 'Unit\USCRParamClass.pas',
+  UnitNextGridUtil2 in '..\..\..\Common\UnitNextGridUtil2.pas',
+  UDragDropFormat_SCRParam in 'Unit\UDragDropFormat_SCRParam.pas',
+  UCommonUtil in 'Unit\UCommonUtil.pas';
 
 {$R *.res}
 
@@ -25,6 +31,6 @@ begin
     Exit;
   end;
 
-  Application.CreateForm(TSCRSettingF, SCRSettingF);
+  Application.CreateForm(TSCRReportF, SCRReportF);
   Application.Run;
 end.

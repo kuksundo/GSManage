@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
   JvExExtCtrls, JvImage, AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls,
   AdvOfficePager, iComponent, iVCLComponent, iCustomComponent, iEditCustom,
-  iAnalogOutput;
+  iAnalogOutput, Vcl.Menus, DragDrop, DropTarget, DragDropText,
+  UDragDropFormat_SCRParam, JvExControls, JvButton, JvTransparentButton;
 
 type
   TSCRGESettingF = class(TForm)
@@ -529,18 +530,41 @@ type
     iAnalogOutput430: TiAnalogOutput;
     iAnalogOutput431: TiAnalogOutput;
     iAnalogOutput432: TiAnalogOutput;
+    DropTextTarget1: TDropTextTarget;
+    PopupMenu1: TPopupMenu;
+    Save2DFM1: TMenuItem;
+    JvTransparentButton4: TJvTransparentButton;
+    N1: TMenuItem;
+    ShowTabAll1: TMenuItem;
+    HideGETabAll1: TMenuItem;
+
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure Save2DFM1Click(Sender: TObject);
+    procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
+    procedure ShowTabAll1Click(Sender: TObject);
+    procedure HideGETabAll1Click(Sender: TObject);
   private
-    { Private declarations }
+    FSCRParameterTarget: TSCRParamDataFormat;
+
+    procedure InitVar;
+    procedure DestroyVar;
+
+    procedure ShowOrHideGETabAll(AVisible: Boolean);
   public
     { Public declarations }
   end;
 
   function CreateNShowSCRGESetting(AOwner: TComponent): string;
+  function CreateNShowSCRGESetting2(AOwner: TComponent): TForm;
 
 var
   SCRGESettingF: TSCRGESettingF;
 
 implementation
+
+uses UnitMouseUtil, UCommonUtil;
 
 {$R *.dfm}
 
@@ -561,6 +585,101 @@ begin
   finally
     FreeAndNil(SCRGESettingF);
   end;
+end;
+
+function CreateNShowSCRGESetting2(AOwner: TComponent): TForm;
+begin
+  if Assigned(SCRGESettingF) then
+    FreeAndNil(SCRGESettingF);
+
+  SCRGESettingF := TSCRGESettingF.Create(AOwner);
+  SCRGESettingF.Show;
+
+  Result := SCRGESettingF;
+end;
+
+procedure TSCRGESettingF.DestroyVar;
+begin
+  FSCRParameterTarget.Free;
+end;
+
+procedure TSCRGESettingF.DropTextTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+var
+  LControl: TControl;
+begin
+  if (FSCRParameterTarget.HasData) then
+  begin
+    LControl := GetComponentUnderMouseCursor();
+
+    if Assigned(LControl) then
+    begin
+      if LControl.ClassType = TAdvGraphicCheckLabel then
+      begin
+//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
+        TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+      end
+      else
+      if LControl.ClassType = TiAnalogOutput then
+      begin
+        TiAnalogOutput(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+      end;
+    end;
+  end;
+end;
+
+procedure TSCRGESettingF.FormCreate(Sender: TObject);
+begin
+  InitVar;
+end;
+
+procedure TSCRGESettingF.FormDestroy(Sender: TObject);
+begin
+  DestroyVar;
+end;
+
+procedure TSCRGESettingF.HideGETabAll1Click(Sender: TObject);
+begin
+  ShowOrHideGETabAll(False);
+end;
+
+procedure TSCRGESettingF.InitVar;
+begin
+  FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
+procedure TSCRGESettingF.Save2DFM1Click(Sender: TObject);
+begin
+  SaveSCRForm2DFM(Self as TForm);
+end;
+
+procedure TSCRGESettingF.ShowOrHideGETabAll(AVisible: Boolean);
+var
+  i: integer;
+begin
+  for i := 0 to AdvOfficePager1.AdvPageCount - 1 do
+    AdvOfficePager1.AdvPages[i].TabVisible := AVisible;
+
+  for i := 0 to AdvOfficePager2.AdvPageCount - 1 do
+    AdvOfficePager2.AdvPages[i].TabVisible := AVisible;
+
+  for i := 0 to AdvOfficePager3.AdvPageCount - 1 do
+    AdvOfficePager3.AdvPages[i].TabVisible := AVisible;
+
+  for i := 0 to AdvOfficePager4.AdvPageCount - 1 do
+    AdvOfficePager4.AdvPages[i].TabVisible := AVisible;
+
+  for i := 0 to AdvOfficePager5.AdvPageCount - 1 do
+    AdvOfficePager5.AdvPages[i].TabVisible := AVisible;
+
+  for i := 0 to AdvOfficePager6.AdvPageCount - 1 do
+    AdvOfficePager6.AdvPages[i].TabVisible := AVisible;
+
+end;
+
+procedure TSCRGESettingF.ShowTabAll1Click(Sender: TObject);
+begin
+  ShowOrHideGETabAll(True);
 end;
 
 end.

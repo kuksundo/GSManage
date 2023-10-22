@@ -3747,4 +3747,16 @@ object SCRSettingF: TSCRSettingF
     BorderWidth = 4
     OnClick = JvTransparentButton3Click
   end
+  object JvTransparentButton4: TJvTransparentButton
+    Left = 757
+    Top = 410
+    Width = 95
+    Height = 35
+  end
+  object JvTransparentButton5: TJvTransparentButton
+    Left = 857
+    Top = 410
+    Width = 96
+    Height = 37
+  end
 end

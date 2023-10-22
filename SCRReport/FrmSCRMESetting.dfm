@@ -12,6 +12,8 @@ object SCRMESettingF: TSCRMESettingF
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object JvImage1: TJvImage
@@ -4712,7 +4714,6 @@ object SCRMESettingF: TSCRMESettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitWidth = 873
       object JvImage2: TJvImage
         Left = 0
         Top = 0
@@ -6686,7 +6687,6 @@ object SCRMESettingF: TSCRMESettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitWidth = 873
       object JvImage3: TJvImage
         Left = 0
         Top = 0
@@ -8355,6 +8355,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel17'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8412,6 +8413,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel18'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8469,6 +8471,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel19'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8526,6 +8529,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel20'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8583,6 +8587,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel21'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8640,6 +8645,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel22'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8697,6 +8703,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel23'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8754,6 +8761,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel24'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8811,6 +8819,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel25'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8868,6 +8877,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel26'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8925,6 +8935,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel27'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -8982,6 +8993,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel28'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -9039,6 +9051,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel29'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -9096,6 +9109,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel30'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -9153,6 +9167,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel31'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -9210,6 +9225,7 @@ object SCRMESettingF: TSCRMESettingF
           58C4FF145E94FCCA8B01BF47672AB90ADF773F0C93A6A2614F5DBAC1F979EC02
           762D07D4E091CA1F0000000049454E44AE426082}
         StateChecked.PictureColor = clNone
+        StateChecked.Text = 'AdvGraphicCheckLabel32'
         StateUnChecked.HoverFontStyle = []
         StateUnChecked.Font.Charset = DEFAULT_CHARSET
         StateUnChecked.Font.Color = clWindowText
@@ -9239,7 +9255,6 @@ object SCRMESettingF: TSCRMESettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitWidth = 873
       object AdvPageControl2: TAdvPageControl
         Left = 0
         Top = 0
@@ -10079,10 +10094,6 @@ object SCRMESettingF: TSCRMESettingF
         TabPosition = tpRight
         TabStop = False
         TabWidth = 120
-        ExplicitLeft = 16
-        ExplicitTop = 20
-        ExplicitWidth = 865
-        ExplicitHeight = 381
         object AdvTabSheet4: TAdvTabSheet
           Caption = '        Calibration'
           Color = clBtnFace
@@ -10090,8 +10101,6 @@ object SCRMESettingF: TSCRMESettingF
           TabVisible = False
           TabColor = clBtnFace
           TabColorTo = clNone
-          ExplicitWidth = 623
-          ExplicitHeight = 291
           object JvImage4: TJvImage
             Left = 0
             Top = 0
@@ -11520,10 +11529,8 @@ object SCRMESettingF: TSCRMESettingF
               06000000807D0041EC3F821800000000F60104B1FFF6DBB071E30E4F492F0700
               00000084DC7E56BE7C39FB535252492F4868EC470D0300000000C28820060000
               000084D2FF036C95C30E2AE8F79C0000000049454E44AE426082}
-            ExplicitLeft = 16
-            ExplicitTop = 32
-            ExplicitWidth = 873
-            ExplicitHeight = 416
+            ExplicitLeft = -3
+            ExplicitTop = 40
           end
           object JvTransparentButton2: TJvTransparentButton
             Left = 872
@@ -11560,6 +11567,17 @@ object SCRMESettingF: TSCRMESettingF
             HotTrackFont.Name = 'Tahoma'
             HotTrackFont.Style = []
             OnClick = JvTransparentButton4Click
+          end
+          object JvTransparentButton11: TJvTransparentButton
+            Left = 685
+            Top = 323
+            Width = 100
+            Height = 62
+            HotTrackFont.Charset = DEFAULT_CHARSET
+            HotTrackFont.Color = clWindowText
+            HotTrackFont.Height = -13
+            HotTrackFont.Name = 'Tahoma'
+            HotTrackFont.Style = []
           end
           object iAnalogOutput1: TiAnalogOutput
             Left = 589
@@ -11849,8 +11867,6 @@ object SCRMESettingF: TSCRMESettingF
           TabVisible = False
           TabColor = clBtnFace
           TabColorTo = clNone
-          ExplicitWidth = 824
-          ExplicitHeight = 373
           object JvImage5: TJvImage
             Left = 0
             Top = 0
@@ -13776,8 +13792,6 @@ object SCRMESettingF: TSCRMESettingF
           TabVisible = False
           TabColor = clBtnFace
           TabColorTo = clNone
-          ExplicitWidth = 857
-          ExplicitHeight = 373
           object JvImage6: TJvImage
             Left = 0
             Top = 0
@@ -16842,6 +16856,23 @@ object SCRMESettingF: TSCRMESettingF
           end
         end
       end
+    end
+  end
+  object DropTextTarget1: TDropTextTarget
+    DragTypes = [dtCopy, dtLink]
+    OnDrop = DropTextTarget1Drop
+    Target = AdvPageControl1
+    WinTarget = 0
+    Left = 952
+    Top = 80
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 952
+    Top = 136
+    object Save2DFM1: TMenuItem
+      Caption = '&Save 2 DFM'
+      Hint = 'Tag '#44050#51012' Drag'#47196' Update '#54980' DFM '#54028#51068' '#49373#49457#54632
+      OnClick = Save2DFM1Click
     end
   end
 end

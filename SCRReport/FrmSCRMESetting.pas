@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
   JvExExtCtrls, JvImage, JvExControls, JvButton, JvTransparentButton,
   AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls, iComponent, iVCLComponent,
-  iCustomComponent, iEditCustom, iAnalogOutput;
+  iCustomComponent, iEditCustom, iAnalogOutput, Vcl.Menus, DragDrop, DropTarget,
+  DragDropText, UDragDropFormat_SCRParam;
 
 type
   TSCRMESettingF = class(TForm)
@@ -106,21 +107,37 @@ type
     iAnalogOutput37: TiAnalogOutput;
     iAnalogOutput38: TiAnalogOutput;
     iAnalogOutput39: TiAnalogOutput;
+    DropTextTarget1: TDropTextTarget;
+    PopupMenu1: TPopupMenu;
+    Save2DFM1: TMenuItem;
+    JvTransparentButton11: TJvTransparentButton;
+
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure JvTransparentButton3Click(Sender: TObject);
     procedure JvTransparentButton4Click(Sender: TObject);
     procedure JvTransparentButton2Click(Sender: TObject);
+    procedure Save2DFM1Click(Sender: TObject);
+    procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
   private
-    { Private declarations }
+    FSCRParameterTarget: TSCRParamDataFormat;
+
+    procedure InitVar;
+    procedure DestroyVar;
   public
     { Public declarations }
   end;
 
   function CreateNShowSCRMESetting(AOwner: TComponent): string;
+  function CreateNShowSCRMESetting2(AOwner: TComponent): TForm;
 
 var
   SCRMESettingF: TSCRMESettingF;
 
 implementation
+
+uses UnitMouseUtil, UCommonUtil;
 
 {$R *.dfm}
 
@@ -143,6 +160,62 @@ begin
   end;
 end;
 
+function CreateNShowSCRMESetting2(AOwner: TComponent): TForm;
+begin
+  if Assigned(SCRMESettingF) then
+    FreeAndNil(SCRMESettingF);
+
+  SCRMESettingF := TSCRMESettingF.Create(AOwner);
+  SCRMESettingF.Show;
+
+  Result := SCRMESettingF;
+end;
+
+procedure TSCRMESettingF.DestroyVar;
+begin
+  FSCRParameterTarget.Free;
+end;
+
+procedure TSCRMESettingF.DropTextTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+var
+  LControl: TControl;
+begin
+  if (FSCRParameterTarget.HasData) then
+  begin
+    LControl := GetComponentUnderMouseCursor();
+
+    if Assigned(LControl) then
+    begin
+      if LControl.ClassType = TAdvGraphicCheckLabel then
+      begin
+//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
+        TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+      end
+      else
+      if LControl.ClassType = TiAnalogOutput then
+      begin
+        TiAnalogOutput(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+      end;
+    end;
+  end;
+end;
+
+procedure TSCRMESettingF.FormCreate(Sender: TObject);
+begin
+  InitVar;
+end;
+
+procedure TSCRMESettingF.FormDestroy(Sender: TObject);
+begin
+  DestroyVar;
+end;
+
+procedure TSCRMESettingF.InitVar;
+begin
+  FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
 procedure TSCRMESettingF.JvTransparentButton2Click(Sender: TObject);
 begin
   AdvPageControl2.ActivePageIndex := 0;
@@ -156,6 +229,11 @@ end;
 procedure TSCRMESettingF.JvTransparentButton4Click(Sender: TObject);
 begin
   AdvPageControl2.ActivePageIndex := 2;
+end;
+
+procedure TSCRMESettingF.Save2DFM1Click(Sender: TObject);
+begin
+  SaveSCRForm2DFM(Self as TForm);
 end;
 
 end.

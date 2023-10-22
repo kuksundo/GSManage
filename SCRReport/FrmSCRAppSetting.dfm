@@ -1,6 +1,6 @@
 object SCRAppSettingF: TSCRAppSettingF
-  Left = 0
-  Top = 0
+  Left = 692
+  Top = 187
   Caption = 'SCRAppSettingF'
   ClientHeight = 612
   ClientWidth = 1093
@@ -11,7 +11,10 @@ object SCRAppSettingF: TSCRAppSettingF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
+  Visible = True
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object JvImage1: TJvImage
@@ -3548,6 +3551,7 @@ object SCRAppSettingF: TSCRAppSettingF
       11AC6C2C1089FD3F168664FD373018C91F0C46888888888888A820A188E244A5
       A7A7E7D8B645F7CFC993274BC78E1D8F780CC108BA881EAFAC59452C10395A30
       827FA362043FFF0FDBD5C31F3CBBDE710000000049454E44AE426082}
+    PopupMenu = PopupMenu1
     ExplicitLeft = -496
     ExplicitTop = 8
   end
@@ -5437,9 +5441,20 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton4: TJvTransparentButton
+        Left = 685
+        Top = 267
+        Width = 100
+        Height = 62
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+      end
       object AdvGraphicCheckLabel1: TAdvGraphicCheckLabel
         Left = 293
-        Top = 83
+        Top = 81
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5495,7 +5510,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel2: TAdvGraphicCheckLabel
         Left = 293
-        Top = 114
+        Top = 112
         Width = 28
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5550,10 +5565,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel3: TAdvGraphicCheckLabel
-        Left = 293
-        Top = 146
+        Tag = 2
+        Left = 294
+        Top = 143
         Width = 27
         Height = 28
+        Checked = True
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -5607,7 +5624,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel4: TAdvGraphicCheckLabel
         Left = 293
-        Top = 176
+        Top = 174
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5663,7 +5680,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel5: TAdvGraphicCheckLabel
         Left = 293
-        Top = 207
+        Top = 205
         Width = 28
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5719,7 +5736,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel6: TAdvGraphicCheckLabel
         Left = 293
-        Top = 239
+        Top = 237
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5775,7 +5792,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel7: TAdvGraphicCheckLabel
         Left = 293
-        Top = 269
+        Top = 267
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5831,7 +5848,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel8: TAdvGraphicCheckLabel
         Left = 293
-        Top = 303
+        Top = 299
         Width = 28
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -5999,7 +6016,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel11: TAdvGraphicCheckLabel
         Left = 615
-        Top = 144
+        Top = 143
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -6167,7 +6184,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel14: TAdvGraphicCheckLabel
         Left = 615
-        Top = 237
+        Top = 236
         Width = 27
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -6279,7 +6296,7 @@ object SCRAppSettingF: TSCRAppSettingF
       end
       object AdvGraphicCheckLabel16: TAdvGraphicCheckLabel
         Left = 615
-        Top = 301
+        Top = 299
         Width = 28
         Height = 28
         StateChecked.HoverFontStyle = []
@@ -18220,6 +18237,23 @@ object SCRAppSettingF: TSCRAppSettingF
         TabOrder = 15
         Version = '1.0.0.0'
       end
+    end
+  end
+  object DropTextTarget1: TDropTextTarget
+    DragTypes = [dtCopy, dtLink]
+    OnDrop = DropTextTarget1Drop
+    Target = AdvPageControl1
+    WinTarget = 0
+    Left = 944
+    Top = 80
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 944
+    Top = 136
+    object Save2DFM1: TMenuItem
+      Caption = '&Save 2 DFM'
+      Hint = 'Tag '#44050#51012' Drag'#47196' Update '#54980' DFM '#54028#51068' '#49373#49457#54632
+      OnClick = Save2DFM1Click
     end
   end
 end

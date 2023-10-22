@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
   JvExExtCtrls, JvImage, AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls,
-  JvExControls, JvButton, JvTransparentButton;
+  JvExControls, JvButton, JvTransparentButton, DragDrop, DropTarget,
+  DragDropText, UDragDropFormat_SCRParam, Vcl.Menus;
 
 type
   TSCRAppSettingF = class(TForm)
@@ -121,18 +122,35 @@ type
     AdvGraphicCheckLabel95: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel96: TAdvGraphicCheckLabel;
     JvTransparentButton1: TJvTransparentButton;
+    DropTextTarget1: TDropTextTarget;
+    PopupMenu1: TPopupMenu;
+    Save2DFM1: TMenuItem;
+    JvTransparentButton4: TJvTransparentButton;
+
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
+    procedure Save2DFM1Click(Sender: TObject);
   private
-    { Private declarations }
+    FSCRParameterTarget: TSCRParamDataFormat;
+
+    procedure InitVar;
+    procedure DestroyVar;
+
   public
     { Public declarations }
   end;
 
   function CreateNShowSCRAppSetting(AOwner: TComponent): string;
+  function CreateNShowSCRAppSetting2(AOwner: TComponent): TForm;
 
 var
   SCRAppSettingF: TSCRAppSettingF;
 
 implementation
+
+uses UnitMouseUtil, UCommonUtil;
 
 {$R *.dfm}
 
@@ -153,6 +171,64 @@ begin
   finally
     FreeAndNil(SCRAppSettingF);
   end;
+end;
+
+function CreateNShowSCRAppSetting2(AOwner: TComponent): TForm;
+begin
+  if Assigned(SCRAppSettingF) then
+    FreeAndNil(SCRAppSettingF);
+
+  SCRAppSettingF := TSCRAppSettingF.Create(AOwner);
+  SCRAppSettingF.Show;
+  Result := SCRAppSettingF as TForm;
+end;
+
+{ TSCRAppSettingF }
+
+procedure TSCRAppSettingF.DestroyVar;
+begin
+  FSCRParameterTarget.Free;
+end;
+
+procedure TSCRAppSettingF.DropTextTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+var
+  LControl: TControl;
+begin
+  if (FSCRParameterTarget.HasData) then
+  begin
+    LControl := GetComponentUnderMouseCursor();
+
+    if Assigned(LControl) then
+    begin
+//      ShowMessage(LControl.Name);
+      if LControl.ClassType = TAdvGraphicCheckLabel then
+      begin
+//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
+        TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+      end;
+    end;
+  end;
+end;
+
+procedure TSCRAppSettingF.FormCreate(Sender: TObject);
+begin
+  InitVar;
+end;
+
+procedure TSCRAppSettingF.FormDestroy(Sender: TObject);
+begin
+  DestroyVar;
+end;
+
+procedure TSCRAppSettingF.InitVar;
+begin
+  FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
+procedure TSCRAppSettingF.Save2DFM1Click(Sender: TObject);
+begin
+  SaveSCRForm2DFM(Self as TForm);
 end;
 
 end.
