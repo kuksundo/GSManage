@@ -1,0 +1,292 @@
+[IniValue('HP_SET_nDoseSetLaw', 'dosing set law', '0.0', 99)]
+property HP_SET_nDoseSetLaw : DOUBLE read FHP_SET_nDoseSetLaw write FHP_SET_nDoseSetLaw;
+[IniValue('HP_SET_rReduceAgentSP_1_', 'reducing agent setpoint[1]', '0.0', 100)]
+property HP_SET_rReduceAgentSP_1_ : DOUBLE read FHP_SET_rReduceAgentSP_1_ write FHP_SET_rReduceAgentSP_1_;
+[IniValue('HP_SET_rReduceAgentSP_2_', 'reducing agent setpoint[2]', '0.0', 101)]
+property HP_SET_rReduceAgentSP_2_ : DOUBLE read FHP_SET_rReduceAgentSP_2_ write FHP_SET_rReduceAgentSP_2_;
+[IniValue('HP_SET_rReduceAgentSP_3_', 'reducing agent setpoint[3]', '0.0', 102)]
+property HP_SET_rReduceAgentSP_3_ : DOUBLE read FHP_SET_rReduceAgentSP_3_ write FHP_SET_rReduceAgentSP_3_;
+[IniValue('HP_SET_rReduceAgentSP_4_', 'reducing agent setpoint[4]', '0.0', 103)]
+property HP_SET_rReduceAgentSP_4_ : DOUBLE read FHP_SET_rReduceAgentSP_4_ write FHP_SET_rReduceAgentSP_4_;
+[IniValue('HP_SET_rReduceAgentSP_5_', 'reducing agent setpoint[5]', '0.0', 104)]
+property HP_SET_rReduceAgentSP_5_ : DOUBLE read FHP_SET_rReduceAgentSP_5_ write FHP_SET_rReduceAgentSP_5_;
+[IniValue('HP_SET_rReduceAgentSP_6_', 'reducing agent setpoint[6]', '0.0', 105)]
+property HP_SET_rReduceAgentSP_6_ : DOUBLE read FHP_SET_rReduceAgentSP_6_ write FHP_SET_rReduceAgentSP_6_;
+[IniValue('HP_SET_rReduceAgentSP_7_', 'reducing agent setpoint[7]', '0.0', 106)]
+property HP_SET_rReduceAgentSP_7_ : DOUBLE read FHP_SET_rReduceAgentSP_7_ write FHP_SET_rReduceAgentSP_7_;
+[IniValue('HP_SET_rReduceAgentSP_8_', 'reducing agent setpoint[8]', '0.0', 107)]
+property HP_SET_rReduceAgentSP_8_ : DOUBLE read FHP_SET_rReduceAgentSP_8_ write FHP_SET_rReduceAgentSP_8_;
+[IniValue('HP_SET_rReduceAgentSP_9_', 'reducing agent setpoint[9]', '0.0', 108)]
+property HP_SET_rReduceAgentSP_9_ : DOUBLE read FHP_SET_rReduceAgentSP_9_ write FHP_SET_rReduceAgentSP_9_;
+[IniValue('HP_SET_rReduceAgentSP_10_', 'reducing agent setpoint[10]', '0.0', 109)]
+property HP_SET_rReduceAgentSP_10_ : DOUBLE read FHP_SET_rReduceAgentSP_10_ write FHP_SET_rReduceAgentSP_10_;
+[IniValue('HP_SET_rReduceAgentSP_11_', 'reducing agent setpoint[11]', '0.0', 110)]
+property HP_SET_rReduceAgentSP_11_ : DOUBLE read FHP_SET_rReduceAgentSP_11_ write FHP_SET_rReduceAgentSP_11_;
+[IniValue('HP_SET_rReduceAgentSP_12_', 'reducing agent setpoint[12]', '0.0', 111)]
+property HP_SET_rReduceAgentSP_12_ : DOUBLE read FHP_SET_rReduceAgentSP_12_ write FHP_SET_rReduceAgentSP_12_;
+[IniValue('HP_SET_rDoseValveInitSP_1_', 'Dosing control vv setpoint[1]', '0.0', 112)]
+property HP_SET_rDoseValveInitSP_1_ : DOUBLE read FHP_SET_rDoseValveInitSP_1_ write FHP_SET_rDoseValveInitSP_1_;
+[IniValue('HP_SET_rDoseValveInitSP_2_', 'Dosing control vv setpoint[2]', '0.0', 113)]
+property HP_SET_rDoseValveInitSP_2_ : DOUBLE read FHP_SET_rDoseValveInitSP_2_ write FHP_SET_rDoseValveInitSP_2_;
+[IniValue('HP_SET_rDoseValveInitSP_3_', 'Dosing control vv setpoint[3]', '0.0', 114)]
+property HP_SET_rDoseValveInitSP_3_ : DOUBLE read FHP_SET_rDoseValveInitSP_3_ write FHP_SET_rDoseValveInitSP_3_;
+[IniValue('HP_SET_rDoseValveInitSP_4_', 'Dosing control vv setpoint[4]', '0.0', 115)]
+property HP_SET_rDoseValveInitSP_4_ : DOUBLE read FHP_SET_rDoseValveInitSP_4_ write FHP_SET_rDoseValveInitSP_4_;
+[IniValue('HP_SET_rDoseValveInitSP_5_', 'Dosing control vv setpoint[5]', '0.0', 116)]
+property HP_SET_rDoseValveInitSP_5_ : DOUBLE read FHP_SET_rDoseValveInitSP_5_ write FHP_SET_rDoseValveInitSP_5_;
+[IniValue('HP_SET_rDoseValveInitSP_6_', 'Dosing control vv setpoint[6]', '0.0', 117)]
+property HP_SET_rDoseValveInitSP_6_ : DOUBLE read FHP_SET_rDoseValveInitSP_6_ write FHP_SET_rDoseValveInitSP_6_;
+[IniValue('HP_SET_rDoseValveInitSP_7_', 'Dosing control vv setpoint[7]', '0.0', 118)]
+property HP_SET_rDoseValveInitSP_7_ : DOUBLE read FHP_SET_rDoseValveInitSP_7_ write FHP_SET_rDoseValveInitSP_7_;
+[IniValue('HP_SET_rDoseValveInitSP_8_', 'Dosing control vv setpoint[8]', '0.0', 119)]
+property HP_SET_rDoseValveInitSP_8_ : DOUBLE read FHP_SET_rDoseValveInitSP_8_ write FHP_SET_rDoseValveInitSP_8_;
+[IniValue('HP_SET_rDoseValveInitSP_9_', 'Dosing control vv setpoint[9]', '0.0', 120)]
+property HP_SET_rDoseValveInitSP_9_ : DOUBLE read FHP_SET_rDoseValveInitSP_9_ write FHP_SET_rDoseValveInitSP_9_;
+[IniValue('HP_SET_rDoseValveInitSP_10_', 'Dosing control vv setpoint[10]', '0.0', 121)]
+property HP_SET_rDoseValveInitSP_10_ : DOUBLE read FHP_SET_rDoseValveInitSP_10_ write FHP_SET_rDoseValveInitSP_10_;
+[IniValue('HP_SET_rDoseValveInitSP_11_', 'Dosing control vv setpoint[11]', '0.0', 122)]
+property HP_SET_rDoseValveInitSP_11_ : DOUBLE read FHP_SET_rDoseValveInitSP_11_ write FHP_SET_rDoseValveInitSP_11_;
+[IniValue('HP_SET_rDoseValveInitSP_12_', 'Dosing control vv setpoint[12]', '0.0', 123)]
+property HP_SET_rDoseValveInitSP_12_ : DOUBLE read FHP_SET_rDoseValveInitSP_12_ write FHP_SET_rDoseValveInitSP_12_;
+[IniValue('HP_SET_Dose_PID_Gain_Kp', 'p gain', '0.0', 124)]
+property HP_SET_Dose_PID_Gain_Kp : DOUBLE read FHP_SET_Dose_PID_Gain_Kp write FHP_SET_Dose_PID_Gain_Kp;
+[IniValue('HP_SET_Dose_PID_Gain_Ki', 'I gain', '0.0', 125)]
+property HP_SET_Dose_PID_Gain_Ki : DOUBLE read FHP_SET_Dose_PID_Gain_Ki write FHP_SET_Dose_PID_Gain_Ki;
+[IniValue('HP_SET_Dose_PID_Gain_Kd', 'D gain', '0.0', 126)]
+property HP_SET_Dose_PID_Gain_Kd : DOUBLE read FHP_SET_Dose_PID_Gain_Kd write FHP_SET_Dose_PID_Gain_Kd;
+[IniValue('HP_SET_Dose_PID_Gain_SettingError', 'setting error', '0.0', 127)]
+property HP_SET_Dose_PID_Gain_SettingError : DOUBLE read FHP_SET_Dose_PID_Gain_SettingError write FHP_SET_Dose_PID_Gain_SettingError;
+[IniValue('HP_SET_Dose_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 128)]
+property HP_SET_Dose_PID_Gain_MaxUpdate : DOUBLE read FHP_SET_Dose_PID_Gain_MaxUpdate write FHP_SET_Dose_PID_Gain_MaxUpdate;
+[IniValue('HP_SET_Dose_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 129)]
+property HP_SET_Dose_PID_Gain_MinUpdate : DOUBLE read FHP_SET_Dose_PID_Gain_MinUpdate write FHP_SET_Dose_PID_Gain_MinUpdate;
+[IniValue('HP_SET_Dose_PID_Gain_MaxOutput', 'Max output', '0.0', 130)]
+property HP_SET_Dose_PID_Gain_MaxOutput : DOUBLE read FHP_SET_Dose_PID_Gain_MaxOutput write FHP_SET_Dose_PID_Gain_MaxOutput;
+[IniValue('HP_SET_Dose_PID_Gain_MinOutput', 'Min output', '0.0', 131)]
+property HP_SET_Dose_PID_Gain_MinOutput : DOUBLE read FHP_SET_Dose_PID_Gain_MinOutput write FHP_SET_Dose_PID_Gain_MinOutput;
+[IniValue('HP_SET_Dose_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 132)]
+property HP_SET_Dose_PID_Gain_ErrorWindowMax : DOUBLE read FHP_SET_Dose_PID_Gain_ErrorWindowMax write FHP_SET_Dose_PID_Gain_ErrorWindowMax;
+[IniValue('HP_SET_Dose_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 133)]
+property HP_SET_Dose_PID_Gain_ErrorWindowMin : DOUBLE read FHP_SET_Dose_PID_Gain_ErrorWindowMin write FHP_SET_Dose_PID_Gain_ErrorWindowMin;
+[IniValue('HP_SET_rMinReduceAgentSetpoint', 'min reducing agent setpoint', '0.0', 134)]
+property HP_SET_rMinReduceAgentSetpoint : DOUBLE read FHP_SET_rMinReduceAgentSetpoint write FHP_SET_rMinReduceAgentSetpoint;
+[IniValue('HP_SET_rCoolingProcessTime', 'cooling process time', '0.0', 135)]
+property HP_SET_rCoolingProcessTime : DOUBLE read FHP_SET_rCoolingProcessTime write FHP_SET_rCoolingProcessTime;
+[IniValue('HP_SET_rFlushingProcessTime1', 'flushing process time1', '0.0', 136)]
+property HP_SET_rFlushingProcessTime1 : DOUBLE read FHP_SET_rFlushingProcessTime1 write FHP_SET_rFlushingProcessTime1;
+[IniValue('HP_SET_rFlushingProcessTime2', 'flushing process time2', '0.0', 137)]
+property HP_SET_rFlushingProcessTime2 : DOUBLE read FHP_SET_rFlushingProcessTime2 write FHP_SET_rFlushingProcessTime2;
+[IniValue('HP_Reduce_Agent_Setpoint_LV', 'reducing agent setpoint min', '0.0', 147)]
+property HP_Reduce_Agent_Setpoint_LV : DOUBLE read FHP_Reduce_Agent_Setpoint_LV write FHP_Reduce_Agent_Setpoint_LV;
+[IniValue('HP_Reduce_Agent_Setpoint_HV', 'reducing agent setpoint max', '0.0', 148)]
+property HP_Reduce_Agent_Setpoint_HV : DOUBLE read FHP_Reduce_Agent_Setpoint_HV write FHP_Reduce_Agent_Setpoint_HV;
+[IniValue('HP_Eng_Load_LV', 'engine load min', '0.0', 149)]
+property HP_Eng_Load_LV : DOUBLE read FHP_Eng_Load_LV write FHP_Eng_Load_LV;
+[IniValue('HP_Eng_Load_HV', 'engine load max', '0.0', 150)]
+property HP_Eng_Load_HV : DOUBLE read FHP_Eng_Load_HV write FHP_Eng_Load_HV;
+[IniValue('HP_SootBlower_Air_In_PT1_LV', 'soot blower air inlet PT1 min', '0.0', 151)]
+property HP_SootBlower_Air_In_PT1_LV : DOUBLE read FHP_SootBlower_Air_In_PT1_LV write FHP_SootBlower_Air_In_PT1_LV;
+[IniValue('HP_SootBlower_Air_In_PT1_HV', 'soot blower air inlet PT1 max', '0.0', 152)]
+property HP_SootBlower_Air_In_PT1_HV : DOUBLE read FHP_SootBlower_Air_In_PT1_HV write FHP_SootBlower_Air_In_PT1_HV;
+[IniValue('HP_SootBlower_Air_In_PT1_VLL', 'soot blower air inlet PT1  ALL', '0.0', 153)]
+property HP_SootBlower_Air_In_PT1_VLL : DOUBLE read FHP_SootBlower_Air_In_PT1_VLL write FHP_SootBlower_Air_In_PT1_VLL;
+[IniValue('HP_SootBlower_Air_In_PT1_DLY_LL', 'soot blower air inlet PT1  ALL alarm delay', '0.0', 154)]
+property HP_SootBlower_Air_In_PT1_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT1_DLY_LL write FHP_SootBlower_Air_In_PT1_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT1_VLO', 'soot blower air inlet PT1  AL', '0.0', 155)]
+property HP_SootBlower_Air_In_PT1_VLO : DOUBLE read FHP_SootBlower_Air_In_PT1_VLO write FHP_SootBlower_Air_In_PT1_VLO;
+[IniValue('HP_SootBlower_Air_In_PT1_DLY_LO', 'soot blower air inlet PT1  AL alarm delay', '0.0', 156)]
+property HP_SootBlower_Air_In_PT1_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT1_DLY_LO write FHP_SootBlower_Air_In_PT1_DLY_LO;
+[IniValue('HP_SootBlower_Air_In_PT2_LV', 'soot blower air inlet PT2 min', '0.0', 157)]
+property HP_SootBlower_Air_In_PT2_LV : DOUBLE read FHP_SootBlower_Air_In_PT2_LV write FHP_SootBlower_Air_In_PT2_LV;
+[IniValue('HP_SootBlower_Air_In_PT2_HV', 'soot blower air inlet PT2 max', '0.0', 158)]
+property HP_SootBlower_Air_In_PT2_HV : DOUBLE read FHP_SootBlower_Air_In_PT2_HV write FHP_SootBlower_Air_In_PT2_HV;
+[IniValue('HP_SootBlower_Air_In_PT2_VLL', 'soot blower air inlet PT2  ALL', '0.0', 159)]
+property HP_SootBlower_Air_In_PT2_VLL : DOUBLE read FHP_SootBlower_Air_In_PT2_VLL write FHP_SootBlower_Air_In_PT2_VLL;
+[IniValue('HP_SootBlower_Air_In_PT2_DLY_LL', 'soot blower air inlet PT2  ALL alarm delay', '0.0', 160)]
+property HP_SootBlower_Air_In_PT2_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT2_DLY_LL write FHP_SootBlower_Air_In_PT2_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT2_VLO', 'soot blower air inlet PT2  AL', '0.0', 161)]
+property HP_SootBlower_Air_In_PT2_VLO : DOUBLE read FHP_SootBlower_Air_In_PT2_VLO write FHP_SootBlower_Air_In_PT2_VLO;
+[IniValue('HP_SootBlower_Air_In_PT2_DLY_LO', 'soot blower air inlet PT2  AL alarm delay', '0.0', 162)]
+property HP_SootBlower_Air_In_PT2_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT2_DLY_LO write FHP_SootBlower_Air_In_PT2_DLY_LO;
+[IniValue('HP_SootBlower_Air_In_PT3_LV', 'soot blower air inlet PT3 min', '0.0', 163)]
+property HP_SootBlower_Air_In_PT3_LV : DOUBLE read FHP_SootBlower_Air_In_PT3_LV write FHP_SootBlower_Air_In_PT3_LV;
+[IniValue('HP_SootBlower_Air_In_PT3_HV', 'soot blower air inlet PT3 max', '0.0', 164)]
+property HP_SootBlower_Air_In_PT3_HV : DOUBLE read FHP_SootBlower_Air_In_PT3_HV write FHP_SootBlower_Air_In_PT3_HV;
+[IniValue('HP_SootBlower_Air_In_PT3_VLL', 'soot blower air inlet PT3  ALL', '0.0', 165)]
+property HP_SootBlower_Air_In_PT3_VLL : DOUBLE read FHP_SootBlower_Air_In_PT3_VLL write FHP_SootBlower_Air_In_PT3_VLL;
+[IniValue('HP_SootBlower_Air_In_PT3_DLY_LL', 'soot blower air inlet PT3  ALL alarm delay', '0.0', 166)]
+property HP_SootBlower_Air_In_PT3_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT3_DLY_LL write FHP_SootBlower_Air_In_PT3_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT3_VLO', 'soot blower air inlet PT3  AL', '0.0', 167)]
+property HP_SootBlower_Air_In_PT3_VLO : DOUBLE read FHP_SootBlower_Air_In_PT3_VLO write FHP_SootBlower_Air_In_PT3_VLO;
+[IniValue('HP_SootBlower_Air_In_PT3_DLY_LO', 'soot blower air inlet PT3  AL alarm delay', '0.0', 168)]
+property HP_SootBlower_Air_In_PT3_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT3_DLY_LO write FHP_SootBlower_Air_In_PT3_DLY_LO;
+[IniValue('HP_SootBlower_Air_In_PT4_LV', 'soot blower air inlet PT4 min', '0.0', 169)]
+property HP_SootBlower_Air_In_PT4_LV : DOUBLE read FHP_SootBlower_Air_In_PT4_LV write FHP_SootBlower_Air_In_PT4_LV;
+[IniValue('HP_SootBlower_Air_In_PT4_HV', 'soot blower air inlet PT4 max', '0.0', 170)]
+property HP_SootBlower_Air_In_PT4_HV : DOUBLE read FHP_SootBlower_Air_In_PT4_HV write FHP_SootBlower_Air_In_PT4_HV;
+[IniValue('HP_SootBlower_Air_In_PT4_VLL', 'soot blower air inlet PT4  ALL', '0.0', 171)]
+property HP_SootBlower_Air_In_PT4_VLL : DOUBLE read FHP_SootBlower_Air_In_PT4_VLL write FHP_SootBlower_Air_In_PT4_VLL;
+[IniValue('HP_SootBlower_Air_In_PT4_DLY_LL', 'soot blower air inlet PT4  ALL alarm delay', '0.0', 172)]
+property HP_SootBlower_Air_In_PT4_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT4_DLY_LL write FHP_SootBlower_Air_In_PT4_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT4_VLO', 'soot blower air inlet PT4  AL', '0.0', 173)]
+property HP_SootBlower_Air_In_PT4_VLO : DOUBLE read FHP_SootBlower_Air_In_PT4_VLO write FHP_SootBlower_Air_In_PT4_VLO;
+[IniValue('HP_SootBlower_Air_In_PT4_DLY_LO', 'soot blower air inlet PT4  AL alarm delay', '0.0', 174)]
+property HP_SootBlower_Air_In_PT4_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT4_DLY_LO write FHP_SootBlower_Air_In_PT4_DLY_LO;
+[IniValue('HP_SootBlower_Air_In_PT5_LV', 'soot blower air inlet PT5 min', '0.0', 175)]
+property HP_SootBlower_Air_In_PT5_LV : DOUBLE read FHP_SootBlower_Air_In_PT5_LV write FHP_SootBlower_Air_In_PT5_LV;
+[IniValue('HP_SootBlower_Air_In_PT5_HV', 'soot blower air inlet PT5 max', '0.0', 176)]
+property HP_SootBlower_Air_In_PT5_HV : DOUBLE read FHP_SootBlower_Air_In_PT5_HV write FHP_SootBlower_Air_In_PT5_HV;
+[IniValue('HP_SootBlower_Air_In_PT5_VLL', 'soot blower air inlet PT5  ALL', '0.0', 177)]
+property HP_SootBlower_Air_In_PT5_VLL : DOUBLE read FHP_SootBlower_Air_In_PT5_VLL write FHP_SootBlower_Air_In_PT5_VLL;
+[IniValue('HP_SootBlower_Air_In_PT5_DLY_LL', 'soot blower air inlet PT5  ALL alarm delay', '0.0', 178)]
+property HP_SootBlower_Air_In_PT5_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT5_DLY_LL write FHP_SootBlower_Air_In_PT5_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT5_VLO', 'soot blower air inlet PT5  AL', '0.0', 179)]
+property HP_SootBlower_Air_In_PT5_VLO : DOUBLE read FHP_SootBlower_Air_In_PT5_VLO write FHP_SootBlower_Air_In_PT5_VLO;
+[IniValue('HP_SootBlower_Air_In_PT5_DLY_LO', 'soot blower air inlet PT5  AL alarm delay', '0.0', 180)]
+property HP_SootBlower_Air_In_PT5_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT5_DLY_LO write FHP_SootBlower_Air_In_PT5_DLY_LO;
+[IniValue('HP_SootBlower_Air_In_PT6_LV', 'soot blower air inlet PT6 min', '0.0', 181)]
+property HP_SootBlower_Air_In_PT6_LV : DOUBLE read FHP_SootBlower_Air_In_PT6_LV write FHP_SootBlower_Air_In_PT6_LV;
+[IniValue('HP_SootBlower_Air_In_PT6_HV', 'soot blower air inlet PT6 max', '0.0', 182)]
+property HP_SootBlower_Air_In_PT6_HV : DOUBLE read FHP_SootBlower_Air_In_PT6_HV write FHP_SootBlower_Air_In_PT6_HV;
+[IniValue('HP_SootBlower_Air_In_PT6_VLL', 'soot blower air inlet PT6  ALL', '0.0', 183)]
+property HP_SootBlower_Air_In_PT6_VLL : DOUBLE read FHP_SootBlower_Air_In_PT6_VLL write FHP_SootBlower_Air_In_PT6_VLL;
+[IniValue('HP_SootBlower_Air_In_PT6_DLY_LL', 'soot blower air inlet PT6  ALL alarm delay', '0.0', 184)]
+property HP_SootBlower_Air_In_PT6_DLY_LL : DOUBLE read FHP_SootBlower_Air_In_PT6_DLY_LL write FHP_SootBlower_Air_In_PT6_DLY_LL;
+[IniValue('HP_SootBlower_Air_In_PT6_VLO', 'soot blower air inlet PT6  AL', '0.0', 185)]
+property HP_SootBlower_Air_In_PT6_VLO : DOUBLE read FHP_SootBlower_Air_In_PT6_VLO write FHP_SootBlower_Air_In_PT6_VLO;
+[IniValue('HP_SootBlower_Air_In_PT6_DLY_LO', 'soot blower air inlet PT6  AL alarm delay', '0.0', 186)]
+property HP_SootBlower_Air_In_PT6_DLY_LO : DOUBLE read FHP_SootBlower_Air_In_PT6_DLY_LO write FHP_SootBlower_Air_In_PT6_DLY_LO;
+[IniValue('HP_Dose_Urea_Flowmeter_LV', 'Dosing urea flowmeter min', '0.0', 187)]
+property HP_Dose_Urea_Flowmeter_LV : DOUBLE read FHP_Dose_Urea_Flowmeter_LV write FHP_Dose_Urea_Flowmeter_LV;
+[IniValue('HP_Dose_Urea_Flowmeter_HV', 'Dosing urea flowmeter max', '0.0', 188)]
+property HP_Dose_Urea_Flowmeter_HV : DOUBLE read FHP_Dose_Urea_Flowmeter_HV write FHP_Dose_Urea_Flowmeter_HV;
+[IniValue('HP_Dose_Urea_Flowmeter_VLL', 'Dosing urea flowmeter ALL', '0.0', 189)]
+property HP_Dose_Urea_Flowmeter_VLL : DOUBLE read FHP_Dose_Urea_Flowmeter_VLL write FHP_Dose_Urea_Flowmeter_VLL;
+[IniValue('HP_Dose_Urea_Flowmeter_DLY_LL', 'Dosing urea flowmeter ALL alarm delay', '0.0', 190)]
+property HP_Dose_Urea_Flowmeter_DLY_LL : DOUBLE read FHP_Dose_Urea_Flowmeter_DLY_LL write FHP_Dose_Urea_Flowmeter_DLY_LL;
+[IniValue('HP_Dose_Urea_Flowmeter_VLO', 'Dosing urea flowmeter AL', '0.0', 191)]
+property HP_Dose_Urea_Flowmeter_VLO : DOUBLE read FHP_Dose_Urea_Flowmeter_VLO write FHP_Dose_Urea_Flowmeter_VLO;
+[IniValue('HP_Dose_Urea_Flowmeter_DLY_LO', 'Dosing urea flowmeter AL alarm delay', '0.0', 192)]
+property HP_Dose_Urea_Flowmeter_DLY_LO : DOUBLE read FHP_Dose_Urea_Flowmeter_DLY_LO write FHP_Dose_Urea_Flowmeter_DLY_LO;
+[IniValue('HP_Dose_Urea_Flowmeter_VHI', 'Dosing urea flowmeter AH', '0.0', 193)]
+property HP_Dose_Urea_Flowmeter_VHI : DOUBLE read FHP_Dose_Urea_Flowmeter_VHI write FHP_Dose_Urea_Flowmeter_VHI;
+[IniValue('HP_Dose_Urea_Flowmeter_DLY_HI', 'Dosing urea flowmeter AH alarm delay', '0.0', 194)]
+property HP_Dose_Urea_Flowmeter_DLY_HI : DOUBLE read FHP_Dose_Urea_Flowmeter_DLY_HI write FHP_Dose_Urea_Flowmeter_DLY_HI;
+[IniValue('HP_Dose_Urea_Flowmeter_VHH', 'Dosing urea flowmeter AHH', '0.0', 195)]
+property HP_Dose_Urea_Flowmeter_VHH : DOUBLE read FHP_Dose_Urea_Flowmeter_VHH write FHP_Dose_Urea_Flowmeter_VHH;
+[IniValue('HP_Dose_Urea_Flowmeter_DLY_HH', 'Dosing urea flowmeter AHH alarm delay', '0.0', 196)]
+property HP_Dose_Urea_Flowmeter_DLY_HH : DOUBLE read FHP_Dose_Urea_Flowmeter_DLY_HH write FHP_Dose_Urea_Flowmeter_DLY_HH;
+[IniValue('HP_Dose_Urea_In_PT_LV', 'Dosing urea inlet PT min', '0.0', 197)]
+property HP_Dose_Urea_In_PT_LV : DOUBLE read FHP_Dose_Urea_In_PT_LV write FHP_Dose_Urea_In_PT_LV;
+[IniValue('HP_Dose_Urea_In_PT_HV', 'Dosing urea inlet PT max', '0.0', 198)]
+property HP_Dose_Urea_In_PT_HV : DOUBLE read FHP_Dose_Urea_In_PT_HV write FHP_Dose_Urea_In_PT_HV;
+[IniValue('HP_Dose_Urea_In_PT_VLL', 'Dosing urea inlet PT ALL', '0.0', 199)]
+property HP_Dose_Urea_In_PT_VLL : DOUBLE read FHP_Dose_Urea_In_PT_VLL write FHP_Dose_Urea_In_PT_VLL;
+[IniValue('HP_Dose_Urea_In_PT_DLY_LL', 'Dosing urea inlet PT ALL alarm delay', '0.0', 200)]
+property HP_Dose_Urea_In_PT_DLY_LL : DOUBLE read FHP_Dose_Urea_In_PT_DLY_LL write FHP_Dose_Urea_In_PT_DLY_LL;
+[IniValue('HP_Dose_Urea_In_PT_VLO', 'Dosing urea inlet PT AL', '0.0', 201)]
+property HP_Dose_Urea_In_PT_VLO : DOUBLE read FHP_Dose_Urea_In_PT_VLO write FHP_Dose_Urea_In_PT_VLO;
+[IniValue('HP_Dose_Urea_In_PT_DLY_LO', 'Dosing urea inlet PT AL alarm delay', '0.0', 202)]
+property HP_Dose_Urea_In_PT_DLY_LO : DOUBLE read FHP_Dose_Urea_In_PT_DLY_LO write FHP_Dose_Urea_In_PT_DLY_LO;
+[IniValue('HP_Dose_Urea_Out_PT_LV', 'Dosing urea outlet PT min', '0.0', 203)]
+property HP_Dose_Urea_Out_PT_LV : DOUBLE read FHP_Dose_Urea_Out_PT_LV write FHP_Dose_Urea_Out_PT_LV;
+[IniValue('HP_Dose_Urea_Out_PT_HV', 'Dosing urea outlet PT max', '0.0', 204)]
+property HP_Dose_Urea_Out_PT_HV : DOUBLE read FHP_Dose_Urea_Out_PT_HV write FHP_Dose_Urea_Out_PT_HV;
+[IniValue('HP_Dose_Air_In_PT_LV', 'Dosing air inlet PT min', '0.0', 205)]
+property HP_Dose_Air_In_PT_LV : DOUBLE read FHP_Dose_Air_In_PT_LV write FHP_Dose_Air_In_PT_LV;
+[IniValue('HP_Dose_Air_In_PT_HV', 'Dosing air inlet PT max', '0.0', 206)]
+property HP_Dose_Air_In_PT_HV : DOUBLE read FHP_Dose_Air_In_PT_HV write FHP_Dose_Air_In_PT_HV;
+[IniValue('HP_Dose_Air_In_PT_VLL', 'Dosing air inlet PT ALL', '0.0', 207)]
+property HP_Dose_Air_In_PT_VLL : DOUBLE read FHP_Dose_Air_In_PT_VLL write FHP_Dose_Air_In_PT_VLL;
+[IniValue('HP_Dose_Air_In_PT_DLY_LL', 'Dosing air inlet PT ALL alarm delay', '0.0', 208)]
+property HP_Dose_Air_In_PT_DLY_LL : DOUBLE read FHP_Dose_Air_In_PT_DLY_LL write FHP_Dose_Air_In_PT_DLY_LL;
+[IniValue('HP_Dose_Air_In_PT_VLO', 'Dosing air inlet PT AL', '0.0', 209)]
+property HP_Dose_Air_In_PT_VLO : DOUBLE read FHP_Dose_Air_In_PT_VLO write FHP_Dose_Air_In_PT_VLO;
+[IniValue('HP_Dose_Air_In_PT_DLY_LO', 'Dosing air inlet PT AL alarm delay', '0.0', 210)]
+property HP_Dose_Air_In_PT_DLY_LO : DOUBLE read FHP_Dose_Air_In_PT_DLY_LO write FHP_Dose_Air_In_PT_DLY_LO;
+[IniValue('HP_Dose_Air_Out_PT_LV', 'Dosing air outlet PT min', '0.0', 211)]
+property HP_Dose_Air_Out_PT_LV : DOUBLE read FHP_Dose_Air_Out_PT_LV write FHP_Dose_Air_Out_PT_LV;
+[IniValue('HP_Dose_Air_Out_PT_HV', 'Dosing air outlet PT max', '0.0', 212)]
+property HP_Dose_Air_Out_PT_HV : DOUBLE read FHP_Dose_Air_Out_PT_HV write FHP_Dose_Air_Out_PT_HV;
+[IniValue('HP_Dose_Air_Out_PT_VLL', 'Dosing air outlet PT ALL', '0.0', 213)]
+property HP_Dose_Air_Out_PT_VLL : DOUBLE read FHP_Dose_Air_Out_PT_VLL write FHP_Dose_Air_Out_PT_VLL;
+[IniValue('HP_Dose_Air_Out_PT_DLY_LL', 'Dosing air outlet PT ALL alarm delay', '0.0', 214)]
+property HP_Dose_Air_Out_PT_DLY_LL : DOUBLE read FHP_Dose_Air_Out_PT_DLY_LL write FHP_Dose_Air_Out_PT_DLY_LL;
+[IniValue('HP_Dose_Air_Out_PT_VLO', 'Dosing air outlet PT AL', '0.0', 215)]
+property HP_Dose_Air_Out_PT_VLO : DOUBLE read FHP_Dose_Air_Out_PT_VLO write FHP_Dose_Air_Out_PT_VLO;
+[IniValue('HP_Dose_Air_Out_PT_DLY_LO', 'Dosing air outlet PT AL alarm delay', '0.0', 216)]
+property HP_Dose_Air_Out_PT_DLY_LO : DOUBLE read FHP_Dose_Air_Out_PT_DLY_LO write FHP_Dose_Air_Out_PT_DLY_LO;
+[IniValue('HP_Chamber_PDT_LV', 'Chamber PDT min', '0.0', 217)]
+property HP_Chamber_PDT_LV : DOUBLE read FHP_Chamber_PDT_LV write FHP_Chamber_PDT_LV;
+[IniValue('HP_Chamber_PDT_HV', 'Chamber PDT max', '0.0', 218)]
+property HP_Chamber_PDT_HV : DOUBLE read FHP_Chamber_PDT_HV write FHP_Chamber_PDT_HV;
+[IniValue('HP_Chamber_PDT_VLO', 'Chamber PDT AL', '0.0', 219)]
+property HP_Chamber_PDT_VLO : DOUBLE read FHP_Chamber_PDT_VLO write FHP_Chamber_PDT_VLO;
+[IniValue('HP_Chamber_PDT_DLY_LO', 'Chamber PDT AL alarm delay', '0.0', 220)]
+property HP_Chamber_PDT_DLY_LO : DOUBLE read FHP_Chamber_PDT_DLY_LO write FHP_Chamber_PDT_DLY_LO;
+[IniValue('HP_Chamber_PDT_VHI', 'Chamber PDT AH', '0.0', 221)]
+property HP_Chamber_PDT_VHI : DOUBLE read FHP_Chamber_PDT_VHI write FHP_Chamber_PDT_VHI;
+[IniValue('HP_Chamber_PDT_DLY_HI', 'Chamber PDT AH alarm delay', '0.0', 222)]
+property HP_Chamber_PDT_DLY_HI : DOUBLE read FHP_Chamber_PDT_DLY_HI write FHP_Chamber_PDT_DLY_HI;
+[IniValue('HP_Chamber_PDT_VHH', 'Chamber PDT AHH', '0.0', 223)]
+property HP_Chamber_PDT_VHH : DOUBLE read FHP_Chamber_PDT_VHH write FHP_Chamber_PDT_VHH;
+[IniValue('HP_Chamber_PDT_DLY_HH', 'Chamber PDT AHH alarm delay', '0.0', 224)]
+property HP_Chamber_PDT_DLY_HH : DOUBLE read FHP_Chamber_PDT_DLY_HH write FHP_Chamber_PDT_DLY_HH;
+[IniValue('HP_Chamber_In_Temp_LV', 'chamber inlet Temp min', '0.0', 225)]
+property HP_Chamber_In_Temp_LV : DOUBLE read FHP_Chamber_In_Temp_LV write FHP_Chamber_In_Temp_LV;
+[IniValue('HP_Chamber_In_Temp_HV', 'chamber inlet Temp max', '0.0', 226)]
+property HP_Chamber_In_Temp_HV : DOUBLE read FHP_Chamber_In_Temp_HV write FHP_Chamber_In_Temp_HV;
+[IniValue('HP_Chamber_In_Temp_VHI', 'chamber inlet Temp AH', '0.0', 227)]
+property HP_Chamber_In_Temp_VHI : DOUBLE read FHP_Chamber_In_Temp_VHI write FHP_Chamber_In_Temp_VHI;
+[IniValue('HP_Chamber_In_Temp_DLY_HI', 'chamber inlet Temp AH alarm delay', '0.0', 228)]
+property HP_Chamber_In_Temp_DLY_HI : DOUBLE read FHP_Chamber_In_Temp_DLY_HI write FHP_Chamber_In_Temp_DLY_HI;
+[IniValue('HP_Chamber_In_Temp_VHH', 'chamber inlet Temp AHH', '0.0', 229)]
+property HP_Chamber_In_Temp_VHH : DOUBLE read FHP_Chamber_In_Temp_VHH write FHP_Chamber_In_Temp_VHH;
+[IniValue('HP_Chamber_In_Temp_DLY_HH', 'chamber inlet Temp AHH alarm delay', '0.0', 230)]
+property HP_Chamber_In_Temp_DLY_HH : DOUBLE read FHP_Chamber_In_Temp_DLY_HH write FHP_Chamber_In_Temp_DLY_HH;
+[IniValue('HP_Chamber_Out_Temp_LV', 'chamber outlet Temp min', '0.0', 231)]
+property HP_Chamber_Out_Temp_LV : DOUBLE read FHP_Chamber_Out_Temp_LV write FHP_Chamber_Out_Temp_LV;
+[IniValue('HP_Chamber_Out_Temp_HV', 'chamber outlet Temp max', '0.0', 232)]
+property HP_Chamber_Out_Temp_HV : DOUBLE read FHP_Chamber_Out_Temp_HV write FHP_Chamber_Out_Temp_HV;
+[IniValue('HP_Chamber_Out_Temp_VHI', 'chamber outlet Temp AH', '0.0', 233)]
+property HP_Chamber_Out_Temp_VHI : DOUBLE read FHP_Chamber_Out_Temp_VHI write FHP_Chamber_Out_Temp_VHI;
+[IniValue('HP_Chamber_Out_Temp_DLY_HI', 'chamber outlet Temp AH alarm delay', '0.0', 234)]
+property HP_Chamber_Out_Temp_DLY_HI : DOUBLE read FHP_Chamber_Out_Temp_DLY_HI write FHP_Chamber_Out_Temp_DLY_HI;
+[IniValue('HP_Chamber_Out_Temp_VHH', 'chamber outlet Temp AHH', '0.0', 235)]
+property HP_Chamber_Out_Temp_VHH : DOUBLE read FHP_Chamber_Out_Temp_VHH write FHP_Chamber_Out_Temp_VHH;
+[IniValue('HP_Chamber_Out_Temp_DLY_HH', 'chamber outlet Temp AHH alarm delay', '0.0', 236)]
+property HP_Chamber_Out_Temp_DLY_HH : DOUBLE read FHP_Chamber_Out_Temp_DLY_HH write FHP_Chamber_Out_Temp_DLY_HH;
+[IniValue('HP_Reduce_Agent_Feedback_LV', 'Reducing agent feedback min', '0.0', 237)]
+property HP_Reduce_Agent_Feedback_LV : DOUBLE read FHP_Reduce_Agent_Feedback_LV write FHP_Reduce_Agent_Feedback_LV;
+[IniValue('HP_Reduce_Agent_Feedback_HV', 'Reducing agent feedback max', '0.0', 238)]
+property HP_Reduce_Agent_Feedback_HV : DOUBLE read FHP_Reduce_Agent_Feedback_HV write FHP_Reduce_Agent_Feedback_HV;
+[IniValue('HP_Dose_Control_VV_LV', 'Dosing control vv min', '0.0', 239)]
+property HP_Dose_Control_VV_LV : DOUBLE read FHP_Dose_Control_VV_LV write FHP_Dose_Control_VV_LV;
+[IniValue('HP_Dose_Control_VV_HV', 'Dosing control vv max', '0.0', 240)]
+property HP_Dose_Control_VV_HV : DOUBLE read FHP_Dose_Control_VV_HV write FHP_Dose_Control_VV_HV;
+[IniValue('HP_SET_rSolValveNumber', 'number  of sol vv', '0.0', 242)]
+property HP_SET_rSolValveNumber : DOUBLE read FHP_SET_rSolValveNumber write FHP_SET_rSolValveNumber;
+[IniValue('HP_SET_rNormalSootBlowingCycle', 'Normal soot blowing cycle', '0.0', 243)]
+property HP_SET_rNormalSootBlowingCycle : DOUBLE read FHP_SET_rNormalSootBlowingCycle write FHP_SET_rNormalSootBlowingCycle;
+[IniValue('HP_SET_rAbnormalSootBlowingCycle', 'Abnormal soot blowing cycle', '0.0', 244)]
+property HP_SET_rAbnormalSootBlowingCycle : DOUBLE read FHP_SET_rAbnormalSootBlowingCycle write FHP_SET_rAbnormalSootBlowingCycle;
+[IniValue('HP_SET_rSolValveOnTime', 'solenoid valve on time', '0.0', 245)]
+property HP_SET_rSolValveOnTime : DOUBLE read FHP_SET_rSolValveOnTime write FHP_SET_rSolValveOnTime;
+[IniValue('HPParameter2', 'HP parameter2', '0.0', 2189)]
+property HPParameter2 : DOUBLE read FHPParameter2 write FHPParameter2;
+[IniValue('HP_Chamber_In_Temp_VLO', 'Chamber inlet temp AL', '0.0', 2190)]
+property HP_Chamber_In_Temp_VLO : DOUBLE read FHP_Chamber_In_Temp_VLO write FHP_Chamber_In_Temp_VLO;
+[IniValue('HP_Chamber_In_Temp_DLY_LO', 'Chamber inlet temp AL alarm delay', '0.0', 2191)]
+property HP_Chamber_In_Temp_DLY_LO : DOUBLE read FHP_Chamber_In_Temp_DLY_LO write FHP_Chamber_In_Temp_DLY_LO;
+[IniValue('HP_Chamber_In_Temp_VLL', 'Chamber inlet temp ALL', '0.0', 2192)]
+property HP_Chamber_In_Temp_VLL : DOUBLE read FHP_Chamber_In_Temp_VLL write FHP_Chamber_In_Temp_VLL;
+[IniValue('HP_Chamber_In_Temp_DLY_LL', 'Chamber inlet temp ALL alarm delay', '0.0', 2193)]
+property HP_Chamber_In_Temp_DLY_LL : DOUBLE read FHP_Chamber_In_Temp_DLY_LL write FHP_Chamber_In_Temp_DLY_LL;
+[IniValue('HP_Chamber_Out_Temp_VLO', 'Chamber outlet temp AL', '0.0', 2194)]
+property HP_Chamber_Out_Temp_VLO : DOUBLE read FHP_Chamber_Out_Temp_VLO write FHP_Chamber_Out_Temp_VLO;
+[IniValue('HP_Chamber_Out_Temp_DLY_LO', 'Chamber outlet temp AL alarm delay', '0.0', 2195)]
+property HP_Chamber_Out_Temp_DLY_LO : DOUBLE read FHP_Chamber_Out_Temp_DLY_LO write FHP_Chamber_Out_Temp_DLY_LO;
+[IniValue('HP_Chamber_Out_Temp_VLL', 'Chamber outlet temp ALL', '0.0', 2196)]
+property HP_Chamber_Out_Temp_VLL : DOUBLE read FHP_Chamber_Out_Temp_VLL write FHP_Chamber_Out_Temp_VLL;
+[IniValue('HP_Chamber_Out_Temp_DLY_LL', 'Chamber outlet temp ALL alarm delay', '0.0', 2197)]
+property HP_Chamber_Out_Temp_DLY_LL : DOUBLE read FHP_Chamber_Out_Temp_DLY_LL write FHP_Chamber_Out_Temp_DLY_LL;

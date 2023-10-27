@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
   JvExExtCtrls, JvImage, AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls,
   JvExControls, JvButton, JvTransparentButton, DragDrop, DropTarget,
-  DragDropText, UDragDropFormat_SCRParam, Vcl.Menus;
+  DragDropText, UDragDropFormat_SCRParam, Vcl.Menus, AdvFocusHelper, USCRParamClass;
 
 type
   TSCRAppSettingF = class(TForm)
@@ -25,11 +25,6 @@ type
     JvImage5: TJvImage;
     JvImage6: TJvImage;
     JvImage7: TJvImage;
-    AdvGraphicCheckLabel1: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel2: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel3: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel4: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel5: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel6: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel7: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel8: TAdvGraphicCheckLabel;
@@ -41,71 +36,12 @@ type
     AdvGraphicCheckLabel14: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel15: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel16: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel17: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel18: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel19: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel20: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel21: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel22: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel23: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel24: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel25: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel26: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel27: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel28: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel29: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel30: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel31: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel32: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel33: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel34: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel35: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel36: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel37: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel38: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel39: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel40: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel41: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel42: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel43: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel44: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel45: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel46: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel47: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel48: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel49: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel50: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel51: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel52: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel53: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel54: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel55: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel56: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel57: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel58: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel59: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel60: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel61: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel62: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel63: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel64: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel65: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel66: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel67: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel68: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel69: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel70: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel71: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel72: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel73: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel74: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel75: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel76: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel77: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel78: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel79: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel80: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel81: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel82: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel83: TAdvGraphicCheckLabel;
     AdvGraphicCheckLabel84: TAdvGraphicCheckLabel;
@@ -125,24 +61,38 @@ type
     DropTextTarget1: TDropTextTarget;
     PopupMenu1: TPopupMenu;
     Save2DFM1: TMenuItem;
+    JvTransparentButton2: TJvTransparentButton;
+    JvTransparentButton3: TJvTransparentButton;
     JvTransparentButton4: TJvTransparentButton;
+    JvTransparentButton5: TJvTransparentButton;
+    JvTransparentButton6: TJvTransparentButton;
+    JvTransparentButton7: TJvTransparentButton;
+    AdvFocusHelper1: TAdvFocusHelper;
+    JvTransparentButton8: TJvTransparentButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
       APoint: TPoint; var Effect: Integer);
     procedure Save2DFM1Click(Sender: TObject);
+    procedure JvTransparentButton2Click(Sender: TObject);
+    procedure JvTransparentButton8Click(Sender: TObject);
+    procedure JvTransparentButton1Click(Sender: TObject);
   private
     FSCRParameterTarget: TSCRParamDataFormat;
+    FSCRAppParam: TSCRAppParam;
+    FSCRRecipe: TSCRRecipeInfoObjArray;
 
     procedure InitVar;
     procedure DestroyVar;
 
+    procedure ShowTagNoAll();
   public
-    { Public declarations }
+    function ApplySettings(): integer;
   end;
 
-  function CreateNShowSCRAppSetting(AOwner: TComponent): string;
+  function CreateNShowSCRAppSetting(AOwner: TComponent;
+    var ASCRAppParam: TSCRAppParam; var ASCRRecipe: TSCRRecipeInfoObjArray): string;
   function CreateNShowSCRAppSetting2(AOwner: TComponent): TForm;
 
 var
@@ -154,7 +104,8 @@ uses UnitMouseUtil, UCommonUtil;
 
 {$R *.dfm}
 
-function CreateNShowSCRAppSetting(AOwner: TComponent): string;
+function CreateNShowSCRAppSetting(AOwner: TComponent; var ASCRAppParam: TSCRAppParam;
+  var ASCRRecipe: TSCRRecipeInfoObjArray): string;
 begin
   Result := '';
 
@@ -164,6 +115,10 @@ begin
   SCRAppSettingF := TSCRAppSettingF.Create(AOwner);
 
   try
+    SCRAppSettingF.FSCRAppParam := ASCRAppParam;
+    SCRAppSettingF.FSCRRecipe := ASCRRecipe;
+    SCRAppSettingF.FSCRAppParam.LoadObject2Form(SCRAppSettingF, SCRAppSettingF.FSCRAppParam, True);
+
     if SCRAppSettingF.ShowModal = mrOK then
     begin
       Result := '';
@@ -185,6 +140,19 @@ end;
 
 { TSCRAppSettingF }
 
+function TSCRAppSettingF.ApplySettings: integer;
+var
+  i: integer;
+begin
+  FSCRAppParam.LoadForm2Object(Self as TObject, FSCRAppParam, True);
+//  ShowMessage(IntToStr(High(FSCRRecipe)));
+//  Result := High(FSCRRecipe);
+  SetSCRRecipeInfoValueFromSCRParam(FSCRAppParam, FSCRRecipe);
+
+//  FSCRAppParam.Save('c:\temp\SCRAppParam.txt');
+  ShowMessage('Setting has applied to the Application parameter!');
+end;
+
 procedure TSCRAppSettingF.DestroyVar;
 begin
   FSCRParameterTarget.Free;
@@ -204,9 +172,13 @@ begin
 //      ShowMessage(LControl.Name);
       if LControl.ClassType = TAdvGraphicCheckLabel then
       begin
-//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
         TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+        TAdvGraphicCheckLabel(LControl).SetFocus;
+        TAdvGraphicCheckLabel(LControl).SetFocus;
       end;
+
+//      LControl.Name := FSCRParameterTarget.SCRD.FTagName;
+      LControl.Hint := 'Checked';
     end;
   end;
 end;
@@ -223,12 +195,33 @@ end;
 
 procedure TSCRAppSettingF.InitVar;
 begin
+  DropTextTarget1.Target := AdvPageControl1;
   FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
+procedure TSCRAppSettingF.JvTransparentButton1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TSCRAppSettingF.JvTransparentButton2Click(Sender: TObject);
+begin
+  ApplySettings();
+end;
+
+procedure TSCRAppSettingF.JvTransparentButton8Click(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TSCRAppSettingF.Save2DFM1Click(Sender: TObject);
 begin
   SaveSCRForm2DFM(Self as TForm);
+end;
+
+procedure TSCRAppSettingF.ShowTagNoAll;
+begin
+
 end;
 
 end.

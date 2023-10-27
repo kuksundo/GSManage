@@ -13,13 +13,14 @@ uses
 
 type
   TSCRParam_DragDrop = record
-    FSCRParam: TSCRParameterRecord;
+//    FSCRParam: TSCRParameterRecord;
     FIsMultipleRec: Boolean; //DragDrop시에 record 가 복수개인지 여부
     //Drag시 누른 키 값은 HiMECS_Watch2(다른 Propcess이므로)에 전달되지 않기 때문에 따로 전해줌
     //Ctrl + MouseDrag 이벤트가 안 잡혀서 실패함
     FShiftState: TShiftState; //DragDrop시에 Ctrl/Shift/Alt 키 상태 여부
     FSourceHandle: integer; //Drag Source Window Handle
     FTagID: integer;
+    FTagName: String[100];
   end;
 
   TSCRParamDataClipboardFormat = class(TCustomSimpleClipboardFormat)

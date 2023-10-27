@@ -11,6 +11,8 @@ object SCRSettingF: TSCRSettingF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object JvImage1: TJvImage
@@ -3752,11 +3754,20 @@ object SCRSettingF: TSCRSettingF
     Top = 410
     Width = 95
     Height = 35
+    OnClick = JvTransparentButton4Click
   end
   object JvTransparentButton5: TJvTransparentButton
     Left = 857
     Top = 410
     Width = 96
     Height = 37
+    OnClick = JvTransparentButton5Click
+  end
+  object JvTransparentButton8: TJvTransparentButton
+    Left = 1061
+    Top = 0
+    Width = 30
+    Height = 68
+    OnClick = JvTransparentButton8Click
   end
 end

@@ -18,9 +18,9 @@ object SCRReportF: TSCRReportF
   TextHeight = 13
   object NextGrid1: TNextGrid
     Left = 8
-    Top = 24
+    Top = 8
     Width = 849
-    Height = 369
+    Height = 385
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Caption = ''
@@ -29,7 +29,12 @@ object SCRReportF: TSCRReportF
     TabStop = True
     OnMouseDown = NextGrid1MouseDown
     OnMouseMove = NextGrid1MouseMove
-    object NxIncrementColumn1: TNxIncrementColumn
+    object TagId: TNxIncrementColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
       Header.Caption = 'No'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
@@ -37,16 +42,143 @@ object SCRReportF: TSCRReportF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
+      ParentFont = False
       Position = 0
       SortType = stAlphabetic
     end
-    object NxTextColumn1: TNxTextColumn
+    object TagName: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Tag Name'
+      Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
+      ParentFont = False
       Position = 1
+      SortType = stAlphabetic
+    end
+    object TagDesc: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Tag Desc'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 2
+      SortType = stAlphabetic
+    end
+    object SCRTYpe: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'SCR Type'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 3
+      SortType = stAlphabetic
+    end
+    object ParamKind: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Param Kind'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 4
+      SortType = stAlphabetic
+    end
+    object SCRComponent: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'SCR Component'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 5
+      SortType = stAlphabetic
+    end
+    object ValueBitNo: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'BitNo'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 6
+      SortType = stAlphabetic
+    end
+    object ParamValue: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Param Value'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 7
+      SortType = stAlphabetic
+    end
+    object ValueType: TNxTextColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Value Type'
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 8
       SortType = stAlphabetic
     end
   end
@@ -121,6 +253,7 @@ object SCRReportF: TSCRReportF
       object LoadBaseInfoXls2Grid1: TMenuItem
         Caption = 'Load Base Info Xls 2 Grid'
         Hint = 'Xls '#54028#51068#47196#48512#53552' Receit File Field '#51221#48372#47484' '#51069#50612' '#46308#51076
+        OnClick = LoadBaseInfoXls2Grid1Click
       end
     end
   end
@@ -128,10 +261,31 @@ object SCRReportF: TSCRReportF
     Left = 56
     Top = 232
     object Save2DB1: TMenuItem
-      Caption = 'Save 2 DB'
+      Caption = 'Save Grid 2 DB'
+    end
+    object Save2JsonFile1: TMenuItem
+      Caption = 'Save Grid 2 Json File'
+      OnClick = Save2JsonFile1Click
+    end
+    object LoadFromJsonFile2Grid1: TMenuItem
+      Caption = 'Load From Json File 2 Grid'
+      OnClick = LoadFromJsonFile2Grid1Click
+    end
+    object LoadFromJsonFile2Aryt1: TMenuItem
+      Caption = 'Load From Json File 2 Object'
+      OnClick = LoadFromJsonFile2Aryt1Click
+    end
+    object LaodFromObj2Grid1: TMenuItem
+      Caption = 'Laod From Obj 2 Grid'
+      OnClick = LaodFromObj2Grid1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
     end
     object GenerateObjectCodeFromGrid1: TMenuItem
-      Caption = 'Generate Object Code From Grid'
+      Caption = 'Generate Obj Code From Grid'
+      Hint = 'Class Field '#48143' Property Code '#47484' c:\temp\'#50640' '#51088#46041' '#49373#49457'  From Grid'
+      OnClick = GenerateObjectCodeFromGrid1Click
     end
     object AssigntagfromObject1: TMenuItem
       Caption = 'Assign Compoonent tag from Object'

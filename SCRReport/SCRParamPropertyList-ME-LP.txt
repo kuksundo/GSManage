@@ -1,0 +1,702 @@
+[IniValue('LP_SET_nDoseSetLaw', 'dosing set law', '0.0', 1831)]
+property LP_SET_nDoseSetLaw : DOUBLE read FLP_SET_nDoseSetLaw write FLP_SET_nDoseSetLaw;
+[IniValue('LP_SET_rReduceAgentSP_1_', 'reducing agent setpoint[1]', '0.0', 1832)]
+property LP_SET_rReduceAgentSP_1_ : DOUBLE read FLP_SET_rReduceAgentSP_1_ write FLP_SET_rReduceAgentSP_1_;
+[IniValue('LP_SET_rReduceAgentSP_2_', 'reducing agent setpoint[2]', '0.0', 1833)]
+property LP_SET_rReduceAgentSP_2_ : DOUBLE read FLP_SET_rReduceAgentSP_2_ write FLP_SET_rReduceAgentSP_2_;
+[IniValue('LP_SET_rReduceAgentSP_3_', 'reducing agent setpoint[3]', '0.0', 1834)]
+property LP_SET_rReduceAgentSP_3_ : DOUBLE read FLP_SET_rReduceAgentSP_3_ write FLP_SET_rReduceAgentSP_3_;
+[IniValue('LP_SET_rReduceAgentSP_4_', 'reducing agent setpoint[4]', '0.0', 1835)]
+property LP_SET_rReduceAgentSP_4_ : DOUBLE read FLP_SET_rReduceAgentSP_4_ write FLP_SET_rReduceAgentSP_4_;
+[IniValue('LP_SET_rReduceAgentSP_5_', 'reducing agent setpoint[5]', '0.0', 1836)]
+property LP_SET_rReduceAgentSP_5_ : DOUBLE read FLP_SET_rReduceAgentSP_5_ write FLP_SET_rReduceAgentSP_5_;
+[IniValue('LP_SET_rReduceAgentSP_6_', 'reducing agent setpoint[6]', '0.0', 1837)]
+property LP_SET_rReduceAgentSP_6_ : DOUBLE read FLP_SET_rReduceAgentSP_6_ write FLP_SET_rReduceAgentSP_6_;
+[IniValue('LP_SET_rReduceAgentSP_7_', 'reducing agent setpoint[7]', '0.0', 1838)]
+property LP_SET_rReduceAgentSP_7_ : DOUBLE read FLP_SET_rReduceAgentSP_7_ write FLP_SET_rReduceAgentSP_7_;
+[IniValue('LP_SET_rReduceAgentSP_8_', 'reducing agent setpoint[8]', '0.0', 1839)]
+property LP_SET_rReduceAgentSP_8_ : DOUBLE read FLP_SET_rReduceAgentSP_8_ write FLP_SET_rReduceAgentSP_8_;
+[IniValue('LP_SET_rReduceAgentSP_9_', 'reducing agent setpoint[9]', '0.0', 1840)]
+property LP_SET_rReduceAgentSP_9_ : DOUBLE read FLP_SET_rReduceAgentSP_9_ write FLP_SET_rReduceAgentSP_9_;
+[IniValue('LP_SET_rReduceAgentSP_10_', 'reducing agent setpoint[10]', '0.0', 1841)]
+property LP_SET_rReduceAgentSP_10_ : DOUBLE read FLP_SET_rReduceAgentSP_10_ write FLP_SET_rReduceAgentSP_10_;
+[IniValue('LP_SET_rReduceAgentSP_11_', 'reducing agent setpoint[11]', '0.0', 1842)]
+property LP_SET_rReduceAgentSP_11_ : DOUBLE read FLP_SET_rReduceAgentSP_11_ write FLP_SET_rReduceAgentSP_11_;
+[IniValue('LP_SET_rReduceAgentSP_12_', 'reducing agent setpoint[12]', '0.0', 1843)]
+property LP_SET_rReduceAgentSP_12_ : DOUBLE read FLP_SET_rReduceAgentSP_12_ write FLP_SET_rReduceAgentSP_12_;
+[IniValue('LP_SET_rDoseValveInitSP_1_', 'Dosing control vv setpoint[1]', '0.0', 1844)]
+property LP_SET_rDoseValveInitSP_1_ : DOUBLE read FLP_SET_rDoseValveInitSP_1_ write FLP_SET_rDoseValveInitSP_1_;
+[IniValue('LP_SET_rDoseValveInitSP_2_', 'Dosing control vv setpoint[2]', '0.0', 1845)]
+property LP_SET_rDoseValveInitSP_2_ : DOUBLE read FLP_SET_rDoseValveInitSP_2_ write FLP_SET_rDoseValveInitSP_2_;
+[IniValue('LP_SET_rDoseValveInitSP_3_', 'Dosing control vv setpoint[3]', '0.0', 1846)]
+property LP_SET_rDoseValveInitSP_3_ : DOUBLE read FLP_SET_rDoseValveInitSP_3_ write FLP_SET_rDoseValveInitSP_3_;
+[IniValue('LP_SET_rDoseValveInitSP_4_', 'Dosing control vv setpoint[4]', '0.0', 1847)]
+property LP_SET_rDoseValveInitSP_4_ : DOUBLE read FLP_SET_rDoseValveInitSP_4_ write FLP_SET_rDoseValveInitSP_4_;
+[IniValue('LP_SET_rDoseValveInitSP_5_', 'Dosing control vv setpoint[5]', '0.0', 1848)]
+property LP_SET_rDoseValveInitSP_5_ : DOUBLE read FLP_SET_rDoseValveInitSP_5_ write FLP_SET_rDoseValveInitSP_5_;
+[IniValue('LP_SET_rDoseValveInitSP_6_', 'Dosing control vv setpoint[6]', '0.0', 1849)]
+property LP_SET_rDoseValveInitSP_6_ : DOUBLE read FLP_SET_rDoseValveInitSP_6_ write FLP_SET_rDoseValveInitSP_6_;
+[IniValue('LP_SET_rDoseValveInitSP_7_', 'Dosing control vv setpoint[7]', '0.0', 1850)]
+property LP_SET_rDoseValveInitSP_7_ : DOUBLE read FLP_SET_rDoseValveInitSP_7_ write FLP_SET_rDoseValveInitSP_7_;
+[IniValue('LP_SET_rDoseValveInitSP_8_', 'Dosing control vv setpoint[8]', '0.0', 1851)]
+property LP_SET_rDoseValveInitSP_8_ : DOUBLE read FLP_SET_rDoseValveInitSP_8_ write FLP_SET_rDoseValveInitSP_8_;
+[IniValue('LP_SET_rDoseValveInitSP_9_', 'Dosing control vv setpoint[9]', '0.0', 1852)]
+property LP_SET_rDoseValveInitSP_9_ : DOUBLE read FLP_SET_rDoseValveInitSP_9_ write FLP_SET_rDoseValveInitSP_9_;
+[IniValue('LP_SET_rDoseValveInitSP_10_', 'Dosing control vv setpoint[10]', '0.0', 1853)]
+property LP_SET_rDoseValveInitSP_10_ : DOUBLE read FLP_SET_rDoseValveInitSP_10_ write FLP_SET_rDoseValveInitSP_10_;
+[IniValue('LP_SET_rDoseValveInitSP_11_', 'Dosing control vv setpoint[11]', '0.0', 1854)]
+property LP_SET_rDoseValveInitSP_11_ : DOUBLE read FLP_SET_rDoseValveInitSP_11_ write FLP_SET_rDoseValveInitSP_11_;
+[IniValue('LP_SET_rDoseValveInitSP_12_', 'Dosing control vv setpoint[12]', '0.0', 1855)]
+property LP_SET_rDoseValveInitSP_12_ : DOUBLE read FLP_SET_rDoseValveInitSP_12_ write FLP_SET_rDoseValveInitSP_12_;
+[IniValue('LP_SET_nBurnerFlowSetLaw', 'exh gas flow set law', '0.0', 1856)]
+property LP_SET_nBurnerFlowSetLaw : DOUBLE read FLP_SET_nBurnerFlowSetLaw write FLP_SET_nBurnerFlowSetLaw;
+[IniValue('LP_SET_rBurnerEngLoadSP_1_', 'engine load setpoint[1]', '0.0', 1857)]
+property LP_SET_rBurnerEngLoadSP_1_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_1_ write FLP_SET_rBurnerEngLoadSP_1_;
+[IniValue('LP_SET_rBurnerEngLoadSP_2_', 'engine load setpoint[2]', '0.0', 1858)]
+property LP_SET_rBurnerEngLoadSP_2_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_2_ write FLP_SET_rBurnerEngLoadSP_2_;
+[IniValue('LP_SET_rBurnerEngLoadSP_3_', 'engine load setpoint[3]', '0.0', 1859)]
+property LP_SET_rBurnerEngLoadSP_3_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_3_ write FLP_SET_rBurnerEngLoadSP_3_;
+[IniValue('LP_SET_rBurnerEngLoadSP_4_', 'engine load setpoint[4]', '0.0', 1860)]
+property LP_SET_rBurnerEngLoadSP_4_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_4_ write FLP_SET_rBurnerEngLoadSP_4_;
+[IniValue('LP_SET_rBurnerEngLoadSP_5_', 'engine load setpoint[5]', '0.0', 1861)]
+property LP_SET_rBurnerEngLoadSP_5_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_5_ write FLP_SET_rBurnerEngLoadSP_5_;
+[IniValue('LP_SET_rBurnerEngLoadSP_6_', 'engine load setpoint[6]', '0.0', 1862)]
+property LP_SET_rBurnerEngLoadSP_6_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_6_ write FLP_SET_rBurnerEngLoadSP_6_;
+[IniValue('LP_SET_rBurnerEngLoadSP_7_', 'engine load setpoint[7]', '0.0', 1863)]
+property LP_SET_rBurnerEngLoadSP_7_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_7_ write FLP_SET_rBurnerEngLoadSP_7_;
+[IniValue('LP_SET_rBurnerEngLoadSP_8_', 'engine load setpoint[8]', '0.0', 1864)]
+property LP_SET_rBurnerEngLoadSP_8_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_8_ write FLP_SET_rBurnerEngLoadSP_8_;
+[IniValue('LP_SET_rBurnerEngLoadSP_9_', 'engine load setpoint[9]', '0.0', 1865)]
+property LP_SET_rBurnerEngLoadSP_9_ : DOUBLE read FLP_SET_rBurnerEngLoadSP_9_ write FLP_SET_rBurnerEngLoadSP_9_;
+[IniValue('LP_SET_rTargetFlowSP_1_', 'target flow setpoint[1]', '0.0', 1866)]
+property LP_SET_rTargetFlowSP_1_ : DOUBLE read FLP_SET_rTargetFlowSP_1_ write FLP_SET_rTargetFlowSP_1_;
+[IniValue('LP_SET_rTargetFlowSP_2_', 'target flow setpoint[2]', '0.0', 1867)]
+property LP_SET_rTargetFlowSP_2_ : DOUBLE read FLP_SET_rTargetFlowSP_2_ write FLP_SET_rTargetFlowSP_2_;
+[IniValue('LP_SET_rTargetFlowSP_3_', 'target flow setpoint[3]', '0.0', 1868)]
+property LP_SET_rTargetFlowSP_3_ : DOUBLE read FLP_SET_rTargetFlowSP_3_ write FLP_SET_rTargetFlowSP_3_;
+[IniValue('LP_SET_rTargetFlowSP_4_', 'target flow setpoint[4]', '0.0', 1869)]
+property LP_SET_rTargetFlowSP_4_ : DOUBLE read FLP_SET_rTargetFlowSP_4_ write FLP_SET_rTargetFlowSP_4_;
+[IniValue('LP_SET_rTargetFlowSP_5_', 'target flow setpoint[5]', '0.0', 1870)]
+property LP_SET_rTargetFlowSP_5_ : DOUBLE read FLP_SET_rTargetFlowSP_5_ write FLP_SET_rTargetFlowSP_5_;
+[IniValue('LP_SET_rTargetFlowSP_6_', 'target flow setpoint[6]', '0.0', 1871)]
+property LP_SET_rTargetFlowSP_6_ : DOUBLE read FLP_SET_rTargetFlowSP_6_ write FLP_SET_rTargetFlowSP_6_;
+[IniValue('LP_SET_rTargetFlowSP_7_', 'target flow setpoint[7]', '0.0', 1872)]
+property LP_SET_rTargetFlowSP_7_ : DOUBLE read FLP_SET_rTargetFlowSP_7_ write FLP_SET_rTargetFlowSP_7_;
+[IniValue('LP_SET_rTargetFlowSP_8_', 'target flow setpoint[8]', '0.0', 1873)]
+property LP_SET_rTargetFlowSP_8_ : DOUBLE read FLP_SET_rTargetFlowSP_8_ write FLP_SET_rTargetFlowSP_8_;
+[IniValue('LP_SET_rTargetFlowSP_9_', 'target flow setpoint[9]', '0.0', 1874)]
+property LP_SET_rTargetFlowSP_9_ : DOUBLE read FLP_SET_rTargetFlowSP_9_ write FLP_SET_rTargetFlowSP_9_;
+[IniValue('LP_SET_rRegenerationFlowTarget', 'regeneration target flow', '0.0', 1875)]
+property LP_SET_rRegenerationFlowTarget : DOUBLE read FLP_SET_rRegenerationFlowTarget write FLP_SET_rRegenerationFlowTarget;
+[IniValue('LP_SET_rStandbyHeatFlowTarget', 'standbyheat target flow', '0.0', 1876)]
+property LP_SET_rStandbyHeatFlowTarget : DOUBLE read FLP_SET_rStandbyHeatFlowTarget write FLP_SET_rStandbyHeatFlowTarget;
+[IniValue('LP_SET_rVentingFlowTarget', 'venting target flow', '0.0', 1877)]
+property LP_SET_rVentingFlowTarget : DOUBLE read FLP_SET_rVentingFlowTarget write FLP_SET_rVentingFlowTarget;
+[IniValue('LP_SET_Dose_PID_Gain_Kp', 'p gain', '0.0', 1878)]
+property LP_SET_Dose_PID_Gain_Kp : DOUBLE read FLP_SET_Dose_PID_Gain_Kp write FLP_SET_Dose_PID_Gain_Kp;
+[IniValue('LP_SET_Dose_PID_Gain_Ki', 'I gain', '0.0', 1879)]
+property LP_SET_Dose_PID_Gain_Ki : DOUBLE read FLP_SET_Dose_PID_Gain_Ki write FLP_SET_Dose_PID_Gain_Ki;
+[IniValue('LP_SET_Dose_PID_Gain_Kd', 'D gain', '0.0', 1880)]
+property LP_SET_Dose_PID_Gain_Kd : DOUBLE read FLP_SET_Dose_PID_Gain_Kd write FLP_SET_Dose_PID_Gain_Kd;
+[IniValue('LP_SET_Dose_PID_Gain_SettingError', 'setting error', '0.0', 1881)]
+property LP_SET_Dose_PID_Gain_SettingError : DOUBLE read FLP_SET_Dose_PID_Gain_SettingError write FLP_SET_Dose_PID_Gain_SettingError;
+[IniValue('LP_SET_Dose_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1882)]
+property LP_SET_Dose_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_Dose_PID_Gain_MaxUpdate write FLP_SET_Dose_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_Dose_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1883)]
+property LP_SET_Dose_PID_Gain_MinUpdate : DOUBLE read FLP_SET_Dose_PID_Gain_MinUpdate write FLP_SET_Dose_PID_Gain_MinUpdate;
+[IniValue('LP_SET_Dose_PID_Gain_MaxOutput', 'Max output', '0.0', 1884)]
+property LP_SET_Dose_PID_Gain_MaxOutput : DOUBLE read FLP_SET_Dose_PID_Gain_MaxOutput write FLP_SET_Dose_PID_Gain_MaxOutput;
+[IniValue('LP_SET_Dose_PID_Gain_MinOutput', 'Min output', '0.0', 1885)]
+property LP_SET_Dose_PID_Gain_MinOutput : DOUBLE read FLP_SET_Dose_PID_Gain_MinOutput write FLP_SET_Dose_PID_Gain_MinOutput;
+[IniValue('LP_SET_Dose_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1886)]
+property LP_SET_Dose_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_Dose_PID_Gain_ErrorWindowMax write FLP_SET_Dose_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_Dose_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1887)]
+property LP_SET_Dose_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_Dose_PID_Gain_ErrorWindowMin write FLP_SET_Dose_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_EGB_BV_PID_Gain_Kp', 'p gain', '0.0', 1888)]
+property LP_SET_EGB_BV_PID_Gain_Kp : DOUBLE read FLP_SET_EGB_BV_PID_Gain_Kp write FLP_SET_EGB_BV_PID_Gain_Kp;
+[IniValue('LP_SET_EGB_BV_PID_Gain_Ki', 'I gain', '0.0', 1889)]
+property LP_SET_EGB_BV_PID_Gain_Ki : DOUBLE read FLP_SET_EGB_BV_PID_Gain_Ki write FLP_SET_EGB_BV_PID_Gain_Ki;
+[IniValue('LP_SET_EGB_BV_PID_Gain_Kd', 'D gain', '0.0', 1890)]
+property LP_SET_EGB_BV_PID_Gain_Kd : DOUBLE read FLP_SET_EGB_BV_PID_Gain_Kd write FLP_SET_EGB_BV_PID_Gain_Kd;
+[IniValue('LP_SET_EGB_BV_PID_Gain_SettingError', 'setting error', '0.0', 1891)]
+property LP_SET_EGB_BV_PID_Gain_SettingError : DOUBLE read FLP_SET_EGB_BV_PID_Gain_SettingError write FLP_SET_EGB_BV_PID_Gain_SettingError;
+[IniValue('LP_SET_EGB_BV_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1892)]
+property LP_SET_EGB_BV_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_EGB_BV_PID_Gain_MaxUpdate write FLP_SET_EGB_BV_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_EGB_BV_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1893)]
+property LP_SET_EGB_BV_PID_Gain_MinUpdate : DOUBLE read FLP_SET_EGB_BV_PID_Gain_MinUpdate write FLP_SET_EGB_BV_PID_Gain_MinUpdate;
+[IniValue('LP_SET_EGB_BV_PID_Gain_MaxOutput', 'Max output', '0.0', 1894)]
+property LP_SET_EGB_BV_PID_Gain_MaxOutput : DOUBLE read FLP_SET_EGB_BV_PID_Gain_MaxOutput write FLP_SET_EGB_BV_PID_Gain_MaxOutput;
+[IniValue('LP_SET_EGB_BV_PID_Gain_MinOutput', 'Min output', '0.0', 1895)]
+property LP_SET_EGB_BV_PID_Gain_MinOutput : DOUBLE read FLP_SET_EGB_BV_PID_Gain_MinOutput write FLP_SET_EGB_BV_PID_Gain_MinOutput;
+[IniValue('LP_SET_EGB_BV_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1896)]
+property LP_SET_EGB_BV_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_EGB_BV_PID_Gain_ErrorWindowMax write FLP_SET_EGB_BV_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_EGB_BV_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1897)]
+property LP_SET_EGB_BV_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_EGB_BV_PID_Gain_ErrorWindowMin write FLP_SET_EGB_BV_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_BSV_PID_Gain_Kp', 'p gain', '0.0', 1898)]
+property LP_SET_BSV_PID_Gain_Kp : DOUBLE read FLP_SET_BSV_PID_Gain_Kp write FLP_SET_BSV_PID_Gain_Kp;
+[IniValue('LP_SET_BSV_PID_Gain_Ki', 'I gain', '0.0', 1899)]
+property LP_SET_BSV_PID_Gain_Ki : DOUBLE read FLP_SET_BSV_PID_Gain_Ki write FLP_SET_BSV_PID_Gain_Ki;
+[IniValue('LP_SET_BSV_PID_Gain_Kd', 'D gain', '0.0', 1900)]
+property LP_SET_BSV_PID_Gain_Kd : DOUBLE read FLP_SET_BSV_PID_Gain_Kd write FLP_SET_BSV_PID_Gain_Kd;
+[IniValue('LP_SET_BSV_PID_Gain_SettingError', 'setting error', '0.0', 1901)]
+property LP_SET_BSV_PID_Gain_SettingError : DOUBLE read FLP_SET_BSV_PID_Gain_SettingError write FLP_SET_BSV_PID_Gain_SettingError;
+[IniValue('LP_SET_BSV_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1902)]
+property LP_SET_BSV_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_BSV_PID_Gain_MaxUpdate write FLP_SET_BSV_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_BSV_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1903)]
+property LP_SET_BSV_PID_Gain_MinUpdate : DOUBLE read FLP_SET_BSV_PID_Gain_MinUpdate write FLP_SET_BSV_PID_Gain_MinUpdate;
+[IniValue('LP_SET_BSV_PID_Gain_MaxOutput', 'Max output', '0.0', 1904)]
+property LP_SET_BSV_PID_Gain_MaxOutput : DOUBLE read FLP_SET_BSV_PID_Gain_MaxOutput write FLP_SET_BSV_PID_Gain_MaxOutput;
+[IniValue('LP_SET_BSV_PID_Gain_MinOutput', 'Min output', '0.0', 1905)]
+property LP_SET_BSV_PID_Gain_MinOutput : DOUBLE read FLP_SET_BSV_PID_Gain_MinOutput write FLP_SET_BSV_PID_Gain_MinOutput;
+[IniValue('LP_SET_BSV_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1906)]
+property LP_SET_BSV_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_BSV_PID_Gain_ErrorWindowMax write FLP_SET_BSV_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_BSV_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1907)]
+property LP_SET_BSV_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_BSV_PID_Gain_ErrorWindowMin write FLP_SET_BSV_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_Blower_PID_Gain_Kp', 'p gain', '0.0', 1908)]
+property LP_SET_Blower_PID_Gain_Kp : DOUBLE read FLP_SET_Blower_PID_Gain_Kp write FLP_SET_Blower_PID_Gain_Kp;
+[IniValue('LP_SET_Blower_PID_Gain_Ki', 'I gain', '0.0', 1909)]
+property LP_SET_Blower_PID_Gain_Ki : DOUBLE read FLP_SET_Blower_PID_Gain_Ki write FLP_SET_Blower_PID_Gain_Ki;
+[IniValue('LP_SET_Blower_PID_Gain_Kd', 'D gain', '0.0', 1910)]
+property LP_SET_Blower_PID_Gain_Kd : DOUBLE read FLP_SET_Blower_PID_Gain_Kd write FLP_SET_Blower_PID_Gain_Kd;
+[IniValue('LP_SET_Blower_PID_Gain_SettingError', 'setting error', '0.0', 1911)]
+property LP_SET_Blower_PID_Gain_SettingError : DOUBLE read FLP_SET_Blower_PID_Gain_SettingError write FLP_SET_Blower_PID_Gain_SettingError;
+[IniValue('LP_SET_Blower_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1912)]
+property LP_SET_Blower_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_Blower_PID_Gain_MaxUpdate write FLP_SET_Blower_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_Blower_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1913)]
+property LP_SET_Blower_PID_Gain_MinUpdate : DOUBLE read FLP_SET_Blower_PID_Gain_MinUpdate write FLP_SET_Blower_PID_Gain_MinUpdate;
+[IniValue('LP_SET_Blower_PID_Gain_MaxOutput', 'Max output', '0.0', 1914)]
+property LP_SET_Blower_PID_Gain_MaxOutput : DOUBLE read FLP_SET_Blower_PID_Gain_MaxOutput write FLP_SET_Blower_PID_Gain_MaxOutput;
+[IniValue('LP_SET_Blower_PID_Gain_MinOutput', 'Min output', '0.0', 1915)]
+property LP_SET_Blower_PID_Gain_MinOutput : DOUBLE read FLP_SET_Blower_PID_Gain_MinOutput write FLP_SET_Blower_PID_Gain_MinOutput;
+[IniValue('LP_SET_Blower_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1916)]
+property LP_SET_Blower_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_Blower_PID_Gain_ErrorWindowMax write FLP_SET_Blower_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_Blower_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1917)]
+property LP_SET_Blower_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_Blower_PID_Gain_ErrorWindowMin write FLP_SET_Blower_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_Sealing_PID_Gain_Kp', 'p gain', '0.0', 1918)]
+property LP_SET_Sealing_PID_Gain_Kp : DOUBLE read FLP_SET_Sealing_PID_Gain_Kp write FLP_SET_Sealing_PID_Gain_Kp;
+[IniValue('LP_SET_Sealing_PID_Gain_Ki', 'I gain', '0.0', 1919)]
+property LP_SET_Sealing_PID_Gain_Ki : DOUBLE read FLP_SET_Sealing_PID_Gain_Ki write FLP_SET_Sealing_PID_Gain_Ki;
+[IniValue('LP_SET_Sealing_PID_Gain_Kd', 'D gain', '0.0', 1920)]
+property LP_SET_Sealing_PID_Gain_Kd : DOUBLE read FLP_SET_Sealing_PID_Gain_Kd write FLP_SET_Sealing_PID_Gain_Kd;
+[IniValue('LP_SET_Sealing_PID_Gain_SettingError', 'setting error', '0.0', 1921)]
+property LP_SET_Sealing_PID_Gain_SettingError : DOUBLE read FLP_SET_Sealing_PID_Gain_SettingError write FLP_SET_Sealing_PID_Gain_SettingError;
+[IniValue('LP_SET_Sealing_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1922)]
+property LP_SET_Sealing_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_Sealing_PID_Gain_MaxUpdate write FLP_SET_Sealing_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_Sealing_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1923)]
+property LP_SET_Sealing_PID_Gain_MinUpdate : DOUBLE read FLP_SET_Sealing_PID_Gain_MinUpdate write FLP_SET_Sealing_PID_Gain_MinUpdate;
+[IniValue('LP_SET_Sealing_PID_Gain_MaxOutput', 'Max output', '0.0', 1924)]
+property LP_SET_Sealing_PID_Gain_MaxOutput : DOUBLE read FLP_SET_Sealing_PID_Gain_MaxOutput write FLP_SET_Sealing_PID_Gain_MaxOutput;
+[IniValue('LP_SET_Sealing_PID_Gain_MinOutput', 'Min output', '0.0', 1925)]
+property LP_SET_Sealing_PID_Gain_MinOutput : DOUBLE read FLP_SET_Sealing_PID_Gain_MinOutput write FLP_SET_Sealing_PID_Gain_MinOutput;
+[IniValue('LP_SET_Sealing_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1926)]
+property LP_SET_Sealing_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_Sealing_PID_Gain_ErrorWindowMax write FLP_SET_Sealing_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_Sealing_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1927)]
+property LP_SET_Sealing_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_Sealing_PID_Gain_ErrorWindowMin write FLP_SET_Sealing_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_XfdFan_PID_Gain_Kp', 'p gain', '0.0', 1928)]
+property LP_SET_XfdFan_PID_Gain_Kp : DOUBLE read FLP_SET_XfdFan_PID_Gain_Kp write FLP_SET_XfdFan_PID_Gain_Kp;
+[IniValue('LP_SET_XfdFan_PID_Gain_Ki', 'I gain', '0.0', 1929)]
+property LP_SET_XfdFan_PID_Gain_Ki : DOUBLE read FLP_SET_XfdFan_PID_Gain_Ki write FLP_SET_XfdFan_PID_Gain_Ki;
+[IniValue('LP_SET_XfdFan_PID_Gain_Kd', 'D gain', '0.0', 1930)]
+property LP_SET_XfdFan_PID_Gain_Kd : DOUBLE read FLP_SET_XfdFan_PID_Gain_Kd write FLP_SET_XfdFan_PID_Gain_Kd;
+[IniValue('LP_SET_XfdFan_PID_Gain_SettingError', 'setting error', '0.0', 1931)]
+property LP_SET_XfdFan_PID_Gain_SettingError : DOUBLE read FLP_SET_XfdFan_PID_Gain_SettingError write FLP_SET_XfdFan_PID_Gain_SettingError;
+[IniValue('LP_SET_XfdFan_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1932)]
+property LP_SET_XfdFan_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_XfdFan_PID_Gain_MaxUpdate write FLP_SET_XfdFan_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_XfdFan_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1933)]
+property LP_SET_XfdFan_PID_Gain_MinUpdate : DOUBLE read FLP_SET_XfdFan_PID_Gain_MinUpdate write FLP_SET_XfdFan_PID_Gain_MinUpdate;
+[IniValue('LP_SET_XfdFan_PID_Gain_MaxOutput', 'Max output', '0.0', 1934)]
+property LP_SET_XfdFan_PID_Gain_MaxOutput : DOUBLE read FLP_SET_XfdFan_PID_Gain_MaxOutput write FLP_SET_XfdFan_PID_Gain_MaxOutput;
+[IniValue('LP_SET_XfdFan_PID_Gain_MinOutput', 'Min output', '0.0', 1935)]
+property LP_SET_XfdFan_PID_Gain_MinOutput : DOUBLE read FLP_SET_XfdFan_PID_Gain_MinOutput write FLP_SET_XfdFan_PID_Gain_MinOutput;
+[IniValue('LP_SET_XfdFan_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1936)]
+property LP_SET_XfdFan_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_XfdFan_PID_Gain_ErrorWindowMax write FLP_SET_XfdFan_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_XfdFan_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1937)]
+property LP_SET_XfdFan_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_XfdFan_PID_Gain_ErrorWindowMin write FLP_SET_XfdFan_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_Kp', 'p gain', '0.0', 1938)]
+property LP_SET_BurnerCooling_PID_Gain_Kp : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_Kp write FLP_SET_BurnerCooling_PID_Gain_Kp;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_Ki', 'I gain', '0.0', 1939)]
+property LP_SET_BurnerCooling_PID_Gain_Ki : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_Ki write FLP_SET_BurnerCooling_PID_Gain_Ki;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_Kd', 'D gain', '0.0', 1940)]
+property LP_SET_BurnerCooling_PID_Gain_Kd : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_Kd write FLP_SET_BurnerCooling_PID_Gain_Kd;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_SettingError', 'setting error', '0.0', 1941)]
+property LP_SET_BurnerCooling_PID_Gain_SettingError : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_SettingError write FLP_SET_BurnerCooling_PID_Gain_SettingError;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1942)]
+property LP_SET_BurnerCooling_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_MaxUpdate write FLP_SET_BurnerCooling_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1943)]
+property LP_SET_BurnerCooling_PID_Gain_MinUpdate : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_MinUpdate write FLP_SET_BurnerCooling_PID_Gain_MinUpdate;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_MaxOutput', 'Max output', '0.0', 1944)]
+property LP_SET_BurnerCooling_PID_Gain_MaxOutput : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_MaxOutput write FLP_SET_BurnerCooling_PID_Gain_MaxOutput;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_MinOutput', 'Min output', '0.0', 1945)]
+property LP_SET_BurnerCooling_PID_Gain_MinOutput : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_MinOutput write FLP_SET_BurnerCooling_PID_Gain_MinOutput;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1946)]
+property LP_SET_BurnerCooling_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_ErrorWindowMax write FLP_SET_BurnerCooling_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_BurnerCooling_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1947)]
+property LP_SET_BurnerCooling_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_BurnerCooling_PID_Gain_ErrorWindowMin write FLP_SET_BurnerCooling_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_UDCCooling_PID_Gain_Kp', 'p gain', '0.0', 1948)]
+property LP_SET_UDCCooling_PID_Gain_Kp : DOUBLE read FLP_SET_UDCCooling_PID_Gain_Kp write FLP_SET_UDCCooling_PID_Gain_Kp;
+[IniValue('LP_SET_UDCCooling_PID_Gain_Ki', 'I gain', '0.0', 1949)]
+property LP_SET_UDCCooling_PID_Gain_Ki : DOUBLE read FLP_SET_UDCCooling_PID_Gain_Ki write FLP_SET_UDCCooling_PID_Gain_Ki;
+[IniValue('LP_SET_UDCCooling_PID_Gain_Kd', 'D gain', '0.0', 1950)]
+property LP_SET_UDCCooling_PID_Gain_Kd : DOUBLE read FLP_SET_UDCCooling_PID_Gain_Kd write FLP_SET_UDCCooling_PID_Gain_Kd;
+[IniValue('LP_SET_UDCCooling_PID_Gain_SettingError', 'setting error', '0.0', 1951)]
+property LP_SET_UDCCooling_PID_Gain_SettingError : DOUBLE read FLP_SET_UDCCooling_PID_Gain_SettingError write FLP_SET_UDCCooling_PID_Gain_SettingError;
+[IniValue('LP_SET_UDCCooling_PID_Gain_MaxUpdate', 'update rate at error > min window', '0.0', 1952)]
+property LP_SET_UDCCooling_PID_Gain_MaxUpdate : DOUBLE read FLP_SET_UDCCooling_PID_Gain_MaxUpdate write FLP_SET_UDCCooling_PID_Gain_MaxUpdate;
+[IniValue('LP_SET_UDCCooling_PID_Gain_MinUpdate', 'update rate at error < min window', '0.0', 1953)]
+property LP_SET_UDCCooling_PID_Gain_MinUpdate : DOUBLE read FLP_SET_UDCCooling_PID_Gain_MinUpdate write FLP_SET_UDCCooling_PID_Gain_MinUpdate;
+[IniValue('LP_SET_UDCCooling_PID_Gain_MaxOutput', 'Max output', '0.0', 1954)]
+property LP_SET_UDCCooling_PID_Gain_MaxOutput : DOUBLE read FLP_SET_UDCCooling_PID_Gain_MaxOutput write FLP_SET_UDCCooling_PID_Gain_MaxOutput;
+[IniValue('LP_SET_UDCCooling_PID_Gain_MinOutput', 'Min output', '0.0', 1955)]
+property LP_SET_UDCCooling_PID_Gain_MinOutput : DOUBLE read FLP_SET_UDCCooling_PID_Gain_MinOutput write FLP_SET_UDCCooling_PID_Gain_MinOutput;
+[IniValue('LP_SET_UDCCooling_PID_Gain_ErrorWindowMax', 'Error window max', '0.0', 1956)]
+property LP_SET_UDCCooling_PID_Gain_ErrorWindowMax : DOUBLE read FLP_SET_UDCCooling_PID_Gain_ErrorWindowMax write FLP_SET_UDCCooling_PID_Gain_ErrorWindowMax;
+[IniValue('LP_SET_UDCCooling_PID_Gain_ErrorWindowMin', 'Error window min', '0.0', 1957)]
+property LP_SET_UDCCooling_PID_Gain_ErrorWindowMin : DOUBLE read FLP_SET_UDCCooling_PID_Gain_ErrorWindowMin write FLP_SET_UDCCooling_PID_Gain_ErrorWindowMin;
+[IniValue('LP_SET_Dose_rMinReduceAgentSetpoint', 'min reducing agent setpoint', '0.0', 1958)]
+property LP_SET_Dose_rMinReduceAgentSetpoint : DOUBLE read FLP_SET_Dose_rMinReduceAgentSetpoint write FLP_SET_Dose_rMinReduceAgentSetpoint;
+[IniValue('LP_SET_Dose_rCoolingProcessTime', 'cooling process time', '0.0', 1959)]
+property LP_SET_Dose_rCoolingProcessTime : DOUBLE read FLP_SET_Dose_rCoolingProcessTime write FLP_SET_Dose_rCoolingProcessTime;
+[IniValue('LP_SET_Dose_rFlushingProcessTime1', 'flushing process time1', '0.0', 1960)]
+property LP_SET_Dose_rFlushingProcessTime1 : DOUBLE read FLP_SET_Dose_rFlushingProcessTime1 write FLP_SET_Dose_rFlushingProcessTime1;
+[IniValue('LP_SET_Dose_rFlushingProcessTime2', 'flushing process time2', '0.0', 1961)]
+property LP_SET_Dose_rFlushingProcessTime2 : DOUBLE read FLP_SET_Dose_rFlushingProcessTime2 write FLP_SET_Dose_rFlushingProcessTime2;
+[IniValue('LP_SET_Dose_rMinUdcInTemp', 'min UDC inlet temp for dosing', '0.0', 1962)]
+property LP_SET_Dose_rMinUdcInTemp : DOUBLE read FLP_SET_Dose_rMinUdcInTemp write FLP_SET_Dose_rMinUdcInTemp;
+[IniValue('LP_SET_Dose_rMinUdcOutTemp', 'min UDC outlet temp for dosing', '0.0', 1963)]
+property LP_SET_Dose_rMinUdcOutTemp : DOUBLE read FLP_SET_Dose_rMinUdcOutTemp write FLP_SET_Dose_rMinUdcOutTemp;
+[IniValue('LP_SET_Dose_rEgbBvPidInitial', 'EGB-GV initial open ration for dosing', '0.0', 1964)]
+property LP_SET_Dose_rEgbBvPidInitial : DOUBLE read FLP_SET_Dose_rEgbBvPidInitial write FLP_SET_Dose_rEgbBvPidInitial;
+[IniValue('LP_SET_Dose_rBurnerSetpointForDose', 'Burner setpoint for dosing', '0.0', 1965)]
+property LP_SET_Dose_rBurnerSetpointForDose : DOUBLE read FLP_SET_Dose_rBurnerSetpointForDose write FLP_SET_Dose_rBurnerSetpointForDose;
+[IniValue('LP_SET_Dose_rXivOpenRatioForDose', 'XIV open ratio for dosing', '0.0', 1966)]
+property LP_SET_Dose_rXivOpenRatioForDose : DOUBLE read FLP_SET_Dose_rXivOpenRatioForDose write FLP_SET_Dose_rXivOpenRatioForDose;
+[IniValue('LP_SET_Dose_rXovOpenRatioForDose', 'XOV open ratio for dosing', '0.0', 1967)]
+property LP_SET_Dose_rXovOpenRatioForDose : DOUBLE read FLP_SET_Dose_rXovOpenRatioForDose write FLP_SET_Dose_rXovOpenRatioForDose;
+[IniValue('LP_SET_Dose_rBurnerTempUpperLimitOverheat', 'burner outlet temp upper limit for overheat cooling', '0.0', 1968)]
+property LP_SET_Dose_rBurnerTempUpperLimitOverheat : DOUBLE read FLP_SET_Dose_rBurnerTempUpperLimitOverheat write FLP_SET_Dose_rBurnerTempUpperLimitOverheat;
+[IniValue('LP_SET_Dose_rBurnerTempLowerLimitOverheat', 'burner outlet temp lower limit for overheat cooling', '0.0', 1969)]
+property LP_SET_Dose_rBurnerTempLowerLimitOverheat : DOUBLE read FLP_SET_Dose_rBurnerTempLowerLimitOverheat write FLP_SET_Dose_rBurnerTempLowerLimitOverheat;
+[IniValue('LP_SET_Dose_rXivOpenRatioForOverheatCooling', 'XIV open ratio for oeverheat cooling', '0.0', 1970)]
+property LP_SET_Dose_rXivOpenRatioForOverheatCooling : DOUBLE read FLP_SET_Dose_rXivOpenRatioForOverheatCooling write FLP_SET_Dose_rXivOpenRatioForOverheatCooling;
+[IniValue('LP_SET_Dose_rXovOpenRatioForOverheatCooling', 'XOV open ratio for oeverheat cooling', '0.0', 1971)]
+property LP_SET_Dose_rXovOpenRatioForOverheatCooling : DOUBLE read FLP_SET_Dose_rXovOpenRatioForOverheatCooling write FLP_SET_Dose_rXovOpenRatioForOverheatCooling;
+[IniValue('LP_SET_SootBlowing_rNumberOfSolValve', 'Number of sol vv', '0.0', 1972)]
+property LP_SET_SootBlowing_rNumberOfSolValve : DOUBLE read FLP_SET_SootBlowing_rNumberOfSolValve write FLP_SET_SootBlowing_rNumberOfSolValve;
+[IniValue('LP_SET_SootBlowing_rNormalCycle', 'normal soot blowing cycle', '0.0', 1973)]
+property LP_SET_SootBlowing_rNormalCycle : DOUBLE read FLP_SET_SootBlowing_rNormalCycle write FLP_SET_SootBlowing_rNormalCycle;
+[IniValue('LP_SET_SootBlowing_rAbnormalCycle', 'Abnormal soot blowing cycle', '0.0', 1974)]
+property LP_SET_SootBlowing_rAbnormalCycle : DOUBLE read FLP_SET_SootBlowing_rAbnormalCycle write FLP_SET_SootBlowing_rAbnormalCycle;
+[IniValue('LP_SET_SootBlowing_rValveOnTime', 'Solenoid valve on time', '0.0', 1975)]
+property LP_SET_SootBlowing_rValveOnTime : DOUBLE read FLP_SET_SootBlowing_rValveOnTime write FLP_SET_SootBlowing_rValveOnTime;
+[IniValue('LP_SET_VentingSealing_rVentingMinTime', 'venting min time', '0.0', 1976)]
+property LP_SET_VentingSealing_rVentingMinTime : DOUBLE read FLP_SET_VentingSealing_rVentingMinTime write FLP_SET_VentingSealing_rVentingMinTime;
+[IniValue('LP_SET_VentingSealing_rVentingExtraTime', 'vening extra time', '0.0', 1977)]
+property LP_SET_VentingSealing_rVentingExtraTime : DOUBLE read FLP_SET_VentingSealing_rVentingExtraTime write FLP_SET_VentingSealing_rVentingExtraTime;
+[IniValue('LP_SET_VentingSealing_rXivInitOpenRatioForVenting', 'XIV initial open ratio for venting', '0.0', 1978)]
+property LP_SET_VentingSealing_rXivInitOpenRatioForVenting : DOUBLE read FLP_SET_VentingSealing_rXivInitOpenRatioForVenting write FLP_SET_VentingSealing_rXivInitOpenRatioForVenting;
+[IniValue('LP_SET_VentingSealing_rXovInitOpenRatioForVenting', 'XOV open ratio for venting', '0.0', 1979)]
+property LP_SET_VentingSealing_rXovInitOpenRatioForVenting : DOUBLE read FLP_SET_VentingSealing_rXovInitOpenRatioForVenting write FLP_SET_VentingSealing_rXovInitOpenRatioForVenting;
+[IniValue('LP_SET_VentingSealing_rXivInitOpenRatioForSealing', 'XIV open ration for sealing', '0.0', 1980)]
+property LP_SET_VentingSealing_rXivInitOpenRatioForSealing : DOUBLE read FLP_SET_VentingSealing_rXivInitOpenRatioForSealing write FLP_SET_VentingSealing_rXivInitOpenRatioForSealing;
+[IniValue('LP_SET_VentingSealing_rXovInitOpenRatioForSealing', 'XOV initial open raion for sealing', '0.0', 1981)]
+property LP_SET_VentingSealing_rXovInitOpenRatioForSealing : DOUBLE read FLP_SET_VentingSealing_rXovInitOpenRatioForSealing write FLP_SET_VentingSealing_rXovInitOpenRatioForSealing;
+[IniValue('LP_SET_VentingSealing_rPdtLowTimeDelayForSealing', 'RSV or RTV PDT low time delay for sealing', '0.0', 1982)]
+property LP_SET_VentingSealing_rPdtLowTimeDelayForSealing : DOUBLE read FLP_SET_VentingSealing_rPdtLowTimeDelayForSealing write FLP_SET_VentingSealing_rPdtLowTimeDelayForSealing;
+[IniValue('LP_SET_VentingSealing_rPdtHighTimeDelayForSealing', 'RSV or RTV PDT high time delay for sealing', '0.0', 1983)]
+property LP_SET_VentingSealing_rPdtHighTimeDelayForSealing : DOUBLE read FLP_SET_VentingSealing_rPdtHighTimeDelayForSealing write FLP_SET_VentingSealing_rPdtHighTimeDelayForSealing;
+[IniValue('LP_SET_VentingSealing_rBlowerSetpointForVenting', 'blower setpoint for venting', '0.0', 1984)]
+property LP_SET_VentingSealing_rBlowerSetpointForVenting : DOUBLE read FLP_SET_VentingSealing_rBlowerSetpointForVenting write FLP_SET_VentingSealing_rBlowerSetpointForVenting;
+[IniValue('LP_SET_VentingSealing_rBlowerInitSetpointForSealing', 'blower initial setpoint for venting', '0.0', 1985)]
+property LP_SET_VentingSealing_rBlowerInitSetpointForSealing : DOUBLE read FLP_SET_VentingSealing_rBlowerInitSetpointForSealing write FLP_SET_VentingSealing_rBlowerInitSetpointForSealing;
+[IniValue('LP_SET_Regeneration_rBurnerInitSetpoint', 'burner inlet setpoint for regeration', '0.0', 1986)]
+property LP_SET_Regeneration_rBurnerInitSetpoint : DOUBLE read FLP_SET_Regeneration_rBurnerInitSetpoint write FLP_SET_Regeneration_rBurnerInitSetpoint;
+[IniValue('LP_SET_Regeneration_rBurnerUpperLimitSetpoint', 'burner upper limit setpoint for regeneration', '0.0', 1987)]
+property LP_SET_Regeneration_rBurnerUpperLimitSetpoint : DOUBLE read FLP_SET_Regeneration_rBurnerUpperLimitSetpoint write FLP_SET_Regeneration_rBurnerUpperLimitSetpoint;
+[IniValue('LP_SET_Regeneration_rBurnerLowerLimitSetpoint', 'burner lower limit setpoint for regeneration', '0.0', 1988)]
+property LP_SET_Regeneration_rBurnerLowerLimitSetpoint : DOUBLE read FLP_SET_Regeneration_rBurnerLowerLimitSetpoint write FLP_SET_Regeneration_rBurnerLowerLimitSetpoint;
+[IniValue('LP_SET_Regeneration_rUpperLimitChamberTemp', 'upper limit of chamber outlet temp for regeneration', '0.0', 1989)]
+property LP_SET_Regeneration_rUpperLimitChamberTemp : DOUBLE read FLP_SET_Regeneration_rUpperLimitChamberTemp write FLP_SET_Regeneration_rUpperLimitChamberTemp;
+[IniValue('LP_SET_Regeneration_rLowerLimitChamberTemp', 'lower limit of chamber outlet temp for regeneration', '0.0', 1990)]
+property LP_SET_Regeneration_rLowerLimitChamberTemp : DOUBLE read FLP_SET_Regeneration_rLowerLimitChamberTemp write FLP_SET_Regeneration_rLowerLimitChamberTemp;
+[IniValue('LP_SET_Regeneration_rRegenerationTime1', 'regeneration time 1', '0.0', 1991)]
+property LP_SET_Regeneration_rRegenerationTime1 : DOUBLE read FLP_SET_Regeneration_rRegenerationTime1 write FLP_SET_Regeneration_rRegenerationTime1;
+[IniValue('LP_SET_Regeneration_rRegenerationTime2', 'regeneration time 2', '0.0', 1992)]
+property LP_SET_Regeneration_rRegenerationTime2 : DOUBLE read FLP_SET_Regeneration_rRegenerationTime2 write FLP_SET_Regeneration_rRegenerationTime2;
+[IniValue('LP_SET_Regeneration_rXivInitOpenRatio', 'XIV initial open ration for regeneration', '0.0', 1993)]
+property LP_SET_Regeneration_rXivInitOpenRatio : DOUBLE read FLP_SET_Regeneration_rXivInitOpenRatio write FLP_SET_Regeneration_rXivInitOpenRatio;
+[IniValue('LP_SET_Regeneration_rXovOpenRatio', 'XOV open ratio for regeneration', '0.0', 1994)]
+property LP_SET_Regeneration_rXovOpenRatio : DOUBLE read FLP_SET_Regeneration_rXovOpenRatio write FLP_SET_Regeneration_rXovOpenRatio;
+[IniValue('LP_SET_Regeneration_rBsvInitialOpenRatio', 'BSV intial open ration for regeneration', '0.0', 1995)]
+property LP_SET_Regeneration_rBsvInitialOpenRatio : DOUBLE read FLP_SET_Regeneration_rBsvInitialOpenRatio write FLP_SET_Regeneration_rBsvInitialOpenRatio;
+[IniValue('LP_SET_Regeneration_rBlowerInitSetpoint', 'blower initial setpoint for regeneration', '0.0', 1996)]
+property LP_SET_Regeneration_rBlowerInitSetpoint : DOUBLE read FLP_SET_Regeneration_rBlowerInitSetpoint write FLP_SET_Regeneration_rBlowerInitSetpoint;
+[IniValue('LP_SET_Regeneration_rRegenerationRequestTime', 'regeneration request signal on time', '0.0', 1997)]
+property LP_SET_Regeneration_rRegenerationRequestTime : DOUBLE read FLP_SET_Regeneration_rRegenerationRequestTime write FLP_SET_Regeneration_rRegenerationRequestTime;
+[IniValue('LP_SET_Regeneration_rRegenerationTimeout', 'regeneration time out', '0.0', 1998)]
+property LP_SET_Regeneration_rRegenerationTimeout : DOUBLE read FLP_SET_Regeneration_rRegenerationTimeout write FLP_SET_Regeneration_rRegenerationTimeout;
+[IniValue('LP_SET_Standbyheat_rBurnerInitSetpoint', 'burner initial setpoint for heat', '0.0', 1999)]
+property LP_SET_Standbyheat_rBurnerInitSetpoint : DOUBLE read FLP_SET_Standbyheat_rBurnerInitSetpoint write FLP_SET_Standbyheat_rBurnerInitSetpoint;
+[IniValue('LP_SET_Standbyheat_rBurnerUpperLimitSetpoint', 'burner upper limit setpoint for heat', '0.0', 2000)]
+property LP_SET_Standbyheat_rBurnerUpperLimitSetpoint : DOUBLE read FLP_SET_Standbyheat_rBurnerUpperLimitSetpoint write FLP_SET_Standbyheat_rBurnerUpperLimitSetpoint;
+[IniValue('LP_SET_Standbyheat_rBurnerLowerLimitSetpoint', 'burner lower limit setpoint for heat', '0.0', 2001)]
+property LP_SET_Standbyheat_rBurnerLowerLimitSetpoint : DOUBLE read FLP_SET_Standbyheat_rBurnerLowerLimitSetpoint write FLP_SET_Standbyheat_rBurnerLowerLimitSetpoint;
+[IniValue('LP_SET_Standbyheat_rUpperLimitChamberTemp', 'upper limit of chamber outlet temp for heat', '0.0', 2002)]
+property LP_SET_Standbyheat_rUpperLimitChamberTemp : DOUBLE read FLP_SET_Standbyheat_rUpperLimitChamberTemp write FLP_SET_Standbyheat_rUpperLimitChamberTemp;
+[IniValue('LP_SET_Standbyheat_rLowerLimitChamberTemp', 'lower limit of chamber outlet temp for heat', '0.0', 2003)]
+property LP_SET_Standbyheat_rLowerLimitChamberTemp : DOUBLE read FLP_SET_Standbyheat_rLowerLimitChamberTemp write FLP_SET_Standbyheat_rLowerLimitChamberTemp;
+[IniValue('LP_SET_Standbyheat_rXivInitOpenRatio', 'XIV initial open ration for heat', '0.0', 2004)]
+property LP_SET_Standbyheat_rXivInitOpenRatio : DOUBLE read FLP_SET_Standbyheat_rXivInitOpenRatio write FLP_SET_Standbyheat_rXivInitOpenRatio;
+[IniValue('LP_SET_Standbyheat_rXovOpenRatio', 'XOV open ration for heat', '0.0', 2005)]
+property LP_SET_Standbyheat_rXovOpenRatio : DOUBLE read FLP_SET_Standbyheat_rXovOpenRatio write FLP_SET_Standbyheat_rXovOpenRatio;
+[IniValue('LP_SET_Standbyheat_rBlowerInitSetpoint', 'blower initial setpoitn for heat', '0.0', 2006)]
+property LP_SET_Standbyheat_rBlowerInitSetpoint : DOUBLE read FLP_SET_Standbyheat_rBlowerInitSetpoint write FLP_SET_Standbyheat_rBlowerInitSetpoint;
+[IniValue('LP_SET_Standbyheat_rMinChamberOutTemp', 'Min chamber outlet temp for heat', '0.0', 2007)]
+property LP_SET_Standbyheat_rMinChamberOutTemp : DOUBLE read FLP_SET_Standbyheat_rMinChamberOutTemp write FLP_SET_Standbyheat_rMinChamberOutTemp;
+[IniValue('LP_SET_Standbyheat_rStandbyHeatTimeOut', 'standby heat timeout', '0.0', 2008)]
+property LP_SET_Standbyheat_rStandbyHeatTimeOut : DOUBLE read FLP_SET_Standbyheat_rStandbyHeatTimeOut write FLP_SET_Standbyheat_rStandbyHeatTimeOut;
+[IniValue('LP_SET_Etc_rUreaControlVVInitKeepTime', 'Urea control vv initial ratio keep time', '0.0', 2009)]
+property LP_SET_Etc_rUreaControlVVInitKeepTime : DOUBLE read FLP_SET_Etc_rUreaControlVVInitKeepTime write FLP_SET_Etc_rUreaControlVVInitKeepTime;
+[IniValue('LP_SET_Etc_rUDCInTempDeviation', 'UDC inlet temp deviation', '0.0', 2010)]
+property LP_SET_Etc_rUDCInTempDeviation : DOUBLE read FLP_SET_Etc_rUDCInTempDeviation write FLP_SET_Etc_rUDCInTempDeviation;
+[IniValue('LP_SET_Etc_rSupplyPumpNormalChangeoverTime', 'Supply pump normal changeover time', '0.0', 2011)]
+property LP_SET_Etc_rSupplyPumpNormalChangeoverTime : DOUBLE read FLP_SET_Etc_rSupplyPumpNormalChangeoverTime write FLP_SET_Etc_rSupplyPumpNormalChangeoverTime;
+[IniValue('LP_SET_Etc_rBurnerPipeDiameter', 'Burner pip diameter', '0.0', 2012)]
+property LP_SET_Etc_rBurnerPipeDiameter : DOUBLE read FLP_SET_Etc_rBurnerPipeDiameter write FLP_SET_Etc_rBurnerPipeDiameter;
+[IniValue('LP_SET_Etc_rBurnerPipeOrificeDiameter', 'Burner pip orfice diameter', '0.0', 2013)]
+property LP_SET_Etc_rBurnerPipeOrificeDiameter : DOUBLE read FLP_SET_Etc_rBurnerPipeOrificeDiameter write FLP_SET_Etc_rBurnerPipeOrificeDiameter;
+[IniValue('LP_SET_Etc_rBurnerInGasMinFlow', 'Burner inlet exh.gas min flow', '0.0', 2014)]
+property LP_SET_Etc_rBurnerInGasMinFlow : DOUBLE read FLP_SET_Etc_rBurnerInGasMinFlow write FLP_SET_Etc_rBurnerInGasMinFlow;
+[IniValue('LP_SET_Etc_rBurnerInGasFlowLowAlarmTime', 'Burner inlet exh.gas min flow low alarm time', '0.0', 2015)]
+property LP_SET_Etc_rBurnerInGasFlowLowAlarmTime : DOUBLE read FLP_SET_Etc_rBurnerInGasFlowLowAlarmTime write FLP_SET_Etc_rBurnerInGasFlowLowAlarmTime;
+[IniValue('LP_SET_Etc_rBurnerInGasFlowLoLoAlarmTime', 'Burner inlet exh.gas min flow lowlow alarm time', '0.0', 2016)]
+property LP_SET_Etc_rBurnerInGasFlowLoLoAlarmTime : DOUBLE read FLP_SET_Etc_rBurnerInGasFlowLoLoAlarmTime write FLP_SET_Etc_rBurnerInGasFlowLoLoAlarmTime;
+[IniValue('LP_SET_Etc_rBurnerInGasMaxFlow', 'Burner inlet exh.gas max flow', '0.0', 2017)]
+property LP_SET_Etc_rBurnerInGasMaxFlow : DOUBLE read FLP_SET_Etc_rBurnerInGasMaxFlow write FLP_SET_Etc_rBurnerInGasMaxFlow;
+[IniValue('LP_SET_Etc_rBurnerInGasFlowHighAlarmTime', 'Burner inlet exh.gas flow hi alarm time', '0.0', 2018)]
+property LP_SET_Etc_rBurnerInGasFlowHighAlarmTime : DOUBLE read FLP_SET_Etc_rBurnerInGasFlowHighAlarmTime write FLP_SET_Etc_rBurnerInGasFlowHighAlarmTime;
+[IniValue('LP_Reduce_Agent_Setpoint_LV', 'reducing agent setpoint min', '0.0', 2019)]
+property LP_Reduce_Agent_Setpoint_LV : DOUBLE read FLP_Reduce_Agent_Setpoint_LV write FLP_Reduce_Agent_Setpoint_LV;
+[IniValue('LP_Reduce_Agent_Setpoint_HV', 'reducing agent setpoint max', '0.0', 2020)]
+property LP_Reduce_Agent_Setpoint_HV : DOUBLE read FLP_Reduce_Agent_Setpoint_HV write FLP_Reduce_Agent_Setpoint_HV;
+[IniValue('LP_Eng_Load_LV', 'engine load min', '0.0', 2021)]
+property LP_Eng_Load_LV : DOUBLE read FLP_Eng_Load_LV write FLP_Eng_Load_LV;
+[IniValue('LP_Eng_Load_HV', 'engine load max', '0.0', 2022)]
+property LP_Eng_Load_HV : DOUBLE read FLP_Eng_Load_HV write FLP_Eng_Load_HV;
+[IniValue('LP_Dose_Urea_Flowmeter_LV', 'dosing urea flowmeter min', '0.0', 2023)]
+property LP_Dose_Urea_Flowmeter_LV : DOUBLE read FLP_Dose_Urea_Flowmeter_LV write FLP_Dose_Urea_Flowmeter_LV;
+[IniValue('LP_Dose_Urea_Flowmeter_HV', 'dosing urea flowmeter max', '0.0', 2024)]
+property LP_Dose_Urea_Flowmeter_HV : DOUBLE read FLP_Dose_Urea_Flowmeter_HV write FLP_Dose_Urea_Flowmeter_HV;
+[IniValue('LP_Dose_Urea_Flowmeter_VLL', 'dosing urea flowmeter ALL', '0.0', 2025)]
+property LP_Dose_Urea_Flowmeter_VLL : DOUBLE read FLP_Dose_Urea_Flowmeter_VLL write FLP_Dose_Urea_Flowmeter_VLL;
+[IniValue('LP_Dose_Urea_Flowmeter_VLO', 'dosing urea flowmeter AL', '0.0', 2026)]
+property LP_Dose_Urea_Flowmeter_VLO : DOUBLE read FLP_Dose_Urea_Flowmeter_VLO write FLP_Dose_Urea_Flowmeter_VLO;
+[IniValue('LP_Dose_Urea_Flowmeter_VHI', 'dosing urea flowmeter AH', '0.0', 2027)]
+property LP_Dose_Urea_Flowmeter_VHI : DOUBLE read FLP_Dose_Urea_Flowmeter_VHI write FLP_Dose_Urea_Flowmeter_VHI;
+[IniValue('LP_Dose_Urea_Flowmeter_VHH', 'dosing urea flowmeter AHH', '0.0', 2028)]
+property LP_Dose_Urea_Flowmeter_VHH : DOUBLE read FLP_Dose_Urea_Flowmeter_VHH write FLP_Dose_Urea_Flowmeter_VHH;
+[IniValue('LP_Dose_Urea_Flowmeter_DLY_LL', 'dosing urea flowmeter ALL alarm delay', '0.0', 2029)]
+property LP_Dose_Urea_Flowmeter_DLY_LL : DOUBLE read FLP_Dose_Urea_Flowmeter_DLY_LL write FLP_Dose_Urea_Flowmeter_DLY_LL;
+[IniValue('LP_Dose_Urea_Flowmeter_DLY_LO', 'dosing urea flowmeter AL alarm delay', '0.0', 2030)]
+property LP_Dose_Urea_Flowmeter_DLY_LO : DOUBLE read FLP_Dose_Urea_Flowmeter_DLY_LO write FLP_Dose_Urea_Flowmeter_DLY_LO;
+[IniValue('LP_Dose_Urea_Flowmeter_DLY_HI', 'dosing urea flowmeter AH alarm delay', '0.0', 2031)]
+property LP_Dose_Urea_Flowmeter_DLY_HI : DOUBLE read FLP_Dose_Urea_Flowmeter_DLY_HI write FLP_Dose_Urea_Flowmeter_DLY_HI;
+[IniValue('LP_Dose_Urea_Flowmeter_DLY_HH', 'dosing urea flowmeter AHH alarm delay', '0.0', 2032)]
+property LP_Dose_Urea_Flowmeter_DLY_HH : DOUBLE read FLP_Dose_Urea_Flowmeter_DLY_HH write FLP_Dose_Urea_Flowmeter_DLY_HH;
+[IniValue('LP_Dose_Urea_In_PT_LV', 'dosing urea inlet PT min', '0.0', 2033)]
+property LP_Dose_Urea_In_PT_LV : DOUBLE read FLP_Dose_Urea_In_PT_LV write FLP_Dose_Urea_In_PT_LV;
+[IniValue('LP_Dose_Urea_In_PT_HV', 'dosing urea inlet PT max', '0.0', 2034)]
+property LP_Dose_Urea_In_PT_HV : DOUBLE read FLP_Dose_Urea_In_PT_HV write FLP_Dose_Urea_In_PT_HV;
+[IniValue('LP_Dose_Urea_In_PT_VLL', 'dosing urea inlet PT ALL', '0.0', 2035)]
+property LP_Dose_Urea_In_PT_VLL : DOUBLE read FLP_Dose_Urea_In_PT_VLL write FLP_Dose_Urea_In_PT_VLL;
+[IniValue('LP_Dose_Urea_In_PT_VLO', 'dosing urea inlet PT AL', '0.0', 2036)]
+property LP_Dose_Urea_In_PT_VLO : DOUBLE read FLP_Dose_Urea_In_PT_VLO write FLP_Dose_Urea_In_PT_VLO;
+[IniValue('LP_Dose_Urea_In_PT_DLY_LL', 'dosing urea inlet PT ALL alarm delay', '0.0', 2037)]
+property LP_Dose_Urea_In_PT_DLY_LL : DOUBLE read FLP_Dose_Urea_In_PT_DLY_LL write FLP_Dose_Urea_In_PT_DLY_LL;
+[IniValue('LP_Dose_Urea_In_PT_DLY_LO', 'dosing urea inlet PT AL alarm delay', '0.0', 2038)]
+property LP_Dose_Urea_In_PT_DLY_LO : DOUBLE read FLP_Dose_Urea_In_PT_DLY_LO write FLP_Dose_Urea_In_PT_DLY_LO;
+[IniValue('LP_Dose_Urea_Out_PT_LV', 'dosing urea outlet PT min', '0.0', 2039)]
+property LP_Dose_Urea_Out_PT_LV : DOUBLE read FLP_Dose_Urea_Out_PT_LV write FLP_Dose_Urea_Out_PT_LV;
+[IniValue('LP_Dose_Urea_Out_PT_HV', 'dosing urea outlet PT max', '0.0', 2040)]
+property LP_Dose_Urea_Out_PT_HV : DOUBLE read FLP_Dose_Urea_Out_PT_HV write FLP_Dose_Urea_Out_PT_HV;
+[IniValue('LP_Dose_Air_In_PT_LV', 'dosing air inlet PT min', '0.0', 2041)]
+property LP_Dose_Air_In_PT_LV : DOUBLE read FLP_Dose_Air_In_PT_LV write FLP_Dose_Air_In_PT_LV;
+[IniValue('LP_Dose_Air_In_PT_HV', 'dosing air inlet PT max', '0.0', 2042)]
+property LP_Dose_Air_In_PT_HV : DOUBLE read FLP_Dose_Air_In_PT_HV write FLP_Dose_Air_In_PT_HV;
+[IniValue('LP_Dose_Air_In_PT_VLL', 'dosing air inlet PT ALL', '0.0', 2043)]
+property LP_Dose_Air_In_PT_VLL : DOUBLE read FLP_Dose_Air_In_PT_VLL write FLP_Dose_Air_In_PT_VLL;
+[IniValue('LP_Dose_Air_In_PT_VLO', 'dosing air inlet PT AL', '0.0', 2044)]
+property LP_Dose_Air_In_PT_VLO : DOUBLE read FLP_Dose_Air_In_PT_VLO write FLP_Dose_Air_In_PT_VLO;
+[IniValue('LP_Dose_Air_In_PT_DLY_LL', 'dosing air inlet PT ALL alarm delay', '0.0', 2045)]
+property LP_Dose_Air_In_PT_DLY_LL : DOUBLE read FLP_Dose_Air_In_PT_DLY_LL write FLP_Dose_Air_In_PT_DLY_LL;
+[IniValue('LP_Dose_Air_In_PT_DLY_LO', 'dosing air inlet PT AL alarm delay', '0.0', 2046)]
+property LP_Dose_Air_In_PT_DLY_LO : DOUBLE read FLP_Dose_Air_In_PT_DLY_LO write FLP_Dose_Air_In_PT_DLY_LO;
+[IniValue('LP_Dose_Air_Out_PT_LV', 'dosing air outlet PT min', '0.0', 2047)]
+property LP_Dose_Air_Out_PT_LV : DOUBLE read FLP_Dose_Air_Out_PT_LV write FLP_Dose_Air_Out_PT_LV;
+[IniValue('LP_Dose_Air_Out_PT_HV', 'dosing air outlet PT max', '0.0', 2048)]
+property LP_Dose_Air_Out_PT_HV : DOUBLE read FLP_Dose_Air_Out_PT_HV write FLP_Dose_Air_Out_PT_HV;
+[IniValue('LP_Dose_Air_Out_PT_VLL', 'dosing air outlet PT ALL', '0.0', 2049)]
+property LP_Dose_Air_Out_PT_VLL : DOUBLE read FLP_Dose_Air_Out_PT_VLL write FLP_Dose_Air_Out_PT_VLL;
+[IniValue('LP_Dose_Air_Out_PT_VLO', 'dosing air outlet PT AL', '0.0', 2050)]
+property LP_Dose_Air_Out_PT_VLO : DOUBLE read FLP_Dose_Air_Out_PT_VLO write FLP_Dose_Air_Out_PT_VLO;
+[IniValue('LP_Dose_Air_Out_PT_DLY_LL', 'dosing air outlet PT ALL alarm delay', '0.0', 2051)]
+property LP_Dose_Air_Out_PT_DLY_LL : DOUBLE read FLP_Dose_Air_Out_PT_DLY_LL write FLP_Dose_Air_Out_PT_DLY_LL;
+[IniValue('LP_Dose_Air_Out_PT_DLY_LO', 'dosing air outlet PT AL alarm delay', '0.0', 2052)]
+property LP_Dose_Air_Out_PT_DLY_LO : DOUBLE read FLP_Dose_Air_Out_PT_DLY_LO write FLP_Dose_Air_Out_PT_DLY_LO;
+[IniValue('LP_Blower_Air_In_PT_LV', 'blower air inlet PT min', '0.0', 2053)]
+property LP_Blower_Air_In_PT_LV : DOUBLE read FLP_Blower_Air_In_PT_LV write FLP_Blower_Air_In_PT_LV;
+[IniValue('LP_Blower_Air_In_PT_HV', 'blower air inlet PT max', '0.0', 2054)]
+property LP_Blower_Air_In_PT_HV : DOUBLE read FLP_Blower_Air_In_PT_HV write FLP_Blower_Air_In_PT_HV;
+[IniValue('LP_Blower_Air_In_PT_VLL', 'blower air inlet PT ALL', '0.0', 2055)]
+property LP_Blower_Air_In_PT_VLL : DOUBLE read FLP_Blower_Air_In_PT_VLL write FLP_Blower_Air_In_PT_VLL;
+[IniValue('LP_Blower_Air_In_PT_VLO', 'blower air inlet PT AL', '0.0', 2056)]
+property LP_Blower_Air_In_PT_VLO : DOUBLE read FLP_Blower_Air_In_PT_VLO write FLP_Blower_Air_In_PT_VLO;
+[IniValue('LP_Blower_Air_In_PT_DLY_LL', 'blower air inlet PT ALL alarm delay', '0.0', 2057)]
+property LP_Blower_Air_In_PT_DLY_LL : DOUBLE read FLP_Blower_Air_In_PT_DLY_LL write FLP_Blower_Air_In_PT_DLY_LL;
+[IniValue('LP_Blower_Air_In_PT_DLY_LO', 'blower air inlet PT AL alarm delay', '0.0', 2058)]
+property LP_Blower_Air_In_PT_DLY_LO : DOUBLE read FLP_Blower_Air_In_PT_DLY_LO write FLP_Blower_Air_In_PT_DLY_LO;
+[IniValue('LP_Chamber_PDT_LV', 'chamber PDT min', '0.0', 2059)]
+property LP_Chamber_PDT_LV : DOUBLE read FLP_Chamber_PDT_LV write FLP_Chamber_PDT_LV;
+[IniValue('LP_Chamber_PDT_HV', 'chamber PDT max', '0.0', 2060)]
+property LP_Chamber_PDT_HV : DOUBLE read FLP_Chamber_PDT_HV write FLP_Chamber_PDT_HV;
+[IniValue('LP_Chamber_PDT_VLO', 'chamber PDT AL', '0.0', 2061)]
+property LP_Chamber_PDT_VLO : DOUBLE read FLP_Chamber_PDT_VLO write FLP_Chamber_PDT_VLO;
+[IniValue('LP_Chamber_PDT_VHI', 'chamber PDT AH', '0.0', 2062)]
+property LP_Chamber_PDT_VHI : DOUBLE read FLP_Chamber_PDT_VHI write FLP_Chamber_PDT_VHI;
+[IniValue('LP_Chamber_PDT_VHH', 'chamber PDT AHH', '0.0', 2063)]
+property LP_Chamber_PDT_VHH : DOUBLE read FLP_Chamber_PDT_VHH write FLP_Chamber_PDT_VHH;
+[IniValue('LP_Chamber_PDT_DLY_LO', 'chamber PDT AL alarm delay', '0.0', 2064)]
+property LP_Chamber_PDT_DLY_LO : DOUBLE read FLP_Chamber_PDT_DLY_LO write FLP_Chamber_PDT_DLY_LO;
+[IniValue('LP_Chamber_PDT_DLY_HI', 'chamber PDT AH alarm delay', '0.0', 2065)]
+property LP_Chamber_PDT_DLY_HI : DOUBLE read FLP_Chamber_PDT_DLY_HI write FLP_Chamber_PDT_DLY_HI;
+[IniValue('LP_Chamber_PDT_DLY_HH', 'chamber PDT AHH alarm delay', '0.0', 2066)]
+property LP_Chamber_PDT_DLY_HH : DOUBLE read FLP_Chamber_PDT_DLY_HH write FLP_Chamber_PDT_DLY_HH;
+[IniValue('LP_Chamber_In_Temp_LV', 'chamber inlet temp min', '0.0', 2067)]
+property LP_Chamber_In_Temp_LV : DOUBLE read FLP_Chamber_In_Temp_LV write FLP_Chamber_In_Temp_LV;
+[IniValue('LP_Chamber_In_Temp_HV', 'chamber inlet temp max', '0.0', 2068)]
+property LP_Chamber_In_Temp_HV : DOUBLE read FLP_Chamber_In_Temp_HV write FLP_Chamber_In_Temp_HV;
+[IniValue('LP_Chamber_In_Temp_VLL', 'chamber inlet temp ALL', '0.0', 2069)]
+property LP_Chamber_In_Temp_VLL : DOUBLE read FLP_Chamber_In_Temp_VLL write FLP_Chamber_In_Temp_VLL;
+[IniValue('LP_Chamber_In_Temp_VLO', 'chamber inlet temp AL', '0.0', 2070)]
+property LP_Chamber_In_Temp_VLO : DOUBLE read FLP_Chamber_In_Temp_VLO write FLP_Chamber_In_Temp_VLO;
+[IniValue('LP_Chamber_In_Temp_VHI', 'chamber inlet temp AH', '0.0', 2071)]
+property LP_Chamber_In_Temp_VHI : DOUBLE read FLP_Chamber_In_Temp_VHI write FLP_Chamber_In_Temp_VHI;
+[IniValue('LP_Chamber_In_Temp_VHH', 'chamber inlet temp AHH', '0.0', 2072)]
+property LP_Chamber_In_Temp_VHH : DOUBLE read FLP_Chamber_In_Temp_VHH write FLP_Chamber_In_Temp_VHH;
+[IniValue('LP_Chamber_In_Temp_DLY_LL', 'chamber inlet temp ALL alarm delay', '0.0', 2073)]
+property LP_Chamber_In_Temp_DLY_LL : DOUBLE read FLP_Chamber_In_Temp_DLY_LL write FLP_Chamber_In_Temp_DLY_LL;
+[IniValue('LP_Chamber_In_Temp_DLY_LO', 'chamber inlet temp AL alarm delay', '0.0', 2074)]
+property LP_Chamber_In_Temp_DLY_LO : DOUBLE read FLP_Chamber_In_Temp_DLY_LO write FLP_Chamber_In_Temp_DLY_LO;
+[IniValue('LP_Chamber_In_Temp_DLY_HI', 'chamber inlet temp AH alarm delay', '0.0', 2075)]
+property LP_Chamber_In_Temp_DLY_HI : DOUBLE read FLP_Chamber_In_Temp_DLY_HI write FLP_Chamber_In_Temp_DLY_HI;
+[IniValue('LP_Chamber_In_Temp_DLY_HH', 'chamber inlet temp AHH alarm delay', '0.0', 2076)]
+property LP_Chamber_In_Temp_DLY_HH : DOUBLE read FLP_Chamber_In_Temp_DLY_HH write FLP_Chamber_In_Temp_DLY_HH;
+[IniValue('LP_Chamber_Out_Temp_LV', 'chamber outlet temp min', '0.0', 2077)]
+property LP_Chamber_Out_Temp_LV : DOUBLE read FLP_Chamber_Out_Temp_LV write FLP_Chamber_Out_Temp_LV;
+[IniValue('LP_Chamber_Out_Temp_HV', 'chamber outlet temp max', '0.0', 2078)]
+property LP_Chamber_Out_Temp_HV : DOUBLE read FLP_Chamber_Out_Temp_HV write FLP_Chamber_Out_Temp_HV;
+[IniValue('LP_Chamber_Out_Temp_VHI', 'chamber outlet temp AH', '0.0', 2079)]
+property LP_Chamber_Out_Temp_VHI : DOUBLE read FLP_Chamber_Out_Temp_VHI write FLP_Chamber_Out_Temp_VHI;
+[IniValue('LP_Chamber_Out_Temp_VHH', 'chamber outlet temp AHH', '0.0', 2080)]
+property LP_Chamber_Out_Temp_VHH : DOUBLE read FLP_Chamber_Out_Temp_VHH write FLP_Chamber_Out_Temp_VHH;
+[IniValue('LP_Chamber_Out_Temp_DLY_HI', 'chamber outlet temp AH alarm delay', '0.0', 2081)]
+property LP_Chamber_Out_Temp_DLY_HI : DOUBLE read FLP_Chamber_Out_Temp_DLY_HI write FLP_Chamber_Out_Temp_DLY_HI;
+[IniValue('LP_Chamber_Out_Temp_DLY_HH', 'chamber outlet temp AHH alarm delay', '0.0', 2082)]
+property LP_Chamber_Out_Temp_DLY_HH : DOUBLE read FLP_Chamber_Out_Temp_DLY_HH write FLP_Chamber_Out_Temp_DLY_HH;
+[IniValue('LP_Temp_For_Udc_In_1_LV', 'temp for UDC inlet 1 min', '0.0', 2083)]
+property LP_Temp_For_Udc_In_1_LV : DOUBLE read FLP_Temp_For_Udc_In_1_LV write FLP_Temp_For_Udc_In_1_LV;
+[IniValue('LP_Temp_For_Udc_In_1_HV', 'temp for UDC inlet 1 max', '0.0', 2084)]
+property LP_Temp_For_Udc_In_1_HV : DOUBLE read FLP_Temp_For_Udc_In_1_HV write FLP_Temp_For_Udc_In_1_HV;
+[IniValue('LP_Temp_For_Udc_In_1_VHI', 'temp for UDC inlet 1 AH', '0.0', 2085)]
+property LP_Temp_For_Udc_In_1_VHI : DOUBLE read FLP_Temp_For_Udc_In_1_VHI write FLP_Temp_For_Udc_In_1_VHI;
+[IniValue('LP_Temp_For_Udc_In_1_VHH', 'temp for UDC inlet 1 AHH', '0.0', 2086)]
+property LP_Temp_For_Udc_In_1_VHH : DOUBLE read FLP_Temp_For_Udc_In_1_VHH write FLP_Temp_For_Udc_In_1_VHH;
+[IniValue('LP_Temp_For_Udc_In_1_DLY_HI', 'temp for UDC inlet 1 AH alarm delay', '0.0', 2087)]
+property LP_Temp_For_Udc_In_1_DLY_HI : DOUBLE read FLP_Temp_For_Udc_In_1_DLY_HI write FLP_Temp_For_Udc_In_1_DLY_HI;
+[IniValue('LP_Temp_For_Udc_In_1_DLY_HH', 'temp for UDC inlet 1 AHH alarm delay', '0.0', 2088)]
+property LP_Temp_For_Udc_In_1_DLY_HH : DOUBLE read FLP_Temp_For_Udc_In_1_DLY_HH write FLP_Temp_For_Udc_In_1_DLY_HH;
+[IniValue('LP_Temp_For_Udc_In_2_LV', 'temp for UDC inlet 2 min', '0.0', 2089)]
+property LP_Temp_For_Udc_In_2_LV : DOUBLE read FLP_Temp_For_Udc_In_2_LV write FLP_Temp_For_Udc_In_2_LV;
+[IniValue('LP_Temp_For_Udc_In_2_HV', 'temp for UDC inlet 2 max', '0.0', 2090)]
+property LP_Temp_For_Udc_In_2_HV : DOUBLE read FLP_Temp_For_Udc_In_2_HV write FLP_Temp_For_Udc_In_2_HV;
+[IniValue('LP_Temp_For_Udc_In_2_VHI', 'temp for UDC inlet 2 AH', '0.0', 2091)]
+property LP_Temp_For_Udc_In_2_VHI : DOUBLE read FLP_Temp_For_Udc_In_2_VHI write FLP_Temp_For_Udc_In_2_VHI;
+[IniValue('LP_Temp_For_Udc_In_2_VHH', 'temp for UDC inlet 2 AHH', '0.0', 2092)]
+property LP_Temp_For_Udc_In_2_VHH : DOUBLE read FLP_Temp_For_Udc_In_2_VHH write FLP_Temp_For_Udc_In_2_VHH;
+[IniValue('LP_Temp_For_Udc_In_2_DLY_HI', 'temp for UDC inlet 2 AH alarm delay', '0.0', 2093)]
+property LP_Temp_For_Udc_In_2_DLY_HI : DOUBLE read FLP_Temp_For_Udc_In_2_DLY_HI write FLP_Temp_For_Udc_In_2_DLY_HI;
+[IniValue('LP_Temp_For_Udc_In_2_DLY_HH', 'temp for UDC inlet 2 AHH alarm delay', '0.0', 2094)]
+property LP_Temp_For_Udc_In_2_DLY_HH : DOUBLE read FLP_Temp_For_Udc_In_2_DLY_HH write FLP_Temp_For_Udc_In_2_DLY_HH;
+[IniValue('LP_Temp_For_Udc_In_3_LV', 'temp for UDC inlet 3 min', '0.0', 2095)]
+property LP_Temp_For_Udc_In_3_LV : DOUBLE read FLP_Temp_For_Udc_In_3_LV write FLP_Temp_For_Udc_In_3_LV;
+[IniValue('LP_Temp_For_Udc_In_3_HV', 'temp for UDC inlet 3 max', '0.0', 2096)]
+property LP_Temp_For_Udc_In_3_HV : DOUBLE read FLP_Temp_For_Udc_In_3_HV write FLP_Temp_For_Udc_In_3_HV;
+[IniValue('LP_Temp_For_Udc_In_3_VHI', 'temp for UDC inlet 3 AH', '0.0', 2097)]
+property LP_Temp_For_Udc_In_3_VHI : DOUBLE read FLP_Temp_For_Udc_In_3_VHI write FLP_Temp_For_Udc_In_3_VHI;
+[IniValue('LP_Temp_For_Udc_In_3_VHH', 'temp for UDC inlet 3 AHH', '0.0', 2098)]
+property LP_Temp_For_Udc_In_3_VHH : DOUBLE read FLP_Temp_For_Udc_In_3_VHH write FLP_Temp_For_Udc_In_3_VHH;
+[IniValue('LP_Temp_For_Udc_In_3_DLY_HI', 'temp for UDC inlet 3 AH alarm delay', '0.0', 2099)]
+property LP_Temp_For_Udc_In_3_DLY_HI : DOUBLE read FLP_Temp_For_Udc_In_3_DLY_HI write FLP_Temp_For_Udc_In_3_DLY_HI;
+[IniValue('LP_Temp_For_Udc_In_3_DLY_HH', 'temp for UDC inlet 3 AHH alarm delay', '0.0', 2100)]
+property LP_Temp_For_Udc_In_3_DLY_HH : DOUBLE read FLP_Temp_For_Udc_In_3_DLY_HH write FLP_Temp_For_Udc_In_3_DLY_HH;
+[IniValue('LP_Temp_For_Udc_Out_LV', 'temp for UDC outlet min', '0.0', 2101)]
+property LP_Temp_For_Udc_Out_LV : DOUBLE read FLP_Temp_For_Udc_Out_LV write FLP_Temp_For_Udc_Out_LV;
+[IniValue('LP_Temp_For_Udc_Out_HV', 'temp for UDC outlet max', '0.0', 2102)]
+property LP_Temp_For_Udc_Out_HV : DOUBLE read FLP_Temp_For_Udc_Out_HV write FLP_Temp_For_Udc_Out_HV;
+[IniValue('LP_Burner_Feedback_LV', 'burner outlet temp feedback min', '0.0', 2103)]
+property LP_Burner_Feedback_LV : DOUBLE read FLP_Burner_Feedback_LV write FLP_Burner_Feedback_LV;
+[IniValue('LP_Burner_Feedback_HV', 'burner outlet temp feedback max', '0.0', 2104)]
+property LP_Burner_Feedback_HV : DOUBLE read FLP_Burner_Feedback_HV write FLP_Burner_Feedback_HV;
+[IniValue('LP_Burner_FO_Rate_LV', 'burner FO consumption min', '0.0', 2105)]
+property LP_Burner_FO_Rate_LV : DOUBLE read FLP_Burner_FO_Rate_LV write FLP_Burner_FO_Rate_LV;
+[IniValue('LP_Burner_FO_Rate_HV', 'burner FO consumption max', '0.0', 2106)]
+property LP_Burner_FO_Rate_HV : DOUBLE read FLP_Burner_FO_Rate_HV write FLP_Burner_FO_Rate_HV;
+[IniValue('LP_Flowmeter_For_Exhaust_gas_LV', 'exh gas flow from burner min', '0.0', 2107)]
+property LP_Flowmeter_For_Exhaust_gas_LV : DOUBLE read FLP_Flowmeter_For_Exhaust_gas_LV write FLP_Flowmeter_For_Exhaust_gas_LV;
+[IniValue('LP_Flowmeter_For_Exhaust_gas_HV', 'exh gas flow from burner max', '0.0', 2108)]
+property LP_Flowmeter_For_Exhaust_gas_HV : DOUBLE read FLP_Flowmeter_For_Exhaust_gas_HV write FLP_Flowmeter_For_Exhaust_gas_HV;
+[IniValue('LP_Blower_Feedback_LV', 'blower feedback min', '0.0', 2109)]
+property LP_Blower_Feedback_LV : DOUBLE read FLP_Blower_Feedback_LV write FLP_Blower_Feedback_LV;
+[IniValue('LP_Blower_Feedback_HV', 'blower feedback max', '0.0', 2110)]
+property LP_Blower_Feedback_HV : DOUBLE read FLP_Blower_Feedback_HV write FLP_Blower_Feedback_HV;
+[IniValue('LP_Burner_PDT_LV', 'burner PDT min', '0.0', 2111)]
+property LP_Burner_PDT_LV : DOUBLE read FLP_Burner_PDT_LV write FLP_Burner_PDT_LV;
+[IniValue('LP_Burner_PDT_HV', 'burner PDT max', '0.0', 2112)]
+property LP_Burner_PDT_HV : DOUBLE read FLP_Burner_PDT_HV write FLP_Burner_PDT_HV;
+[IniValue('LP_Burner_In_Temp_LV', 'burner inlet temp min', '0.0', 2113)]
+property LP_Burner_In_Temp_LV : DOUBLE read FLP_Burner_In_Temp_LV write FLP_Burner_In_Temp_LV;
+[IniValue('LP_Burner_In_Temp_HV', 'burner inlet temp max', '0.0', 2114)]
+property LP_Burner_In_Temp_HV : DOUBLE read FLP_Burner_In_Temp_HV write FLP_Burner_In_Temp_HV;
+[IniValue('LP_X_FD_Fan_Power_Consumption_LV', 'xfd fan power consumption min', '0.0', 2115)]
+property LP_X_FD_Fan_Power_Consumption_LV : DOUBLE read FLP_X_FD_Fan_Power_Consumption_LV write FLP_X_FD_Fan_Power_Consumption_LV;
+[IniValue('LP_RSV_PDT_LV', 'RSV PDT min', '0.0', 2116)]
+property LP_RSV_PDT_LV : DOUBLE read FLP_RSV_PDT_LV write FLP_RSV_PDT_LV;
+[IniValue('LP_RSV_PDT_HV', 'RSV PDT max', '0.0', 2117)]
+property LP_RSV_PDT_HV : DOUBLE read FLP_RSV_PDT_HV write FLP_RSV_PDT_HV;
+[IniValue('LP_RSV_PDT_VLL', 'RSV PDT ALL', '0.0', 2118)]
+property LP_RSV_PDT_VLL : DOUBLE read FLP_RSV_PDT_VLL write FLP_RSV_PDT_VLL;
+[IniValue('LP_RSV_PDT_VLO', 'RSV PDT AL', '0.0', 2119)]
+property LP_RSV_PDT_VLO : DOUBLE read FLP_RSV_PDT_VLO write FLP_RSV_PDT_VLO;
+[IniValue('LP_RSV_PDT_VHI', 'RSV PDT AH', '0.0', 2120)]
+property LP_RSV_PDT_VHI : DOUBLE read FLP_RSV_PDT_VHI write FLP_RSV_PDT_VHI;
+[IniValue('LP_RSV_PDT_VHH', 'RSV PDT AHH', '0.0', 2121)]
+property LP_RSV_PDT_VHH : DOUBLE read FLP_RSV_PDT_VHH write FLP_RSV_PDT_VHH;
+[IniValue('LP_RSV_PDT_DLY_LL', 'RSV PDT ALL alarm delay', '0.0', 2122)]
+property LP_RSV_PDT_DLY_LL : DOUBLE read FLP_RSV_PDT_DLY_LL write FLP_RSV_PDT_DLY_LL;
+[IniValue('LP_RSV_PDT_DLY_LO', 'RSV PDT AL alarm delay', '0.0', 2123)]
+property LP_RSV_PDT_DLY_LO : DOUBLE read FLP_RSV_PDT_DLY_LO write FLP_RSV_PDT_DLY_LO;
+[IniValue('LP_RSV_PDT_DLY_HI', 'RSV PDT AH alarm delay', '0.0', 2124)]
+property LP_RSV_PDT_DLY_HI : DOUBLE read FLP_RSV_PDT_DLY_HI write FLP_RSV_PDT_DLY_HI;
+[IniValue('LP_RSV_PDT_DLY_HH', 'RSV PDT AHH alarm delay', '0.0', 2125)]
+property LP_RSV_PDT_DLY_HH : DOUBLE read FLP_RSV_PDT_DLY_HH write FLP_RSV_PDT_DLY_HH;
+[IniValue('LP_RBV_PDT_LV', 'RBV PDT min', '0.0', 2126)]
+property LP_RBV_PDT_LV : DOUBLE read FLP_RBV_PDT_LV write FLP_RBV_PDT_LV;
+[IniValue('LP_RBV_PDT_HV', 'RBV PDT max', '0.0', 2127)]
+property LP_RBV_PDT_HV : DOUBLE read FLP_RBV_PDT_HV write FLP_RBV_PDT_HV;
+[IniValue('LP_RBV_PDT_VHI', 'RBV PDT AH', '0.0', 2128)]
+property LP_RBV_PDT_VHI : DOUBLE read FLP_RBV_PDT_VHI write FLP_RBV_PDT_VHI;
+[IniValue('LP_RBV_PDT_VHH', 'RBV PDT AHH', '0.0', 2129)]
+property LP_RBV_PDT_VHH : DOUBLE read FLP_RBV_PDT_VHH write FLP_RBV_PDT_VHH;
+[IniValue('LP_RBV_PDT_DLY_HI', 'RBV PDT AH alarm delay', '0.0', 2130)]
+property LP_RBV_PDT_DLY_HI : DOUBLE read FLP_RBV_PDT_DLY_HI write FLP_RBV_PDT_DLY_HI;
+[IniValue('LP_RBV_PDT_DLY_HH', 'RBV PDT AHH alarm delay', '0.0', 2131)]
+property LP_RBV_PDT_DLY_HH : DOUBLE read FLP_RBV_PDT_DLY_HH write FLP_RBV_PDT_DLY_HH;
+[IniValue('LP_RTV_Feedback_LV', 'RTV feedback min', '0.0', 2132)]
+property LP_RTV_Feedback_LV : DOUBLE read FLP_RTV_Feedback_LV write FLP_RTV_Feedback_LV;
+[IniValue('LP_RTV_Feedback_HV', 'RTV feedback max', '0.0', 2133)]
+property LP_RTV_Feedback_HV : DOUBLE read FLP_RTV_Feedback_HV write FLP_RTV_Feedback_HV;
+[IniValue('LP_RTV_PDT_LV', 'RTV PDT min', '0.0', 2134)]
+property LP_RTV_PDT_LV : DOUBLE read FLP_RTV_PDT_LV write FLP_RTV_PDT_LV;
+[IniValue('LP_RTV_PDT_HV', 'RTV PDT max', '0.0', 2135)]
+property LP_RTV_PDT_HV : DOUBLE read FLP_RTV_PDT_HV write FLP_RTV_PDT_HV;
+[IniValue('LP_RTV_PDT_VLL', 'RTV PDT ALL', '0.0', 2136)]
+property LP_RTV_PDT_VLL : DOUBLE read FLP_RTV_PDT_VLL write FLP_RTV_PDT_VLL;
+[IniValue('LP_RTV_PDT_VLO', 'RTV PDT AL', '0.0', 2137)]
+property LP_RTV_PDT_VLO : DOUBLE read FLP_RTV_PDT_VLO write FLP_RTV_PDT_VLO;
+[IniValue('LP_RTV_PDT_VHI', 'RTV PDT AH', '0.0', 2138)]
+property LP_RTV_PDT_VHI : DOUBLE read FLP_RTV_PDT_VHI write FLP_RTV_PDT_VHI;
+[IniValue('LP_RTV_PDT_VHH', 'RTV PDT AHH', '0.0', 2139)]
+property LP_RTV_PDT_VHH : DOUBLE read FLP_RTV_PDT_VHH write FLP_RTV_PDT_VHH;
+[IniValue('LP_RTV_PDT_DLY_LL', 'RTV PDT ALL alarm delay', '0.0', 2140)]
+property LP_RTV_PDT_DLY_LL : DOUBLE read FLP_RTV_PDT_DLY_LL write FLP_RTV_PDT_DLY_LL;
+[IniValue('LP_RTV_PDT_DLY_LO', 'RTV PDT AL alarm delay', '0.0', 2141)]
+property LP_RTV_PDT_DLY_LO : DOUBLE read FLP_RTV_PDT_DLY_LO write FLP_RTV_PDT_DLY_LO;
+[IniValue('LP_RTV_PDT_DLY_HI', 'RTV PDT AH alarm delay', '0.0', 2142)]
+property LP_RTV_PDT_DLY_HI : DOUBLE read FLP_RTV_PDT_DLY_HI write FLP_RTV_PDT_DLY_HI;
+[IniValue('LP_RTV_PDT_DLY_HH', 'RTV PDT AHH alarm delay', '0.0', 2143)]
+property LP_RTV_PDT_DLY_HH : DOUBLE read FLP_RTV_PDT_DLY_HH write FLP_RTV_PDT_DLY_HH;
+[IniValue('LP_BSV_Feedback_LV', 'BSV feedback min', '0.0', 2144)]
+property LP_BSV_Feedback_LV : DOUBLE read FLP_BSV_Feedback_LV write FLP_BSV_Feedback_LV;
+[IniValue('LP_BSV_Feedback_HV', 'BSV feedback max', '0.0', 2145)]
+property LP_BSV_Feedback_HV : DOUBLE read FLP_BSV_Feedback_HV write FLP_BSV_Feedback_HV;
+[IniValue('LP_EGB_Feedback_LV', 'EGB-BV feedback min', '0.0', 2146)]
+property LP_EGB_Feedback_LV : DOUBLE read FLP_EGB_Feedback_LV write FLP_EGB_Feedback_LV;
+[IniValue('LP_EGB_Feedback_HV', 'EGB-BV feedback max', '0.0', 2147)]
+property LP_EGB_Feedback_HV : DOUBLE read FLP_EGB_Feedback_HV write FLP_EGB_Feedback_HV;
+[IniValue('LP_XIV_Feedback_LV', 'XIV feedback min', '0.0', 2148)]
+property LP_XIV_Feedback_LV : DOUBLE read FLP_XIV_Feedback_LV write FLP_XIV_Feedback_LV;
+[IniValue('LP_XIV_Feedback_HV', 'XIV feedback max', '0.0', 2149)]
+property LP_XIV_Feedback_HV : DOUBLE read FLP_XIV_Feedback_HV write FLP_XIV_Feedback_HV;
+[IniValue('LP_XOV_Feedback_LV', 'XOV feedback min', '0.0', 2150)]
+property LP_XOV_Feedback_LV : DOUBLE read FLP_XOV_Feedback_LV write FLP_XOV_Feedback_LV;
+[IniValue('LP_XOV_Feedback_HV', 'XOV feedback max', '0.0', 2151)]
+property LP_XOV_Feedback_HV : DOUBLE read FLP_XOV_Feedback_HV write FLP_XOV_Feedback_HV;
+[IniValue('LP_Reduce_Agent_Feedback_LV', 'reducing agent feedback min', '0.0', 2152)]
+property LP_Reduce_Agent_Feedback_LV : DOUBLE read FLP_Reduce_Agent_Feedback_LV write FLP_Reduce_Agent_Feedback_LV;
+[IniValue('LP_Reduce_Agent_Feedback_HV', 'reducing agent feedback max', '0.0', 2153)]
+property LP_Reduce_Agent_Feedback_HV : DOUBLE read FLP_Reduce_Agent_Feedback_HV write FLP_Reduce_Agent_Feedback_HV;
+[IniValue('LP_oChamber_In_Temp_LV', 'chamber inlet temp outout min', '0.0', 2154)]
+property LP_oChamber_In_Temp_LV : DOUBLE read FLP_oChamber_In_Temp_LV write FLP_oChamber_In_Temp_LV;
+[IniValue('LP_oChamber_In_Temp_HV', 'chamber inlet temp output max', '0.0', 2155)]
+property LP_oChamber_In_Temp_HV : DOUBLE read FLP_oChamber_In_Temp_HV write FLP_oChamber_In_Temp_HV;
+[IniValue('LP_oChamber_Out_Temp_LV', 'chamber outlet temp output min', '0.0', 2156)]
+property LP_oChamber_Out_Temp_LV : DOUBLE read FLP_oChamber_Out_Temp_LV write FLP_oChamber_Out_Temp_LV;
+[IniValue('LP_oChamber_Out_Temp_HV', 'chamber outlet temp output max', '0.0', 2157)]
+property LP_oChamber_Out_Temp_HV : DOUBLE read FLP_oChamber_Out_Temp_HV write FLP_oChamber_Out_Temp_HV;
+[IniValue('LP_RTV_Position_Feedback_LV', 'RTV feedback min', '0.0', 2158)]
+property LP_RTV_Position_Feedback_LV : DOUBLE read FLP_RTV_Position_Feedback_LV write FLP_RTV_Position_Feedback_LV;
+[IniValue('LP_RTV_Position_Feedback_HV', 'RTV feedback max', '0.0', 2159)]
+property LP_RTV_Position_Feedback_HV : DOUBLE read FLP_RTV_Position_Feedback_HV write FLP_RTV_Position_Feedback_HV;
+[IniValue('LP_Dose_Control_VV_LV', 'Dosing control vv setpoint min', '0.0', 2160)]
+property LP_Dose_Control_VV_LV : DOUBLE read FLP_Dose_Control_VV_LV write FLP_Dose_Control_VV_LV;
+[IniValue('LP_Dose_Control_VV_HV', 'Dosing control vv setpoint max', '0.0', 2161)]
+property LP_Dose_Control_VV_HV : DOUBLE read FLP_Dose_Control_VV_HV write FLP_Dose_Control_VV_HV;
+[IniValue('LP_BSV_Setpoint_LV', 'BSV setpoint min', '0.0', 2162)]
+property LP_BSV_Setpoint_LV : DOUBLE read FLP_BSV_Setpoint_LV write FLP_BSV_Setpoint_LV;
+[IniValue('LP_BSV_Setpoint_HV', 'BSV setpoint max', '0.0', 2163)]
+property LP_BSV_Setpoint_HV : DOUBLE read FLP_BSV_Setpoint_HV write FLP_BSV_Setpoint_HV;
+[IniValue('LP_oFlowmeter_For_Exhaust_gas_LV', 'exh gas flowmeter output min', '0.0', 2164)]
+property LP_oFlowmeter_For_Exhaust_gas_LV : DOUBLE read FLP_oFlowmeter_For_Exhaust_gas_LV write FLP_oFlowmeter_For_Exhaust_gas_LV;
+[IniValue('LP_oFlowmeter_For_Exhaust_gas_HV', 'exh gas flowmeter output max', '0.0', 2165)]
+property LP_oFlowmeter_For_Exhaust_gas_HV : DOUBLE read FLP_oFlowmeter_For_Exhaust_gas_HV write FLP_oFlowmeter_For_Exhaust_gas_HV;
+[IniValue('LP_Burner_Setpoint_LV', 'Burner setpoint min', '0.0', 2166)]
+property LP_Burner_Setpoint_LV : DOUBLE read FLP_Burner_Setpoint_LV write FLP_Burner_Setpoint_LV;
+[IniValue('LP_Burner_Setpoint_HV', 'Burner setpoint max', '0.0', 2167)]
+property LP_Burner_Setpoint_HV : DOUBLE read FLP_Burner_Setpoint_HV write FLP_Burner_Setpoint_HV;
+[IniValue('LP_oUdc_In_Temp_Average_LV', 'UDC inlet temp avg output min', '0.0', 2168)]
+property LP_oUdc_In_Temp_Average_LV : DOUBLE read FLP_oUdc_In_Temp_Average_LV write FLP_oUdc_In_Temp_Average_LV;
+[IniValue('LP_oUdc_In_Temp_Average_HV', 'UDC inlet temp avg output max', '0.0', 2169)]
+property LP_oUdc_In_Temp_Average_HV : DOUBLE read FLP_oUdc_In_Temp_Average_HV write FLP_oUdc_In_Temp_Average_HV;
+[IniValue('LP_oMain_Eng_Load_LV', 'main engine load output min', '0.0', 2170)]
+property LP_oMain_Eng_Load_LV : DOUBLE read FLP_oMain_Eng_Load_LV write FLP_oMain_Eng_Load_LV;
+[IniValue('LP_oMain_Eng_Load_HV', 'main engine load output max', '0.0', 2171)]
+property LP_oMain_Eng_Load_HV : DOUBLE read FLP_oMain_Eng_Load_HV write FLP_oMain_Eng_Load_HV;
+[IniValue('LP_Blower_Setpoint_LV', 'blower setpoint min', '0.0', 2172)]
+property LP_Blower_Setpoint_LV : DOUBLE read FLP_Blower_Setpoint_LV write FLP_Blower_Setpoint_LV;
+[IniValue('LP_Blower_Setpoint_HV', 'blower setpoint max', '0.0', 2173)]
+property LP_Blower_Setpoint_HV : DOUBLE read FLP_Blower_Setpoint_HV write FLP_Blower_Setpoint_HV;
+[IniValue('LP_RTV_Setpoint_LV', 'RTV setpoint min', '0.0', 2174)]
+property LP_RTV_Setpoint_LV : DOUBLE read FLP_RTV_Setpoint_LV write FLP_RTV_Setpoint_LV;
+[IniValue('LP_RTV_Setpoint_HV', 'RTV setpoint max', '0.0', 2175)]
+property LP_RTV_Setpoint_HV : DOUBLE read FLP_RTV_Setpoint_HV write FLP_RTV_Setpoint_HV;
+[IniValue('LP_EGB_Setpoint_LV', 'EGB-BV setpoint min', '0.0', 2176)]
+property LP_EGB_Setpoint_LV : DOUBLE read FLP_EGB_Setpoint_LV write FLP_EGB_Setpoint_LV;
+[IniValue('LP_EGB_Setpoint_HV', 'EGB-BV setpoint max', '0.0', 2177)]
+property LP_EGB_Setpoint_HV : DOUBLE read FLP_EGB_Setpoint_HV write FLP_EGB_Setpoint_HV;
+[IniValue('LP_XIV_Setpoint_LV', 'XIV setpoint min', '0.0', 2178)]
+property LP_XIV_Setpoint_LV : DOUBLE read FLP_XIV_Setpoint_LV write FLP_XIV_Setpoint_LV;
+[IniValue('LP_XIV_Setpoint_HV', 'XIV setpoint max', '0.0', 2179)]
+property LP_XIV_Setpoint_HV : DOUBLE read FLP_XIV_Setpoint_HV write FLP_XIV_Setpoint_HV;
+[IniValue('LP_XOV_Setpoint_LV', 'XOV setpoint', '0.0', 2180)]
+property LP_XOV_Setpoint_LV : DOUBLE read FLP_XOV_Setpoint_LV write FLP_XOV_Setpoint_LV;
+[IniValue('LP_XOV_Setpoint_HV', 'XOV setpoint', '0.0', 2181)]
+property LP_XOV_Setpoint_HV : DOUBLE read FLP_XOV_Setpoint_HV write FLP_XOV_Setpoint_HV;

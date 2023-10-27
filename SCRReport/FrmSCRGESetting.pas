@@ -8,7 +8,8 @@ uses
   JvExExtCtrls, JvImage, AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls,
   AdvOfficePager, iComponent, iVCLComponent, iCustomComponent, iEditCustom,
   iAnalogOutput, Vcl.Menus, DragDrop, DropTarget, DragDropText,
-  UDragDropFormat_SCRParam, JvExControls, JvButton, JvTransparentButton;
+  UDragDropFormat_SCRParam, JvExControls, JvButton, JvTransparentButton,
+  AdvFocusHelper, USCRParamClass;
 
 type
   TSCRGESettingF = class(TForm)
@@ -537,6 +538,27 @@ type
     N1: TMenuItem;
     ShowTabAll1: TMenuItem;
     HideGETabAll1: TMenuItem;
+    iAnalogOutput433: TiAnalogOutput;
+    AdvGraphicCheckLabel1: TAdvGraphicCheckLabel;
+    iAnalogOutput434: TiAnalogOutput;
+    AdvFocusHelper1: TAdvFocusHelper;
+    JvTransparentButton8: TJvTransparentButton;
+    JvTransparentButton6: TJvTransparentButton;
+    JvTransparentButton7: TJvTransparentButton;
+    JvTransparentButton9: TJvTransparentButton;
+    JvTransparentButton10: TJvTransparentButton;
+    JvTransparentButton11: TJvTransparentButton;
+    JvTransparentButton1: TJvTransparentButton;
+    JvTransparentButton12: TJvTransparentButton;
+    JvTransparentButton13: TJvTransparentButton;
+    JvTransparentButton14: TJvTransparentButton;
+    JvTransparentButton2: TJvTransparentButton;
+    JvTransparentButton15: TJvTransparentButton;
+    JvTransparentButton16: TJvTransparentButton;
+    JvTransparentButton3: TJvTransparentButton;
+    JvTransparentButton5: TJvTransparentButton;
+    JvTransparentButton17: TJvTransparentButton;
+    JvTransparentButton18: TJvTransparentButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -545,18 +567,33 @@ type
       APoint: TPoint; var Effect: Integer);
     procedure ShowTabAll1Click(Sender: TObject);
     procedure HideGETabAll1Click(Sender: TObject);
+    procedure JvTransparentButton8Click(Sender: TObject);
+    procedure JvTransparentButton6Click(Sender: TObject);
+    procedure JvTransparentButton4Click(Sender: TObject);
   private
     FSCRParameterTarget: TSCRParamDataFormat;
+//    FSCRAEParam_1: TSCRAEParam_1;
+//    FSCRAEParam_2: TSCRAEParam_2;
+//    FSCRAEParam_3: TSCRAEParam_3;
+//    FSCRAEParam_4: TSCRAEParam_4;
+//    FSCRAEParam_5: TSCRAEParam_5;
+//    FSCRAEParam_6: TSCRAEParam_6;
+//    FSCRAEParam_7: TSCRAEParam_7;
+//    FSCRAEParam_8: TSCRAEParam_8;
+      FSCRAEParamList: TStringList;
+      FSCRRecipe: TSCRRecipeInfoObjArray;
 
     procedure InitVar;
     procedure DestroyVar;
 
     procedure ShowOrHideGETabAll(AVisible: Boolean);
   public
-    { Public declarations }
+    procedure ApplySettings();
+    procedure LoadParamList2Form();
   end;
 
-  function CreateNShowSCRGESetting(AOwner: TComponent): string;
+  function CreateNShowSCRGESetting(AOwner: TComponent; var ASCRAEParamList: TStringList;
+    var ASCRRecipe: TSCRRecipeInfoObjArray): string;
   function CreateNShowSCRGESetting2(AOwner: TComponent): TForm;
 
 var
@@ -564,11 +601,12 @@ var
 
 implementation
 
-uses UnitMouseUtil, UCommonUtil;
+uses UnitMouseUtil, UCommonUtil, UnitConfigIniClass2;
 
 {$R *.dfm}
 
-function CreateNShowSCRGESetting(AOwner: TComponent): string;
+function CreateNShowSCRGESetting(AOwner: TComponent; var ASCRAEParamList: TStringList;
+    var ASCRRecipe: TSCRRecipeInfoObjArray): string;
 begin
   Result := '';
 
@@ -578,6 +616,10 @@ begin
   SCRGESettingF := TSCRGESettingF.Create(AOwner);
 
   try
+    SCRGESettingF.FSCRAEParamList := ASCRAEParamList;
+    SCRGESettingF.FSCRRecipe := ASCRRecipe;
+    SCRGESettingF.LoadParamList2Form();
+
     if SCRGESettingF.ShowModal = mrOK then
     begin
       Result := '';
@@ -598,6 +640,19 @@ begin
   Result := SCRGESettingF;
 end;
 
+procedure TSCRGESettingF.ApplySettings;
+var
+  i: integer;
+begin
+  for i := 0 to FSCRAEParamList.Count - 1 do
+  begin
+    TINIConfigBase.LoadForm2Object(Self as TObject, FSCRAEParamList.Objects[i], True);
+    SetSCRRecipeInfoValueFromSCRParam(FSCRAEParamList.Objects[i], FSCRRecipe);
+  end;
+
+  ShowMessage('Setting has applied to the G/E parameter!');
+end;
+
 procedure TSCRGESettingF.DestroyVar;
 begin
   FSCRParameterTarget.Free;
@@ -616,14 +671,20 @@ begin
     begin
       if LControl.ClassType = TAdvGraphicCheckLabel then
       begin
-//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
         TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+        TAdvGraphicCheckLabel(LControl).Hint := 'Checked';
+        TAdvGraphicCheckLabel(LControl).SetFocus;
       end
       else
       if LControl.ClassType = TiAnalogOutput then
       begin
         TiAnalogOutput(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+        TiAnalogOutput(LControl).Hint := 'Value';
+        TiAnalogOutput(LControl).SetFocus;
+//        TiAnalogOutput(LControl).Update;
       end;
+
+//      LControl.Name := FSCRParameterTarget.SCRD.FTagName;
     end;
   end;
 end;
@@ -645,7 +706,33 @@ end;
 
 procedure TSCRGESettingF.InitVar;
 begin
+  DropTextTarget1.Target := AdvPageControl1;
   FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
+procedure TSCRGESettingF.JvTransparentButton4Click(Sender: TObject);
+begin
+  ApplySettings();
+end;
+
+procedure TSCRGESettingF.JvTransparentButton6Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TSCRGESettingF.JvTransparentButton8Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TSCRGESettingF.LoadParamList2Form;
+var
+  i: integer;
+begin
+  for i := 0 to FSCRAEParamList.Count - 1 do
+  begin
+    TINIConfigBase.LoadObject2Form(Self as TObject, FSCRAEParamList.Objects[i], True);
+  end;
 end;
 
 procedure TSCRGESettingF.Save2DFM1Click(Sender: TObject);
@@ -657,22 +744,22 @@ procedure TSCRGESettingF.ShowOrHideGETabAll(AVisible: Boolean);
 var
   i: integer;
 begin
-  for i := 0 to AdvOfficePager1.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager1.AdvPageCount - 1 do
     AdvOfficePager1.AdvPages[i].TabVisible := AVisible;
 
-  for i := 0 to AdvOfficePager2.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager2.AdvPageCount - 1 do
     AdvOfficePager2.AdvPages[i].TabVisible := AVisible;
 
-  for i := 0 to AdvOfficePager3.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager3.AdvPageCount - 1 do
     AdvOfficePager3.AdvPages[i].TabVisible := AVisible;
 
-  for i := 0 to AdvOfficePager4.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager4.AdvPageCount - 1 do
     AdvOfficePager4.AdvPages[i].TabVisible := AVisible;
 
-  for i := 0 to AdvOfficePager5.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager5.AdvPageCount - 1 do
     AdvOfficePager5.AdvPages[i].TabVisible := AVisible;
 
-  for i := 0 to AdvOfficePager6.AdvPageCount - 1 do
+  for i := 1 to AdvOfficePager6.AdvPageCount - 1 do
     AdvOfficePager6.AdvPages[i].TabVisible := AVisible;
 
 end;

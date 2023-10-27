@@ -1,6 +1,6 @@
 object SCRAppSettingF: TSCRAppSettingF
-  Left = 692
-  Top = 187
+  Left = 908
+  Top = 28
   Caption = 'SCRAppSettingF'
   ClientHeight = 612
   ClientWidth = 1093
@@ -11,8 +11,7 @@ object SCRAppSettingF: TSCRAppSettingF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDesigned
-  Visible = True
+  Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -3557,12 +3556,20 @@ object SCRAppSettingF: TSCRAppSettingF
   end
   object JvTransparentButton1: TJvTransparentButton
     Left = 1015
-    Top = 335
+    Top = 336
     Width = 78
     Height = 54
+    OnClick = JvTransparentButton1Click
+  end
+  object JvTransparentButton8: TJvTransparentButton
+    Left = 1061
+    Top = 0
+    Width = 30
+    Height = 68
+    OnClick = JvTransparentButton8Click
   end
   object AdvPageControl1: TAdvPageControl
-    Left = 16
+    Left = 8
     Top = 89
     Width = 881
     Height = 459
@@ -5441,22 +5448,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
-      object JvTransparentButton4: TJvTransparentButton
-        Left = 685
+      object JvTransparentButton2: TJvTransparentButton
+        Left = 686
         Top = 267
-        Width = 100
-        Height = 62
+        Width = 97
+        Height = 63
         HotTrackFont.Charset = DEFAULT_CHARSET
         HotTrackFont.Color = clWindowText
         HotTrackFont.Height = -13
         HotTrackFont.Name = 'Tahoma'
         HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
       end
       object AdvGraphicCheckLabel1: TAdvGraphicCheckLabel
+        Tag = 1
         Left = 293
         Top = 81
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -5509,10 +5519,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel2: TAdvGraphicCheckLabel
+        Tag = 2
         Left = 293
         Top = 112
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -5565,12 +5577,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel3: TAdvGraphicCheckLabel
-        Tag = 2
-        Left = 294
-        Top = 143
+        Tag = 3
+        Left = 293
+        Top = 144
         Width = 27
         Height = 28
-        Checked = True
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -5623,10 +5635,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel4: TAdvGraphicCheckLabel
+        Tag = 4
         Left = 293
         Top = 174
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -5679,10 +5693,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel5: TAdvGraphicCheckLabel
+        Tag = 5
         Left = 293
         Top = 205
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -6357,6 +6373,10 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvImage3: TJvImage
         Left = 0
         Top = 0
@@ -7990,11 +8010,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton3: TJvTransparentButton
+        Left = 687
+        Top = 271
+        Width = 97
+        Height = 63
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
+      end
       object AdvGraphicCheckLabel17: TAdvGraphicCheckLabel
+        Tag = 16
         Left = 293
         Top = 85
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8047,10 +8081,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel18: TAdvGraphicCheckLabel
+        Tag = 17
         Left = 293
         Top = 116
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8103,10 +8139,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel19: TAdvGraphicCheckLabel
+        Tag = 18
         Left = 293
         Top = 148
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8159,10 +8197,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel20: TAdvGraphicCheckLabel
+        Tag = 19
         Left = 293
         Top = 178
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8215,10 +8255,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel21: TAdvGraphicCheckLabel
+        Tag = 20
         Left = 293
         Top = 209
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8271,10 +8313,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel22: TAdvGraphicCheckLabel
+        Tag = 21
         Left = 293
         Top = 241
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8439,10 +8483,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel25: TAdvGraphicCheckLabel
+        Tag = 25
         Left = 615
         Top = 83
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8495,10 +8541,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel26: TAdvGraphicCheckLabel
+        Tag = 26
         Left = 615
         Top = 114
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8551,10 +8599,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel27: TAdvGraphicCheckLabel
+        Tag = 27
         Left = 615
         Top = 146
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8607,10 +8657,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel28: TAdvGraphicCheckLabel
+        Tag = 28
         Left = 615
         Top = 176
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8663,10 +8715,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel29: TAdvGraphicCheckLabel
+        Tag = 29
         Left = 615
         Top = 207
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -8893,6 +8947,10 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvImage4: TJvImage
         Left = 0
         Top = 0
@@ -10351,11 +10409,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton4: TJvTransparentButton
+        Left = 686
+        Top = 269
+        Width = 97
+        Height = 63
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
+      end
       object AdvGraphicCheckLabel33: TAdvGraphicCheckLabel
+        Tag = 32
         Left = 294
         Top = 85
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10408,10 +10480,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel34: TAdvGraphicCheckLabel
+        Tag = 33
         Left = 294
         Top = 116
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10464,10 +10538,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel35: TAdvGraphicCheckLabel
+        Tag = 34
         Left = 294
         Top = 148
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10520,10 +10596,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel36: TAdvGraphicCheckLabel
+        Tag = 35
         Left = 294
         Top = 178
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10576,10 +10654,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel37: TAdvGraphicCheckLabel
+        Tag = 36
         Left = 294
         Top = 209
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10632,10 +10712,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel38: TAdvGraphicCheckLabel
+        Tag = 37
         Left = 294
         Top = 241
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10688,10 +10770,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel39: TAdvGraphicCheckLabel
+        Tag = 38
         Left = 294
         Top = 271
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10744,10 +10828,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel40: TAdvGraphicCheckLabel
+        Tag = 39
         Left = 294
         Top = 305
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10800,10 +10886,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel41: TAdvGraphicCheckLabel
+        Tag = 40
         Left = 616
         Top = 83
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10856,10 +10944,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel42: TAdvGraphicCheckLabel
+        Tag = 41
         Left = 616
         Top = 114
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10912,10 +11002,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel43: TAdvGraphicCheckLabel
+        Tag = 42
         Left = 616
         Top = 146
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -10968,10 +11060,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel44: TAdvGraphicCheckLabel
+        Tag = 43
         Left = 616
         Top = 176
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -11024,10 +11118,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel45: TAdvGraphicCheckLabel
+        Tag = 44
         Left = 616
         Top = 207
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -11080,10 +11176,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel46: TAdvGraphicCheckLabel
+        Tag = 45
         Left = 616
         Top = 239
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -11136,10 +11234,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel47: TAdvGraphicCheckLabel
+        Tag = 46
         Left = 616
         Top = 269
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -11192,10 +11292,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel48: TAdvGraphicCheckLabel
+        Tag = 47
         Left = 616
         Top = 303
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -11254,6 +11356,10 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvImage5: TJvImage
         Left = 0
         Top = 0
@@ -13010,11 +13116,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton5: TJvTransparentButton
+        Left = 686
+        Top = 271
+        Width = 97
+        Height = 63
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
+      end
       object AdvGraphicCheckLabel49: TAdvGraphicCheckLabel
+        Tag = 48
         Left = 292
         Top = 85
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13067,10 +13187,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel50: TAdvGraphicCheckLabel
+        Tag = 49
         Left = 292
         Top = 116
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13123,10 +13245,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel51: TAdvGraphicCheckLabel
+        Tag = 50
         Left = 292
         Top = 148
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13179,10 +13303,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel52: TAdvGraphicCheckLabel
+        Tag = 51
         Left = 292
         Top = 178
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13235,10 +13361,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel53: TAdvGraphicCheckLabel
+        Tag = 52
         Left = 292
         Top = 209
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13291,10 +13419,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel54: TAdvGraphicCheckLabel
+        Tag = 53
         Left = 292
         Top = 241
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13347,10 +13477,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel55: TAdvGraphicCheckLabel
+        Tag = 54
         Left = 292
         Top = 271
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13403,10 +13535,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel56: TAdvGraphicCheckLabel
+        Tag = 55
         Left = 292
         Top = 305
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13459,10 +13593,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel57: TAdvGraphicCheckLabel
+        Tag = 56
         Left = 614
         Top = 83
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13515,10 +13651,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel58: TAdvGraphicCheckLabel
+        Tag = 57
         Left = 614
         Top = 114
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13571,10 +13709,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel59: TAdvGraphicCheckLabel
+        Tag = 58
         Left = 614
         Top = 146
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13627,10 +13767,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel60: TAdvGraphicCheckLabel
+        Tag = 59
         Left = 614
         Top = 176
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13683,10 +13825,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel61: TAdvGraphicCheckLabel
+        Tag = 60
         Left = 614
         Top = 207
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13739,10 +13883,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel62: TAdvGraphicCheckLabel
+        Tag = 61
         Left = 614
         Top = 239
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13795,10 +13941,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel63: TAdvGraphicCheckLabel
+        Tag = 62
         Left = 614
         Top = 269
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13851,10 +13999,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel64: TAdvGraphicCheckLabel
+        Tag = 63
         Left = 614
         Top = 303
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -13913,6 +14063,10 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvImage6: TJvImage
         Left = 0
         Top = 0
@@ -15630,11 +15784,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton6: TJvTransparentButton
+        Left = 686
+        Top = 270
+        Width = 97
+        Height = 63
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
+      end
       object AdvGraphicCheckLabel65: TAdvGraphicCheckLabel
+        Tag = 64
         Left = 294
         Top = 84
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15687,10 +15855,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel66: TAdvGraphicCheckLabel
+        Tag = 65
         Left = 294
         Top = 115
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15743,10 +15913,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel67: TAdvGraphicCheckLabel
+        Tag = 66
         Left = 294
         Top = 147
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15799,10 +15971,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel68: TAdvGraphicCheckLabel
+        Tag = 67
         Left = 294
         Top = 177
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15855,10 +16029,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel69: TAdvGraphicCheckLabel
+        Tag = 68
         Left = 294
         Top = 208
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15911,10 +16087,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel70: TAdvGraphicCheckLabel
+        Tag = 69
         Left = 294
         Top = 240
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -15967,10 +16145,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel71: TAdvGraphicCheckLabel
+        Tag = 70
         Left = 294
         Top = 270
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16023,10 +16203,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel72: TAdvGraphicCheckLabel
+        Tag = 71
         Left = 294
         Top = 304
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16079,10 +16261,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel73: TAdvGraphicCheckLabel
+        Tag = 72
         Left = 616
         Top = 82
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16135,10 +16319,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel74: TAdvGraphicCheckLabel
+        Tag = 73
         Left = 616
         Top = 113
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16191,10 +16377,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel75: TAdvGraphicCheckLabel
+        Tag = 74
         Left = 616
         Top = 145
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16247,10 +16435,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel76: TAdvGraphicCheckLabel
+        Tag = 75
         Left = 616
         Top = 175
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16303,10 +16493,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel77: TAdvGraphicCheckLabel
+        Tag = 76
         Left = 616
         Top = 206
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16415,10 +16607,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel79: TAdvGraphicCheckLabel
+        Tag = 77
         Left = 616
         Top = 268
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16471,10 +16665,12 @@ object SCRAppSettingF: TSCRAppSettingF
         Version = '1.0.0.0'
       end
       object AdvGraphicCheckLabel80: TAdvGraphicCheckLabel
+        Tag = 78
         Left = 616
         Top = 302
         Width = 28
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -16533,6 +16729,10 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvImage7: TJvImage
         Left = 0
         Top = 0
@@ -17341,11 +17541,25 @@ object SCRAppSettingF: TSCRAppSettingF
         ExplicitWidth = 801
         ExplicitHeight = 385
       end
+      object JvTransparentButton7: TJvTransparentButton
+        Left = 686
+        Top = 270
+        Width = 97
+        Height = 63
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = 'Tahoma'
+        HotTrackFont.Style = []
+        OnClick = JvTransparentButton2Click
+      end
       object AdvGraphicCheckLabel81: TAdvGraphicCheckLabel
+        Tag = 79
         Left = 293
         Top = 84
         Width = 27
         Height = 28
+        Hint = 'Checked'
         StateChecked.HoverFontStyle = []
         StateChecked.Font.Charset = DEFAULT_CHARSET
         StateChecked.Font.Color = clWindowText
@@ -18244,7 +18458,7 @@ object SCRAppSettingF: TSCRAppSettingF
     OnDrop = DropTextTarget1Drop
     Target = AdvPageControl1
     WinTarget = 0
-    Left = 944
+    Left = 952
     Top = 80
   end
   object PopupMenu1: TPopupMenu
@@ -18255,5 +18469,13 @@ object SCRAppSettingF: TSCRAppSettingF
       Hint = 'Tag '#44050#51012' Drag'#47196' Update '#54980' DFM '#54028#51068' '#49373#49457#54632
       OnClick = Save2DFM1Click
     end
+  end
+  object AdvFocusHelper1: TAdvFocusHelper
+    ExcludeControls = []
+    IncludeControls = []
+    Opacity = 230
+    Version = '1.1.0.3'
+    Left = 920
+    Top = 80
   end
 end

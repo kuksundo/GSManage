@@ -8,7 +8,7 @@ uses
   JvExExtCtrls, JvImage, JvExControls, JvButton, JvTransparentButton,
   AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls, iComponent, iVCLComponent,
   iCustomComponent, iEditCustom, iAnalogOutput, Vcl.Menus, DragDrop, DropTarget,
-  DragDropText, UDragDropFormat_SCRParam;
+  DragDropText, UDragDropFormat_SCRParam, AdvFocusHelper, USCRParamClass;
 
 type
   TSCRMESettingF = class(TForm)
@@ -16,40 +16,8 @@ type
     AdvPageControl1: TAdvPageControl;
     AdvTabSheet1: TAdvTabSheet;
     JvImage2: TJvImage;
-    AdvGraphicCheckLabel1: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel2: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel3: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel4: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel5: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel6: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel7: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel8: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel9: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel10: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel11: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel12: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel13: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel14: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel15: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel16: TAdvGraphicCheckLabel;
     AdvTabSheet2: TAdvTabSheet;
     JvImage3: TJvImage;
-    AdvGraphicCheckLabel17: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel18: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel19: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel20: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel21: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel22: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel23: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel24: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel25: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel26: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel27: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel28: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel29: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel30: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel31: TAdvGraphicCheckLabel;
-    AdvGraphicCheckLabel32: TAdvGraphicCheckLabel;
     AdvTabSheet3: TAdvTabSheet;
     JvTransparentButton1: TJvTransparentButton;
     AdvPageControl2: TAdvPageControl;
@@ -111,6 +79,37 @@ type
     PopupMenu1: TPopupMenu;
     Save2DFM1: TMenuItem;
     JvTransparentButton11: TJvTransparentButton;
+    iAnalogOutput40: TiAnalogOutput;
+    iAnalogOutput41: TiAnalogOutput;
+    iAnalogOutput42: TiAnalogOutput;
+    iAnalogOutput43: TiAnalogOutput;
+    iAnalogOutput44: TiAnalogOutput;
+    iAnalogOutput45: TiAnalogOutput;
+    iAnalogOutput46: TiAnalogOutput;
+    iAnalogOutput47: TiAnalogOutput;
+    iAnalogOutput48: TiAnalogOutput;
+    iAnalogOutput49: TiAnalogOutput;
+    iAnalogOutput50: TiAnalogOutput;
+    iAnalogOutput51: TiAnalogOutput;
+    iAnalogOutput52: TiAnalogOutput;
+    iAnalogOutput53: TiAnalogOutput;
+    iAnalogOutput54: TiAnalogOutput;
+    iAnalogOutput55: TiAnalogOutput;
+    iAnalogOutput56: TiAnalogOutput;
+    iAnalogOutput57: TiAnalogOutput;
+    iAnalogOutput58: TiAnalogOutput;
+    iAnalogOutput59: TiAnalogOutput;
+    iAnalogOutput60: TiAnalogOutput;
+    iAnalogOutput61: TiAnalogOutput;
+    iAnalogOutput62: TiAnalogOutput;
+    iAnalogOutput63: TiAnalogOutput;
+    iAnalogOutput64: TiAnalogOutput;
+    JvTransparentButton12: TJvTransparentButton;
+    JvTransparentButton13: TJvTransparentButton;
+    AdvFocusHelper1: TAdvFocusHelper;
+    JvTransparentButton14: TJvTransparentButton;
+    JvTransparentButton15: TJvTransparentButton;
+    JvTransparentButton16: TJvTransparentButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -120,16 +119,25 @@ type
     procedure Save2DFM1Click(Sender: TObject);
     procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
       APoint: TPoint; var Effect: Integer);
+    procedure JvTransparentButton14Click(Sender: TObject);
+    procedure JvTransparentButton1Click(Sender: TObject);
+    procedure JvTransparentButton13Click(Sender: TObject);
+    procedure JvTransparentButton12Click(Sender: TObject);
+    procedure JvTransparentButton11Click(Sender: TObject);
   private
     FSCRParameterTarget: TSCRParamDataFormat;
+    FSCRMEHPParam: TSCRMEHPParam;
+//    FSCRMELPParam: TSCRMELPParam;
+    FSCRRecipe: TSCRRecipeInfoObjArray;
 
     procedure InitVar;
     procedure DestroyVar;
   public
-    { Public declarations }
+    procedure ApplySettings();
   end;
 
-  function CreateNShowSCRMESetting(AOwner: TComponent): string;
+  function CreateNShowSCRMESetting_HP(AOwner: TComponent; var ASCRMEParam: TSCRMEHPParam;
+    var ASCRRecipe: TSCRRecipeInfoObjArray): string;
   function CreateNShowSCRMESetting2(AOwner: TComponent): TForm;
 
 var
@@ -141,7 +149,8 @@ uses UnitMouseUtil, UCommonUtil;
 
 {$R *.dfm}
 
-function CreateNShowSCRMESetting(AOwner: TComponent): string;
+function CreateNShowSCRMESetting_HP(AOwner: TComponent; var ASCRMEParam: TSCRMEHPParam;
+  var ASCRRecipe: TSCRRecipeInfoObjArray): string;
 begin
   Result := '';
 
@@ -151,6 +160,10 @@ begin
   SCRMESettingF := TSCRMESettingF.Create(AOwner);
 
   try
+    SCRMESettingF.FSCRMEHPParam := ASCRMEParam;
+    SCRMESettingF.FSCRRecipe := ASCRRecipe;
+    SCRMESettingF.FSCRMEHPParam.LoadObject2Form(SCRMESettingF, SCRMESettingF.FSCRMEHPParam, True);
+
     if SCRMESettingF.ShowModal = mrOK then
     begin
       Result := '';
@@ -171,6 +184,14 @@ begin
   Result := SCRMESettingF;
 end;
 
+procedure TSCRMESettingF.ApplySettings;
+begin
+  FSCRMEHPParam.LoadForm2Object(Self as TObject, FSCRMEHPParam, True);
+  SetSCRRecipeInfoValueFromSCRParam(FSCRMEHPParam, FSCRRecipe);
+
+  ShowMessage('Setting has applied to the M/E parameter!');
+end;
+
 procedure TSCRMESettingF.DestroyVar;
 begin
   FSCRParameterTarget.Free;
@@ -189,14 +210,19 @@ begin
     begin
       if LControl.ClassType = TAdvGraphicCheckLabel then
       begin
-//        TAdvGraphicCheckLabel(LControl).Checked := FSCRParameterTarget.SCRD.FSCRParam.F4S_LPSCR_Enable;
         TAdvGraphicCheckLabel(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+        TAdvGraphicCheckLabel(LControl).Hint := 'Checked';
+        TAdvGraphicCheckLabel(LControl).SetFocus;
       end
       else
       if LControl.ClassType = TiAnalogOutput then
       begin
         TiAnalogOutput(LControl).Tag := FSCRParameterTarget.SCRD.FTagID;
+        TiAnalogOutput(LControl).Hint := 'Value';
+        TiAnalogOutput(LControl).SetFocus;
       end;
+
+//      LControl.Name := FSCRParameterTarget.SCRD.FTagName;
     end;
   end;
 end;
@@ -213,7 +239,33 @@ end;
 
 procedure TSCRMESettingF.InitVar;
 begin
+  DropTextTarget1.Target := AdvPageControl1;
   FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
+end;
+
+procedure TSCRMESettingF.JvTransparentButton11Click(Sender: TObject);
+begin
+  ApplySettings();
+end;
+
+procedure TSCRMESettingF.JvTransparentButton12Click(Sender: TObject);
+begin
+  ApplySettings();
+end;
+
+procedure TSCRMESettingF.JvTransparentButton13Click(Sender: TObject);
+begin
+  ApplySettings();
+end;
+
+procedure TSCRMESettingF.JvTransparentButton14Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TSCRMESettingF.JvTransparentButton1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TSCRMESettingF.JvTransparentButton2Click(Sender: TObject);

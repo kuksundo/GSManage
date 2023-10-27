@@ -1,0 +1,266 @@
+[IniValue('SET_GE5__nDoseSetLaw', '', '0.0', 1039)]
+property SET_GE5__nDoseSetLaw : DOUBLE read FSET_GE5__nDoseSetLaw write FSET_GE5__nDoseSetLaw;
+[IniValue('SET_GE5__rEngLoadSP_1_', '', '0.0', 1040)]
+property SET_GE5__rEngLoadSP_1_ : DOUBLE read FSET_GE5__rEngLoadSP_1_ write FSET_GE5__rEngLoadSP_1_;
+[IniValue('SET_GE5__rEngLoadSP_2_', '', '0.0', 1041)]
+property SET_GE5__rEngLoadSP_2_ : DOUBLE read FSET_GE5__rEngLoadSP_2_ write FSET_GE5__rEngLoadSP_2_;
+[IniValue('SET_GE5__rEngLoadSP_3_', '', '0.0', 1042)]
+property SET_GE5__rEngLoadSP_3_ : DOUBLE read FSET_GE5__rEngLoadSP_3_ write FSET_GE5__rEngLoadSP_3_;
+[IniValue('SET_GE5__rEngLoadSP_4_', '', '0.0', 1043)]
+property SET_GE5__rEngLoadSP_4_ : DOUBLE read FSET_GE5__rEngLoadSP_4_ write FSET_GE5__rEngLoadSP_4_;
+[IniValue('SET_GE5__rEngLoadSP_5_', '', '0.0', 1044)]
+property SET_GE5__rEngLoadSP_5_ : DOUBLE read FSET_GE5__rEngLoadSP_5_ write FSET_GE5__rEngLoadSP_5_;
+[IniValue('SET_GE5__rEngLoadSP_6_', '', '0.0', 1045)]
+property SET_GE5__rEngLoadSP_6_ : DOUBLE read FSET_GE5__rEngLoadSP_6_ write FSET_GE5__rEngLoadSP_6_;
+[IniValue('SET_GE5__rEngLoadSP_7_', '', '0.0', 1046)]
+property SET_GE5__rEngLoadSP_7_ : DOUBLE read FSET_GE5__rEngLoadSP_7_ write FSET_GE5__rEngLoadSP_7_;
+[IniValue('SET_GE5__rEngLoadSP_8_', '', '0.0', 1047)]
+property SET_GE5__rEngLoadSP_8_ : DOUBLE read FSET_GE5__rEngLoadSP_8_ write FSET_GE5__rEngLoadSP_8_;
+[IniValue('SET_GE5__rEngLoadSP_9_', '', '0.0', 1048)]
+property SET_GE5__rEngLoadSP_9_ : DOUBLE read FSET_GE5__rEngLoadSP_9_ write FSET_GE5__rEngLoadSP_9_;
+[IniValue('SET_GE5__rEngLoadSP_10_', '', '0.0', 1049)]
+property SET_GE5__rEngLoadSP_10_ : DOUBLE read FSET_GE5__rEngLoadSP_10_ write FSET_GE5__rEngLoadSP_10_;
+[IniValue('SET_GE5__rEngLoadSP_11_', '', '0.0', 1050)]
+property SET_GE5__rEngLoadSP_11_ : DOUBLE read FSET_GE5__rEngLoadSP_11_ write FSET_GE5__rEngLoadSP_11_;
+[IniValue('SET_GE5__rEngLoadSP_12_', '', '0.0', 1051)]
+property SET_GE5__rEngLoadSP_12_ : DOUBLE read FSET_GE5__rEngLoadSP_12_ write FSET_GE5__rEngLoadSP_12_;
+[IniValue('SET_GE5__rReduceAgentSP_1_', '', '0.0', 1052)]
+property SET_GE5__rReduceAgentSP_1_ : DOUBLE read FSET_GE5__rReduceAgentSP_1_ write FSET_GE5__rReduceAgentSP_1_;
+[IniValue('SET_GE5__rReduceAgentSP_2_', '', '0.0', 1053)]
+property SET_GE5__rReduceAgentSP_2_ : DOUBLE read FSET_GE5__rReduceAgentSP_2_ write FSET_GE5__rReduceAgentSP_2_;
+[IniValue('SET_GE5__rReduceAgentSP_3_', '', '0.0', 1054)]
+property SET_GE5__rReduceAgentSP_3_ : DOUBLE read FSET_GE5__rReduceAgentSP_3_ write FSET_GE5__rReduceAgentSP_3_;
+[IniValue('SET_GE5__rReduceAgentSP_4_', '', '0.0', 1055)]
+property SET_GE5__rReduceAgentSP_4_ : DOUBLE read FSET_GE5__rReduceAgentSP_4_ write FSET_GE5__rReduceAgentSP_4_;
+[IniValue('SET_GE5__rReduceAgentSP_5_', '', '0.0', 1056)]
+property SET_GE5__rReduceAgentSP_5_ : DOUBLE read FSET_GE5__rReduceAgentSP_5_ write FSET_GE5__rReduceAgentSP_5_;
+[IniValue('SET_GE5__rReduceAgentSP_6_', '', '0.0', 1057)]
+property SET_GE5__rReduceAgentSP_6_ : DOUBLE read FSET_GE5__rReduceAgentSP_6_ write FSET_GE5__rReduceAgentSP_6_;
+[IniValue('SET_GE5__rReduceAgentSP_7_', '', '0.0', 1058)]
+property SET_GE5__rReduceAgentSP_7_ : DOUBLE read FSET_GE5__rReduceAgentSP_7_ write FSET_GE5__rReduceAgentSP_7_;
+[IniValue('SET_GE5__rReduceAgentSP_8_', '', '0.0', 1059)]
+property SET_GE5__rReduceAgentSP_8_ : DOUBLE read FSET_GE5__rReduceAgentSP_8_ write FSET_GE5__rReduceAgentSP_8_;
+[IniValue('SET_GE5__rReduceAgentSP_9_', '', '0.0', 1060)]
+property SET_GE5__rReduceAgentSP_9_ : DOUBLE read FSET_GE5__rReduceAgentSP_9_ write FSET_GE5__rReduceAgentSP_9_;
+[IniValue('SET_GE5__rReduceAgentSP_10_', '', '0.0', 1061)]
+property SET_GE5__rReduceAgentSP_10_ : DOUBLE read FSET_GE5__rReduceAgentSP_10_ write FSET_GE5__rReduceAgentSP_10_;
+[IniValue('SET_GE5__rReduceAgentSP_11_', '', '0.0', 1062)]
+property SET_GE5__rReduceAgentSP_11_ : DOUBLE read FSET_GE5__rReduceAgentSP_11_ write FSET_GE5__rReduceAgentSP_11_;
+[IniValue('SET_GE5__rReduceAgentSP_12_', '', '0.0', 1063)]
+property SET_GE5__rReduceAgentSP_12_ : DOUBLE read FSET_GE5__rReduceAgentSP_12_ write FSET_GE5__rReduceAgentSP_12_;
+[IniValue('SET_GE5__rDoseValveInitSP_1_', '', '0.0', 1064)]
+property SET_GE5__rDoseValveInitSP_1_ : DOUBLE read FSET_GE5__rDoseValveInitSP_1_ write FSET_GE5__rDoseValveInitSP_1_;
+[IniValue('SET_GE5__rDoseValveInitSP_2_', '', '0.0', 1065)]
+property SET_GE5__rDoseValveInitSP_2_ : DOUBLE read FSET_GE5__rDoseValveInitSP_2_ write FSET_GE5__rDoseValveInitSP_2_;
+[IniValue('SET_GE5__rDoseValveInitSP_3_', '', '0.0', 1066)]
+property SET_GE5__rDoseValveInitSP_3_ : DOUBLE read FSET_GE5__rDoseValveInitSP_3_ write FSET_GE5__rDoseValveInitSP_3_;
+[IniValue('SET_GE5__rDoseValveInitSP_4_', '', '0.0', 1067)]
+property SET_GE5__rDoseValveInitSP_4_ : DOUBLE read FSET_GE5__rDoseValveInitSP_4_ write FSET_GE5__rDoseValveInitSP_4_;
+[IniValue('SET_GE5__rDoseValveInitSP_5_', '', '0.0', 1068)]
+property SET_GE5__rDoseValveInitSP_5_ : DOUBLE read FSET_GE5__rDoseValveInitSP_5_ write FSET_GE5__rDoseValveInitSP_5_;
+[IniValue('SET_GE5__rDoseValveInitSP_6_', '', '0.0', 1069)]
+property SET_GE5__rDoseValveInitSP_6_ : DOUBLE read FSET_GE5__rDoseValveInitSP_6_ write FSET_GE5__rDoseValveInitSP_6_;
+[IniValue('SET_GE5__rDoseValveInitSP_7_', '', '0.0', 1070)]
+property SET_GE5__rDoseValveInitSP_7_ : DOUBLE read FSET_GE5__rDoseValveInitSP_7_ write FSET_GE5__rDoseValveInitSP_7_;
+[IniValue('SET_GE5__rDoseValveInitSP_8_', '', '0.0', 1071)]
+property SET_GE5__rDoseValveInitSP_8_ : DOUBLE read FSET_GE5__rDoseValveInitSP_8_ write FSET_GE5__rDoseValveInitSP_8_;
+[IniValue('SET_GE5__rDoseValveInitSP_9_', '', '0.0', 1072)]
+property SET_GE5__rDoseValveInitSP_9_ : DOUBLE read FSET_GE5__rDoseValveInitSP_9_ write FSET_GE5__rDoseValveInitSP_9_;
+[IniValue('SET_GE5__rDoseValveInitSP_10_', '', '0.0', 1073)]
+property SET_GE5__rDoseValveInitSP_10_ : DOUBLE read FSET_GE5__rDoseValveInitSP_10_ write FSET_GE5__rDoseValveInitSP_10_;
+[IniValue('SET_GE5__rDoseValveInitSP_11_', '', '0.0', 1074)]
+property SET_GE5__rDoseValveInitSP_11_ : DOUBLE read FSET_GE5__rDoseValveInitSP_11_ write FSET_GE5__rDoseValveInitSP_11_;
+[IniValue('SET_GE5__rDoseValveInitSP_12_', '', '0.0', 1075)]
+property SET_GE5__rDoseValveInitSP_12_ : DOUBLE read FSET_GE5__rDoseValveInitSP_12_ write FSET_GE5__rDoseValveInitSP_12_;
+[IniValue('SET_GE5__Dose_PID_Gain_Kp', '', '0.0', 1076)]
+property SET_GE5__Dose_PID_Gain_Kp : DOUBLE read FSET_GE5__Dose_PID_Gain_Kp write FSET_GE5__Dose_PID_Gain_Kp;
+[IniValue('SET_GE5__Dose_PID_Gain_Ki', '', '0.0', 1077)]
+property SET_GE5__Dose_PID_Gain_Ki : DOUBLE read FSET_GE5__Dose_PID_Gain_Ki write FSET_GE5__Dose_PID_Gain_Ki;
+[IniValue('SET_GE5__Dose_PID_Gain_Kd', '', '0.0', 1078)]
+property SET_GE5__Dose_PID_Gain_Kd : DOUBLE read FSET_GE5__Dose_PID_Gain_Kd write FSET_GE5__Dose_PID_Gain_Kd;
+[IniValue('SET_GE5__Dose_PID_Gain_SettingError', '', '0.0', 1079)]
+property SET_GE5__Dose_PID_Gain_SettingError : DOUBLE read FSET_GE5__Dose_PID_Gain_SettingError write FSET_GE5__Dose_PID_Gain_SettingError;
+[IniValue('SET_GE5__Dose_PID_Gain_MaxUpdate', '', '0.0', 1080)]
+property SET_GE5__Dose_PID_Gain_MaxUpdate : DOUBLE read FSET_GE5__Dose_PID_Gain_MaxUpdate write FSET_GE5__Dose_PID_Gain_MaxUpdate;
+[IniValue('SET_GE5__Dose_PID_Gain_MinUpdate', '', '0.0', 1081)]
+property SET_GE5__Dose_PID_Gain_MinUpdate : DOUBLE read FSET_GE5__Dose_PID_Gain_MinUpdate write FSET_GE5__Dose_PID_Gain_MinUpdate;
+[IniValue('SET_GE5__Dose_PID_Gain_MaxOutput', '', '0.0', 1082)]
+property SET_GE5__Dose_PID_Gain_MaxOutput : DOUBLE read FSET_GE5__Dose_PID_Gain_MaxOutput write FSET_GE5__Dose_PID_Gain_MaxOutput;
+[IniValue('SET_GE5__Dose_PID_Gain_MinOutput', '', '0.0', 1083)]
+property SET_GE5__Dose_PID_Gain_MinOutput : DOUBLE read FSET_GE5__Dose_PID_Gain_MinOutput write FSET_GE5__Dose_PID_Gain_MinOutput;
+[IniValue('SET_GE5__Dose_PID_Gain_ErrorWindowMax', '', '0.0', 1084)]
+property SET_GE5__Dose_PID_Gain_ErrorWindowMax : DOUBLE read FSET_GE5__Dose_PID_Gain_ErrorWindowMax write FSET_GE5__Dose_PID_Gain_ErrorWindowMax;
+[IniValue('SET_GE5__Dose_PID_Gain_ErrorWindowMin', '', '0.0', 1085)]
+property SET_GE5__Dose_PID_Gain_ErrorWindowMin : DOUBLE read FSET_GE5__Dose_PID_Gain_ErrorWindowMin write FSET_GE5__Dose_PID_Gain_ErrorWindowMin;
+[IniValue('SET_GE5__rMinEngLoad', '', '0.0', 1089)]
+property SET_GE5__rMinEngLoad : DOUBLE read FSET_GE5__rMinEngLoad write FSET_GE5__rMinEngLoad;
+[IniValue('SET_GE5__rCoolingProcessTime', '', '0.0', 1090)]
+property SET_GE5__rCoolingProcessTime : DOUBLE read FSET_GE5__rCoolingProcessTime write FSET_GE5__rCoolingProcessTime;
+[IniValue('SET_GE5__rFlushingProcessTime1', '', '0.0', 1091)]
+property SET_GE5__rFlushingProcessTime1 : DOUBLE read FSET_GE5__rFlushingProcessTime1 write FSET_GE5__rFlushingProcessTime1;
+[IniValue('SET_GE5__rFlushingProcessTime2', '', '0.0', 1092)]
+property SET_GE5__rFlushingProcessTime2 : DOUBLE read FSET_GE5__rFlushingProcessTime2 write FSET_GE5__rFlushingProcessTime2;
+[IniValue('SET_GE5__rSolValveNumber', '', '0.0', 1093)]
+property SET_GE5__rSolValveNumber : DOUBLE read FSET_GE5__rSolValveNumber write FSET_GE5__rSolValveNumber;
+[IniValue('SET_GE5__rNormalSootBlowingCycle', '', '0.0', 1094)]
+property SET_GE5__rNormalSootBlowingCycle : DOUBLE read FSET_GE5__rNormalSootBlowingCycle write FSET_GE5__rNormalSootBlowingCycle;
+[IniValue('SET_GE5__rAbnormalSootBlowingCycle', '', '0.0', 1095)]
+property SET_GE5__rAbnormalSootBlowingCycle : DOUBLE read FSET_GE5__rAbnormalSootBlowingCycle write FSET_GE5__rAbnormalSootBlowingCycle;
+[IniValue('SET_GE5__rSolValveOnTime', '', '0.0', 1096)]
+property SET_GE5__rSolValveOnTime : DOUBLE read FSET_GE5__rSolValveOnTime write FSET_GE5__rSolValveOnTime;
+[IniValue('GE5__Dose_Urea_Flowmeter_LV', '', '0.0', 1145)]
+property GE5__Dose_Urea_Flowmeter_LV : DOUBLE read FGE5__Dose_Urea_Flowmeter_LV write FGE5__Dose_Urea_Flowmeter_LV;
+[IniValue('GE5__Dose_Urea_Flowmeter_HV', '', '0.0', 1146)]
+property GE5__Dose_Urea_Flowmeter_HV : DOUBLE read FGE5__Dose_Urea_Flowmeter_HV write FGE5__Dose_Urea_Flowmeter_HV;
+[IniValue('GE5__Dose_Urea_Flowmeter_VLL', '', '0.0', 1147)]
+property GE5__Dose_Urea_Flowmeter_VLL : DOUBLE read FGE5__Dose_Urea_Flowmeter_VLL write FGE5__Dose_Urea_Flowmeter_VLL;
+[IniValue('GE5__Dose_Urea_Flowmeter_DLY_LL', '', '0.0', 1148)]
+property GE5__Dose_Urea_Flowmeter_DLY_LL : DOUBLE read FGE5__Dose_Urea_Flowmeter_DLY_LL write FGE5__Dose_Urea_Flowmeter_DLY_LL;
+[IniValue('GE5__Dose_Urea_Flowmeter_VLO', '', '0.0', 1149)]
+property GE5__Dose_Urea_Flowmeter_VLO : DOUBLE read FGE5__Dose_Urea_Flowmeter_VLO write FGE5__Dose_Urea_Flowmeter_VLO;
+[IniValue('GE5__Dose_Urea_Flowmeter_DLY_LO', '', '0.0', 1150)]
+property GE5__Dose_Urea_Flowmeter_DLY_LO : DOUBLE read FGE5__Dose_Urea_Flowmeter_DLY_LO write FGE5__Dose_Urea_Flowmeter_DLY_LO;
+[IniValue('GE5__Dose_Urea_Flowmeter_VHI', '', '0.0', 1151)]
+property GE5__Dose_Urea_Flowmeter_VHI : DOUBLE read FGE5__Dose_Urea_Flowmeter_VHI write FGE5__Dose_Urea_Flowmeter_VHI;
+[IniValue('GE5__Dose_Urea_Flowmeter_DLY_HI', '', '0.0', 1152)]
+property GE5__Dose_Urea_Flowmeter_DLY_HI : DOUBLE read FGE5__Dose_Urea_Flowmeter_DLY_HI write FGE5__Dose_Urea_Flowmeter_DLY_HI;
+[IniValue('GE5__Dose_Urea_Flowmeter_VHH', '', '0.0', 1153)]
+property GE5__Dose_Urea_Flowmeter_VHH : DOUBLE read FGE5__Dose_Urea_Flowmeter_VHH write FGE5__Dose_Urea_Flowmeter_VHH;
+[IniValue('GE5__Dose_Urea_Flowmeter_DLY_HH', '', '0.0', 1154)]
+property GE5__Dose_Urea_Flowmeter_DLY_HH : DOUBLE read FGE5__Dose_Urea_Flowmeter_DLY_HH write FGE5__Dose_Urea_Flowmeter_DLY_HH;
+[IniValue('GE5__Dose_Urea_In_PT_LV', '', '0.0', 1155)]
+property GE5__Dose_Urea_In_PT_LV : DOUBLE read FGE5__Dose_Urea_In_PT_LV write FGE5__Dose_Urea_In_PT_LV;
+[IniValue('GE5__Dose_Urea_In_PT_HV', '', '0.0', 1156)]
+property GE5__Dose_Urea_In_PT_HV : DOUBLE read FGE5__Dose_Urea_In_PT_HV write FGE5__Dose_Urea_In_PT_HV;
+[IniValue('GE5__Dose_Urea_In_PT_VLL', '', '0.0', 1157)]
+property GE5__Dose_Urea_In_PT_VLL : DOUBLE read FGE5__Dose_Urea_In_PT_VLL write FGE5__Dose_Urea_In_PT_VLL;
+[IniValue('GE5__Dose_Urea_In_PT_DLY_LL', '', '0.0', 1158)]
+property GE5__Dose_Urea_In_PT_DLY_LL : DOUBLE read FGE5__Dose_Urea_In_PT_DLY_LL write FGE5__Dose_Urea_In_PT_DLY_LL;
+[IniValue('GE5__Dose_Urea_In_PT_VLO', '', '0.0', 1159)]
+property GE5__Dose_Urea_In_PT_VLO : DOUBLE read FGE5__Dose_Urea_In_PT_VLO write FGE5__Dose_Urea_In_PT_VLO;
+[IniValue('GE5__Dose_Urea_In_PT_DLY_LO', '', '0.0', 1160)]
+property GE5__Dose_Urea_In_PT_DLY_LO : DOUBLE read FGE5__Dose_Urea_In_PT_DLY_LO write FGE5__Dose_Urea_In_PT_DLY_LO;
+[IniValue('GE5__Dose_Urea_Out_PT_LV', '', '0.0', 1161)]
+property GE5__Dose_Urea_Out_PT_LV : DOUBLE read FGE5__Dose_Urea_Out_PT_LV write FGE5__Dose_Urea_Out_PT_LV;
+[IniValue('GE5__Dose_Urea_Out_PT_HV', '', '0.0', 1162)]
+property GE5__Dose_Urea_Out_PT_HV : DOUBLE read FGE5__Dose_Urea_Out_PT_HV write FGE5__Dose_Urea_Out_PT_HV;
+[IniValue('GE5__Dose_Air_In_PT_LV', '', '0.0', 1163)]
+property GE5__Dose_Air_In_PT_LV : DOUBLE read FGE5__Dose_Air_In_PT_LV write FGE5__Dose_Air_In_PT_LV;
+[IniValue('GE5__Dose_Air_In_PT_HV', '', '0.0', 1164)]
+property GE5__Dose_Air_In_PT_HV : DOUBLE read FGE5__Dose_Air_In_PT_HV write FGE5__Dose_Air_In_PT_HV;
+[IniValue('GE5__Dose_Air_In_PT_VLL', '', '0.0', 1165)]
+property GE5__Dose_Air_In_PT_VLL : DOUBLE read FGE5__Dose_Air_In_PT_VLL write FGE5__Dose_Air_In_PT_VLL;
+[IniValue('GE5__Dose_Air_In_PT_DLY_LL', '', '0.0', 1166)]
+property GE5__Dose_Air_In_PT_DLY_LL : DOUBLE read FGE5__Dose_Air_In_PT_DLY_LL write FGE5__Dose_Air_In_PT_DLY_LL;
+[IniValue('GE5__Dose_Air_In_PT_VLO', '', '0.0', 1167)]
+property GE5__Dose_Air_In_PT_VLO : DOUBLE read FGE5__Dose_Air_In_PT_VLO write FGE5__Dose_Air_In_PT_VLO;
+[IniValue('GE5__Dose_Air_In_PT_DLY_LO', '', '0.0', 1168)]
+property GE5__Dose_Air_In_PT_DLY_LO : DOUBLE read FGE5__Dose_Air_In_PT_DLY_LO write FGE5__Dose_Air_In_PT_DLY_LO;
+[IniValue('GE5__Dose_Air_Out_PT_LV', '', '0.0', 1169)]
+property GE5__Dose_Air_Out_PT_LV : DOUBLE read FGE5__Dose_Air_Out_PT_LV write FGE5__Dose_Air_Out_PT_LV;
+[IniValue('GE5__Dose_Air_Out_PT_HV', '', '0.0', 1170)]
+property GE5__Dose_Air_Out_PT_HV : DOUBLE read FGE5__Dose_Air_Out_PT_HV write FGE5__Dose_Air_Out_PT_HV;
+[IniValue('GE5__Dose_Air_Out_PT_VLL', '', '0.0', 1171)]
+property GE5__Dose_Air_Out_PT_VLL : DOUBLE read FGE5__Dose_Air_Out_PT_VLL write FGE5__Dose_Air_Out_PT_VLL;
+[IniValue('GE5__Dose_Air_Out_PT_DLY_LL', '', '0.0', 1172)]
+property GE5__Dose_Air_Out_PT_DLY_LL : DOUBLE read FGE5__Dose_Air_Out_PT_DLY_LL write FGE5__Dose_Air_Out_PT_DLY_LL;
+[IniValue('GE5__Dose_Air_Out_PT_VLO', '', '0.0', 1173)]
+property GE5__Dose_Air_Out_PT_VLO : DOUBLE read FGE5__Dose_Air_Out_PT_VLO write FGE5__Dose_Air_Out_PT_VLO;
+[IniValue('GE5__Dose_Air_Out_PT_DLY_LO', '', '0.0', 1174)]
+property GE5__Dose_Air_Out_PT_DLY_LO : DOUBLE read FGE5__Dose_Air_Out_PT_DLY_LO write FGE5__Dose_Air_Out_PT_DLY_LO;
+[IniValue('GE5__Load_Signal_LV', '', '0.0', 1175)]
+property GE5__Load_Signal_LV : DOUBLE read FGE5__Load_Signal_LV write FGE5__Load_Signal_LV;
+[IniValue('GE5__Load_Signal_HV', '', '0.0', 1176)]
+property GE5__Load_Signal_HV : DOUBLE read FGE5__Load_Signal_HV write FGE5__Load_Signal_HV;
+[IniValue('GE5__SootBlower_Air_In_PT_LV', '', '0.0', 1177)]
+property GE5__SootBlower_Air_In_PT_LV : DOUBLE read FGE5__SootBlower_Air_In_PT_LV write FGE5__SootBlower_Air_In_PT_LV;
+[IniValue('GE5__SootBlower_Air_In_PT_HV', '', '0.0', 1178)]
+property GE5__SootBlower_Air_In_PT_HV : DOUBLE read FGE5__SootBlower_Air_In_PT_HV write FGE5__SootBlower_Air_In_PT_HV;
+[IniValue('GE5__SootBlower_Air_In_PT_VLL', '', '0.0', 1179)]
+property GE5__SootBlower_Air_In_PT_VLL : DOUBLE read FGE5__SootBlower_Air_In_PT_VLL write FGE5__SootBlower_Air_In_PT_VLL;
+[IniValue('GE5__SootBlower_Air_In_PT_DLY_LL', '', '0.0', 1180)]
+property GE5__SootBlower_Air_In_PT_DLY_LL : DOUBLE read FGE5__SootBlower_Air_In_PT_DLY_LL write FGE5__SootBlower_Air_In_PT_DLY_LL;
+[IniValue('GE5__SootBlower_Air_In_PT_VLO', '', '0.0', 1181)]
+property GE5__SootBlower_Air_In_PT_VLO : DOUBLE read FGE5__SootBlower_Air_In_PT_VLO write FGE5__SootBlower_Air_In_PT_VLO;
+[IniValue('GE5__SootBlower_Air_In_PT_DLY_LO', '', '0.0', 1182)]
+property GE5__SootBlower_Air_In_PT_DLY_LO : DOUBLE read FGE5__SootBlower_Air_In_PT_DLY_LO write FGE5__SootBlower_Air_In_PT_DLY_LO;
+[IniValue('GE5__Chamber_PDT_LV', '', '0.0', 1183)]
+property GE5__Chamber_PDT_LV : DOUBLE read FGE5__Chamber_PDT_LV write FGE5__Chamber_PDT_LV;
+[IniValue('GE5__Chamber_PDT_HV', '', '0.0', 1184)]
+property GE5__Chamber_PDT_HV : DOUBLE read FGE5__Chamber_PDT_HV write FGE5__Chamber_PDT_HV;
+[IniValue('GE5__Chamber_PDT_VLO', '', '0.0', 1185)]
+property GE5__Chamber_PDT_VLO : DOUBLE read FGE5__Chamber_PDT_VLO write FGE5__Chamber_PDT_VLO;
+[IniValue('GE5__Chamber_PDT_DLY_LO', '', '0.0', 1186)]
+property GE5__Chamber_PDT_DLY_LO : DOUBLE read FGE5__Chamber_PDT_DLY_LO write FGE5__Chamber_PDT_DLY_LO;
+[IniValue('GE5__Chamber_PDT_VHI', '', '0.0', 1187)]
+property GE5__Chamber_PDT_VHI : DOUBLE read FGE5__Chamber_PDT_VHI write FGE5__Chamber_PDT_VHI;
+[IniValue('GE5__Chamber_PDT_DLY_HI', '', '0.0', 1188)]
+property GE5__Chamber_PDT_DLY_HI : DOUBLE read FGE5__Chamber_PDT_DLY_HI write FGE5__Chamber_PDT_DLY_HI;
+[IniValue('GE5__Chamber_PDT_VHH', '', '0.0', 1189)]
+property GE5__Chamber_PDT_VHH : DOUBLE read FGE5__Chamber_PDT_VHH write FGE5__Chamber_PDT_VHH;
+[IniValue('GE5__Chamber_PDT_DLY_HH', '', '0.0', 1190)]
+property GE5__Chamber_PDT_DLY_HH : DOUBLE read FGE5__Chamber_PDT_DLY_HH write FGE5__Chamber_PDT_DLY_HH;
+[IniValue('GE5__Chamber_In_Temp_LV', '', '0.0', 1191)]
+property GE5__Chamber_In_Temp_LV : DOUBLE read FGE5__Chamber_In_Temp_LV write FGE5__Chamber_In_Temp_LV;
+[IniValue('GE5__Chamber_In_Temp_HV', '', '0.0', 1192)]
+property GE5__Chamber_In_Temp_HV : DOUBLE read FGE5__Chamber_In_Temp_HV write FGE5__Chamber_In_Temp_HV;
+[IniValue('GE5__Chamber_In_Temp_DLY_LL', '', '0.0', 1194)]
+property GE5__Chamber_In_Temp_DLY_LL : DOUBLE read FGE5__Chamber_In_Temp_DLY_LL write FGE5__Chamber_In_Temp_DLY_LL;
+[IniValue('GE5__Chamber_In_Temp_DLY_LO', '', '0.0', 1196)]
+property GE5__Chamber_In_Temp_DLY_LO : DOUBLE read FGE5__Chamber_In_Temp_DLY_LO write FGE5__Chamber_In_Temp_DLY_LO;
+[IniValue('GE5__Chamber_In_Temp_VHI', '', '0.0', 1197)]
+property GE5__Chamber_In_Temp_VHI : DOUBLE read FGE5__Chamber_In_Temp_VHI write FGE5__Chamber_In_Temp_VHI;
+[IniValue('GE5__Chamber_In_Temp_DLY_HI', '', '0.0', 1198)]
+property GE5__Chamber_In_Temp_DLY_HI : DOUBLE read FGE5__Chamber_In_Temp_DLY_HI write FGE5__Chamber_In_Temp_DLY_HI;
+[IniValue('GE5__Chamber_In_Temp_VHH', '', '0.0', 1199)]
+property GE5__Chamber_In_Temp_VHH : DOUBLE read FGE5__Chamber_In_Temp_VHH write FGE5__Chamber_In_Temp_VHH;
+[IniValue('GE5__Chamber_In_Temp_DLY_HH', '', '0.0', 1200)]
+property GE5__Chamber_In_Temp_DLY_HH : DOUBLE read FGE5__Chamber_In_Temp_DLY_HH write FGE5__Chamber_In_Temp_DLY_HH;
+[IniValue('GE5__Chamber_Out_Temp_LV', '', '0.0', 1201)]
+property GE5__Chamber_Out_Temp_LV : DOUBLE read FGE5__Chamber_Out_Temp_LV write FGE5__Chamber_Out_Temp_LV;
+[IniValue('GE5__Chamber_Out_Temp_HV', '', '0.0', 1202)]
+property GE5__Chamber_Out_Temp_HV : DOUBLE read FGE5__Chamber_Out_Temp_HV write FGE5__Chamber_Out_Temp_HV;
+[IniValue('GE5__Chamber_Out_Temp_DLY_LL', '', '0.0', 1204)]
+property GE5__Chamber_Out_Temp_DLY_LL : DOUBLE read FGE5__Chamber_Out_Temp_DLY_LL write FGE5__Chamber_Out_Temp_DLY_LL;
+[IniValue('GE5__Chamber_Out_Temp_DLY_LO', '', '0.0', 1206)]
+property GE5__Chamber_Out_Temp_DLY_LO : DOUBLE read FGE5__Chamber_Out_Temp_DLY_LO write FGE5__Chamber_Out_Temp_DLY_LO;
+[IniValue('GE5__Chamber_Out_Temp_VHI', '', '0.0', 1207)]
+property GE5__Chamber_Out_Temp_VHI : DOUBLE read FGE5__Chamber_Out_Temp_VHI write FGE5__Chamber_Out_Temp_VHI;
+[IniValue('GE5__Chamber_Out_Temp_DLY_HI', '', '0.0', 1208)]
+property GE5__Chamber_Out_Temp_DLY_HI : DOUBLE read FGE5__Chamber_Out_Temp_DLY_HI write FGE5__Chamber_Out_Temp_DLY_HI;
+[IniValue('GE5__Chamber_Out_Temp_VHH', '', '0.0', 1209)]
+property GE5__Chamber_Out_Temp_VHH : DOUBLE read FGE5__Chamber_Out_Temp_VHH write FGE5__Chamber_Out_Temp_VHH;
+[IniValue('GE5__Chamber_Out_Temp_DLY_HH', '', '0.0', 1210)]
+property GE5__Chamber_Out_Temp_DLY_HH : DOUBLE read FGE5__Chamber_Out_Temp_DLY_HH write FGE5__Chamber_Out_Temp_DLY_HH;
+[IniValue('GE5__Nox_Concentration_LV', '', '0.0', 1211)]
+property GE5__Nox_Concentration_LV : DOUBLE read FGE5__Nox_Concentration_LV write FGE5__Nox_Concentration_LV;
+[IniValue('GE5__Nox_Concentration_HV', '', '0.0', 1212)]
+property GE5__Nox_Concentration_HV : DOUBLE read FGE5__Nox_Concentration_HV write FGE5__Nox_Concentration_HV;
+[IniValue('GE5__RBV_PDT_LV', '', '0.0', 1213)]
+property GE5__RBV_PDT_LV : DOUBLE read FGE5__RBV_PDT_LV write FGE5__RBV_PDT_LV;
+[IniValue('GE5__RBV_PDT_HV', '', '0.0', 1214)]
+property GE5__RBV_PDT_HV : DOUBLE read FGE5__RBV_PDT_HV write FGE5__RBV_PDT_HV;
+[IniValue('GE5__RBV_PDT_VHI', '', '0.0', 1215)]
+property GE5__RBV_PDT_VHI : DOUBLE read FGE5__RBV_PDT_VHI write FGE5__RBV_PDT_VHI;
+[IniValue('GE5__RBV_PDT_DLY_HI', '', '0.0', 1216)]
+property GE5__RBV_PDT_DLY_HI : DOUBLE read FGE5__RBV_PDT_DLY_HI write FGE5__RBV_PDT_DLY_HI;
+[IniValue('GE5__RBV_PDT_VHH', '', '0.0', 1217)]
+property GE5__RBV_PDT_VHH : DOUBLE read FGE5__RBV_PDT_VHH write FGE5__RBV_PDT_VHH;
+[IniValue('GE5__RBV_PDT_DLY_HH', '', '0.0', 1218)]
+property GE5__RBV_PDT_DLY_HH : DOUBLE read FGE5__RBV_PDT_DLY_HH write FGE5__RBV_PDT_DLY_HH;
+[IniValue('GE5__Dose_Control_VV_LV', '', '0.0', 1219)]
+property GE5__Dose_Control_VV_LV : DOUBLE read FGE5__Dose_Control_VV_LV write FGE5__Dose_Control_VV_LV;
+[IniValue('GE5__Dose_Control_VV_HV', '', '0.0', 1220)]
+property GE5__Dose_Control_VV_HV : DOUBLE read FGE5__Dose_Control_VV_HV write FGE5__Dose_Control_VV_HV;
+[IniValue('GE5__DoseUreaFlowrate_LV', '', '0.0', 1221)]
+property GE5__DoseUreaFlowrate_LV : DOUBLE read FGE5__DoseUreaFlowrate_LV write FGE5__DoseUreaFlowrate_LV;
+[IniValue('GE5__DoseUreaFlowrate_HV', '', '0.0', 1222)]
+property GE5__DoseUreaFlowrate_HV : DOUBLE read FGE5__DoseUreaFlowrate_HV write FGE5__DoseUreaFlowrate_HV;
+[IniValue('GE5__Nox_Con_Out_LV', '', '0.0', 1223)]
+property GE5__Nox_Con_Out_LV : DOUBLE read FGE5__Nox_Con_Out_LV write FGE5__Nox_Con_Out_LV;
+[IniValue('GE5__Nox_Con_Out_HV', '', '0.0', 1224)]
+property GE5__Nox_Con_Out_HV : DOUBLE read FGE5__Nox_Con_Out_HV write FGE5__Nox_Con_Out_HV;
+[IniValue('GE5__Reduce_Agent_Setpoint_HV', '', '0.0', 1225)]
+property GE5__Reduce_Agent_Setpoint_HV : DOUBLE read FGE5__Reduce_Agent_Setpoint_HV write FGE5__Reduce_Agent_Setpoint_HV;
+[IniValue('GE5__Reduce_Agent_Setpoint_LV', '', '0.0', 1226)]
+property GE5__Reduce_Agent_Setpoint_LV : DOUBLE read FGE5__Reduce_Agent_Setpoint_LV write FGE5__Reduce_Agent_Setpoint_LV;

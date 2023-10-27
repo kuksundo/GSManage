@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{49CDED17-62A0-47C3-A4EF-779816C85459}</ProjectGuid>
+        <ProjectGuid>{9637EACC-96D4-47F4-8550-B44E66D60821}</ProjectGuid>
         <ProjectVersion>15.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>SCRReport.dpr</MainSource>
@@ -73,7 +73,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Form;E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Frame;E:\pjh\Dev\Lang\Delphi\Template\Dabbler\Unit;E:\pjh\project\OpenSrc\lib\robstechcorner\rtti;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-Mocks-master\Source;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\ArrayHelper-master;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_ExeOutput>.\</DCC_ExeOutput>
+        <DCC_ExeOutput>.\bin</DCC_ExeOutput>
         <DCC_DcuOutput>Y:\pjh\Dcu\Win32\$(MSBuildProjectName)</DCC_DcuOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
@@ -104,10 +104,6 @@
             <Form>SCRMESettingF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="FrmSCRSetting.pas">
-            <Form>SCRSettingF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="FrmSCRReportMain.pas">
             <Form>SCRReportF</Form>
             <FormType>dfm</FormType>
@@ -118,6 +114,13 @@
         <DCCReference Include="..\..\..\Common\UnitNextGridUtil2.pas"/>
         <DCCReference Include="Unit\UDragDropFormat_SCRParam.pas"/>
         <DCCReference Include="Unit\UCommonUtil.pas"/>
+        <DCCReference Include="Unit\UAppInfo.pas"/>
+        <DCCReference Include="..\..\..\Template\Dabbler\Unit\USettings.pas"/>
+        <DCCReference Include="Unit\USettingsConst.pas"/>
+        <DCCReference Include="FrmSCRSetting.pas">
+            <Form>SCRSettingF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="SCRParamFieldList.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -191,6 +194,8 @@
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhIOCompProPkg.bpl">(untitled)</Excluded_Packages>
+                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhDelphiStandardPkg.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k190.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp190.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

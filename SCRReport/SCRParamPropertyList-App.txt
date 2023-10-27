@@ -1,0 +1,130 @@
+[IniValue('CMN_SET_System_LpScrEnable_VAL', '2S LP SCR enable', 'False', 1)]
+property CMN_SET_System_LpScrEnable_VAL : BOOL read FCMN_SET_System_LpScrEnable_VAL write FCMN_SET_System_LpScrEnable_VAL;
+[IniValue('CMN_SET_System_HpScrEnable_VAL', '2S HP SCR enable', 'False', 2)]
+property CMN_SET_System_HpScrEnable_VAL : BOOL read FCMN_SET_System_HpScrEnable_VAL write FCMN_SET_System_HpScrEnable_VAL;
+[IniValue('CMN_SET_System_GeScrEnable_VAL', '4S LP SCR enable', 'False', 3)]
+property CMN_SET_System_GeScrEnable_VAL : BOOL read FCMN_SET_System_GeScrEnable_VAL write FCMN_SET_System_GeScrEnable_VAL;
+[IniValue('CMN_SET_System_PowerSource_VAL', 'Dual (Power source on)', 'False', 4)]
+property CMN_SET_System_PowerSource_VAL : BOOL read FCMN_SET_System_PowerSource_VAL write FCMN_SET_System_PowerSource_VAL;
+[IniValue('CMN_SET_System_ModbusComm_VAL', 'RS485 Communication Enable on', 'False', 5)]
+property CMN_SET_System_ModbusComm_VAL : BOOL read FCMN_SET_System_ModbusComm_VAL write FCMN_SET_System_ModbusComm_VAL;
+[IniValue('CMN_SET_2S_ManEngEnable_VAL', 'MAN-ES engine enable', 'False', 16)]
+property CMN_SET_2S_ManEngEnable_VAL : BOOL read FCMN_SET_2S_ManEngEnable_VAL write FCMN_SET_2S_ManEngEnable_VAL;
+[IniValue('CMN_SET_2S_WinGdEngEnable_VAL', 'WINGD engine enable', 'False', 17)]
+property CMN_SET_2S_WinGdEngEnable_VAL : BOOL read FCMN_SET_2S_WinGdEngEnable_VAL write FCMN_SET_2S_WinGdEngEnable_VAL;
+[IniValue('CMN_SET_2S_FuelOilType_VAL', 'Fuel oil type', 'False', 18)]
+property CMN_SET_2S_FuelOilType_VAL : BOOL read FCMN_SET_2S_FuelOilType_VAL write FCMN_SET_2S_FuelOilType_VAL;
+[IniValue('CMN_SET_2S_HpSealingSystem_VAL', '2S HP sealing', 'False', 19)]
+property CMN_SET_2S_HpSealingSystem_VAL : BOOL read FCMN_SET_2S_HpSealingSystem_VAL write FCMN_SET_2S_HpSealingSystem_VAL;
+[IniValue('CMN_SET_2S_LpSealingSystem_VAL', '2S LP Sealing', 'False', 20)]
+property CMN_SET_2S_LpSealingSystem_VAL : BOOL read FCMN_SET_2S_LpSealingSystem_VAL write FCMN_SET_2S_LpSealingSystem_VAL;
+[IniValue('CMN_SET_2S_MENoxConcentration_VAL', 'ME Nox concentration', 'False', 21)]
+property CMN_SET_2S_MENoxConcentration_VAL : BOOL read FCMN_SET_2S_MENoxConcentration_VAL write FCMN_SET_2S_MENoxConcentration_VAL;
+[IniValue('CMN_SET_2S_PdtSensor_VAL', 'Bypass valve PDT', 'False', 25)]
+property CMN_SET_2S_PdtSensor_VAL : BOOL read FCMN_SET_2S_PdtSensor_VAL write FCMN_SET_2S_PdtSensor_VAL;
+[IniValue('CMN_SET_2S_BurnerSystem_VAL', 'Burner system', 'False', 26)]
+property CMN_SET_2S_BurnerSystem_VAL : BOOL read FCMN_SET_2S_BurnerSystem_VAL write FCMN_SET_2S_BurnerSystem_VAL;
+[IniValue('CMN_SET_2S_RtvLine_VAL', 'RTV line', 'False', 27)]
+property CMN_SET_2S_RtvLine_VAL : BOOL read FCMN_SET_2S_RtvLine_VAL write FCMN_SET_2S_RtvLine_VAL;
+[IniValue('CMN_SET_2S_BurnerInGasFlow_VAL', 'Burner flow', 'False', 28)]
+property CMN_SET_2S_BurnerInGasFlow_VAL : BOOL read FCMN_SET_2S_BurnerInGasFlow_VAL write FCMN_SET_2S_BurnerInGasFlow_VAL;
+[IniValue('CMN_SET_2S_ContinuousSealing_VAL', 'Continuous sealing', 'False', 29)]
+property CMN_SET_2S_ContinuousSealing_VAL : BOOL read FCMN_SET_2S_ContinuousSealing_VAL write FCMN_SET_2S_ContinuousSealing_VAL;
+[IniValue('CMN_SET_2S_AllowChiefToSetChamberTemp_VAL', '', 'False', 30)]
+property CMN_SET_2S_AllowChiefToSetChamberTemp_VAL : BOOL read FCMN_SET_2S_AllowChiefToSetChamberTemp_VAL write FCMN_SET_2S_AllowChiefToSetChamberTemp_VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE1__VAL', 'GE No.1 Enable', 'False', 32)]
+property CMN_SET_4S_GeEnable_GE1__VAL : BOOL read FCMN_SET_4S_GeEnable_GE1__VAL write FCMN_SET_4S_GeEnable_GE1__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE2__VAL', 'GE No.2 Enable', 'False', 33)]
+property CMN_SET_4S_GeEnable_GE2__VAL : BOOL read FCMN_SET_4S_GeEnable_GE2__VAL write FCMN_SET_4S_GeEnable_GE2__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE3__VAL', 'GE No.3 Enable', 'False', 34)]
+property CMN_SET_4S_GeEnable_GE3__VAL : BOOL read FCMN_SET_4S_GeEnable_GE3__VAL write FCMN_SET_4S_GeEnable_GE3__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE4__VAL', 'GE No.4 Enable', 'False', 35)]
+property CMN_SET_4S_GeEnable_GE4__VAL : BOOL read FCMN_SET_4S_GeEnable_GE4__VAL write FCMN_SET_4S_GeEnable_GE4__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE5__VAL', 'GE No.5 Enable', 'False', 36)]
+property CMN_SET_4S_GeEnable_GE5__VAL : BOOL read FCMN_SET_4S_GeEnable_GE5__VAL write FCMN_SET_4S_GeEnable_GE5__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE6__VAL', 'GE No.6 Enable', 'False', 37)]
+property CMN_SET_4S_GeEnable_GE6__VAL : BOOL read FCMN_SET_4S_GeEnable_GE6__VAL write FCMN_SET_4S_GeEnable_GE6__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE7__VAL', 'GE No.7 Enable', 'False', 38)]
+property CMN_SET_4S_GeEnable_GE7__VAL : BOOL read FCMN_SET_4S_GeEnable_GE7__VAL write FCMN_SET_4S_GeEnable_GE7__VAL;
+[IniValue('CMN_SET_4S_GeEnable_GE8__VAL', 'GE No.8 Enable', 'False', 39)]
+property CMN_SET_4S_GeEnable_GE8__VAL : BOOL read FCMN_SET_4S_GeEnable_GE8__VAL write FCMN_SET_4S_GeEnable_GE8__VAL;
+[IniValue('CMN_SET_4S_BypassEnable_VAL', 'bypass enable', 'False', 40)]
+property CMN_SET_4S_BypassEnable_VAL : BOOL read FCMN_SET_4S_BypassEnable_VAL write FCMN_SET_4S_BypassEnable_VAL;
+[IniValue('CMN_SET_4S_NOxSensor_VAL', 'Nox sensor enable', 'False', 41)]
+property CMN_SET_4S_NOxSensor_VAL : BOOL read FCMN_SET_4S_NOxSensor_VAL write FCMN_SET_4S_NOxSensor_VAL;
+[IniValue('CMN_SET_4S_NOxCompensator_VAL', 'Nox compensator enable', 'False', 42)]
+property CMN_SET_4S_NOxCompensator_VAL : BOOL read FCMN_SET_4S_NOxCompensator_VAL write FCMN_SET_4S_NOxCompensator_VAL;
+[IniValue('CMN_SET_4S_MainEngEnable_VAL', 'Enable Main engine', 'False', 43)]
+property CMN_SET_4S_MainEngEnable_VAL : BOOL read FCMN_SET_4S_MainEngEnable_VAL write FCMN_SET_4S_MainEngEnable_VAL;
+[IniValue('CMN_SET_4S_IndividualEmcyStop_VAL', 'individual emcy stop', 'False', 44)]
+property CMN_SET_4S_IndividualEmcyStop_VAL : BOOL read FCMN_SET_4S_IndividualEmcyStop_VAL write FCMN_SET_4S_IndividualEmcyStop_VAL;
+[IniValue('CMN_SET_4S_DualFuelEng_VAL', 'dual fuel engine', 'False', 45)]
+property CMN_SET_4S_DualFuelEng_VAL : BOOL read FCMN_SET_4S_DualFuelEng_VAL write FCMN_SET_4S_DualFuelEng_VAL;
+[IniValue('CMN_SET_4S_NOxSensorSignalType_VAL', 'Nox sensor signal type', 'False', 46)]
+property CMN_SET_4S_NOxSensorSignalType_VAL : BOOL read FCMN_SET_4S_NOxSensorSignalType_VAL write FCMN_SET_4S_NOxSensorSignalType_VAL;
+[IniValue('CMN_SET_4S_Model_VAL', 'physical model calibration', 'False', 47)]
+property CMN_SET_4S_Model_VAL : BOOL read FCMN_SET_4S_Model_VAL write FCMN_SET_4S_Model_VAL;
+[IniValue('CMN_SET_Designer_DripTrayLevelHighHigh_VAL', 'Urea tank drip tray level hi-hi', 'False', 48)]
+property CMN_SET_Designer_DripTrayLevelHighHigh_VAL : BOOL read FCMN_SET_Designer_DripTrayLevelHighHigh_VAL write FCMN_SET_Designer_DripTrayLevelHighHigh_VAL;
+[IniValue('CMN_SET_Designer_TankTempHighHigh_VAL', 'Urea tank temp hi-hi', 'False', 49)]
+property CMN_SET_Designer_TankTempHighHigh_VAL : BOOL read FCMN_SET_Designer_TankTempHighHigh_VAL write FCMN_SET_Designer_TankTempHighHigh_VAL;
+[IniValue('CMN_SET_Designer_TankLevelHigh_VAL', 'Urea tank level hi', 'False', 50)]
+property CMN_SET_Designer_TankLevelHigh_VAL : BOOL read FCMN_SET_Designer_TankLevelHigh_VAL write FCMN_SET_Designer_TankLevelHigh_VAL;
+[IniValue('CMN_SET_Designer_DripTrayLevelHigh_VAL', 'Urea tank drip tray level hi', 'False', 51)]
+property CMN_SET_Designer_DripTrayLevelHigh_VAL : BOOL read FCMN_SET_Designer_DripTrayLevelHigh_VAL write FCMN_SET_Designer_DripTrayLevelHigh_VAL;
+[IniValue('CMN_SET_Designer_TankTempLow_VAL', 'Urea tank temp low', 'False', 52)]
+property CMN_SET_Designer_TankTempLow_VAL : BOOL read FCMN_SET_Designer_TankTempLow_VAL write FCMN_SET_Designer_TankTempLow_VAL;
+[IniValue('CMN_SET_Designer_TankTempHigh_VAL', 'Urea tank temp hi', 'False', 53)]
+property CMN_SET_Designer_TankTempHigh_VAL : BOOL read FCMN_SET_Designer_TankTempHigh_VAL write FCMN_SET_Designer_TankTempHigh_VAL;
+[IniValue('CMN_SET_Designer_TankLevelLow_VAL', 'Urea tank level low', 'False', 54)]
+property CMN_SET_Designer_TankLevelLow_VAL : BOOL read FCMN_SET_Designer_TankLevelLow_VAL write FCMN_SET_Designer_TankLevelLow_VAL;
+[IniValue('CMN_SET_Designer_SupplyUreaTEMP_VAL', 'Supply urea temp', 'False', 55)]
+property CMN_SET_Designer_SupplyUreaTEMP_VAL : BOOL read FCMN_SET_Designer_SupplyUreaTEMP_VAL write FCMN_SET_Designer_SupplyUreaTEMP_VAL;
+[IniValue('CMN_SET_Designer_BypassValveConnection_VAL', 'Bypass valve position hard wired', 'False', 56)]
+property CMN_SET_Designer_BypassValveConnection_VAL : BOOL read FCMN_SET_Designer_BypassValveConnection_VAL write FCMN_SET_Designer_BypassValveConnection_VAL;
+[IniValue('CMN_SET_Designer_UreaFlowrateConnection_VAL', 'Urea flowrate Hard wired', 'False', 57)]
+property CMN_SET_Designer_UreaFlowrateConnection_VAL : BOOL read FCMN_SET_Designer_UreaFlowrateConnection_VAL write FCMN_SET_Designer_UreaFlowrateConnection_VAL;
+[IniValue('CMN_SET_Designer_AMS_Revision_VAL', 'RS485 reversion', 'False', 58)]
+property CMN_SET_Designer_AMS_Revision_VAL : BOOL read FCMN_SET_Designer_AMS_Revision_VAL write FCMN_SET_Designer_AMS_Revision_VAL;
+[IniValue('CMN_SET_Designer_GeEmcyFromEcrNotApplied_VAL', 'GE emcy shutdown from ECR not applied', 'False', 59)]
+property CMN_SET_Designer_GeEmcyFromEcrNotApplied_VAL : BOOL read FCMN_SET_Designer_GeEmcyFromEcrNotApplied_VAL write FCMN_SET_Designer_GeEmcyFromEcrNotApplied_VAL;
+[IniValue('CMN_SET_Designer_NewOptimizationCode_VAL', 'New Ge hardware', 'False', 60)]
+property CMN_SET_Designer_NewOptimizationCode_VAL : BOOL read FCMN_SET_Designer_NewOptimizationCode_VAL write FCMN_SET_Designer_NewOptimizationCode_VAL;
+[IniValue('CMN_SET_Designer_InternalPower_VAL', 'Enable internal power fail', 'False', 61)]
+property CMN_SET_Designer_InternalPower_VAL : BOOL read FCMN_SET_Designer_InternalPower_VAL write FCMN_SET_Designer_InternalPower_VAL;
+[IniValue('CMN_SET_Designer_SilsEnable_VAL', 'urea drip tray hi shutdown enable', 'False', 62)]
+property CMN_SET_Designer_SilsEnable_VAL : BOOL read FCMN_SET_Designer_SilsEnable_VAL write FCMN_SET_Designer_SilsEnable_VAL;
+[IniValue('CMN_SET_Designer_CosmoEnable_VAL', 'Cosmo communication enable', 'False', 63)]
+property CMN_SET_Designer_CosmoEnable_VAL : BOOL read FCMN_SET_Designer_CosmoEnable_VAL write FCMN_SET_Designer_CosmoEnable_VAL;
+[IniValue('CMN_SET_Designer_ABSClass_VAL', 'ABS class', 'False', 64)]
+property CMN_SET_Designer_ABSClass_VAL : BOOL read FCMN_SET_Designer_ABSClass_VAL write FCMN_SET_Designer_ABSClass_VAL;
+[IniValue('CMN_SET_Designer_FOPumpControlEnable_VAL', 'FO pump control enable', 'False', 65)]
+property CMN_SET_Designer_FOPumpControlEnable_VAL : BOOL read FCMN_SET_Designer_FOPumpControlEnable_VAL write FCMN_SET_Designer_FOPumpControlEnable_VAL;
+[IniValue('CMN_SET_Designer_UnitChangeEnable_VAL', 'Unit change enable', 'False', 66)]
+property CMN_SET_Designer_UnitChangeEnable_VAL : BOOL read FCMN_SET_Designer_UnitChangeEnable_VAL write FCMN_SET_Designer_UnitChangeEnable_VAL;
+[IniValue('CMN_SET_Designer_BypassValveInterlockEnable_VAL', 'EPA regulation', 'False', 67)]
+property CMN_SET_Designer_BypassValveInterlockEnable_VAL : BOOL read FCMN_SET_Designer_BypassValveInterlockEnable_VAL write FCMN_SET_Designer_BypassValveInterlockEnable_VAL;
+[IniValue('CMN_SET_Designer_MultiFuelTextEnable_VAL', 'Multi-fuel text', 'False', 68)]
+property CMN_SET_Designer_MultiFuelTextEnable_VAL : BOOL read FCMN_SET_Designer_MultiFuelTextEnable_VAL write FCMN_SET_Designer_MultiFuelTextEnable_VAL;
+[IniValue('CMN_SET_Designer_XFDFanConsumptionSigEnable_VAL', 'X-FD fan power consumption signal enable', 'False', 69)]
+property CMN_SET_Designer_XFDFanConsumptionSigEnable_VAL : BOOL read FCMN_SET_Designer_XFDFanConsumptionSigEnable_VAL write FCMN_SET_Designer_XFDFanConsumptionSigEnable_VAL;
+[IniValue('CMN_SET_Designer_TransferPumpEnable_VAL', 'Transfer pump enable', 'False', 70)]
+property CMN_SET_Designer_TransferPumpEnable_VAL : BOOL read FCMN_SET_Designer_TransferPumpEnable_VAL write FCMN_SET_Designer_TransferPumpEnable_VAL;
+[IniValue('CMN_SET_Designer_GeScrRbvPdtEnable_VAL', '4S LPSCR RBV PDT sensor enable', 'False', 71)]
+property CMN_SET_Designer_GeScrRbvPdtEnable_VAL : BOOL read FCMN_SET_Designer_GeScrRbvPdtEnable_VAL write FCMN_SET_Designer_GeScrRbvPdtEnable_VAL;
+[IniValue('CMN_SET_Designer_UreaTankLevelHighHigh_VAL', 'Urea tank level hi-hi', 'False', 72)]
+property CMN_SET_Designer_UreaTankLevelHighHigh_VAL : BOOL read FCMN_SET_Designer_UreaTankLevelHighHigh_VAL write FCMN_SET_Designer_UreaTankLevelHighHigh_VAL;
+[IniValue('CMN_SET_Designer_HmiTrendEnable_VAL', 'Trend option enable', 'False', 73)]
+property CMN_SET_Designer_HmiTrendEnable_VAL : BOOL read FCMN_SET_Designer_HmiTrendEnable_VAL write FCMN_SET_Designer_HmiTrendEnable_VAL;
+[IniValue('CMN_SET_Designer_UreaInPdsApply_VAL', '-', 'False', 74)]
+property CMN_SET_Designer_UreaInPdsApply_VAL : BOOL read FCMN_SET_Designer_UreaInPdsApply_VAL write FCMN_SET_Designer_UreaInPdsApply_VAL;
+[IniValue('CMN_SET_Designer_SootblowingSolvvDiagEnable_VAL', '-', 'False', 75)]
+property CMN_SET_Designer_SootblowingSolvvDiagEnable_VAL : BOOL read FCMN_SET_Designer_SootblowingSolvvDiagEnable_VAL write FCMN_SET_Designer_SootblowingSolvvDiagEnable_VAL;
+[IniValue('CMN_SET_Designer_PurgingSolvvDiagEnable_VAL', '-', 'False', 76)]
+property CMN_SET_Designer_PurgingSolvvDiagEnable_VAL : BOOL read FCMN_SET_Designer_PurgingSolvvDiagEnable_VAL write FCMN_SET_Designer_PurgingSolvvDiagEnable_VAL;
+[IniValue('CMN_SET_Designer_GeCommonLowSulfurEnable_VAL', '-', 'False', 77)]
+property CMN_SET_Designer_GeCommonLowSulfurEnable_VAL : BOOL read FCMN_SET_Designer_GeCommonLowSulfurEnable_VAL write FCMN_SET_Designer_GeCommonLowSulfurEnable_VAL;
+[IniValue('CMN_SET_Designer_GeScrEmcyShutdownFromLocal_VAL', '-', 'False', 78)]
+property CMN_SET_Designer_GeScrEmcyShutdownFromLocal_VAL : BOOL read FCMN_SET_Designer_GeScrEmcyShutdownFromLocal_VAL write FCMN_SET_Designer_GeScrEmcyShutdownFromLocal_VAL;
+[IniValue('CMN_SET_Designer_ScrEcsModbusHiMECS_VAL', '-', 'False', 79)]
+property CMN_SET_Designer_ScrEcsModbusHiMECS_VAL : BOOL read FCMN_SET_Designer_ScrEcsModbusHiMECS_VAL write FCMN_SET_Designer_ScrEcsModbusHiMECS_VAL;
