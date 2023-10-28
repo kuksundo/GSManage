@@ -6204,7 +6204,6 @@ object SCRMESettingF: TSCRMESettingF
           000084E4F8831C03000084E4F8831C03000084E4F8831C03000084E4F8831C03
           000084E4F8831C03000084E4F8831C03000084E4F8C300EEDB74173906283700
           00000049454E44AE426082}
-        PopupMenu = PopupMenu1
         ExplicitLeft = 8
         ExplicitTop = 16
         ExplicitWidth = 801
@@ -17550,6 +17549,13 @@ object SCRMESettingF: TSCRMESettingF
       Caption = '&Save 2 DFM'
       Hint = 'Tag '#44050#51012' Drag'#47196' Update '#54980' DFM '#54028#51068' '#49373#49457#54632
       OnClick = Save2DFM1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object ShowTagNo1: TMenuItem
+      Caption = 'Show TagNo'
+      OnClick = ShowTagNo1Click
     end
   end
   object AdvFocusHelper1: TAdvFocusHelper

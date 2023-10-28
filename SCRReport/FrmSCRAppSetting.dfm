@@ -3550,7 +3550,6 @@ object SCRAppSettingF: TSCRAppSettingF
       11AC6C2C1089FD3F168664FD373018C91F0C46888888888888A820A188E244A5
       A7A7E7D8B645F7CFC993274BC78E1D8F780CC108BA881EAFAC59452C10395A30
       827FA362043FFF0FDBD5C31F3CBBDE710000000049454E44AE426082}
-    PopupMenu = PopupMenu1
     ExplicitLeft = -496
     ExplicitTop = 8
   end
@@ -6373,10 +6372,6 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvImage3: TJvImage
         Left = 0
         Top = 0
@@ -8947,10 +8942,6 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvImage4: TJvImage
         Left = 0
         Top = 0
@@ -11356,10 +11347,6 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvImage5: TJvImage
         Left = 0
         Top = 0
@@ -14063,10 +14050,6 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvImage6: TJvImage
         Left = 0
         Top = 0
@@ -16729,10 +16712,6 @@ object SCRAppSettingF: TSCRAppSettingF
       ColorTo = clNone
       TabColor = clBtnFace
       TabColorTo = clNone
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvImage7: TJvImage
         Left = 0
         Top = 0
@@ -18468,6 +18447,13 @@ object SCRAppSettingF: TSCRAppSettingF
       Caption = '&Save 2 DFM'
       Hint = 'Tag '#44050#51012' Drag'#47196' Update '#54980' DFM '#54028#51068' '#49373#49457#54632
       OnClick = Save2DFM1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object ShowTagNo1: TMenuItem
+      Caption = 'Show TagNo'
+      OnClick = ShowTagNo1Click
     end
   end
   object AdvFocusHelper1: TAdvFocusHelper

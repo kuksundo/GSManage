@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls,
   JvExExtCtrls, JvImage, AdvGraphicCheckLabel, AdvPageControl, Vcl.ComCtrls,
   JvExControls, JvButton, JvTransparentButton, DragDrop, DropTarget,
-  DragDropText, UDragDropFormat_SCRParam, Vcl.Menus, AdvFocusHelper, USCRParamClass;
+  DragDropText, UDragDropFormat_SCRParam, Vcl.Menus, AdvFocusHelper,
+  UnitConfigIniClass2, USCRParamClass;
 
 type
   TSCRAppSettingF = class(TForm)
@@ -69,6 +70,8 @@ type
     JvTransparentButton7: TJvTransparentButton;
     AdvFocusHelper1: TAdvFocusHelper;
     JvTransparentButton8: TJvTransparentButton;
+    ShowTagNo1: TMenuItem;
+    N1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -78,6 +81,7 @@ type
     procedure JvTransparentButton2Click(Sender: TObject);
     procedure JvTransparentButton8Click(Sender: TObject);
     procedure JvTransparentButton1Click(Sender: TObject);
+    procedure ShowTagNo1Click(Sender: TObject);
   private
     FSCRParameterTarget: TSCRParamDataFormat;
     FSCRAppParam: TSCRAppParam;
@@ -195,6 +199,10 @@ end;
 
 procedure TSCRAppSettingF.InitVar;
 begin
+  {$IFDEF SCR_DEV}
+  JvImage1.PopupMenu := PopupMenu1;
+  {$ENDIF}
+
   DropTextTarget1.Target := AdvPageControl1;
   FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
 end;
@@ -217,6 +225,11 @@ end;
 procedure TSCRAppSettingF.Save2DFM1Click(Sender: TObject);
 begin
   SaveSCRForm2DFM(Self as TForm);
+end;
+
+procedure TSCRAppSettingF.ShowTagNo1Click(Sender: TObject);
+begin
+  TINIConfigBase.SetTagNo2ComponentFromForm(Self as TObject);
 end;
 
 procedure TSCRAppSettingF.ShowTagNoAll;

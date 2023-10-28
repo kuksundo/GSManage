@@ -559,6 +559,7 @@ type
     JvTransparentButton5: TJvTransparentButton;
     JvTransparentButton17: TJvTransparentButton;
     JvTransparentButton18: TJvTransparentButton;
+    ShowTagNo1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -570,6 +571,7 @@ type
     procedure JvTransparentButton8Click(Sender: TObject);
     procedure JvTransparentButton6Click(Sender: TObject);
     procedure JvTransparentButton4Click(Sender: TObject);
+    procedure ShowTagNo1Click(Sender: TObject);
   private
     FSCRParameterTarget: TSCRParamDataFormat;
 //    FSCRAEParam_1: TSCRAEParam_1;
@@ -706,6 +708,10 @@ end;
 
 procedure TSCRGESettingF.InitVar;
 begin
+  {$IFDEF SCR_DEV}
+  JvImage1.PopupMenu := PopupMenu1;
+  {$ENDIF}
+
   DropTextTarget1.Target := AdvPageControl1;
   FSCRParameterTarget := TSCRParamDataFormat.Create(DropTextTarget1);
 end;
@@ -767,6 +773,11 @@ end;
 procedure TSCRGESettingF.ShowTabAll1Click(Sender: TObject);
 begin
   ShowOrHideGETabAll(True);
+end;
+
+procedure TSCRGESettingF.ShowTagNo1Click(Sender: TObject);
+begin
+  TINIConfigBase.SetTagNo2ComponentFromForm(Self as TObject);
 end;
 
 end.

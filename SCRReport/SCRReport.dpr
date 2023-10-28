@@ -28,6 +28,8 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
 
+  ReportMemoryLeaksOnShutdown := True;
+
   if not TStartUp.Execute then
   begin
     Application.Terminate;
