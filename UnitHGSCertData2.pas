@@ -12,10 +12,11 @@ type
   THGSCertType = (hctNull, hctEducation, hctAPTService, hctProductApproval, hctEducation_Entrust,
     hctLicBasic, hctLicInter, hctLicAdv, hctFinal);
   THGSCertTypes = set of THGSCertType;
-  TCertFindCondition = (cfcNull, cfcNoResultRelpy, cfcNoInvConfirm, cfcNoPaied,
+  TCertFindCondition = (cfcNull, cfcValidityUntilLicDate, cfcNoResultRelpy, cfcNoInvConfirm, cfcNoPaied,
     cfcLastQAPTListOnSuccess, cfcVesselListWithNoAPTInPeriod, cfcFinal);
   THGSCertDocType = (hcdtNull, hcdtEducation, hcdtAPTCoC, hcdtAPTCheckList, hcdtServiceReport,
     hcdtProductApproval, hcdtEducation_Entrust, hcdtFinal);
+//  TRamainExpireDate = (redNull, red6Month, red1Year);
 
 const
   HGS_CERT_DB_NAME = 'HGSCertMaster.sqlite';
@@ -43,11 +44,12 @@ const
       'Bill Paid Date', 'Exclude APT Date', '');
   R_HGSCertType : array[Low(THGSCertType)..High(THGSCertType)] of string =
     ('', 'Education', 'APT Service', 'Product Approval', 'Entrust Education',
-      'Licence Basic', 'Licence Intermediated', 'Licence Advanced', '');
+      'Licence Basic', 'Licence Intermediate', 'Licence Advanced', '');
   R_HGSCertTypeCode : array[Low(THGSCertType)..High(THGSCertType)] of string =
     ('', 'E', 'S', 'A', 'ETE','LB','LI','LA','');
   R_CertFindCondition : array[Low(TCertFindCondition)..High(TCertFindCondition)] of string =
     ('',
+      'Validity Until Licence Date',
       'No service result reply list ',
       'No invoice confirm list',
       'No paid list', 'Last Quarter APT List on successed',
@@ -62,6 +64,8 @@ const
       'Product Approval',
       '±³À° ¼ö·áÁõ(À§Å¹)',
     '');
+//  R_RemainExpireDate : array[Low(TRamainExpireDate)..High(TRamainExpireDate)] of string =
+//    ('', '6 Month', '1 Year');
 
 function GetLicCardColorFromCertType(ACertType: THGSCertType): string;
 function IsLicenseCheckedFromCertType(ACertType: THGSCertType): Boolean;
@@ -73,6 +77,7 @@ var
   g_HGSCertTypeCode: TLabelledEnum<THGSCertType>;
   g_CertFindCondition: TLabelledEnum<TCertFindCondition>;
   g_HGSCertDocType: TLabelledEnum<THGSCertDocType>;
+//  g_RemainExpireDate: TLabelledEnum<TRamainExpireDate>;
 
 implementation
 
@@ -107,5 +112,6 @@ initialization
 //  g_HGSCertTypeCode.InitArrayRecord(R_HGSCertTypeCode);
 //  g_CertFindCondition.InitArrayRecord(R_CertFindCondition);
 //  g_HGSCertDocType.InitArrayRecord(R_HGSCertDocType);
+//  g_RemainExpireDate.InitArrayRecord(R_RemainExpireDate);
 
 end.

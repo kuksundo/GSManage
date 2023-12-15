@@ -108,7 +108,6 @@ type
     JvLabel3: TJvLabel;
     JvLabel7: TJvLabel;
     TraineeNameEdit: TEdit;
-    SubjectEdit: TNxButtonEdit;
     CourseEdit: TNxButtonEdit;
     Panel5: TPanel;
     JvLabel23: TJvLabel;
@@ -202,6 +201,8 @@ type
     N9: TMenuItem;
     Merge1: TMenuItem;
     Splite1: TMenuItem;
+    SubjectEdit: TNxButtonEdit;
+    ExpiredCB: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
@@ -288,6 +289,7 @@ type
     procedure ShowSearchVesselForm(Sender: TObject);
     procedure GetVesselListByExcludeAPTDate(ACertSearchParamRec: TCertSearchParamRec);
     procedure GetVesselListFromVariant2Grid(ADoc: TDictionary<string, string>);
+    procedure GetCertListWithinValidDate(ACertSearchParamRec: TCertSearchParamRec);
 
     procedure SetDefaultCond;
     procedure ClearCond;
@@ -296,6 +298,7 @@ type
     procedure SetNoPaidCond;
     procedure SetLastQAPTListOnSuccess;
     procedure SetVesselListWithNoAPTInPeriod;
+    procedure SetLicListBeforeExpired;
 
     procedure LoadConfigFromFile(AFileName: string = '');
     procedure LoadConfig2Form(AForm: TCertManageConfigF);
@@ -561,6 +564,7 @@ begin
   SetFildCondCB.ItemIndex := -1;
   ComboBox1.ItemIndex := -1;
   ProdTypeCB.ItemIndex := -1;
+  ExpiredCB.ItemIndex := -1;
   CompanyNameEdit.Text := '';
   CertNoEdit.Text := '';
   SubjectEdit.Text := '';
@@ -927,6 +931,7 @@ begin
   LoadConfigFromFile(FIniFileName);
 
   g_ShipProductType.SetType2Combo(ProdTypeCB);
+//  g_RemainExpireDate.SetType2Combo(ExpiredCB);
   g_CertQueryDateType.SetType2Combo(ComboBox1);
   g_CertFindCondition.SetType2Combo(SetFildCondCB);
 
@@ -962,6 +967,10 @@ begin
     begin
       if LCertSearchParamRec.fQueryDate = cqdtExcludeAPTDate then
         GetVesselListByExcludeAPTDate(LCertSearchParamRec)
+      else
+      if (LCertSearchParamRec.fQueryDate = cqdtValidityUntilDate) and
+        (LCertSearchParamRec.fFindCondition = cfcValidityUntilLicDate) then
+        GetCertListWithinValidDate(LCertSearchParamRec)
       else
 
 //    if AIsFromRemote then
@@ -1198,10 +1207,36 @@ begin
   end;
 end;
 
+procedure TCertManageF.GetCertListWithinValidDate(
+  ACertSearchParamRec: TCertSearchParamRec);
+var
+  LSQLHGSLicRecord: TOrmHGSTrainLicense;
+  LDoc: Variant;
+  LUtf8: RawUTF8;
+begin
+//  ACertSearchParamRec.fQueryDate := cqdtValidityUntilLicDate;
+  LSQLHGSLicRecord := GetHGSLicenseRecordFromSearchRec(ACertSearchParamRec);
+  try
+    if LSQLHGSLicRecord.IsUpdate then
+    begin
+      LSQLHGSLicRecord.FillRewind;
+
+      while LSQLHGSLicRecord.FillOne do
+      begin
+        LDoc := GetVariantFromHGSLicenseRecord(LSQLHGSLicRecord);
+        GetLIcListFromVariant2Grid(LDoc);
+      end;//while
+    end;
+  finally
+    LSQLHGSLicRecord.Free;
+  end;
+end;
+
 function TCertManageF.GetCertSearchParam2Rec(
   var ACertSearchParamRec: TCertSearchParamRec): Boolean;
 var
   LCertQueryDateType: TCertQueryDateType;
+  LCertFindCondition: TCertFindCondition;
 begin
   Result := (InvoiceIssuedCheck.Checked) or (InvoiceNotIssuedCheck.Checked);
 
@@ -1226,7 +1261,13 @@ begin
   else
     LCertQueryDateType := g_CertQueryDateType.ToType(ComboBox1.ItemIndex);
 
+  if SetFildCondCB.ItemIndex = -1 then
+    LCertFindCondition := cfcNull
+  else
+    LCertFindCondition := g_CertFindCondition.ToType(SetFildCondCB.ItemIndex);
+
   ACertSearchParamRec.fQueryDate := LCertQueryDateType;
+  ACertSearchParamRec.fFindCondition := LCertFindCondition;
   ACertSearchParamRec.FFrom := DateOf(dt_Begin.Date);//DateOf() : 시간 부분을 0으로
   ACertSearchParamRec.FTo := GetEndTimeOfTheDay(dt_end.Date);
   ACertSearchParamRec.fCertNo := System.SysUtils.Trim(CertNoEdit.Text);
@@ -1412,7 +1453,7 @@ begin
 
     LShipProductTypes := ADoc.ProductType;
     CellsByName['ProductType', LRow] := g_ShipProductType.ToString(LShipProductTypes);
-    CellsByName['CertType', LRow] := g_HGSCertType.ToString(ADoc.CertType);
+    CellsByName['CertType', LRow] := g_AcademyCourseLevelDesc.ToString(ADoc.CourseLevel);// g_HGSCertType.ToString(ADoc.CertType);
 
     if ADoc.TrainedBeginDate > 127489752310 then
       CellsByName['TrainedBeginDate', LRow] := DateToStr(TimeLogToDateTime(ADoc.TrainedBeginDate));
@@ -1626,6 +1667,7 @@ begin
   g_ContainData4Mail.InitArrayRecord(R_ContainData4Mail);
   g_ProcessDirection.InitArrayRecord(R_ProcessDirection);
   g_AcademyCourseLevelDesc.InitArrayRecord(R_AcademyCourseLevelDesc);
+//  g_RemainExpireDate.InitArrayRecord(R_RemainExpireDate);
 end;
 
 function TCertManageF.IsLicenseCheckedFromForm: Boolean;
@@ -1976,13 +2018,14 @@ end;
 
 procedure TCertManageF.SetFildCondCBChange(Sender: TObject);
 begin
-  case SetFildCondCB.ItemIndex of
-    0: SetDefaultCond;
-    1: SetNoServResltReplyCond;
-    2: SetNoInvoiceConfirmCond;
-    3: SetNoPaidCond;
-    4: SetLastQAPTListOnSuccess;
-    5: SetVesselListWithNoAPTInPeriod;
+  case TCertFindCondition(SetFildCondCB.ItemIndex) of
+    cfcNull: SetDefaultCond;
+    cfcNoResultRelpy: SetNoServResltReplyCond;
+    cfcNoInvConfirm: SetNoInvoiceConfirmCond;
+    cfcNoPaied: SetNoPaidCond;
+    cfcLastQAPTListOnSuccess: SetLastQAPTListOnSuccess;
+    cfcVesselListWithNoAPTInPeriod: SetVesselListWithNoAPTInPeriod;
+    cfcValidityUntilLicDate: SetLicListBeforeExpired;
   end;
 end;
 
@@ -2084,6 +2127,27 @@ begin
   rg_periodClick(nil);
 
   NoResultCheck.Checked := False;
+  SuccessedCheck.Checked := True;
+  CancelledCheck.Checked := False;
+  FailedCheck.Checked := False;
+
+  InvoiceIssuedCheck.Checked := True;
+  InvoiceNotIssuedCheck.Checked := True;
+  InvoiceIgnoreCheck.Checked := False;
+
+  InvoiceConfirmedCheck.Checked := True;
+  InvoiceNotConfirmedCheck.Checked := True;
+end;
+
+procedure TCertManageF.SetLicListBeforeExpired;
+begin
+  ComboBox1.ItemIndex := Ord(cqdtValidityUntilDate);
+  rg_period.ItemIndex := 3;
+  rg_periodClick(nil);
+  dt_begin.Date := GetBeginTimeOfTheDay(IncMonth(date, 6));
+  dt_end.Date := GetEndTimeOfTheDay(IncMonth(date, 6));
+
+  NoResultCheck.Checked := True;
   SuccessedCheck.Checked := True;
   CancelledCheck.Checked := False;
   FailedCheck.Checked := False;
