@@ -1819,13 +1819,13 @@ begin
         LSlideWidth := g_PptApp.ActivePresentation.PageSetup.SlideWidth;
         //첫번째 Slide를 복제함
         LSlide := PPT_CopySlideFromSlideIndex(g_PptApp, 1);
-        PPT_InsertImageToSlideFromClipboard(LSlide, LSlideHeight, LSlideWidth, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+        PPT_InsertImageToSlideFromClipboard(LSlide, LSlideHeight, LSlideWidth, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-220);
       end
       else
       begin
         LPptApp := GetActiveMSPPTClass(AOriginalFileName, AIsVisible);
         LSlide := LPptApp.ActivePresentation.Slides.Item(1);
-        PPT_InsertImageToPPTFromClipboard(LPptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-120);
+        PPT_InsertImageToPPTFromClipboard(LPptApp, 1, 60.0, 60.0, PPTSlideHeight_A4-120, PPTSlideWidth_A4-220);
       end;
 
       PPT_StringReplaceFromSlide(LSlide, 'Cert_No', CertNoButtonEdit.Text);
