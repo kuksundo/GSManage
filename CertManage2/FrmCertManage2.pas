@@ -2298,10 +2298,13 @@ end;
 procedure TCertManageF.ShowCertEditFormFromGrid(ARow: integer; AAttachPageView: Boolean);
 var
   LCertNo, LMailList: string;
+  LResult: integer;
 begin
   LCertNo := CertListGrid.CellsByName['CertNo', ARow];
 
-  if CreateCertEditFormFromDB(LCertNo, '', True, LMailList, GetEduCertTypeFromForm(), AAttachPageView) = mrOK then
+  LResult := CreateCertEditFormFromDB(LCertNo, '', True, LMailList, GetEduCertTypeFromForm(), AAttachPageView);
+
+  if (LResult = mrOK) or (LResult = mrYes) then
   begin
     GetCertList2Grid;
     NextGridScrollToRow(CertListGrid);

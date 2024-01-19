@@ -289,7 +289,7 @@ var
   LCertType: THGSCertType;
   LSQLHGSCertRecord,
   LSQLHGSCertRecord2: TSQLHGSCertRecord;
-  LHGSLicRecord: TOrmHGSTrainLicense;
+  LHGSLicRecord, LHGSLicRecord2: TOrmHGSTrainLicense;
   LDoc: variant;
   LYear: integer;
   LIsLicense: Boolean;
@@ -367,27 +367,27 @@ begin
                   Continue;
                 end;
 
-                LHGSLicRecord := TOrmHGSTrainLicense.Create;
+                LHGSLicRecord2 := TOrmHGSTrainLicense.Create;
                 try
-                  if LoadLicDetail2LicRecordFromForm(LHGSLicRecord) then
+                  if LoadLicDetail2LicRecordFromForm(LHGSLicRecord2) then
                   begin
-                    if CheckIfExistHGSLicenseNo(LHGSLicRecord.CertNo) then
+                    if CheckIfExistHGSLicenseNo(LHGSLicRecord2.CertNo) then
                     begin
                       ShowMessage('Please Change Cert. No.');
                       Continue;
                     end;
 
-                    AddOrUpdateHGSLicense(LHGSLicRecord);
-                    LHGSLicRecord.NextSerialNo := GetSerialNoFromCertNo(LHGSLicRecord.CertNo, LYear);
-                    AddOrUpdateNextHGSSerial(LYear,Ord(LHGSLicRecord.ProductType),
-                      Ord(LHGSLicRecord.CertType), StrToIntDef(LHGSLicRecord.NextSerialNo, 0));
+                    AddOrUpdateHGSLicense(LHGSLicRecord2);
+                    LHGSLicRecord2.NextSerialNo := GetSerialNoFromCertNo(LHGSLicRecord2.CertNo, LYear);
+                    AddOrUpdateNextHGSSerial(LYear,Ord(LHGSLicRecord2.ProductType),
+                      Ord(LHGSLicRecord2.CertType), StrToIntDef(LHGSLicRecord2.NextSerialNo, 0));
 
                     SaveGSFile2DB();
 
                     ShowMessage('Data Add is successful!');
                   end;
                 finally
-                  LHGSLicRecord.Free;
+                  LHGSLicRecord2.Free;
                 end;
               end;
 
