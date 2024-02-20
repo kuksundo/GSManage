@@ -47,7 +47,7 @@ type
     fReplacedModel
     : RawUTF8;
 
-    fAttachments: TSQLGSFileRecs;
+    fAttachments: TJHPFileRecs;//TSQLGSFileRecs;
     fFileCount: integer;
 
     fIsIMO: Boolean;
@@ -75,7 +75,7 @@ type
     property DeliveryDate: TTimeLog read fDeliveryDate write fDeliveryDate;
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
     property FileCount: integer read fFileCount write fFileCount;
-    property Attachments: TSQLGSFileRecs read fAttachments write fAttachments;
+    property Attachments: TJHPFileRecs read fAttachments write fAttachments;
     property ReplacedModel: RawUTF8 read fReplacedModel write fReplacedModel;
   end;
 
@@ -362,8 +362,8 @@ end;
 procedure UpdateHGSVDRAttachments(AImoNo, AGSFileRecsJson: string);
 var
   LSQLHGSVDRRecord: TSQLHGSVDRRecord;
-  LSQLGSFileRec: TSQLGSFileRec;
-  LSQLGSFileRecs: TSQLGSFileRecs;
+  LSQLGSFileRec: TJHPFileRec;
+  LSQLGSFileRecs: TJHPFileRecs;
   LDocData: TDocVariantData;
   LVar: variant;
   LUtf8: RawUTF8;
