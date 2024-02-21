@@ -794,7 +794,7 @@ end;
 function TCertEditF.CheckIfExistATRFileFromDB(AImoNo: string; var AFilName: string): Boolean;
 var
   LSQLHGSVDRRecord: TSQLHGSVDRRecord;
-  LSQLGSFileRec: TJHPFileRec;
+  LSQLGSFileRec: TSQLGSFileRec;
   LDocData: TDocVariantData;
   LVar: Variant;
   LJsonFileList, LStr: string;
@@ -810,8 +810,8 @@ begin
   try
     if LSQLHGSVDRRecord.IsUpdate then
     begin
-//      LJsonFileList := MakeGSFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
-      LJsonFileList := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
+      LJsonFileList := MakeGSFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
+//      LJsonFileList := MakeJHPFileRecs2JSON(LSQLHGSVDRRecord.Attachments);
       LDocData.InitJSON(LJsonFileList);
       for i := 0 to LDocData.Count - 1 do
       begin

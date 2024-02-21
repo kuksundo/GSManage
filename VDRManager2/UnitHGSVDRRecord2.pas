@@ -47,7 +47,7 @@ type
     fReplacedModel
     : RawUTF8;
 
-    fAttachments: TJHPFileRecs;//TSQLGSFileRecs;
+    fAttachments: TSQLGSFileRecs;//TJHPFileRecs;//TSQLGSFileRecs;
     fFileCount: integer;
 
     fIsIMO: Boolean;
@@ -75,7 +75,7 @@ type
     property DeliveryDate: TTimeLog read fDeliveryDate write fDeliveryDate;
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
     property FileCount: integer read fFileCount write fFileCount;
-    property Attachments: TJHPFileRecs read fAttachments write fAttachments;
+    property Attachments: TSQLGSFileRecs read fAttachments write fAttachments;
     property ReplacedModel: RawUTF8 read fReplacedModel write fReplacedModel;
   end;
 
@@ -362,8 +362,8 @@ end;
 procedure UpdateHGSVDRAttachments(AImoNo, AGSFileRecsJson: string);
 var
   LSQLHGSVDRRecord: TSQLHGSVDRRecord;
-  LSQLGSFileRec: TJHPFileRec;
-  LSQLGSFileRecs: TJHPFileRecs;
+  LSQLGSFileRec: TSQLGSFileRec;
+  LSQLGSFileRecs: TSQLGSFileRecs;
   LDocData: TDocVariantData;
   LVar: variant;
   LUtf8: RawUTF8;
@@ -380,10 +380,10 @@ begin
     begin
       LVar := _JSON(LDocData.Value[i]);
       LUtf8 := LVar;
-      RecordLoadJson(LSQLGSFileRec, LUtf8, TypeInfo(TJHPFileRec));
+      RecordLoadJson(LSQLGSFileRec, LUtf8, TypeInfo(TSQLGSFileRec));
       if (LSQLGSFileRec.fFilename <> '') and (LSQLGSFileRec.fData <> '') then
       begin
-        LDynArr.Init(TypeInfo(TJHPFileRecs), LSQLGSFileRecs);
+        LDynArr.Init(TypeInfo(TSQLGSFileRec), LSQLGSFileRecs);
         LDynArr.Add(LSQLGSFileRec);
       end;
     end;
