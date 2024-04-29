@@ -480,6 +480,7 @@ begin
   LWorkBook.Close(False,EmptyParam,EmptyParam,LCID);
   LExcel.Quit;
   LExcel.DisConnect;
+  FreeAndNil(LExcel);
 end;
 
 procedure MakeDocInvoiceList4VDRAPT_(AInvoiceList: TStringList);
@@ -545,6 +546,7 @@ begin
   LWorkBook.Close(False,EmptyParam,EmptyParam,LCID);
   LExcel.Quit;
   LExcel.DisConnect;
+  FreeAndNil(LExcel);
 end;
 
 procedure GetInvoiceItemRec(ADelimitedStr: string;

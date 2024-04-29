@@ -50,6 +50,7 @@ type
 procedure InitClient4GSTariff(AExeName: string);
 function CreateGSTariffModel: TSQLModel;
 procedure ClearTariffSearchRec(var ATariffSearchRec: TGSTariffSearchRec);
+procedure DestroyGSTariffClient;
 
 function GetGSTariffFromCompanyCode(const ACompanyCode: RawUTF8): TSQLGSTariff;
 function GetGSTariffFromCompanyCodeNYear(const ACompanyCode: RawUTF8; const AYear: integer): TSQLGSTariff;
@@ -92,6 +93,15 @@ end;
 function CreateGSTariffModel: TSQLModel;
 begin
   result := TSQLModel.Create([TSQLGSTariff]);
+end;
+
+procedure DestroyGSTariffClient;
+begin
+  if Assigned(TariffModel) then
+    FreeAndNil(TariffModel);
+
+  if Assigned(g_GSTariffDB) then
+    FreeAndNil(g_GSTariffDB);
 end;
 
 procedure ClearTariffSearchRec(var ATariffSearchRec: TGSTariffSearchRec);

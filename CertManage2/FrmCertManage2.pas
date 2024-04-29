@@ -946,6 +946,10 @@ procedure TCertManageF.FormDestroy(Sender: TObject);
 begin
   FSettings.Free;
   FEgg.Free;
+  DestroyHGSCertClient();
+  DestroyHGSLicenseClient();
+  DestroyGSTariffClient();
+  DestroyCompanyMasterClient();
 end;
 
 procedure TCertManageF.GetCertFilesFromDocType2Grid;

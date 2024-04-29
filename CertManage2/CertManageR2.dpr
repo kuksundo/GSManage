@@ -92,6 +92,7 @@ begin
   {$EndIf USE_REGCODE}
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.CreateForm(TCertManageF, CertManageF);
   Application.Run;
 end.

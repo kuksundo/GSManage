@@ -701,6 +701,8 @@ function CreateInvoiceItemModel: TSQLModel;
 
 procedure InitGAMasterClient(AExeName: string);
 procedure InitCompanyMasterClient(ADBName: string);
+procedure DestroyGAMasterClient;
+procedure DestroyCompanyMasterClient;
 procedure InitFSM;
 procedure Add2FSM(ASPType:TSalesProcessType=sptNone;
   ACompanyType: TCompanyType=ctNull);
@@ -902,6 +904,39 @@ begin
   g_MasterDB:= TRestClientDB.Create(MasterModel, CreateCompanyMasterModel,
     LStr, TRestServerDB);
   TRestClientDB(g_MasterDB).Server.CreateMissingTables;
+end;
+
+procedure DestroyGAMasterClient;
+begin
+  if Assigned(ProjectModel) then
+    FreeAndNil(ProjectModel);
+
+  if Assigned(g_ProjectDB) then
+    FreeAndNil(g_ProjectDB);
+
+  if Assigned(ProjectDetailModel) then
+    FreeAndNil(ProjectDetailModel);
+
+  if Assigned(g_ProjectDetailDB) then
+    FreeAndNil(g_ProjectDetailDB);
+
+  if Assigned(SubConInvoiceModel) then
+    FreeAndNil(SubConInvoiceModel);
+
+  if Assigned(g_SubConInvoiceDB) then
+    FreeAndNil(g_SubConInvoiceDB);
+
+  DestroyCompanyMasterClient();
+  DestroyJHPFile();
+end;
+
+procedure DestroyCompanyMasterClient;
+begin
+  if Assigned(MasterModel) then
+    FreeAndNil(MasterModel);
+
+  if Assigned(g_MasterDB) then
+    FreeAndNil(g_MasterDB);
 end;
 
 function CreateProjectModel: TSQLModel;
