@@ -319,7 +319,7 @@ begin
       GSFileFrame.ApplyButton.Visible := False;
       GSFileFrame.CloseButton.Visible := False;
 
-      if LIsLicense then
+      if LIsLicense then//정비사 자격증인 경우
       begin
         LHGSLicRecord := GetHGSLicenseFromCertNo(ACertNo);
         try
@@ -1478,7 +1478,7 @@ end;
 
 procedure TCertEditF.SavePhotoImage2DB(AOrm: TOrmHGSTrainLicense);
 var
-  LImgData: RawBlob;
+//  LImgData: RawBlob;
   LStream: TRawByteStringStream;
 begin
   if PhotoImage.Picture = nil then
@@ -2602,13 +2602,17 @@ begin
 
   LSQLVesselMaster := GetVesselMasterFromIMONo(AIMONo);
 
-  if LSQLVesselMaster.IsUpdate then
-  begin
-    HullNoEdit.Text := LSQLVesselMaster.HullNo;
-    ShipNameEdit.Text := LSQLVesselMaster.ShipName;
-    ImoNoEdit.Text := LSQLVesselMaster.ImoNo;
-    OwnerNameEdit.Text := LSQLVesselMaster.OwnerName;
-    ClassSocietyEdit.Text := LSQLVesselMaster.SClass1;
+  try
+    if LSQLVesselMaster.IsUpdate then
+    begin
+      HullNoEdit.Text := LSQLVesselMaster.HullNo;
+      ShipNameEdit.Text := LSQLVesselMaster.ShipName;
+      ImoNoEdit.Text := LSQLVesselMaster.ImoNo;
+      OwnerNameEdit.Text := LSQLVesselMaster.OwnerName;
+      ClassSocietyEdit.Text := LSQLVesselMaster.SClass1;
+    end;
+  finally
+    LSQLVesselMaster.Free;
   end;
 
   InitHGSVDRClient(HGS_VDRLIST_DB_NAME);
@@ -2622,6 +2626,7 @@ begin
       VDRTypeEdit.Text := LSQLHGSVDRRecord.VDRType;
     end;
   finally
+    LSQLHGSVDRRecord.Free;
     DestroyHGSVDR;
   end;
 
