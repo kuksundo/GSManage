@@ -293,6 +293,7 @@ var
   LDoc: variant;
   LYear: integer;
   LIsLicense: Boolean;
+  LStrList: TStrings;
 begin
   g_CertEditF := TCertEditF.Create(nil);
   try
@@ -314,10 +315,15 @@ begin
       LIsLicense := IsLicenseCheckedFromCertType(LCertType);
 
                     //      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
-      GSFileFrame.InitDocTypeList2Combo(g_HGSCertDocType.GetTypeLabels);
-      GSFileFrame.AddButton.Align :=alLeft;
-      GSFileFrame.ApplyButton.Visible := False;
-      GSFileFrame.CloseButton.Visible := False;
+      LStrList := g_HGSCertDocType.GetTypeLabels;
+      try
+        GSFileFrame.InitDocTypeList2Combo(LStrList);
+        GSFileFrame.AddButton.Align :=alLeft;
+        GSFileFrame.ApplyButton.Visible := False;
+        GSFileFrame.CloseButton.Visible := False;
+      finally
+        LStrList.Free;
+      end;
 
       if LIsLicense then//정비사 자격증인 경우
       begin
@@ -1086,7 +1092,6 @@ begin
   InitEnum;
   InitNetwork;
   g_CertEditF := Self;
-//  QRCodeFrame1.Panel1.Visible := False;
   g_ShipProductType.SetType2Combo(ProductTypeCB);
   g_AcademyCourseLevelDesc.SetType2Combo(CourseLevelCB);
   g_HGSCertType.SetType2Combo(CertTypeCB);
@@ -1557,6 +1562,7 @@ begin
       Result := StringReplace(Result, #10, #13#10, [rfReplaceAll]);
     end;
   finally
+    LSQLHGSVDRRecord.Free;
     DestroyHGSVDR;
   end;
 end;
@@ -2350,7 +2356,7 @@ var
 begin
   Result := '';
 
-  LZipFileName := ReportNoEdit.Text;
+  LZipFileName := ReportNoEdit.Text + '(' + IMONoEdit.Text + ')';
   LZipFileName := GetZipFileName4Doc(LZipFileName);
 
   if LZipFileName = '' then
