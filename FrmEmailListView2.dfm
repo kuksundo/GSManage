@@ -21,6 +21,8 @@ object EmailListViewF: TEmailListViewF
     Height = 594
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 24
+    ExplicitTop = 16
     ExplicitWidth = 751
     ExplicitHeight = 594
     inherited mailPanel1: TPanel

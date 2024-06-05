@@ -17,7 +17,7 @@ uses System.Classes, Dialogs, System.Rtti,
   {$ELSE}
   UElecDataRecord2,
   {$ENDIF}
-  UnitInqManageWSInterface2;
+  UnitInqManageWSInterface2, UnitOLDataType;
 
 //AMailType = 1: invoice 송부, 2: 매출처리요청, 3: 직투입요청
 //            4: 해외 매출 고객사 등록 요청, 5: 전전 비표준공사 생성 요청
@@ -56,7 +56,7 @@ function SendCmd2IPC4MoveFolderEmail_WS(AOriginalEntryId, AOriginalStoreId,
   AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask; ASubFolderName: string): boolean;
 procedure SendCmd2IPC4ViewEmailFromMsgFile_WS(AFileName: string);
 function SendReqOLEmailInfo2_WS(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
-//function SendReqAddAppointment_WS(AJsonpjhTodoItem: string): boolean;
+function SendReqAddAppointment_WS(AJsonpjhTodoItem: string): boolean;
 function SendReqOLEmailAccountInfo_WS: TOLAccountInfo;
 function GetClientWS: TRestHttpClientWebsockets;
 {$ENDIF}
@@ -726,35 +726,35 @@ begin
   end;
 end;
 
-//function SendReqAddAppointment_WS(AJsonpjhTodoItem: string): boolean;
-//var
-//  Client: TRestHttpClientWebsockets;
-//  Service: IOLMailService;
-//  LCommand, LRespond: String;
-//  LStrList: TStringList;
-//begin
-//  LStrList := TStringList.Create;
-//  try
-//    LStrList.Add('ServerName='+IPC_SERVER_NAME_4_OUTLOOK2);
-//    LStrList.Add('Command='+CMD_REQ_ADD_APPOINTMENT);
-//    LStrList.Add('TodoItemsJson='+AJsonpjhTodoItem);
-//    LCommand := LStrList.Text;
-//
-//    Client := GetClientWS;
-//    try
-//      if not Client.Services.Resolve(IOLMailService,Service) then
-//        raise EServiceException.Create('Service IOLMailService unavailable');
-//
-//      LRespond := Service.ServerExecute(LCommand);
-//    finally
-//      Service := nil;
-//      Client.Free;
-//    end;
-//  finally
-//    LStrList.Free;
-//  end;
-//end;
-//
+function SendReqAddAppointment_WS(AJsonpjhTodoItem: string): boolean;
+var
+  Client: TRestHttpClientWebsockets;
+  Service: IOLMailService;
+  LCommand, LRespond: String;
+  LStrList: TStringList;
+begin
+  LStrList := TStringList.Create;
+  try
+    LStrList.Add('ServerName='+IPC_SERVER_NAME_4_OUTLOOK2);
+    LStrList.Add('Command='+CMD_REQ_ADD_APPOINTMENT);
+    LStrList.Add('TodoItemsJson='+AJsonpjhTodoItem);
+    LCommand := LStrList.Text;
+
+    Client := GetClientWS;
+    try
+      if not Client.Services.Resolve(IOLMailService,Service) then
+        raise EServiceException.Create('Service IOLMailService unavailable');
+
+      LRespond := Service.ServerExecute(LCommand);
+    finally
+      Service := nil;
+      Client.Free;
+    end;
+  finally
+    LStrList.Free;
+  end;
+end;
+
 function SendReqOLEmailAccountInfo_WS: TOLAccountInfo;
 var
   Client: TRestHttpClientWebsockets;

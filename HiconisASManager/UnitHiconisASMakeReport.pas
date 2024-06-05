@@ -1,11 +1,10 @@
-unit UnitMakeReport2;
+unit UnitHiconisASMakeReport;
 
 interface
 
-uses Windows, Sysutils, Dialogs, Classes, System.Variants, DateUtils,
-  mormot.core.variants, mormot.core.base, mormot.core.unicode, mormot.core.json,
-  UnitExcelUtil, CommonData2, Word2010, Excel2010, UnitJHPFileData,
-  UnitJHPFileRecord;
+uses Sysutils, Dialogs, Classes, Word2010, System.Variants,
+  mormot.core.variants,
+  UnitExcelUtil, CommonData2;
 
 const
 //  DOC_DIR = 'C:\Users\HGS\Documents\양식\';
@@ -27,9 +26,6 @@ const
   CONTRACT_FILE = '';
   CUSTOMER_REG_ENG = 'Customer_Registration.xlsx';
   SUBCON_INVOICE_LIST_FILE = '외주용역비_인보이스_처리현황.xlsx';
-  INVOICE_FILE_VDR_APT = 'Invoice_of_VDR_APT.ods';
-  INVOICE_LIST_FILE_VDR_APT = 'InvoiceList_of_VDR_APT.ods'; //분기별 Invoice List를 정리한 파일
-  INVOICE_FILE_LIST_NAME = 'c:\temp\VDR_APT_Invoice_List.txt';
 
   SALES_MUSTACHE_FILE_NAME = 'Mustache_매출요청메일.htm';
   INVOICE_SEND_MUSTACHE_FILE_NAME = 'Mustache_Invoice송부메일.htm';
@@ -37,9 +33,6 @@ const
   FOREIGN_REG_MUSTACHE_FILE_NAME = 'Mustache_해외매출_고객사_거래처등록요청메일.htm';
   ELEC_HULLNO_REG_REQ_MUSTACHE_FILE_NAME = 'Mustache_전전_비표준공사_생성_요청메일.htm';
   PO_REQ_MUSTACHE_FILE_NAME = 'Mustache_PO요청메일.htm';
-  VDR_APT_COC_KOR_SEND_MUSTACHE_FILE_NAME = 'Mustache_VDRAPT_SEND_COC_메일_KOR.htm';
-  VDR_APT_COC_ENG_SEND_MUSTACHE_FILE_NAME = 'Mustache_VDRAPT_SEND_COC_메일_ENG.htm';
-  VDR_APT_INVOICE_SEND_MUSTACHE_FILE_NAME = 'Mustache_VDRAPT_SEND_INVOICE_메일.htm';
   SHIPPING_MUSTACHE_FILE_NAME = 'Mustache_SHIPPING요청메일.htm';
   FORWARD_FIELDSERVICE_MUSTACHE_FILE_NAME = 'Mustache_FIELDSERVICE전달메일.htm';
   PAYCHECK_SUBCON_MUSTACHE_FILE_NAME = 'Mustache_기성확인요청메일.htm';
@@ -61,26 +54,18 @@ const
 
   COMPANY_SELECTION_CONTENT = '   표제 호선의 작업을 위해 다음과 같이 업체 견적을 접수/검토 후 ';
   WORK_PERIOD_CHANGE_DESC = '※ Work schedule can be changed according to vessel schedule';
-
-  //Email Action To OutLook (UnitStrategy4OLEmailInterface.Algorithm4EmailAction)
-  ACTION_MakeEmailHTMLBody = 1;
-  ACTION_MakeAttachFile = 2;
-
-  MAILKIND_VDRAPT_REPLY_WITHMAKEZIP = 1; //Zip 파일 생성
-  MAILKIND_VDRAPT_REPLY_WITHNOMAKEZIP = 2; //Zip 파일 생성하지 않고 파일명만 필요
-  MAILKIND_VDRAPT_REPLY_IFZIPEXIST = 3; //c:\temp 폴더에 zip파일이 존재하지 않으면 생성
 type
   Doc_Qtn_Rec = record
     FCustomerInfo, FQtnNo, FQtnDate, FHullNo, FShipName,
     FSubject, FProduceType, FPONo, FValidateDate: string;
   end;
 
-//  Doc_Invoice_Rec = record
-//    FCompanyCode, FCustomerInfo, FInvNo, FInvDate, FHullNo, FShipName,
-//    FSubject, FProduceType, FPONo, FTotalPrice: string;
-//    FOnboardDate: TDate;
-//    FInvoiceItemList: TStringList;
-//  end;
+  Doc_Invoice_Rec = record
+    FCustomerInfo, FInvNo, FInvDate, FHullNo, FShipName,
+    FSubject, FProduceType, FPONo, FTotalPrice: string;
+    FOnboardDate: TDate;
+    FInvoiceItemList: TStringList;
+  end;
 
   Doc_Invoice_Item_Rec = record
     FItemType, FItemDesc, FQty, FFUnit, FUnitPrice, FTotalPrice: string;
@@ -109,10 +94,6 @@ type
   procedure MakeDocQtn(AQtnR: Doc_Qtn_Rec; ALang: integer = 1);
   procedure MakeDocPO(ALang: integer=1);
   procedure MakeDocInvoice(AInvR: Doc_Invoice_Rec; ALang: integer=1);
-  procedure MakeDocInvoice4VDRAPT(const AList: TStringList; AFileKind: TJHPFileFormat; ALang: integer=1);
-  function MakeDocInvoice4VDRAPT_(ADoc_Invoice_Rec: Doc_Invoice_Rec; ACertList: TStringList;
-    AFileKind: TJHPFileFormat; ALang: integer=1): string;
-  procedure MakeDocInvoiceList4VDRAPT_(AInvoiceList: TStringList);
   procedure GetInvoiceItemRec(ADelimitedStr: string;
     var AItem: Doc_Invoice_Item_Rec);
   procedure MakeDocServiceOrder(ASOR: Doc_ServiceOrder_Rec);
@@ -140,12 +121,7 @@ var
 
 implementation
 
-uses UnitStringUtil,
-  {$IFDEF GAMANAGER} UnitGAVarJsonUtil2,
-  {$ELSE} UnitVariantJsonUtil2,
-  {$ENDIF}
-  UnitElecServiceData2, UnitDateUtil,
-  UnitGSTariffRecord2, UnitGSTriffData;
+uses UnitStringUtil, UnitHiconisASVarJsonUtil, UnitGAServiceData;
 
 procedure MakeDocQtn(AQtnR: Doc_Qtn_Rec; ALang: integer = 1);
 var
@@ -316,237 +292,6 @@ begin
       LStrList.Free;
     end;
   end;
-end;
-
-procedure MakeDocInvoice4VDRAPT(const AList: TStringList; AFileKind: TJHPFileFormat; ALang: integer=1);
-var
-  i, j, LCount, LCount2, LMonth, LPrice: integer;
-  LStrList, LCertList, LCreatedFileList, LInvoiceListPerCompany: TStringList;
-  LUtf8: RawUTF8;
-  LDoc_Invoice_Rec: Doc_Invoice_Rec;
-  LStr, LQty, LFileName, LCompanyName: string;
-begin
-  LCertList := TStringList.Create;
-  LCreatedFileList := TStringList.Create;
-  LInvoiceListPerCompany := TStringList.Create;
-  try
-    LCount := AList.Count;
-
-    for i := 0 to LCount - 1 do
-    begin
-      LStrList := AList.Objects[i] as TStringList;
-      LCount2 := LStrList.Count;
-      LCertList.Clear;
-
-      for j := 0 to LCount2 - 1 do
-      begin
-        LDoc_Invoice_Rec := Default(Doc_Invoice_Rec);
-        LUtf8 := StringToUTF8(LStrList.Strings[j]);
-        RecordLoadJSON(LDoc_Invoice_Rec, LUtf8, TypeInfo(Doc_Invoice_Rec));
-        LMonth := MonthOf(LDoc_Invoice_Rec.FOnboardDate);
-        LStr := '(' + IntToStr(j+1) + ') Cert. No.: ' +LDoc_Invoice_Rec.FSubject +
-          ', Ship Name: ' + LDoc_Invoice_Rec.FShipName +
-          '(' + LDoc_Invoice_Rec.FHullNo + '),' +
-          'APT Date: ' + pjhShortMonthNames[LMonth] + '.' +
-          FormatDateTime('dd, yyyy', LDoc_Invoice_Rec.FOnboardDate);
-        LCertList.Add(LStr);
-      end;
-
-      LQty := IntToStr(LCount2);
-      LPrice := GetGSServiceRate('0001056374',
-        YearOf(LDoc_Invoice_Rec.FOnboardDate),
-        gswtVDRAPTCert);
-      LDoc_Invoice_Rec.FTotalPrice := IntToStr(LPrice);
-      LFileName := MakeDocInvoice4VDRAPT_(LDoc_Invoice_Rec, LCertList, AFileKind);
-      LCreatedFileList.Add(LFileName);
-
-      LDoc_Invoice_Rec.FTotalPrice := IntToStr(LPrice*LCount2);
-      LUtf8 := RecordSaveJson(LDoc_Invoice_Rec, TypeInfo(Doc_Invoice_Rec));
-      LInvoiceListPerCompany.Add(Utf8ToString(LUtf8));
-    end;//for
-
-    MakeDocInvoiceList4VDRAPT_(LInvoiceListPerCompany);
-    ShowMessage(LCreatedFileList.Text);
-    LCreatedFileList.SaveToFile(INVOICE_FILE_LIST_NAME);
-  finally
-    LInvoiceListPerCompany.Free;
-    LCreatedFileList.Free;
-    LCertList.Free;
-  end;
-end;
-
-function MakeDocInvoice4VDRAPT_(ADoc_Invoice_Rec: Doc_Invoice_Rec; ACertList: TStringList;
-  AFileKind: TJHPFileFormat; ALang: integer=1): string;
-var
-  LExcel: TExcelApplication;
-  LWorkBook: _WorkBook;
-  LWorksheet: _Worksheet;
-  LRange: OleVariant;
-  LFileName, LQty,
-  LExcelFileName, LInvNo: string;
-  LERow,i: integer;
-  LCID: cardinal;
-begin
-  LFileName := DOC_DIR + INVOICE_FILE_VDR_APT;
-
-  if not FileExists(LFileName) then
-  begin
-    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
-    exit;
-  end;
-
-  LExcelFileName := 'c:\temp\' + ExtractFileName(LFileName);
-
-  //CopyFile시에 제한된 보기로 설정되어 진행 불가 함
-//  if not CopyFile(LFileName, LExcelFileName, False) then
-//  begin
-//    ShowMessage('Failure Copy File : ' + LFileName + ' -> ' + LExcelFileName);
-//    exit;
-//  end;
-
-  LCID := GetUserDefaultLCID;
-
-  LExcel := TExcelApplication.Create(nil);
-  LExcel.Connect;
-  LWorkBook := LExcel.Workbooks.Open(LFileName,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam,LCID
-    );
-
-//  LWorkBook.SaveCopyAs(LExcelFileName, LCID);
-
-//  if AFileKind = gfkEXCEL then
-//    LExcel.Visible[LCID] := true;
-
-//  LWorkBook.SaveAs(LExcelFileName, xlWorkBookNormal,
-//    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-//    xlExclusive, xlUserResolution, EmptyParam, EmptyParam,
-//    EmptyParam, EmptyParam, LCID
-//    );
-//  LWorkBook.Close(False,EmptyParam,EmptyParam,LCID);
-//  LWorkBook := LExcel.Workbooks.Open(LExcelFileName,
-//    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-//    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-//    EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam,LCID
-//    );
-
-  LWorksheet := LWorkBook.ActiveSheet as _Worksheet;
-  LERow := 34;
-  LQty := IntToStr(ACertList.Count);
-
-  LRange := LWorksheet.range['K5','K5'];
-  LRange.FormulaR1C1 := ADoc_Invoice_Rec.FInvNo;
-  LInvNo := ADoc_Invoice_Rec.FInvNo;
-  LInvNo := LInvNo + '(' + ADoc_Invoice_Rec.FCompanyName + ')';
-  LRange := LWorksheet.range['I6','I6'];
-  LRange.FormulaR1C1 := 'Date: ' + ADoc_Invoice_Rec.FInvDate;
-  LRange := LWorksheet.range['A8','A8'];
-  LRange.FormulaR1C1 := ADoc_Invoice_Rec.FCustomerInfo;
-  LRange := LWorksheet.range['H28','H28'];
-  LRange.FormulaR1C1 := LQty;
-  LRange := LWorksheet.range['K28','K28'];
-  LRange.FormulaR1C1 := ADoc_Invoice_Rec.FTotalPrice;
-
-  for i := 0 to ACertList.Count - 1 do
-  begin
-    LRange := LWorksheet.range['A34','M34'];
-    LRange.Copy;
-    Inc(LERow);
-    LRange := LWorksheet.range['A'+IntToStr(LERow),'M'+IntToStr(LERow)];
-    LRange.Insert;
-    LRange := LWorksheet.range['A'+IntToStr(LERow),'A'+IntToStr(LERow)];
-    LRange.FormulaR1C1 := ACertList.Strings[i];//' (' + IntToStr(i+1) + ') ' +
-  end;
-
-  if AFileKind = gfkEXCEL then
-  begin
-    Result := GetDefaultInvoiceFileName(gfkEXCEL, LInvNo);
-    LWorkBook.SaveAs(Result, xlOpenDocumentSpreadsheet,//xlWorkBookNormal,
-      EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-      xlExclusive, xlUserResolution, EmptyParam, EmptyParam,
-//      xlNoChange, xlUserResolution, EmptyParam, EmptyParam,
-      EmptyParam, EmptyParam, LCID
-      );
-
-  end
-  else
-  begin
-    Result := GetDefaultInvoiceFileName(gfkPDF, LInvNo);
-    LWorksheet.ExportAsFixedFormat(xlTypePdf, Result,
-      xlQualityStandard, True, False, EmptyParam, EmptyParam, True, EmptyParam);
-  end;
-
-  LWorkBook.Close(False,EmptyParam,EmptyParam,LCID);
-  LExcel.Quit;
-  LExcel.DisConnect;
-  FreeAndNil(LExcel);
-end;
-
-procedure MakeDocInvoiceList4VDRAPT_(AInvoiceList: TStringList);
-var
-  LExcel: TExcelApplication;
-  LWorkBook: _WorkBook;
-  LWorksheet: _Worksheet;
-  LRange: OleVariant;
-  LFileName, LExcelFileName, LRangeStr: string;
-  LDoc_Invoice_Rec: Doc_Invoice_Rec;
-  LERow,i: integer;
-  LCID: cardinal;
-  LUtf8: RawUTF8;
-begin
-  LFileName := DOC_DIR + INVOICE_LIST_FILE_VDR_APT;
-
-  if not FileExists(LFileName) then
-  begin
-    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
-    exit;
-  end;
-
-  LExcelFileName := 'c:\temp\' + ExtractFileName(LFileName);
-
-  LCID := GetUserDefaultLCID;
-
-  LExcel := TExcelApplication.Create(nil);
-  LExcel.Connect;
-  LWorkBook := LExcel.Workbooks.Open(LFileName,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam, EmptyParam,LCID
-    );
-
-  LWorksheet := LWorkBook.ActiveSheet as _Worksheet;
-  LERow := 2;
-
-  for i := 0 to AInvoiceList.Count - 1 do
-  begin
-    LDoc_Invoice_Rec := Default(Doc_Invoice_Rec);
-    LUtf8 := StringToUTF8(AInvoiceList.Strings[i]);
-    RecordLoadJSON(LDoc_Invoice_Rec, LUtf8, TypeInfo(Doc_Invoice_Rec));
-
-    LRangeStr := 'A'+IntToStr(LERow);
-    LRange := LWorksheet.range[LRangeStr,LRangeStr];
-    LRange.FormulaR1C1 := LDoc_Invoice_Rec.FCompanyName;
-
-    LRangeStr := 'B'+IntToStr(LERow);
-    LRange := LWorksheet.range[LRangeStr,LRangeStr];
-    LRange.FormulaR1C1 := LDoc_Invoice_Rec.FCompanyCode;
-
-    LRangeStr := 'D'+IntToStr(LERow);
-    LRange := LWorksheet.range[LRangeStr,LRangeStr];
-    LRange.FormulaR1C1 := LDoc_Invoice_Rec.FTotalPrice;
-    Inc(LERow);
-  end;
-
-  LWorkBook.SaveAs(LExcelFileName, xlOpenDocumentSpreadsheet,//xlWorkBookNormal,
-    EmptyParam, EmptyParam, EmptyParam, EmptyParam,
-    xlExclusive, xlUserResolution, EmptyParam, EmptyParam,
-    EmptyParam, EmptyParam, LCID
-    );
-  LWorkBook.Close(False,EmptyParam,EmptyParam,LCID);
-  LExcel.Quit;
-  LExcel.DisConnect;
-  FreeAndNil(LExcel);
 end;
 
 procedure GetInvoiceItemRec(ADelimitedStr: string;
@@ -820,7 +565,7 @@ end;
 
 procedure MakeSubConInvoice_SANISN(ADoc_Invoice_Rec:Doc_Invoice_Rec);
 var
-  wordApp : Word2010._Application;
+  wordApp : _Application;
   doc : WordDocument;
   LSections: Sections;
   LSection: Section;
@@ -837,7 +582,7 @@ var
 begin
   filename := DOC_DIR + INVOICE_FILE_SUBCON_SANISN;
   try
-    wordApp := Word2010.CoWordApplication.Create;
+    wordApp := CoWordApplication.Create;
     wordApp.visible := True;
 
     doc := wordApp.documents.open( filename, emptyparam,emptyparam,emptyparam,

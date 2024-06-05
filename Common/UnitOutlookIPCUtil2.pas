@@ -12,20 +12,7 @@ uses System.Classes, Vcl.Dialogs, SysUtils,
   Cromis.Comm.Custom, Cromis.Comm.IPC, Cromis.Threading,
 {$ENDIF}
   mormot.core.base, mormot.rest.http.client, mormot.soa.core,
-  CommonData2, UnitMQData;
-
-type
-  TWSInfoRec = record
-    FIPAddr,
-    FPortNo,
-    FTransKey,
-    FServerName,
-    FComputerName: string;
-    FIsWSEnabled,
-    FIsSendMQ,
-    FNamedPipeEnabled,
-    FIsRemoteMode: Boolean;
-  end;
+  CommonData2, UnitMQData, UnitOLDataType;
 
 procedure SetWSInfoRec(AIPAddr,APortNo,ATransKey: string;
   AIsWSEnable: Boolean; var ARec: TWSInfoRec);

@@ -3481,41 +3481,33 @@ object CertEditF: TCertEditF
         Height = 600
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 2
-        ExplicitWidth = 820
-        ExplicitHeight = 600
+        ExplicitLeft = 16
+        ExplicitTop = 24
+        ExplicitWidth = 793
+        ExplicitHeight = 553
         inherited JvLabel13: TJvLabel
           Height = 556
-          ExplicitHeight = 556
         end
         inherited fileGrid: TNextGrid
           Width = 722
           Height = 562
-          ExplicitWidth = 722
-          ExplicitHeight = 562
           inherited FileName: TNxTextColumn
-            DefaultWidth = 608
             Width = 608
           end
         end
         inherited Panel2: TPanel
           Top = 562
           Width = 820
-          ExplicitTop = 562
-          ExplicitWidth = 820
           inherited CloseButton: TAdvGlowButton
             Left = 691
-            ExplicitLeft = 691
           end
           inherited ApplyButton: TAdvGlowButton
             Left = 560
-            ExplicitLeft = 560
           end
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800280510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800580410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5519,7 +5511,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800980610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800A40610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -7116,7 +7108,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400780310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400840310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63

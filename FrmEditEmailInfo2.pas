@@ -28,7 +28,7 @@ var
 
 implementation
 
-uses UnitElecServiceData;
+uses UnitElecServiceData2;
 
 {$R *.dfm}
 

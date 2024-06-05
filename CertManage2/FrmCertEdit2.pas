@@ -127,7 +127,6 @@ type
     FrameOLEmailList: TFrame2;
     JvLabel36: TJvLabel;
     InvoiceEmailEdit: TEdit;
-    GSFileFrame: TJHPFileListFrame;
     AdvOfficePage2: TAdvOfficePage;
     Panel2: TPanel;
     Panel4: TPanel;
@@ -148,6 +147,7 @@ type
     Button1: TButton;
     Button3: TButton;
     RenewalCheck: TCheckBox;
+    GSFileFrame: TJHPFileListFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -266,6 +266,8 @@ function CreateCertEditFormFromDB(ACertNo, AIMONo: string; AIsShowForm: Boolean;
 //ACertNoList Valueø° CertType¿Ã ¿˙¿Âµ 
 //ACertNoList = ActualCertNo = CertType
 function CreateCertEditFormFromDB4MakeCert(ACertNoList: TStringList; AIsMerged: Boolean): integer;
+
+function ShowEMailListFromCertNo(ACertNo, AHullNo, AProdType, AOLFolderListFileName: string): integer;
 
 var
   g_CertEditF: TCertEditF;
@@ -570,6 +572,51 @@ begin
     g_CertEditF.Free;
   end;
 end;
+
+function ShowEMailListFromCertNo(ACertNo, AHullNo, AProdType, AOLFolderListFileName: string): integer;
+var
+  LEmailListViewF: TEmailListViewF;
+  LUtf8: RawUTF8;
+  LProdCode, LEMailDBName: string;
+  LMailCount: integer;
+begin
+  Result := -1;
+  LProdCode := GetProdCodeFromProdType(AProdType);
+
+  LEmailListViewF := TEmailListViewF.CreateWithOLFolderList(
+    AOLFolderListFileName, LProdCode);
+  try
+    with LEmailListViewF.FrameOLMailList do
+    begin
+      FDBKey := ACertNo;
+      FHullNo := AHullNo;
+      FOLFolderListFileName := LEmailListViewF.FOLFolderListFileName;
+      FDBNameSuffix := LEmailListViewF.FDBNameSuffix;
+//      SetWSInfoRec(FSettings.WSServerIPAddr, FSettings.WSServerPort,
+//        FSettings.WSServerTransmissionKey);
+//      SetMQInfoRec(FSettings.MQServerIP, FSettings.MQServerPort,
+//        FSettings.MQServerUserId, FSettings.MQServerPasswd,
+//        FSettings.MQServerTopic, FSettings.MQServerEnable);
+
+      FContext4OLEmail.SetStrategy(TOLEmail4VDRAPTCert.Create(ACertNo));
+      LEMailDBName := GetEMailDBName(Application.ExeName, LProdCode);
+      InitOLEmailMsgClient(LEMailDBName);
+      MailCount := ShowEmailListFromDBKey(grid_Mail, FDBKey);
+      LMailCount := MailCount;
+
+      LEmailListViewF.ShowModal;
+
+      if LMailCount <> MailCount then
+      begin
+        UpdateMailCountFromCertNo(ACertNo, MailCount);
+        Result := MailCount;
+      end;
+    end;
+  finally
+    LEmailListViewF.Free;
+  end;
+end;
+
 
 { TCertEditF }
 
