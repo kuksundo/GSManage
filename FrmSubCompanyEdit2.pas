@@ -9,14 +9,15 @@ uses
   AeroButtons, NxColumnClasses,
   mormot.core.base, mormot.core.variants, mormot.core.datetime, mormot.orm.base,
   mormot.core.data, mormot.core.text,
+  NxColumns, NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
+  Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits, AdvGroupBox, AdvOfficeButtons,
+
   UnitElecMasterData, FrmSearchCustomer2, CommonData2,
   {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord,
   {$ELSE}
   UElecDataRecord,
   {$ENDIF}
-  NxColumns, NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
-  Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits, AdvGroupBox, AdvOfficeButtons,
   UnitJHPFileRecord;
 
 type
@@ -430,7 +431,7 @@ end;
 
 procedure TSubCompanyEditF.FormCreate(Sender: TObject);
 begin
-  if not Assigned(g_MasterDB) then
+  if not Assigned(g_CustomerCompanyDB) then
   {$IFDEF GAMANAGER}
     InitCompanyMasterClient(Application.ExeName);
   {$ELSE}
@@ -603,13 +604,13 @@ begin
     if MessageDlg('협력사 정보가 이미 MasterDB에 존재합니다.' + #13#10 + '새로운 정보로 Update 하시겠습니까?', mtConfirmation, [mbYes, mbNo],0) = mrYes then
     begin
       LoadTaskForm2MasterSubContractor(AMCustomer, Self.FTask.ID);
-      g_MasterDB.Update(AMCustomer);
+      g_CustomerCompanyDB.Update(AMCustomer);
     end;
   end
   else
   begin
     LoadTaskForm2MasterSubContractor(AMCustomer, Self.FTask.ID);
-    g_MasterDB.Add(AMCustomer, true);
+    g_CustomerCompanyDB.Add(AMCustomer, true);
   end;
 end;
 

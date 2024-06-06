@@ -8,7 +8,7 @@ uses
   NxCustomGrid, NxGrid, Vcl.ExtCtrls, Vcl.Buttons, Vcl.StdCtrls,
   NxColumns, NxColumnClasses, CommonData2, AdvGroupBox, AdvOfficeButtons,
   {$IFDEF GAMANAGER}
-  UnitGAMasterRecord2,
+  UnitHiconisMasterRecord,
   {$ELSE}
   UElecDataRecord2,
   {$ENDIF}
@@ -236,7 +236,7 @@ procedure TSearchCustomerF.FormCreate(Sender: TObject);
 begin
   NextGrid1.DoubleBuffered := False;
 
-  if not Assigned(g_MasterDB) then
+  if not Assigned(g_CustomerCompanyDB) then
   {$IFDEF GAMANAGER}
     InitCompanyMasterClient('CompanyMaster.sqlite');
   {$ELSE}

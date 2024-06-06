@@ -13,6 +13,7 @@ object DisplayTariffF: TDisplayTariffF
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13

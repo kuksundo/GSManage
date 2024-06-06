@@ -11,11 +11,13 @@ uses
   AdvEdit, AdvEdBtn, JvToolEdit, JvBaseEdits, Clipbrd, Generics.Collections,
   pjhComboBox,
   DragDrop, DropTarget, DropSource, DragDropFile,
-  mormot.core.base,
+  mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
+  mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
+  mormot.core.datetime,
 
-  FSMClass_Dic, CommonData2, FSMState, UnitTodoCollect2, UnitHiconisASMakeReport,
+  FSMClass_Dic, CommonData2, FSMState, UnitTodoCollect2, UnitMakeReport2,
   FrmEmailListView2, UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2,
-  FrmFileSelect, UnitGSFileData2
+  FrmFileSelect, UnitGSFileData2, UnitOLDataType
   ;
 
 type
@@ -248,10 +250,10 @@ type
     OrderInputPicker: TDateTimePicker;
     JvLabel11: TJvLabel;
     InvoiceIssuePicker: TDateTimePicker;
-    procedure AeroButton1Click(Sender: TObject);
-    procedure btn_CloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure AeroButton1Click(Sender: TObject);
+    procedure btn_CloseClick(Sender: TObject);
     procedure SelectMailBtnClick(Sender: TObject);
     procedure CancelMailSelectBtnClick(Sender: TObject);
     procedure fileGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
@@ -393,10 +395,10 @@ var
 
 implementation
 
-uses FrmHiconisASManage, FrmDisplayTaskInfo, DragDropInternet, DragDropFormats,
-  UnitGAVarJsonUtil,
-  UnitIPCModule, UnitTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
-  DateUtils, UnitHttpModule4InqManageServer, UnitBase64Util2, FrmSearchVessel,
+uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
+  UnitHiconisASVarJsonUtil,
+  UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
+  DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
   UnitGAServiceData, UnitElecMasterData;
 
 {$R *.dfm}
@@ -459,7 +461,7 @@ begin
 
     try
     {$IFDEF GAMANAGER}
-      FrmGATaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LIsFromInvoiceManage);
+      FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LIsFromInvoiceManage);
     {$ELSE}
       TaskForm.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LIsFromInvoiceManage);
     {$ENDIF}
@@ -476,7 +478,7 @@ function DisplayTaskInfo2EditForm(var ATask: TSQLGSTask;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
-  LSubCon: TSQLSubCon;
+//  LSubCon: TSQLSubCon;
   LMat4Proj: TSQLMaterial4Project;
   LTask, LTask2: TSQLGSTask;
   LFiles: TSQLGSFile;
@@ -491,14 +493,14 @@ begin
     begin
       LTask := ATask;
 
-      if ATask.IsUpdate then
+      if LTask.IsUpdate then
         Caption := Caption + ' (Update)'
       else
         Caption := Caption + ' (New)';
 
       //InvoiceManage로부터 오는 Json은 Task와 Customer에 대한 변경 내용이 없음
       if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
-        LoadTaskFromVariant(ATask, ADoc.Task);
+        LoadTaskFromVariant(LTask, ADoc.Task);
 
       LoadTaskVar2Form(LTask, LTaskEditF, g_FSMClass);
       LCustomer := GetCustomerFromTask(LTask);
@@ -556,7 +558,7 @@ begin
             ShowMessage('Task 및 Email Add 완료');
           end;
 
-          LTask.EmailMsg.ManyAdd(g_ProjectDB, LTask.ID, ASQLEmailMsg.ID, True)
+          LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, ASQLEmailMsg.ID, True)
         end
         else
         begin
@@ -572,13 +574,15 @@ begin
         else
           g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
 
+        //고객정보 탭 정보 Load -> LCustomer
         LoadTaskForm2Customer(LTaskEditF, LCustomer, LTask.ID);
-        SaveSubConFromForm(LTaskEditF, LTask.ID);
-        LoadTaskForm2Material4Project(LTaskEditF, LMat4Proj, LTask.ID);
-
         AddOrUpdateCustomer(LCustomer);
+        //협력사 탭 정보 Load and Save To DB
+        SaveSubConFromForm(LTaskEditF, LTask.ID);
+        //자재정보 탭 Load -> LMat4Proj
+        LoadTaskForm2Material4Project(LTaskEditF, LMat4Proj, LTask.ID);
         AddOrUpdateMaterial4Project(LMat4Proj);
-      end;
+      end;//mrOK
     end;//with
   finally
     //대표 메일을 선택한 경우
@@ -586,7 +590,7 @@ begin
 //      ATask := nil;
 
     FreeAndNil(LCustomer);
-    FreeAndNil(LSubCon);
+//    FreeAndNil(LSubCon);
     FreeAndNil(LMat4Proj);
     FreeAndNil(LTaskEditF);
   end;
@@ -686,7 +690,7 @@ begin
           LUtf8 := LMat4Proj.GetJSONValues(true, true, soSelect);
           LDoc.Material := _JSON(LUtf8);
           LUtf8 := LDoc;
-          SendReq2InqManagerServer_Http(ARemoteIPAddress, APort, ARoot, CMD_EXECUTE_SAVE_TASK_DETAIL, LUtf8);
+          SendReq2Server_Http(ARemoteIPAddress, APort, ARoot, CMD_EXECUTE_SAVE_TASK_DETAIL, LUtf8);
         end;
       finally
         FreeAndNil(LMat4Proj);
@@ -758,7 +762,7 @@ end;
 
 procedure TTaskEditF.AeroButton4Click(Sender: TObject);
 begin
-  ShowEMailListFromTask(FEmailDisplayTask, FRemoteIPAddress, GAManageF.TDTF.FPortName, GAManageF.TDTF.FRootName);
+  ShowEMailListFromTask(FEmailDisplayTask, FRemoteIPAddress, HiconisASManageF.TDTF.FPortName, HiconisASManageF.TDTF.FRootName);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -845,12 +849,12 @@ begin
   begin
     if MessageDlg('고객 정보가 이미 MasterDB에 존재합니다.' + #13#10 + '새로운 정보로 Update 하시겠습니까?', mtConfirmation, [mbYes, mbNo],0) = mrYes then
     begin
-      g_MasterDB.Update(AMCustomer);
+      g_CustomerCompanyDB.Update(AMCustomer);
     end;
   end
   else
   begin
-    g_MasterDB.Add(AMCustomer, true);
+    g_CustomerCompanyDB.Add(AMCustomer, true);
   end;
 end;
 
@@ -1098,7 +1102,6 @@ begin
   FOLMessagesFromDrop := TStringList.Create;
   FSalesProcessList := TStringList.Create;
   g_ElecProductType.SetType2Combo(ProductTypeCB);
-//  SalesProcess2Combo(CurWorkCB);
   g_SalesProcessType.SetType2Combo(SalesProcTypeCB);
   CompanyType2Combo(CustCompanyTypeCB);
 
@@ -1120,8 +1123,11 @@ begin
   if Assigned(FTask) then
     FreeAndNil(FTask);
 
-  FToDoCollect.Clear;
-  FreeAndNil(FToDoCollect);
+  if Assigned(FToDoCollect) then
+  begin
+    FToDoCollect.Clear;
+    FreeAndNil(FToDoCollect);
+  end;
 
   if Assigned(FSQLGSFiles) then
     FSQLGSFiles.Free;
@@ -1276,6 +1282,8 @@ end;
 procedure TTaskEditF.InitEnum;
 begin
   g_ElecProductType.InitArrayRecord(R_ElecProductType);
+  g_SalesProcessType.InitArrayRecord(R_SalesProcessType);
+  g_GSDocType.InitArrayRecord(R_GSDocType);
 end;
 
 procedure TTaskEditF.INQInput1Click(Sender: TObject);
@@ -1288,7 +1296,7 @@ end;
 
 procedure TTaskEditF.JvLabel5Click(Sender: TObject);
 begin
-  FrmGAManage.GAManageF.TestRemoteTaskEmailList(FEmailDisplayTask);
+  FrmHiconisASManage.HiconisASManageF.TestRemoteTaskEmailList(FEmailDisplayTask);
 end;
 
 procedure TTaskEditF.LoadCustomer2Form(ACustomer: TSQLCustomer;
@@ -1338,29 +1346,29 @@ var
     i,j,k: integer;
     LFolderPath: string;
   begin
-    for i := 0 to AForm.grid_Mail.RowCount - 1 do
+    for i := 0 to AForm.FrameOLMailList.grid_Mail.RowCount - 1 do
     begin
-      LFolderPath := AForm.grid_Mail.CellByName['FolderPath',i].AsString;
+      LFolderPath := AForm.FrameOLMailList.grid_Mail.CellByName['FolderPath',i].AsString;
 
-      for j := 0 to AForm.MoveFolderCB.Items.Count - 1 do
+      for j := 0 to AForm.FrameOLMailList.MoveFolderCB.Items.Count - 1 do
       begin
-        k := Pos(AForm.MoveFolderCB.Items.Strings[j], LFolderPath);
+        k := Pos(AForm.FrameOLMailList.MoveFolderCB.Items.Strings[j], LFolderPath);
 
         if k > 0 then
         begin
-          AForm.MoveFolderCB.ItemIndex := j;
+          AForm.FrameOLMailList.MoveFolderCB.ItemIndex := j;
           Exit;
         end;
       end;
     end;
   end;
 begin
-  AForm.FillInMoveFolderCB;
-  ATask.EmailMsg.DestGet(g_ProjectDB, ATask.ID, LIds);
-  ShowEmailListFromIDs(AForm.grid_Mail, LIds);
+  AForm.FrameOLMailList.FillInMoveFolderCB;
+  ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
+  ShowEmailListFromIDs(AForm.FrameOLMailList.grid_Mail, LIds);
 //  LFolderPath := AForm.grid_Mail.CellByName['FolderPath',].AsString;
   SetMoveFolderCB;//(AForm.MoveFolderCB, AForm.grid_Mail);
-  AForm.SubFolderNameEdit.Text := ATask.Order_No;
+  AForm.FrameOLMailList.SubFolderNameEdit.Text := ATask.Order_No;
 end;
 
 procedure TTaskEditF.LoadGrid2TaskEditForm(AGrid: TNextGrid; ARow: integer;
@@ -2000,36 +2008,36 @@ end;
 procedure TTaskEditF.N18Click(Sender: TObject);
 begin
   SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    GAManageF.TDTF.FSettings,
-    GAManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    HiconisASManageF.TDTF.FSettings,
+    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N19Click(Sender: TObject);
 begin
   SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    GAManageF.TDTF.FSettings,
-    GAManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    HiconisASManageF.TDTF.FSettings,
+    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N20Click(Sender: TObject);
 begin
   SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    GAManageF.TDTF.FSettings,
-    GAManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    HiconisASManageF.TDTF.FSettings,
+    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N21Click(Sender: TObject);
 begin
   SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    GAManageF.TDTF.FSettings,
-    GAManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    HiconisASManageF.TDTF.FSettings,
+    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N22Click(Sender: TObject);
 begin
   SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    GAManageF.TDTF.FSettings,
-    GAManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    HiconisASManageF.TDTF.FSettings,
+    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N23Click(Sender: TObject);
@@ -2202,18 +2210,18 @@ begin
   LViewMailListF := TEmailListViewF.Create(nil);
   try
     begin
-      LViewMailListF.FTask := ATask;
+//      LViewMailListF.FTask := ATask;
 //      LViewMailListF.SetMoveFolderIndex; //모든 StoredID가 동일하여 효과 없음
       if ARemoteIPAddress = '' then
         LoadEmailListFromTask(ATask, LViewMailListF)
       else
       begin
-        LViewMailListF.FRemoteIPAddress := ARemoteIPAddress;
+        LViewMailListF.FrameOLMailList.FRemoteIPAddress := ARemoteIPAddress;
         LUtf8 := IntToStr(ATask.TaskID);
-        LUtf8 := SendReq2InqManagerServer_Http(ARemoteIPAddress, APort, ARoot,
+        LUtf8 := SendReq2Server_Http(ARemoteIPAddress, APort, ARoot,
           CMD_REQ_TASK_EAMIL_LIST, LUtf8);
         LUtf8 := MakeBase64ToUTF8(LUtf8);
-        ShowEmailListFromJson(LViewMailListF.grid_Mail, LUtf8);
+        ShowEmailListFromJson(LViewMailListF.FrameOLMailList.grid_Mail, LUtf8);
       end;
 
       if LViewMailListF.ShowModal = mrOK then
@@ -2244,7 +2252,7 @@ begin
     if AFileName <> '' then
       LFileSelectF.JvFilenameEdit1.FileName := AFileName;
 
-    g_GSDocType.SetType2Combo(LFileSelectF.ComboBox1);
+    g_GSDocType.SetType2Combo(LFileSelectF.DocTypeCombo);
 
     if LFileSelectF.ShowModal = mrOK then
     begin
@@ -2263,7 +2271,7 @@ begin
             LDoc := StringFromFile(LFileSelectF.JvFilenameEdit1.FileName);
 
           LSQLGSFileRec.fData := LDoc;
-          LSQLGSFileRec.fGSDocType := g_GSDocType.ToOrdinal(LFileSelectF.ComboBox1.Text);
+          LSQLGSFileRec.fGSDocType := g_GSDocType.ToOrdinal(LFileSelectF.DocTypeCombo.Text);
           LSQLGSFileRec.fFilename := lfilename;
           lsize := Length(LDoc);
 
@@ -2275,7 +2283,7 @@ begin
           CellByName['FileName',RowCount-1].AsString := lfilename;
           CellByName['FileSize',RowCount-1].AsString := IntToStr(lsize);
           CellByName['FilePath',RowCount-1].AsString := LFileSelectF.JvFilenameEdit1.FileName;
-          CellByName['DocType',RowCount-1].AsString := LFileSelectF.ComboBox1.Text;
+          CellByName['DocType',RowCount-1].AsString := LFileSelectF.DocTypeCombo.Text;
         finally
           EndUpdate;
         end;
@@ -2310,7 +2318,7 @@ begin
       LFileSelectF.JvFilenameEdit1.FileName := AFileName;
     end;
 
-    g_GSDocType.SetType2Combo(LFileSelectF.ComboBox1);
+    g_GSDocType.SetType2Combo(LFileSelectF.DocTypeCombo);
 
     if LFileSelectF.ShowModal = mrOK then
     begin
@@ -2344,7 +2352,7 @@ begin
             LFileName := ExtractFileName(LFileName);
 
             LSQLGSFileRec.fData := LDoc;
-            LSQLGSFileRec.fGSDocType := g_GSDocType.ToOrdinal(LFileSelectF.ComboBox1.Text);
+            LSQLGSFileRec.fGSDocType := g_GSDocType.ToOrdinal(LFileSelectF.DocTypeCombo.Text);
             LSQLGSFileRec.fFilename := LFileName;
             lsize := Length(LDoc);
 
@@ -2356,7 +2364,7 @@ begin
             CellByName['FileName',LRow].AsString := LFileName;
             CellByName['FileSize',LRow].AsString := IntToStr(lsize);
             CellByName['FilePath',LRow].AsString := ExtractFilePath(LFileName);
-            CellByName['DocType',LRow].AsString := LFileSelectF.ComboBox1.Text;
+            CellByName['DocType',LRow].AsString := LFileSelectF.DocTypeCombo.Text;
           end;
 
         finally

@@ -10,12 +10,13 @@ uses
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
   CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
-  mormot.core.base,
+  mormot.core.base, mormot.core.datetime, mormot.core.data, mormot.core.variants,
+  mormot.orm.base, mormot.core.text, mormot.core.unicode, mormot.core.json,
   VarRecUtils,
-  CommonData2, FSMClass_Dic, FSMState,
+  CommonData2, UnitOLDataType, FSMClass_Dic, FSMState,
   Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, FrmInqManageConfig, UnitElecMasterData,
   {$IFDEF GAMANAGER}
-  UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitGAServiceData, UnitHiconisASMakeReport,
+  UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitGAServiceData, UnitMakeReport2,
   {$ELSE}
   UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport,
   {$ENDIF}
@@ -256,7 +257,7 @@ uses System.Rtti, UnitIPCModule2, ClipBrd, System.RegularExpressions,
   {$ELSE}
   UnitVariantJsonUtil,
   {$ENDIF}
-  UnitHttpModule4InqManageServer, UnitStringUtil;
+  UnitHttpModule4InqManageServer2, UnitStringUtil;
 
 {$R *.dfm}
 
@@ -361,8 +362,8 @@ begin
   if not Assigned(AVar) then
     exit;
 
-  AVar.EmailMsg.DestGet(g_ProjectDB, AVar.ID, LIds);
-  LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB, TInt64DynArray(LIds));
+  AVar.EmailMsg.DestGet(g_ProjectDB.Orm, AVar.ID, LIds);
+  LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIDDynArray(LIds));
   try
     LMailCount := 0;
     LSubject := '';
@@ -1224,7 +1225,7 @@ begin
   LTask:= CreateOrGetLoadTask(ATaskID);
   try
   {$IFDEF GAMANAGER}
-    FrmGATaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
+    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ELSE}
     TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ENDIF}
@@ -1390,7 +1391,12 @@ begin
 end;
 
 destructor TDisplayTaskF.Destroy;
+var
+  i: integer;
 begin
+  for i := 0 to grid_Req.RowCount - 1 do
+    TIDList(grid_Req.Row[i].Data).Free;
+
   FSettings.Free;
   FreeAndNil(FToDoCollect);
   FFolderListFromOL.Free;
@@ -1534,7 +1540,7 @@ begin
       LWhere := LWhere + 'CurrentWorkStatus <= ?';
     end;
 
-    LSQLGSTask := TSQLGSTask.CreateAndFillPrepare(g_ProjectDB, LWhere, ConstArray);
+    LSQLGSTask := TSQLGSTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
 
     try
       if AFromRemote then
@@ -1635,7 +1641,7 @@ begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   try
   {$IFDEF GAMANAGER}
-    FrmGATaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
+    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ELSE}
     TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ENDIF}

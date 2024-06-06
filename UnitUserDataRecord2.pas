@@ -48,6 +48,7 @@ type
 
 function CreateUserModel: TSQLModel;
 procedure InitUserClient(AExeName: string);
+procedure DestroyUserClient();
 
 function GetMyNameFromEmailAddress(AEmail: string): string;
 function GetMyNameNIPAddressFromEmailAddress(AEmail: string): string;
@@ -80,6 +81,15 @@ begin
   TSQLRestClientDB(g_UserDB).Server.CreateMissingTables;
 end;
 
+procedure DestroyUserClient();
+begin
+  if Assigned(UserModel) then
+    FreeAndNil(UserModel);
+
+  if Assigned(g_UserDB) then
+    FreeAndNil(g_UserDB);
+end;
+
 function GetMyNameFromEmailAddress(AEmail: string): string;
 var
   LSQLUserDetail: TSQLUserDetail;
@@ -98,6 +108,9 @@ function GetMyNameNIPAddressFromEmailAddress(AEmail: string): string;
 var
   LSQLUserDetail: TSQLUserDetail;
 begin
+  if not Assigned(g_UserDB) then
+    exit;
+
   LSQLUserDetail := TSQLUserDetail.CreateAndFillPrepare(g_UserDB.Orm,
     'EmailAddress LIKE ?', ['%'+AEmail+'%']);
   try
@@ -117,10 +130,5 @@ end;
 initialization
 
 finalization
-  if Assigned(UserModel) then
-    FreeAndNil(UserModel);
-
-  if Assigned(g_UserDB) then
-    FreeAndNil(g_UserDB);
-
+  DestroyUserClient();
 end.

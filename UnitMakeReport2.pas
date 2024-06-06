@@ -141,7 +141,7 @@ var
 implementation
 
 uses UnitStringUtil,
-  {$IFDEF GAMANAGER} UnitGAVarJsonUtil2,
+  {$IFDEF GAMANAGER} UnitHiconisASVarJsonUtil,
   {$ELSE} UnitVariantJsonUtil2,
   {$ENDIF}
   UnitElecServiceData2, UnitDateUtil,

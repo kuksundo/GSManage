@@ -177,7 +177,7 @@ begin
       if Assigned(FDeleteToDoListFromDB) then
       begin
         LToDoItem := FToDoCollect.Items[TodoList1.Selected.Tag];
-        FDeleteToDoListFromDB(nil, LToDoItem);
+        FDeleteToDoListFromDB(LToDoItem);
       end;
 
       FToDoCollect.Delete(TodoList1.Selected.Tag);
@@ -339,7 +339,7 @@ begin
   LToDoItem.Complete := AComplete;
 
   if Assigned(InsertOrUpdateToDoList2DB) then
-    InsertOrUpdateToDoList2DB(nil, LToDoItem, False);
+    InsertOrUpdateToDoList2DB(LToDoItem, False);
 end;
 
 procedure TToDoListF.SaveToDoItemFromDetailF(AIndex: integer;
@@ -391,7 +391,7 @@ begin
   LoadToDoItemFromCollect(LToDoItem.Index, LIsAdd);
 
   if Assigned(InsertOrUpdateToDoList2DB) then
-    InsertOrUpdateToDoList2DB(nil, LToDoItem, LIsAdd);
+    InsertOrUpdateToDoList2DB(LToDoItem, LIsAdd);
 end;
 
 procedure TToDoListF.SetComplete1Click(Sender: TObject);

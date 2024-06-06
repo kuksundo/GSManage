@@ -17,16 +17,18 @@ type
 
   TDisplayTariffF = class(TForm)
     TariffGrid: TAdvStringGrid;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TariffGridGetAlignment(Sender: TObject; ARow, ACol: Integer;
       var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure TariffGridGetWordWrap(Sender: TObject; ACol, ARow: Integer;
       var WordWrap: Boolean);
     procedure TariffGridGetCellColor(Sender: TObject; ARow, ACol: Integer;
       AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
-    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
+    Fsg: TSimpleGraphicCell;
     procedure InitGrid(AGrid: TAdvStringGrid);
   end;
 
@@ -138,12 +140,15 @@ begin
   Result := true;
 end;
 
-procedure TDisplayTariffF.FormCreate(Sender: TObject);
-var
-  sg: TSimpleGraphicCell;
+procedure TDisplayTariffF.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  sg := TSimpleGraphicCell.Create;
-  TariffGrid.AddInterfacedCell(0, 0, sg);
+  Fsg.Free;
+end;
+
+procedure TDisplayTariffF.FormCreate(Sender: TObject);
+begin
+  Fsg := TSimpleGraphicCell.Create;
+  TariffGrid.AddInterfacedCell(0, 0, Fsg);
 end;
 
 procedure TDisplayTariffF.InitGrid(AGrid: TAdvStringGrid);

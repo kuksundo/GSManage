@@ -13,7 +13,7 @@ uses System.Classes, Dialogs, System.Rtti,
   UnitIniConfigSetting2, OLMailWSCallbackInterface2,
   UnitOutlookIPCUtil2, CommonData2,
   {$IFDEF GAMANAGER}
-  UnitGAMasterRecord2,
+  UnitHiconisMasterRecord,
   {$ELSE}
   UElecDataRecord2,
   {$ENDIF}
@@ -74,7 +74,7 @@ implementation
 
 uses mormot.core.mustache,
   {$IFDEF GAMANAGER}
-  UnitGAVarJsonUtil2, UnitGAServiceData, UnitGAMakeReport2,//FrmGATaskEdit,
+  UnitHiconisASVarJsonUtil, UnitGAServiceData, UnitMakeReport2,//FrmGATaskEdit,
   {$ELSE}
   TaskForm, UnitVariantJsonUtil2, UnitElecServiceData, UnitMakeReport2,
   {$ENDIF}

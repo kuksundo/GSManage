@@ -71,7 +71,7 @@ var
 implementation
 
 uses SysUtils, Forms, VarRecUtils,
-  {$IFDEF GAMANAGER} UnitGAVarJsonUtil2,
+  {$IFDEF GAMANAGER} UnitHiconisASVarJsonUtil,
   {$ELSE} UnitVariantJsonUtil,
   {$ENDIF}
   UnitFolderUtil2;
@@ -321,8 +321,6 @@ end;
 
 initialization
 finalization
-  if Assigned(g_GSTariffDB) then
-    FreeAndNil(g_GSTariffDB);
-
+  DestroyGSTariffClient();
 end.
 
