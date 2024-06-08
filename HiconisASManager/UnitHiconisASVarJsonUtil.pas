@@ -67,7 +67,7 @@ function LoadRecordList2VariantFromSQlRecord(ASQLRecord: TSQLRecord): variant;
 
 implementation
 
-uses UnitMakeReport2, UnitStringUtil, StrUtils, mormot.core.mustache, UnitGAServiceData,
+uses UnitMakeReport2, UnitStringUtil, StrUtils, mormot.core.mustache, UnitElecServiceData2,
   UnitGSTriffData, UnitGSFileData2;
 
 function MakeDirectShippingEmailBody(ATask: TSQLGSTask): string;

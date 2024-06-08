@@ -54,6 +54,8 @@ type
     cdmTaxBillFromSubCon, cdmTaxBill2Cust, cdmFinal
   );
 
+  TContainData4Mails = set of TContainData4Mail;
+
   TEngineerAgency = (eaNone, eaSubCon, eaHGS, eaHELEC, eaFinal);//엔지니어 소속사
 
   TGSInvoiceItemType = (iitNull, iitServiceReport, iitWork_Week_N, iitWork_Week_OT,
@@ -63,6 +65,11 @@ type
 
   TCalcInvoiceMethod = (cimNull, cimPerDay, cimPerHour, cimFinal);
 
+  TASServiceChargeType = (assctNull, assctCharged, assctFree, assctFinal);
+  TASServiceType = (asstNull, asstFinal);
+
+  THiconisASState = (hassNull, hassNewClaim, hassClaimRegistered, hassFinal);
+  THiconisASTrigger = (hastNull, hastRegister2Maps, hastFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -142,6 +149,32 @@ const
     ''
      );
 
+  R_ASServiceChargeType : array[Low(TASServiceChargeType)..High(TASServiceChargeType)] of string =
+    (
+    '',
+    'Charged',
+    'Free',
+    ''
+     );
+
+  R_ASServiceType : array[Low(TASServiceType)..High(TASServiceType)] of string =
+    (
+    '',
+    ''
+     );
+
+  R_HiconisASState : array[Low(THiconisASState)..High(THiconisASState)] of string =
+    (
+    '', '클레임 접수', '클레임 등록 완료',
+    ''
+     );
+
+  R_HiconisASTrigger : array[Low(THiconisASTrigger)..High(THiconisASTrigger)] of string =
+    (
+    '', '클레임 등록',
+    ''
+     );
+
 var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_EngineerKind: TLabelledEnum<TEngineerKind>;
@@ -153,6 +186,10 @@ var
   g_EngineerAgency: TLabelledEnum<TEngineerAgency>;
   g_GSInvoiceItemType: TLabelledEnum<TGSInvoiceItemType>;
   g_CalcInvoiceMethod: TLabelledEnum<TCalcInvoiceMethod>;
+  g_ASServiceType: TLabelledEnum<TASServiceType>;
+  g_ASServiceChargeType: TLabelledEnum<TASServiceChargeType>;
+  g_HiconisASState: TLabelledEnum<THiconisASState>;
+  g_HiconisASTrigger: TLabelledEnum<THiconisASTrigger>;
 
 procedure SalesProcess2List(AList: TStringList; AFSMState: TFSMState);
 
@@ -182,6 +219,10 @@ initialization
 //  g_EngineerAgency.InitArrayRecord(R_EngineerAgency);
 //  g_GSInvoiceItemType.InitArrayRecord(R_GSInvoiceItemType);
 //  g_CalcInvoiceMethod.InitArrayRecord(R_CalcInvoiceMethod);
+//  g_ASServiceChargeType.InitArrayRecord(R_ASServiceChargeType);
+//  g_ASServiceType.InitArrayRecord(R_ASServiceType);
+//  g_HiconisASState.InitArrayRecord(R_HiconisASState);
+//  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
 
 finalization
 

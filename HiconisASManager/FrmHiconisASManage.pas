@@ -19,7 +19,7 @@ uses
   VarRecUtils,
   UnitHiconisASWSInterface, UnitOLDataType,
   thundax.lib.actions_pjh, UnitMAPSMacro2, UnitUserDataRecord2,
-  UnitGAServiceData, FrameDisplayTaskInfo2;
+  UnitElecServiceData2, FrameDisplayTaskInfo2;
 
 const
   WM_OLMSG_RESULT = WM_USER + 1;

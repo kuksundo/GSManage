@@ -15,12 +15,14 @@ uses
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime,
 
-  FSMClass_Dic, CommonData2, FSMState, UnitTodoCollect2, UnitMakeReport2,
+  CommonData2, UnitTodoCollect2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   FrmEmailListView2, UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2,
-  FrmFileSelect, UnitGSFileData2, UnitOLDataType
+  FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2
   ;
 
 type
+  THiconisASStateMachine = TStateMachine<THiconisASState, THiconisASTrigger>;
+
   TTaskEditF = class(TForm)
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -295,6 +297,8 @@ type
     procedure HullNoEditClickBtn(Sender: TObject);
     procedure Saveas1Click(Sender: TObject);
     procedure CurWorkCBChange(Sender: TObject);
+    procedure ServiceChargeCBDropDown(Sender: TObject);
+    procedure ServiceTypeCBDropDown(Sender: TObject);
   private
     FTaskJson: String;
 
@@ -332,7 +336,8 @@ type
     FTask,
     FEmailDisplayTask: TSQLGSTask;
     FSQLGSFiles: TSQLGSFile;
-    FFSMState: TFSMState;
+//    FFSMState: TFSMState;
+    FFSMState: THiconisASStateMachine;
     FOLMessagesFromDrop,
     //현재 Task의 작업순서 List
     FSalesProcessList: TStringList;
@@ -343,7 +348,7 @@ type
     class procedure ShowEMailListFromTask(ATask: TSQLGSTask; ARemoteIPAddress, APort, ARoot: string);
     class procedure LoadEmailListFromTask(ATask: TSQLGSTask; AForm: TEmailListViewF);
     procedure ShowDTIForm;
-    procedure SPType2Combo(ACombo: TComboBox; AFSMState: TFSMState=nil);
+    procedure SPType2Combo(ACombo: TComboBox; AFSMState: THiconisASStateMachine=nil);
     //Drag하여 파일 추가한 경우 AFileName <> ''
     //Drag를 윈도우 탐색기에서 하면 AFromOutLook=Fase,
     //Outlook 첨부 파일에서 하면 AFromOutLook=True임
@@ -353,7 +358,7 @@ type
     procedure LoadCustomerFromCompanycode(ACompanyCode: string);
 //    procedure LoadCustomer2
 
-    procedure LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: TFSMClass);
+    procedure LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
     procedure LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TSQLGSTask);
     procedure LoadTaskEditForm2Grid(AEditForm: TTaskEditF; AGrid: TNextGrid;
       ARow: integer);
@@ -399,7 +404,7 @@ uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
   UnitHiconisASVarJsonUtil,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
-  UnitGAServiceData, UnitElecMasterData;
+  UnitElecMasterData;
 
 {$R *.dfm}
 
@@ -863,12 +868,22 @@ begin
   ShowDTIForm;
 end;
 
+procedure TTaskEditF.ServiceChargeCBDropDown(Sender: TObject);
+begin
+  g_ASServiceChargeType.SetType2Combo(ServiceChargeCB);
+end;
+
 procedure TTaskEditF.ServiceOrder1Click(Sender: TObject);
 var
   LRec: Doc_ServiceOrder_Rec;
 begin
   LRec := Get_Doc_ServiceOrder_Rec;
   MakeDocServiceOrder(LRec);
+end;
+
+procedure TTaskEditF.ServiceTypeCBDropDown(Sender: TObject);
+begin
+  g_ASServiceType.SetType2Combo(ServiceTypeCB);
 end;
 
 procedure TTaskEditF.CancelMailSelectBtnClick(Sender: TObject);
@@ -901,6 +916,7 @@ end;
 
 procedure TTaskEditF.CurWorkCBDropDown(Sender: TObject);
 begin
+  g_FSMClass.GetStateNTriggers2Combo(hassNewClaim, CurWorkCB);
 //  CurWorkCB.Clear;
 //  SalesProcessType2Combo(CurWorkCB);
 //  SPType2Combo(CurWorkCB);
@@ -1284,6 +1300,10 @@ begin
   g_ElecProductType.InitArrayRecord(R_ElecProductType);
   g_SalesProcessType.InitArrayRecord(R_SalesProcessType);
   g_GSDocType.InitArrayRecord(R_GSDocType);
+  g_ASServiceChargeType.InitArrayRecord(R_ASServiceChargeType);
+  g_ASServiceType.InitArrayRecord(R_ASServiceType);
+  g_HiconisASState.InitArrayRecord(R_HiconisASState);
+  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
 end;
 
 procedure TTaskEditF.INQInput1Click(Sender: TObject);
@@ -1894,9 +1914,9 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: TFSMClass);
+procedure TTaskEditF.LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
 var
-  LFSMState: TFSMState;
+  LFSMState: THiconisASState;
   LStr: string;
 begin
   with AForm do
@@ -1941,22 +1961,30 @@ begin
 //    CompanyTypeCB.ItemIndex := Ord(AVar.CompanyType);
 //    ManagerDepartmentEdit.Text :=
 
-    LFSMState := nil;
+    LFSMState := g_HiconisASState.ToType(Ord(AVar.SalesProcessType));
 
-    if Assigned(AFSMClass) then
-      LFSMState := AFSMClass.GetState(Ord(AVar.SalesProcessType));
+//    LFSMState := 0;
 
-    if Assigned(LFSMState) then
-    begin
-//      SPType2Combo(CurWorkCB, LFSMState);
-      SalesProcess2List(FSalesProcessList, LFSMState);
-      CurWorkCB.Items.Assign(FSalesProcessList);
-      CurWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
-        AVar.CurrentWorkStatus));
-      NextWorkCB.Items.Assign(FSalesProcessList);
-      NextWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
-        AVar.NextWork));
-    end;
+//    if Assigned(AFSMClass) then
+//      LFSMState := AFSMClass.GetState();
+
+//    if Assigned(LFSMState) then
+//    begin
+////      SPType2Combo(CurWorkCB, LFSMState);
+//      SalesProcess2List(FSalesProcessList, LFSMState);
+
+    if Assigned(FSalesProcessList) then
+      FreeAndNil(FSalesProcessList);
+
+    FSalesProcessList := AFSMClass.GetStateNTriggers2Strings(LFSMState) as TStringList;
+
+    CurWorkCB.Items.Assign(FSalesProcessList);
+    CurWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
+      AVar.CurrentWorkStatus));
+    NextWorkCB.Items.Assign(FSalesProcessList);
+    NextWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
+      AVar.NextWork));
+//    end;
 
     QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
     OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
@@ -2438,20 +2466,14 @@ begin
   end;
 end;
 
-procedure TTaskEditF.SPType2Combo(ACombo: TComboBox; AFSMState: TFSMState);
+procedure TTaskEditF.SPType2Combo(ACombo: TComboBox; AFSMState: THiconisASStateMachine);
 var
   LIntArr: TIntegerArray;
   i: integer;
 begin
-  if not Assigned(AFSMState) then
-  begin
-    if not Assigned(FFSMState) then
-      exit;
-
-    AFSMState := FFSMState;
-  end;
-
-  LIntArr := AFSMState.GetOutputs;
+//  AFSMState := FFSMState;
+//
+//  LIntArr := AFSMState.GetOutputs;
 
   for i := Low(LIntArr) to High(LIntArr) do
     ACombo.Items.Add(g_SalesProcess.ToString(LIntArr[i]));

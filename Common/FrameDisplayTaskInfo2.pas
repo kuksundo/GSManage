@@ -13,10 +13,10 @@ uses
   mormot.core.base, mormot.core.datetime, mormot.core.data, mormot.core.variants,
   mormot.orm.base, mormot.core.text, mormot.core.unicode, mormot.core.json,
   VarRecUtils,
-  CommonData2, UnitOLDataType, FSMClass_Dic, FSMState,
+  CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, FrmInqManageConfig, UnitElecMasterData,
   {$IFDEF GAMANAGER}
-  UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitGAServiceData, UnitMakeReport2,
+  UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
   {$ELSE}
   UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport,
   {$ENDIF}
@@ -293,7 +293,7 @@ procedure TDisplayTaskF.LoadGSTask2Grid(ATask: TSQLGSTask; AGrid: TNextGrid;
   ARow: integer);
 var
   LStrList: TStringList;
-  LFSMState: TFSMState;
+  LFSMState: THiconisASState;
 begin
   if ARow = -1 then
   begin
@@ -326,18 +326,19 @@ begin
     end
     else
     begin
-      LFSMState := g_FSMClass.GetState(Ord(SalesProcessType));
-      if Assigned(LFSMState) then
-      begin
-        LStrList := TStringList.Create;
-        try
-          SalesProcess2List(LStrList, LFSMState);
-          CellByName['NextProcess', ARow].AsString := g_SalesProcess.ToString(
-            LFSMState.GetOutput(CurrentWorkStatus));
-        finally
-          LStrList.Free;
-        end;
-      end;
+      LFSMState := g_HiconisASState.ToType(Ord(SalesProcessType));
+
+//      if Assigned(LFSMState) then
+//      begin
+//        LStrList := TStringList.Create;
+//        try
+//          SalesProcess2List(LStrList, LFSMState);
+//          CellByName['NextProcess', ARow].AsString := g_SalesProcess.ToString(
+//            LFSMState.GetOutput(CurrentWorkStatus));
+//        finally
+//          LStrList.Free;
+//        end;
+//      end;
     end;
 
 //      CellByName['CustomerName', ARow].AsString := ReqCustomer;

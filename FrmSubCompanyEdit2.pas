@@ -141,7 +141,7 @@ implementation
 
 uses FrmFileList, FrmSelectProductType2,
   {$IFDEF GAMANAGER}
-  UnitGAServiceData, UnitHiconisASVarJsonUtil,
+  UnitElecServiceData2, UnitHiconisASVarJsonUtil,
   {$ELSE}
   UnitElecServiceData, UnitVariantJsonUtil,
   {$ENDIF}

@@ -74,7 +74,7 @@ implementation
 
 uses mormot.core.mustache,
   {$IFDEF GAMANAGER}
-  UnitHiconisASVarJsonUtil, UnitGAServiceData, UnitMakeReport2,//FrmGATaskEdit,
+  UnitHiconisASVarJsonUtil, UnitElecServiceData2, UnitMakeReport2,//FrmGATaskEdit,
   {$ELSE}
   TaskForm, UnitVariantJsonUtil2, UnitElecServiceData, UnitMakeReport2,
   {$ENDIF}
