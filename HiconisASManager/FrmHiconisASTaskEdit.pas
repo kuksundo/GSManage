@@ -299,6 +299,7 @@ type
     procedure CurWorkCBChange(Sender: TObject);
     procedure ServiceChargeCBDropDown(Sender: TObject);
     procedure ServiceTypeCBDropDown(Sender: TObject);
+    procedure NextWorkCBDropDown(Sender: TObject);
   private
     FTaskJson: String;
 
@@ -331,6 +332,8 @@ type
 
     procedure SubContractorAdd;
     function GetNextSalesProcess2String(ASalesProcess: string): string;
+
+    procedure FillNextWorkCB(const AState: integer);
 
   public
     FTask,
@@ -541,6 +544,7 @@ begin
       LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
       LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
 
+      //"저장" 버튼을 누른 경우
       if LTaskEditF.ShowModal = mrOK then
       begin
         Result := True;
@@ -916,7 +920,6 @@ end;
 
 procedure TTaskEditF.CurWorkCBDropDown(Sender: TObject);
 begin
-  g_FSMClass.GetStateNTriggers2Combo(hassNewClaim, CurWorkCB);
 //  CurWorkCB.Clear;
 //  SalesProcessType2Combo(CurWorkCB);
 //  SPType2Combo(CurWorkCB);
@@ -1102,6 +1105,18 @@ begin
     end;
 
     DropEmptySource1.Execute;
+  end;
+end;
+
+procedure TTaskEditF.FillNextWorkCB(const AState: integer);
+var
+  LStrList: TStringList;
+begin
+  try
+    LStrList := GetStateOrTriggers2Strings(AState);
+    NextWorkCB.Items.Assign(LStrList);
+  finally
+    LStrList.Free;
   end;
 end;
 
@@ -1916,7 +1931,7 @@ end;
 
 procedure TTaskEditF.LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
 var
-  LFSMState: THiconisASState;
+//  LCurrentState: THiconisASState;
   LStr: string;
 begin
   with AForm do
@@ -1961,30 +1976,26 @@ begin
 //    CompanyTypeCB.ItemIndex := Ord(AVar.CompanyType);
 //    ManagerDepartmentEdit.Text :=
 
-    LFSMState := g_HiconisASState.ToType(Ord(AVar.SalesProcessType));
-
-//    LFSMState := 0;
-
-//    if Assigned(AFSMClass) then
-//      LFSMState := AFSMClass.GetState();
-
-//    if Assigned(LFSMState) then
-//    begin
-////      SPType2Combo(CurWorkCB, LFSMState);
-//      SalesProcess2List(FSalesProcessList, LFSMState);
+//    LCurrentState := g_HiconisASState.ToType(AVar.CurrentWorkStatus);//Ord(AVar.SalesProcessType)
 
     if Assigned(FSalesProcessList) then
       FreeAndNil(FSalesProcessList);
 
-    FSalesProcessList := AFSMClass.GetStateNTriggers2Strings(LFSMState) as TStringList;
+    //현재 State의 Trigger List : TTriggerHolder List를 저장함
+//    FSalesProcessList := GetStateOrTriggers2Strings(Ord(LCurrentState));
+
+    //StateMachine에 등록 된 모든 State List를 저장함
+    FSalesProcessList := GetStateOrTriggers2Strings();
 
     CurWorkCB.Items.Assign(FSalesProcessList);
-    CurWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
-      AVar.CurrentWorkStatus));
-    NextWorkCB.Items.Assign(FSalesProcessList);
-    NextWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
-      AVar.NextWork));
+    CurWorkCB.ItemIndex := AVar.CurrentWorkStatus;
+//    CurWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
+//      AVar.CurrentWorkStatus));
+//    NextWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
+//      AVar.NextWork));
 //    end;
+    FillNextWorkCB(CurWorkCB.ItemIndex);
+    NextWorkCB.ItemIndex := AVar.NextWork;
 
     QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
     OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
@@ -2102,6 +2113,11 @@ var
 begin
   LRec := Get_Doc_Cust_Reg_Rec;
   MakeDocCustomerRegistration(LRec);
+end;
+
+procedure TTaskEditF.NextWorkCBDropDown(Sender: TObject);
+begin
+  FillNextWorkCB(CurWorkCB.ItemIndex);
 end;
 
 procedure TTaskEditF.oCustomer1Click(Sender: TObject);

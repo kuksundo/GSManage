@@ -68,8 +68,8 @@ type
   TASServiceChargeType = (assctNull, assctCharged, assctFree, assctFinal);
   TASServiceType = (asstNull, asstFinal);
 
-  THiconisASState = (hassNull, hassNewClaim, hassClaimRegistered, hassFinal);
-  THiconisASTrigger = (hastNull, hastRegister2Maps, hastFinal);
+  THiconisASState = (hassNull, hassNewClaim, hassClaimRegistered, hassClaimRegisterCancelled, hassFinal);
+  THiconisASTrigger = (hastNull, hastRegister2Maps, hastCancelRegisgter, hastFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -165,13 +165,13 @@ const
 
   R_HiconisASState : array[Low(THiconisASState)..High(THiconisASState)] of string =
     (
-    '', '클레임 접수', '클레임 등록 완료',
+    '', '클레임 접수', '클레임 등록 완료', '클레임 등록 취소됨',
     ''
      );
 
   R_HiconisASTrigger : array[Low(THiconisASTrigger)..High(THiconisASTrigger)] of string =
     (
-    '', '클레임 등록',
+    '', '클레임 등록', '클레임 등록 취소',
     ''
      );
 
