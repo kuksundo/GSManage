@@ -2117,7 +2117,8 @@ end;
 
 procedure TTaskEditF.NextWorkCBDropDown(Sender: TObject);
 begin
-  FillNextWorkCB(CurWorkCB.ItemIndex);
+//  if CurWorkCB.Items.Count = 0 then
+    FillNextWorkCB(CurWorkCB.ItemIndex);
 end;
 
 procedure TTaskEditF.oCustomer1Click(Sender: TObject);

@@ -68,8 +68,30 @@ type
   TASServiceChargeType = (assctNull, assctCharged, assctFree, assctFinal);
   TASServiceType = (asstNull, asstFinal);
 
-  THiconisASState = (hassNull, hassNewClaim, hassClaimRegistered, hassClaimRegisterCancelled, hassFinal);
-  THiconisASTrigger = (hastNull, hastRegister2Maps, hastCancelRegisgter, hastFinal);
+  THiconisASState = (hassNull,
+    hassNewClaimRecv, //Claim 접수
+    hassNewClaimRegistered, //Claim 등록
+    hassNewClaimCancelled, //Claim 취소
+    hassTSSent, //Trouble Shoot 송부
+    hassSupplyPart, //자재 공급
+    hassSEOnboard, //Service Engineer 방선
+    hassReqQuote4SE, //용역 - 견적요청
+    hassConfirmQuote4SE, //용역 - 견적확정
+    hassAppoveQouto, //용역 - 견적품의
+    hassSendOrder2SubCon, //용역 - 발주서 송부
+    hassReceitProcess,//용역 - 전표처리
+    hassCheckMatCode,//자재 - 코드확인
+    hassIssueMatPOR,//자재 - POR 발행
+    hassCheckMatBudget,//자재 - 예산확인(보증예산정보)
+    hassSendMatPOR,//자재 - POR 전송(POR관리탭에서 재전송)
+    hassClaimClosed, //Claim 종료
+    hassFinal);
+
+  THiconisASTrigger = (hastNull,
+    hastRegister2Maps, //Maps에 등록
+    hastCancelRegisgter, //Maps 등록 취소
+    hastReqTS2Lab, //Trouble Shooting 요청(담당자)
+    hastFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -165,13 +187,32 @@ const
 
   R_HiconisASState : array[Low(THiconisASState)..High(THiconisASState)] of string =
     (
-    '', '클레임 접수', '클레임 등록 완료', '클레임 등록 취소됨',
+    '',
+    'Claim 접수',
+    'Claim 등록',
+    'Claim 취소',
+    'Trouble Shoot 송부',
+    '자재 공급',
+    'Service Engineer 방선',
+    '용역 - 견적요청',
+    '용역 - 견적확정',
+    '용역 - 견적품의',
+    '용역 - 발주서 송부',
+    '용역 - 전표처리',
+    '자재 - 코드확인',
+    '자재 - POR 발행',
+    '자재 - 예산확인(보증예산정보)',
+    '자재 - POR 전송(POR관리탭에서 재전송)',
+    'Claim 종료',
     ''
      );
 
   R_HiconisASTrigger : array[Low(THiconisASTrigger)..High(THiconisASTrigger)] of string =
     (
-    '', '클레임 등록', '클레임 등록 취소',
+    '',
+    'Maps에 등록',
+    'Maps 등록 취소',
+    'Trouble Shooting 요청(담당자)',
     ''
      );
 

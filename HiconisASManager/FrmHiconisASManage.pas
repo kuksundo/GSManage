@@ -238,7 +238,7 @@ begin
           try
             rec := msg.MsgData.ToRecord<TOLMsgFileRecord>;
 
-            if msg.MsgID = 1 then
+            if msg.MsgID = Ord(dkmqMailFromOL) then
             begin
               LIsProcessJson := False;
 
@@ -299,7 +299,7 @@ begin
               end;
             end
             else
-            if msg.MsgID = 2 then
+            if msg.MsgID = Ord(dkmqFolderFromOL) then
             begin
               //task.Invoke함수에서 Grid에 Task 추가하는 것을 방지함
               LIsAddTask := False;
@@ -307,14 +307,14 @@ begin
               TDTF.AddFolderListFromOL(rec.FEntryId + '=' + rec.FStoreId);
             end
             else
-            if msg.MsgID = 3 then
+            if msg.MsgID = Ord(dkmqFileFromDrag) then
             begin
               LStr := rec.FSubject;
               LIsProcessJson := True;
               LIsAddTask := False;
             end;
 
-            task.Invoke(
+            task.Invoke(//Thread Synchronize와 동일함
               procedure
               begin
                 //동일한 제목의 메일이 존재하지 않으면 Grid에 추가
@@ -443,16 +443,17 @@ var
   LOmniValue: TOmniValue;
 begin
   LFileName := '';
-  // 윈도우 탐색기에서 Drag 했을 경우
+  // 윈도우 탐색기에서 Drag 했을 경우 LFileName에 Drag한 File Name이 존재함
+  // OutLook에서 Drag한 경우에는 LFileName = '' 임
   if (DataFormatAdapter1.DataFormat <> nil) then
   begin
     LFileName := (DataFormatAdapter1.DataFormat as TFileDataFormat).Files.Text;
 
     if LFileName <> '' then
     begin
-      if ExtractFileExt(LFileName) <> '.hgs' then
+      if ExtractFileExt(LFileName) <> '.hms' then
       begin
-        ShowMessage('This file is not auto created by HGS from explorer');
+        ShowMessage('This file is not auto created by HMS from explorer');
         exit;
       end;
 
@@ -472,9 +473,9 @@ begin
 
     if ExtractFileExt(LFileName) <> '.msg' then
     begin
-      if ExtractFileExt(LFileName) <> '.hgs' then
+      if ExtractFileExt(LFileName) <> '.hms' then
       begin
-        ShowMessage('This file is not auto created by HGS');
+        ShowMessage('This file is not auto created by HMS');
         exit;
       end;
 
@@ -488,7 +489,7 @@ begin
 
         rec.FSubject := LStr;
         LOmniValue := TOmniValue.FromRecord<TOLMsgFileRecord>(rec);
-        FIPCMQFromOL.Enqueue(TOmniMessage.Create(3, LOmniValue));
+        FIPCMQFromOL.Enqueue(TOmniMessage.Create(Ord(dkmqFileFromDrag), LOmniValue));
         exit;
 //        LProcessOK := ProcessTaskJson(LStr);
 
@@ -586,7 +587,7 @@ begin
 
   Parallel.TaskConfig.OnMessage(WM_OLMSG_RESULT,DisplayOLMsg2Grid);
   FStopEvent := TEvent.Create;
-  UnitHiconisMasterRecord.InitGAMasterClient(Application.ExeName);
+  UnitHiconisMasterRecord.InitHiconisASClient(Application.ExeName);
   InitUserClient(Application.ExeName);
   InitClient4GSTariff(Application.ExeName);
   AsynDisplayOLMsg2Grid();
@@ -796,7 +797,7 @@ begin
       rec.FUserEMail := LStrList.Values['UserEmail'];
       rec.FUserName := LStrList.Values['UserName'];
       LOmniValue := TOmniValue.FromRecord<TOLMsgFileRecord>(rec);
-      FIPCMQFromOL.Enqueue(TOmniMessage.Create(1, LOmniValue));
+      FIPCMQFromOL.Enqueue(TOmniMessage.Create(Ord(dkmqMailFromOL), LOmniValue));
     end
     else
     if Command = CMD_SEND_FOLDER_STOREID then
@@ -805,7 +806,7 @@ begin
       rec.FSender := LStrList.Values['FolderName'];
       rec.FStoreId := LStrList.Values['StoreId'];
       LOmniValue := TOmniValue.FromRecord<TOLMsgFileRecord>(rec);
-      FIPCMQFromOL.Enqueue(TOmniMessage.Create(2, LOmniValue));
+      FIPCMQFromOL.Enqueue(TOmniMessage.Create(Ord(dkmqFolderFromOL), LOmniValue));
     end
     else
     if Command = 'SaveFile' then

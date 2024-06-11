@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{4F3D71B3-E5F4-4687-873D-BF64461AD3F1}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="HiconisASManageR.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="HiconisASManageR">
+        <MSBuild Projects="HiconisASManageR.dproj"/>
+    </Target>
+    <Target Name="HiconisASManageR:Clean">
+        <MSBuild Projects="HiconisASManageR.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="HiconisASManageR:Make">
+        <MSBuild Projects="HiconisASManageR.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OLAddIn4HiconisAS">
+        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj"/>
+    </Target>
+    <Target Name="OLAddIn4HiconisAS:Clean">
+        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OLAddIn4HiconisAS:Make">
+        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="HiconisASManageR;OLAddIn4HiconisAS"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="HiconisASManageR:Clean;OLAddIn4HiconisAS:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="HiconisASManageR:Make;OLAddIn4HiconisAS:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
