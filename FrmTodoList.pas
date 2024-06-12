@@ -152,7 +152,9 @@ end;
 procedure TToDoListF.AddtoOutlookAppointment1Click(Sender: TObject);
 begin
 //  ShowMessage(GetJsonArrFromToDoSelected);
+{$IFDEF USE_MORMOT_WS}
   SendReqAddAppointment_WS(GetJsonArrFromToDoSelected);
+{$ENDIF}
 end;
 
 procedure TToDoListF.Button1Click(Sender: TObject);

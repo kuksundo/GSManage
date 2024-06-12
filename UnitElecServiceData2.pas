@@ -92,6 +92,18 @@ type
     hastCancelRegisgter, //Maps 등록 취소
     hastReqTS2Lab, //Trouble Shooting 요청(담당자)
     hastFinal);
+
+  TClaimServiceKind = (cskNull,
+    cskPartSupply,//부품 공급
+    cskPartSupplyNSE,//부품 공급 + S/E 방선
+    cskSEOnboard,//S/E 방선
+    cskTechInfo, //기술정보 제공
+    cskOverDue,  //보증기간 경과
+    cskByCrew,   //본선 조치
+    cskOwnerPrepare,//선주사 준비
+    cskYardPrepare, //조선소 준비
+    cskPayCompensation,//보상금 지급
+    cskFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -216,6 +228,21 @@ const
     ''
      );
 
+  R_ClaimServiceKind : array[Low(TClaimServiceKind)..High(TClaimServiceKind)] of string =
+    (
+    '',
+    '부품 공급',
+    '부품 공급 + S/E 방선',
+    'S/E 방선',
+    '기술정보 제공',
+    '보증기간 경과',
+    '본선 조치',
+    '선주사 준비',
+    '조선소 준비',
+    '보상금 지급',
+    ''
+     );
+
 var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_EngineerKind: TLabelledEnum<TEngineerKind>;
@@ -231,6 +258,7 @@ var
   g_ASServiceChargeType: TLabelledEnum<TASServiceChargeType>;
   g_HiconisASState: TLabelledEnum<THiconisASState>;
   g_HiconisASTrigger: TLabelledEnum<THiconisASTrigger>;
+  g_ClaimServiceKind: TLabelledEnum<TClaimServiceKind>;
 
 procedure SalesProcess2List(AList: TStringList; AFSMState: TFSMState);
 
@@ -264,6 +292,7 @@ initialization
 //  g_ASServiceType.InitArrayRecord(R_ASServiceType);
 //  g_HiconisASState.InitArrayRecord(R_HiconisASState);
 //  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
+//  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
 
 finalization
 

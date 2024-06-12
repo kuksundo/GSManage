@@ -12,25 +12,25 @@ uses System.Classes, Dialogs, System.Rtti,
   UnitBase64Util2, UnitGSFileRecord2,
   UnitMustacheUtil2, UnitHiconisMasterRecord, CommonData2;
 
-function MakeEmailHTMLBody(ATask: TSQLGSTask; AMailType: integer;
+function MakeEmailHTMLBody(ATask: TOrmHiconisASTask; AMailType: integer;
   ASalesPICSig, ATaskAShippingPICSig, AFieldServicePICSig, AElecHullRegPICSig, AMyNameSig: string): string;
-function MakeSalesReqEmailBody(ATask: TSQLGSTask; ASalesPICSig, AMyNameSig: string): string;
-function MakeInvoiceEmailBody(ATask: TSQLGSTask): string;
-function MakeDirectShippingEmailBody(ATask: TSQLGSTask): string;
-function MakeForeignRegEmailBody(ATask: TSQLGSTask): string;
-function MakeElecHullRegReqEmailBody(ATask: TSQLGSTask; AElecHullRegPICSig, AMyNameSig: string): string;
-function MakePOReqEmailBody(ATask: TSQLGSTask): string;
-function MakeShippingReqEmailBody(ATask: TSQLGSTask; AShippingPICSig, AMyNameSig: string): string;
-function MakeForwardFieldServiceEmailBody(ATask: TSQLGSTask; AFieldServicePICSig, AMyNameSig: string): string;
-function MakeForwardPayCheckSubConEmailBody(ATask: TSQLGSTask; AMyNameSig: string): string;
-function MakeSubConQuotationReqEmailBody(ATask: TSQLGSTask; ASubConPICSig, AMyNameSig: string): string;
-function MakeForwardSubConPaymentReqEmailBody(ATask: TSQLGSTask; ASubConPaymentPICSig, AMyNameSig: string): string;
-function MakeSubConServiceOrderReqEmailBody(ATask: TSQLGSTask; ASubConPICEMailAddr, ASubConPICSig, AMyNameSig: string): string;
+function MakeSalesReqEmailBody(ATask: TOrmHiconisASTask; ASalesPICSig, AMyNameSig: string): string;
+function MakeInvoiceEmailBody(ATask: TOrmHiconisASTask): string;
+function MakeDirectShippingEmailBody(ATask: TOrmHiconisASTask): string;
+function MakeForeignRegEmailBody(ATask: TOrmHiconisASTask): string;
+function MakeElecHullRegReqEmailBody(ATask: TOrmHiconisASTask; AElecHullRegPICSig, AMyNameSig: string): string;
+function MakePOReqEmailBody(ATask: TOrmHiconisASTask): string;
+function MakeShippingReqEmailBody(ATask: TOrmHiconisASTask; AShippingPICSig, AMyNameSig: string): string;
+function MakeForwardFieldServiceEmailBody(ATask: TOrmHiconisASTask; AFieldServicePICSig, AMyNameSig: string): string;
+function MakeForwardPayCheckSubConEmailBody(ATask: TOrmHiconisASTask; AMyNameSig: string): string;
+function MakeSubConQuotationReqEmailBody(ATask: TOrmHiconisASTask; ASubConPICSig, AMyNameSig: string): string;
+function MakeForwardSubConPaymentReqEmailBody(ATask: TOrmHiconisASTask; ASubConPaymentPICSig, AMyNameSig: string): string;
+function MakeSubConServiceOrderReqEmailBody(ATask: TOrmHiconisASTask; ASubConPICEMailAddr, ASubConPICSig, AMyNameSig: string): string;
 
-function MakeTaskInfoEmailAttached(ATask: TSQLGSTask; var AFileName: string;
+function MakeTaskInfoEmailAttached(ATask: TOrmHiconisASTask; var AFileName: string;
   ASubConID: integer = -1): string;
-function MakeTaskList2JSONArray(ATask: TSQLGSTask): RawUTF8;
-function MakeTaskDetail2JSON(ATask: TSQLGSTask): RawUTF8;
+function MakeTaskList2JSONArray(ATask: TOrmHiconisASTask): RawUTF8;
+function MakeTaskDetail2JSON(ATask: TOrmHiconisASTask): RawUTF8;
 function MakeGSFile2JSON(ASQLGSFile: TSQLGSFile): RawUTF8;
 function MakeTaskEmailList2JSON(ATaskID: TID): RawUTF8;
 //function MakeTaskEmailContent2JSON(): RawUTF8;
@@ -62,7 +62,7 @@ procedure LoadSubConInvoiceFileListFromVariantWithSQLSubConInvoiceFile(ADoc: var
 procedure LoadInvoiceFileFromJSON(AFile:TSQLInvoiceFile; AJson: RawUTF8);
 procedure LoadSubConInvoiceFileFromJSON(AFile:TSQLSubConInvoiceFile; AJson: RawUTF8);
 
-function MakeMailSubject(ATask: TSQLGSTask; AMailType: integer): string;
+function MakeMailSubject(ATask: TOrmHiconisASTask; AMailType: integer): string;
 function LoadRecordList2VariantFromSQlRecord(ASQLRecord: TSQLRecord): variant;
 
 implementation
@@ -70,7 +70,7 @@ implementation
 uses UnitMakeReport2, UnitStringUtil, StrUtils, mormot.core.mustache, UnitElecServiceData2,
   UnitGSTriffData, UnitGSFileData2;
 
-function MakeDirectShippingEmailBody(ATask: TSQLGSTask): string;
+function MakeDirectShippingEmailBody(ATask: TOrmHiconisASTask): string;
 var
   LDoc: variant;
   LSQLMaterial: TSQLMaterial4Project;
@@ -91,7 +91,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + DIRECT_SHIPPING_MUSTACHE_FILE_NAME);
 end;
 
-function MakeElecHullRegReqEmailBody(ATask: TSQLGSTask; AElecHullRegPICSig, AMyNameSig: string): string;
+function MakeElecHullRegReqEmailBody(ATask: TOrmHiconisASTask; AElecHullRegPICSig, AMyNameSig: string): string;
 var
   LDoc: variant;
   LJSON: RawUTF8;
@@ -117,7 +117,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + ELEC_HULLNO_REG_REQ_MUSTACHE_FILE_NAME);
 end;
 
-function MakeForeignRegEmailBody(ATask: TSQLGSTask): string;
+function MakeForeignRegEmailBody(ATask: TOrmHiconisASTask): string;
 var
   LDoc: variant;
   LJSON: RawUTF8;
@@ -130,7 +130,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + FOREIGN_REG_MUSTACHE_FILE_NAME);
 end;
 
-function MakeEmailHTMLBody(ATask: TSQLGSTask; AMailType: integer;
+function MakeEmailHTMLBody(ATask: TOrmHiconisASTask; AMailType: integer;
   ASalesPICSig, ATaskAShippingPICSig, AFieldServicePICSig, AElecHullRegPICSig,
   AMyNameSig: string): string;
 begin
@@ -150,7 +150,7 @@ begin
   end;
 end;
 
-function MakeInvoiceEmailBody(ATask: TSQLGSTask): string;
+function MakeInvoiceEmailBody(ATask: TOrmHiconisASTask): string;
 var
   LDoc: variant;
   LSQLCustomer: TSQLCustomer;
@@ -171,7 +171,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + INVOICE_SEND_MUSTACHE_FILE_NAME);
 end;
 
-function MakeMailSubject(ATask: TSQLGSTask; AMailType: integer): string;
+function MakeMailSubject(ATask: TOrmHiconisASTask; AMailType: integer): string;
 begin
   case AMailType of
     1: Result := 'Send Invouice';
@@ -188,7 +188,7 @@ begin
   end;
 end;
 
-function MakePOReqEmailBody(ATask: TSQLGSTask): string;
+function MakePOReqEmailBody(ATask: TOrmHiconisASTask): string;
 var
   LDoc: variant;
   LJSON: RawUTF8;
@@ -212,7 +212,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + PO_REQ_MUSTACHE_FILE_NAME);
 end;
 
-function MakeSalesReqEmailBody(ATask: TSQLGSTask; ASalesPICSig, AMyNameSig: string): string;
+function MakeSalesReqEmailBody(ATask: TOrmHiconisASTask; ASalesPICSig, AMyNameSig: string): string;
 var
   LDoc: variant;
   LSQLCustomer: TSQLCustomer;
@@ -252,7 +252,7 @@ begin
 //  QuotedStrJSON(VariantToUTF8(LDoc), LJSON);
 end;
 
-function MakeShippingReqEmailBody(ATask: TSQLGSTask;
+function MakeShippingReqEmailBody(ATask: TOrmHiconisASTask;
   AShippingPICSig, AMyNameSig: string): string;
 var
   LDoc: variant;
@@ -277,7 +277,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + SHIPPING_MUSTACHE_FILE_NAME);
 end;
 
-function MakeForwardFieldServiceEmailBody(ATask: TSQLGSTask;
+function MakeForwardFieldServiceEmailBody(ATask: TOrmHiconisASTask;
   AFieldServicePICSig, AMyNameSig: string): string;
 var
   LDoc: variant;
@@ -307,7 +307,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + FORWARD_FIELDSERVICE_MUSTACHE_FILE_NAME);
 end;
 
-function MakeForwardPayCheckSubConEmailBody(ATask: TSQLGSTask; AMyNameSig: string): string;
+function MakeForwardPayCheckSubConEmailBody(ATask: TOrmHiconisASTask; AMyNameSig: string): string;
 var
   LDoc: variant;
 begin
@@ -321,7 +321,7 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + PAYCHECK_SUBCON_MUSTACHE_FILE_NAME);
 end;
 
-function MakeSubConQuotationReqEmailBody(ATask: TSQLGSTask; ASubConPICSig, AMyNameSig: string): string;
+function MakeSubConQuotationReqEmailBody(ATask: TOrmHiconisASTask; ASubConPICSig, AMyNameSig: string): string;
 var
   LDoc: variant;
 begin
@@ -339,12 +339,12 @@ begin
   Result := GetMustacheJSONFromFile(LDoc, DOC_DIR + SUBCON_QUOTATION_REQ_MUSTACHE_FILE_NAME);
 end;
 
-function MakeForwardSubConPaymentReqEmailBody(ATask: TSQLGSTask; ASubConPaymentPICSig, AMyNameSig: string): string;
+function MakeForwardSubConPaymentReqEmailBody(ATask: TOrmHiconisASTask; ASubConPaymentPICSig, AMyNameSig: string): string;
 begin
 
 end;
 
-function MakeSubConServiceOrderReqEmailBody(ATask: TSQLGSTask; ASubConPICEMailAddr, ASubConPICSig, AMyNameSig: string): string;
+function MakeSubConServiceOrderReqEmailBody(ATask: TOrmHiconisASTask; ASubConPICEMailAddr, ASubConPICSig, AMyNameSig: string): string;
 begin
 
 end;
@@ -352,7 +352,7 @@ end;
 //InqManage의 grid_Req에서 Task를 Drag할때 JSON 파일(*.hgs) 생성하는 함수
 //ASubConID : SubCon을 한개만 선택할 때 = -1, 두개 이상일때 = SubConID
 //(TaskEditForm의 SubConGrid에서 한개의 협력사만 선택하여 Drag하면 한개의 협력사만 *.hgs파일에 포함됨)
-function MakeTaskInfoEmailAttached(ATask: TSQLGSTask; var AFileName: string;
+function MakeTaskInfoEmailAttached(ATask: TOrmHiconisASTask; var AFileName: string;
    ASubConID: integer = -1): string;
 var
   LUtf8: RawUTF8;
@@ -513,7 +513,7 @@ begin
   end;
 end;
 
-function MakeTaskList2JSONArray(ATask: TSQLGSTask): RawUTF8;
+function MakeTaskList2JSONArray(ATask: TOrmHiconisASTask): RawUTF8;
 var
   LDynUtf8: TRawUTF8DynArray;
   LDynArr: TDynArray;
@@ -561,7 +561,7 @@ begin
   Result := LDynArr.SaveToJSON;
 end;
 
-function MakeTaskDetail2JSON(ATask: TSQLGSTask): RawUTF8;
+function MakeTaskDetail2JSON(ATask: TOrmHiconisASTask): RawUTF8;
 var
   LV, LV2: variant;
   LUtf8: RawUTF8;
@@ -653,7 +653,7 @@ end;
 
 function MakeTaskEmailList2JSON(ATaskID: TID): RawUTF8;
 var
-  LSQLGSTask: TSQLGSTask;
+  LSQLGSTask: TOrmHiconisASTask;
   LSQLEmailMsg: TSQLEmailMsg;
   LIds: TIDDynArray;
   LUtf8: RawUTF8;

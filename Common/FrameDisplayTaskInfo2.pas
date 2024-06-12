@@ -224,12 +224,12 @@ type
     function GetIsRemote(var ARemoteAddr: string): Boolean;
     procedure FillInUserList;
 
-    function GetTask: TSQLGSTask;
+    function GetTask: TOrmHiconisASTask;
     procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
-    procedure LoadTaskVar2Grid(AVar: TSQLGSTask; AGrid: TNextGrid;
+    procedure LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
-    procedure LoadGSTask2Grid(ATask: TSQLGSTask; AGrid: TNextGrid;
+    procedure LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
 
     procedure AddFolderListFromOL(AFolder: string);
@@ -289,7 +289,7 @@ begin
     FSettings.MQServerIP := '127.0.0.1';
 end;
 
-procedure TDisplayTaskF.LoadGSTask2Grid(ATask: TSQLGSTask; AGrid: TNextGrid;
+procedure TDisplayTaskF.LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
   ARow: integer);
 var
   LStrList: TStringList;
@@ -352,7 +352,7 @@ begin
   end;
 end;
 
-procedure TDisplayTaskF.LoadTaskVar2Grid(AVar: TSQLGSTask; AGrid: TNextGrid;
+procedure TDisplayTaskF.LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
   ARow: integer);
 var
   LIds: TIDDynArray;
@@ -425,7 +425,7 @@ end;
 
 procedure TDisplayTaskF.N11Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -439,7 +439,7 @@ end;
 
 procedure TDisplayTaskF.N12Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -453,7 +453,7 @@ end;
 
 procedure TDisplayTaskF.N13Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -467,7 +467,7 @@ end;
 
 procedure TDisplayTaskF.N14Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -481,7 +481,7 @@ end;
 
 procedure TDisplayTaskF.N15Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -495,7 +495,7 @@ end;
 
 procedure TDisplayTaskF.N16Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -509,7 +509,7 @@ end;
 
 procedure TDisplayTaskF.N18Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -523,7 +523,7 @@ end;
 
 procedure TDisplayTaskF.N19Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -537,7 +537,7 @@ end;
 
 procedure TDisplayTaskF.N20Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -551,7 +551,7 @@ end;
 
 procedure TDisplayTaskF.N21Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
@@ -655,7 +655,7 @@ end;
 
 procedure TDisplayTaskF.GetJsonValues1Click(Sender: TObject);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LUtf8: RawUTF8;
   LDynArr: TDynArray;
   LCount: integer;
@@ -765,7 +765,7 @@ begin
   end;
 end;
 
-function TDisplayTaskF.GetTask: TSQLGSTask;
+function TDisplayTaskF.GetTask: TOrmHiconisASTask;
 var
   LTaskID: TID;
 begin
@@ -969,7 +969,7 @@ end;
 
 function TDisplayTaskF.Get_Doc_Cust_Reg_Rec(ARow: integer): Doc_Cust_Reg_Rec;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LIdList: TIDList;
   LCustomer: TSQLCustomer;
 begin
@@ -998,7 +998,7 @@ end;
 
 function TDisplayTaskF.Get_Doc_Inv_Rec(ARow: integer): Doc_Invoice_Rec;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LIdList: TIDList;
   LCustomer: TSQLCustomer;
 begin
@@ -1029,7 +1029,7 @@ end;
 function TDisplayTaskF.Get_Doc_Qtn_Rec(ARow: integer): Doc_Qtn_Rec;
 var
   LQTN: string;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LIdList: TIDList;
   LCustomer: TSQLCustomer;
 begin
@@ -1067,7 +1067,7 @@ end;
 function TDisplayTaskF.Get_Doc_ServiceOrder_Rec(ARow: integer): Doc_ServiceOrder_Rec;
 var
   LPeriod:string;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LIdList: TIDList;
   LSQLSubCon: TSQLSubCon;
   LSQLCustomer: TSQLCustomer;
@@ -1133,7 +1133,7 @@ end;
 procedure TDisplayTaskF.grid_ReqCellDblClick(Sender: TObject; ACol,
   ARow: Integer);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   if ARow = -1 then
     Exit;
@@ -1221,7 +1221,7 @@ end;
 
 procedure TDisplayTaskF.DisplayTaskInfo2EditForm(const ATaskID: integer);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask:= CreateOrGetLoadTask(ATaskID);
   try
@@ -1411,7 +1411,7 @@ procedure TDisplayTaskF.DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFr
 var
   ConstArray: TConstArray;
   LWhere, LStr: string;
-  LSQLGSTask: TSQLGSTask;
+  LSQLGSTask: TOrmHiconisASTask;
   LSQLCustomer: TSQLCustomer;
   LUtf8: RawUTF8;
   LV: variant;
@@ -1541,7 +1541,7 @@ begin
       LWhere := LWhere + 'CurrentWorkStatus <= ?';
     end;
 
-    LSQLGSTask := TSQLGSTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
+    LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
 
     try
       if AFromRemote then
@@ -1583,9 +1583,9 @@ var
   LDocData: TDocVariantData;
   LVar: variant;
   i: integer;
-  LSQLGSTask: TSQLGSTask;
+  LSQLGSTask: TOrmHiconisASTask;
 begin//AJson : [] Task 배열 형식임
-  LSQLGSTask := TSQLGSTask.Create;
+  LSQLGSTask := TOrmHiconisASTask.Create;
   try
     grid_Req.ClearRows;
     LDocData.InitJSON(AJson);
@@ -1637,7 +1637,7 @@ end;
 
 procedure TDisplayTaskF.ShowTaskFormFromDB(AIDList: TIDList; ARow: integer);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   try
@@ -1727,7 +1727,7 @@ end;
 
 procedure TDisplayTaskF.ShowTodoListFormFromData(ARow: integer);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LID : TID;
   i: integer;
 begin
@@ -1835,7 +1835,7 @@ end;
 
 procedure TDisplayTaskF.ShowEmailListFormFromData(ARow: integer);
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LID : TID;
 begin
   LID := GetTaskIdFromGrid(ARow);
@@ -1855,7 +1855,7 @@ procedure TDisplayTaskF.ShowGSFileID1Click(Sender: TObject);
 var
   LSQLGSFile: TSQLGSFile;
   LIdList: TIDList;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LStr: string;
 begin
   if grid_Req.SelectedRow = -1 then
@@ -1880,3 +1880,4 @@ begin
 end;
 
 end.
+

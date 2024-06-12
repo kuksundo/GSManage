@@ -6,9 +6,6 @@
         <Projects Include="HiconisASManageR.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -26,23 +23,14 @@
     <Target Name="HiconisASManageR:Make">
         <MSBuild Projects="HiconisASManageR.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OLAddIn4HiconisAS">
-        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj"/>
-    </Target>
-    <Target Name="OLAddIn4HiconisAS:Clean">
-        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OLAddIn4HiconisAS:Make">
-        <MSBuild Projects="..\..\OutlookAddIn2\OLAddIn4HiconisAS.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="HiconisASManageR;OLAddIn4HiconisAS"/>
+        <CallTarget Targets="HiconisASManageR"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="HiconisASManageR:Clean;OLAddIn4HiconisAS:Clean"/>
+        <CallTarget Targets="HiconisASManageR:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="HiconisASManageR:Make;OLAddIn4HiconisAS:Make"/>
+        <CallTarget Targets="HiconisASManageR:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -172,7 +172,7 @@ type
     //Main or 단순 조회: Main := 0, 단순 조회 := 1
     FProgMode: integer;
 
-    procedure TestRemoteTaskEmailList(ATask: TSQLGSTask);
+    procedure TestRemoteTaskEmailList(ATask: TOrmHiconisASTask);
 
     procedure AsynDisplayOLMsg2Grid;//(AStopEvent: TEvent; AIPCMQFromOL: TOmniMessageQueue);
     procedure SendReqOLEmailInfo;
@@ -206,7 +206,7 @@ var
   LEmailMsg,
   LEmailMsg2: TSQLEmailMsg;
   LTask,
-  LTask2: TSQLGSTask;
+  LTask2: TOrmHiconisASTask;
 begin
   Parallel.Async(
     procedure (const task: IOmniTask)
@@ -234,7 +234,7 @@ begin
       begin
         while FIPCMQFromOL.TryDequeue(msg) do
         begin
-          LTask := TSQLGSTask.Create;
+          LTask := TOrmHiconisASTask.Create;
           try
             rec := msg.MsgData.ToRecord<TOLMsgFileRecord>;
 
@@ -393,9 +393,9 @@ end;
 
 procedure THiconisASManageF.CreateNewTask;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
-  LTask := TSQLGSTask.Create;
+  LTask := TOrmHiconisASTask.Create;
   try
   if FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null) then
     TDTF.LoadTaskVar2Grid(LTask, TDTF.grid_Req);
@@ -633,7 +633,7 @@ end;
 procedure THiconisASManageF.KeyIn_CompanyCode;
 var
   LCode: string;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -647,7 +647,7 @@ end;
 procedure THiconisASManageF.KeyIn_Content;
 var
   LContent: string;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -661,7 +661,7 @@ end;
 procedure THiconisASManageF.KeyIn_RFQ;
 var
   LPONo: string;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -832,7 +832,7 @@ end;
 
 function THiconisASManageF.SaveCurrentTask2File(AFileName: string): string;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 //  LUtf8: RawUTF8;
 //  LDynArr: TDynArray;
 //  LCount: integer;
@@ -883,7 +883,7 @@ end;
 procedure THiconisASManageF.Select_DeliveryCondition;
 var
   LDeliveryCondition: integer;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -897,7 +897,7 @@ end;
 procedure THiconisASManageF.Select_EstimateType;
 var
   LEstimateType: integer;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -911,7 +911,7 @@ end;
 procedure THiconisASManageF.Select_Money;
 var
   LCurrencyKind: integer;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -925,7 +925,7 @@ end;
 procedure THiconisASManageF.Select_TermsOfPayment;
 var
   LTermsOfPayment: integer;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
 begin
   LTask := TDTF.GetTask;
   try
@@ -983,6 +983,7 @@ var
   callback: IOLMailCallback;
   LStrList: TStringList;
 begin
+{$IFDEF USE_MORMOT_WS}
   Client := GetClientWS;
   try
     if not Client.Services.Resolve(IOLMailService,Service) then
@@ -1008,6 +1009,7 @@ begin
   finally
     Client.Free;
   end;
+{$ENDIF}
 end;
 
 function THiconisASManageF.ServerExecuteFromClient(ACommand: RawUTF8): RawUTF8;
@@ -1017,7 +1019,7 @@ var
   LStrList: TStringList;
   LVarArr: TVariantDynArray;
   LSearchCondRec: TSearchCondRec;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LVar: Variant;
   i, LTaskId: integer;
   LRaw: RawByteString;
@@ -1209,7 +1211,7 @@ begin
   TDTF.ShowTaskFormFromJson(LUtf8);
 end;
 
-procedure THiconisASManageF.TestRemoteTaskEmailList(ATask: TSQLGSTask);
+procedure THiconisASManageF.TestRemoteTaskEmailList(ATask: TOrmHiconisASTask);
 var
   LViewMailListF: TEmailListViewF;
   LUtf8: RawUTF8;

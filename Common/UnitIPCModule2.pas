@@ -25,37 +25,37 @@ uses System.Classes, Dialogs, System.Rtti,
 //            9: 업체 견적 요청, 10: 서비스오더 날인 요청, 11: 업체 기성 확인 요청(영업팀에 문의)
 //            12: 기성 처리 요청(기성 담당자에게)
 procedure SendCmd2IPC4ReplyMail(AEntryId, AStoreId: string; AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings);
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings);
 procedure SendCmd2IPC4CreateMail(AGrid: TNextGrid; ARow, AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings; AToMailAddr: string);
-procedure SendCmd2IPC4ForwardMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AToMailAddr: string);
+procedure SendCmd2IPC4ForwardMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
    ASettings: TConfigSettings);
 procedure SendCmd2IPC4ViewEmail(AGrid: TNextGrid; ARow: integer);
 function SendCmd2IPC4MoveFolderEmail(AOriginalEntryId, AOriginalStoreId,
-  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask; ASubFolderName: string): boolean;
-function SendReqOLEmailInfo2(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask; ASubFolderName: string): boolean;
+function SendReqOLEmailInfo2(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 
 //procedure SendCmd2IPC4ReplyMail_CromisIPC(AGrid: TNextGrid; ARow, AMailType: integer;
-//  ATask: TSQLGSTask; ASettings: TConfigSettings);
+//  ATask: TOrmHiconisASTask; ASettings: TConfigSettings);
 //procedure SendCmd2IPC4CreateMail_CromisIPC(AGrid: TNextGrid; ARow, AMailType: integer;
-//  ATask: TSQLGSTask; ASettings: TConfigSettings; AMailAddr: string);
+//  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AMailAddr: string);
 //procedure SendCmd2IPC4ViewEmail_CromisIPC(AGrid: TNextGrid; ARow: integer);
 //function SendCmd2IPC4MoveFolderEmail_CromisIPC(AOriginalEntryId, AOriginalStoreId,
-//  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask): boolean;
-//function SendReqOLEmailInfo2_CromisIPC(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+//  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask): boolean;
+//function SendReqOLEmailInfo2_CromisIPC(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 
 {$IFDEF USE_MORMOT_WS}
-procedure SendCmd2IPC4ReplyMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+procedure SendCmd2IPC4ReplyMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
   ASettings: TConfigSettings);
 procedure SendCmd2IPC4CreateMail_WS(AGrid: TNextGrid; ARow, AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings; AToMailAddr: string);
-procedure SendCmd2IPC4ForwardMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AToMailAddr: string);
+procedure SendCmd2IPC4ForwardMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
   ASettings: TConfigSettings);
 procedure SendCmd2IPC4ViewEmailFromGrid(AGrid: TNextGrid; ARow: integer=-1);
 function SendCmd2IPC4MoveFolderEmail_WS(AOriginalEntryId, AOriginalStoreId,
-  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask; ASubFolderName: string): boolean;
+  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask; ASubFolderName: string): boolean;
 procedure SendCmd2IPC4ViewEmailFromMsgFile_WS(AFileName: string);
-function SendReqOLEmailInfo2_WS(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+function SendReqOLEmailInfo2_WS(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 function SendReqAddAppointment_WS(AJsonpjhTodoItem: string): boolean;
 function SendReqOLEmailAccountInfo_WS: TOLAccountInfo;
 function GetClientWS: TRestHttpClientWebsockets;
@@ -80,7 +80,7 @@ uses mormot.core.mustache,
   {$ENDIF}
   UnitStringUtil;
 
-procedure SendCmd2IPC4ReplyMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+procedure SendCmd2IPC4ReplyMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
   ASettings: TConfigSettings);
 begin
 //  SendCmd2IPC4ReplyMail_CromisIPC(AGrid, ARow, AMailType,ATask);
@@ -102,7 +102,7 @@ begin
 end;
 
 procedure SendCmd2IPC4CreateMail(AGrid: TNextGrid; ARow, AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings; AToMailAddr: string);
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AToMailAddr: string);
 begin
 //  SendCmd2IPC4CreateMail_CromisIPC(AGrid, ARow, AMailType, ATask);
 {$IFDEF USE_MORMOT_WS}
@@ -114,7 +114,7 @@ begin
 {$ENDIF}
 end;
 
-procedure SendCmd2IPC4ForwardMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+procedure SendCmd2IPC4ForwardMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
   ASettings: TConfigSettings);
 begin
 {$IFDEF USE_MORMOT_WS}
@@ -127,7 +127,7 @@ begin
 end;
 
 function SendCmd2IPC4MoveFolderEmail(AOriginalEntryId, AOriginalStoreId,
-  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask; ASubFolderName: string): boolean;
+  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask; ASubFolderName: string): boolean;
 begin
 //  SendCmd2IPC4MoveFolderEmail_CromisIPC(AOriginalEntryId, AOriginalStoreId,
 //    AMoveStoreId, AMoveStorePath, ATask);
@@ -137,7 +137,7 @@ begin
 {$ENDIF}
 end;
 
-function SendReqOLEmailInfo2(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+function SendReqOLEmailInfo2(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 begin
 //  SendReqOLEmailInfo2_CromisIPC(AGrid, ATask, AResultList);
 {$IFDEF USE_MORMOT_WS}
@@ -146,7 +146,7 @@ begin
 end;
 
 //procedure SendCmd2IPC4ReplyMail_CromisIPC(AGrid: TNextGrid; ARow, AMailType: integer;
-//  ATask: TSQLGSTask; ASettings: TConfigSettings);
+//  ATask: TOrmHiconisASTask; ASettings: TConfigSettings);
 //var
 //  Request: IIPCData;
 //  Result: IIPCData;
@@ -182,7 +182,7 @@ end;
 //end;
 //
 //procedure SendCmd2IPC4CreateMail_CromisIPC(AGrid: TNextGrid; ARow, AMailType: integer;
-//  ATask: TSQLGSTask; ASettings: TConfigSettings; AMailAddr: string);
+//  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AMailAddr: string);
 //var
 //  Request: IIPCData;
 //  Result: IIPCData;
@@ -251,7 +251,7 @@ end;
 //end;
 //
 //function SendCmd2IPC4MoveFolderEmail_CromisIPC(AOriginalEntryId, AOriginalStoreId,
-//  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask): boolean;
+//  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask): boolean;
 //var
 //  IPCClient: TIPCClient;
 //  Request: IIPCData;
@@ -321,7 +321,7 @@ end;
 //  end;
 //end;
 //
-//function SendReqOLEmailInfo2_CromisIPC(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+//function SendReqOLEmailInfo2_CromisIPC(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 //var
 //  IPCClient: TIPCClient;
 //  LStrList: TStringList;
@@ -330,7 +330,7 @@ end;
 //  Command: AnsiString;
 //  LEmailMsg,
 //  LEmailMsg2: TSQLEmailMsg;
-//  LTask: TSQLGSTask;
+//  LTask: TOrmHiconisASTask;
 //  LJson: string;
 //  LVarArr: TVariantDynArray;
 //  i: integer;
@@ -408,7 +408,7 @@ end;
 
 {$IFDEF USE_MORMOT_WS}
 procedure SendCmd2IPC4ReplyMail_WS(AEntryId, AStoreId: string; AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings);
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings);
 var
   Client: TRestHttpClientWebsockets;
   Service: IOLMailService;
@@ -449,7 +449,7 @@ begin
 end;
 
 procedure SendCmd2IPC4CreateMail_WS(AGrid: TNextGrid; ARow, AMailType: integer;
-  ATask: TSQLGSTask; ASettings: TConfigSettings; AToMailAddr: string);
+  ATask: TOrmHiconisASTask; ASettings: TConfigSettings; AToMailAddr: string);
 var
   Client: TRestHttpClientWebsockets;
   Service: IOLMailService;
@@ -499,7 +499,7 @@ begin
   end;
 end;
 
-procedure SendCmd2IPC4ForwardMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TSQLGSTask;
+procedure SendCmd2IPC4ForwardMail_WS(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;
   ASettings: TConfigSettings);
 var
   Client: TRestHttpClientWebsockets;
@@ -541,7 +541,7 @@ begin
 end;
 
 function SendCmd2IPC4MoveFolderEmail_WS(AOriginalEntryId, AOriginalStoreId,
-  AMoveStoreId, AMoveStorePath: string; ATask: TSQLGSTask; ASubFolderName: string): boolean;
+  AMoveStoreId, AMoveStorePath: string; ATask: TOrmHiconisASTask; ASubFolderName: string): boolean;
 var
   Client: TRestHttpClientWebsockets;
   Service: IOLMailService;
@@ -640,7 +640,7 @@ begin
   end;
 end;
 
-function SendReqOLEmailInfo2_WS(AGrid: TNextGrid; ATask: TSQLGSTask; var AResultList: TStringList): boolean;
+function SendReqOLEmailInfo2_WS(AGrid: TNextGrid; ATask: TOrmHiconisASTask; var AResultList: TStringList): boolean;
 var
   Client: TRestHttpClientWebsockets;
   Service: IOLMailService;
@@ -648,7 +648,7 @@ var
   LCommand, LRespond: String;
   LEmailMsg,
   LEmailMsg2: TSQLEmailMsg;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LJson: string;
   LVarArr: TVariantDynArray;
   i: integer;
@@ -882,7 +882,7 @@ end;
 //function ProcessTaskJson(AJson: String): Boolean;
 //var
 //  LDoc: variant;
-//  LTask: TSQLGSTask;
+//  LTask: TOrmHiconisASTask;
 //  LUTF8: RawUTF8;
 //  LRaw: RawByteString;
 //  LHullNo, LPONO, LOrderNo: string;
@@ -1048,3 +1048,4 @@ begin
 end;
 
 end.
+

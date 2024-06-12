@@ -326,10 +326,6 @@ object TaskEditF: TTaskEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -577,10 +573,6 @@ object TaskEditF: TTaskEditF
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         599
         355)
@@ -1011,10 +1003,6 @@ object TaskEditF: TTaskEditF
     object SubConTS: TTabSheet
       Caption = #54801#47141#49324
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 185
@@ -1567,10 +1555,6 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         599
         355)
@@ -1875,10 +1859,6 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -2535,7 +2515,7 @@ object TaskEditF: TTaskEditF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'QTN '#48264#54840
+      Caption = 'Claim No.'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2655,7 +2635,7 @@ object TaskEditF: TTaskEditF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 1
     end
-    object QTNNoEdit: TEdit
+    object ClaimNoEdit: TEdit
       Left = 115
       Top = 40
       Width = 185
@@ -2831,7 +2811,7 @@ object TaskEditF: TTaskEditF
     end
     object JvLabel2: TJvLabel
       AlignWithMargins = True
-      Left = 8
+      Left = 404
       Top = 69
       Width = 100
       Height = 25
@@ -2858,13 +2838,13 @@ object TaskEditF: TTaskEditF
     end
     object JvLabel10: TJvLabel
       AlignWithMargins = True
-      Left = 205
+      Left = 8
       Top = 69
       Width = 100
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'QTN '#51077#47141#51068
+      Caption = 'Claim '#51217#49688#51068
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2885,13 +2865,13 @@ object TaskEditF: TTaskEditF
     end
     object JvLabel50: TJvLabel
       AlignWithMargins = True
-      Left = 404
+      Left = 207
       Top = 71
       Width = 100
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'QTN '#49569#48512#51068
+      Caption = 'Claim '#46321#47197#51068
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2918,7 +2898,7 @@ object TaskEditF: TTaskEditF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'INQ '#51217#49688#51068
+      Caption = 'Claim '#51312#52824#51068
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2945,7 +2925,7 @@ object TaskEditF: TTaskEditF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #49688#53685' '#51077#47141#51068
+      Caption = 'Claim '#50756#47308#51068
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -3019,7 +2999,7 @@ object TaskEditF: TTaskEditF
       TabOrder = 2
     end
     object AttendSchedulePicker: TDateTimePicker
-      Left = 114
+      Left = 510
       Top = 69
       Width = 89
       Height = 24
@@ -3028,8 +3008,8 @@ object TaskEditF: TTaskEditF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 3
     end
-    object QTNInputPicker: TDateTimePicker
-      Left = 311
+    object ClaimRecvPicker: TDateTimePicker
+      Left = 114
       Top = 71
       Width = 89
       Height = 24
@@ -3038,8 +3018,8 @@ object TaskEditF: TTaskEditF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 4
     end
-    object QtnIssuePicker: TDateTimePicker
-      Left = 509
+    object ClaimInputPicker: TDateTimePicker
+      Left = 312
       Top = 71
       Width = 89
       Height = 24
@@ -3048,7 +3028,7 @@ object TaskEditF: TTaskEditF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 5
     end
-    object InqRecvPicker: TDateTimePicker
+    object ClaimReadyPicker: TDateTimePicker
       Left = 114
       Top = 100
       Width = 89
@@ -3058,7 +3038,7 @@ object TaskEditF: TTaskEditF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 6
     end
-    object OrderInputPicker: TDateTimePicker
+    object ClaimClosedPicker: TDateTimePicker
       Left = 311
       Top = 100
       Width = 89
@@ -3084,7 +3064,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800D80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800DC0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -4991,7 +4971,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400AC0110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400B00110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

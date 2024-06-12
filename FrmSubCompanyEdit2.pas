@@ -116,7 +116,7 @@ type
     procedure SetCompanyTypes2Grp;
     function GetCompanyTypesFromGrp: TCompanyTypes;
   public
-    FTask: TSQLGSTask;
+    FTask: TOrmHiconisASTask;
 
     procedure SaveSubConEdit2MasterCustomer;
     procedure SaveSubContractEdit2MasterSubContract(AMCustomer: TSQLMasterCustomer);

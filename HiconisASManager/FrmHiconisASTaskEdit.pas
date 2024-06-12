@@ -226,7 +226,7 @@ type
     JvLabel7: TJvLabel;
     OrderNoEdit: TEdit;
     JvLabel6: TJvLabel;
-    QTNNoEdit: TEdit;
+    ClaimNoEdit: TEdit;
     JvLabel5: TJvLabel;
     PONoEdit: TEdit;
     Panel5: TPanel;
@@ -243,13 +243,13 @@ type
     JvLabel2: TJvLabel;
     AttendSchedulePicker: TDateTimePicker;
     JvLabel10: TJvLabel;
-    QTNInputPicker: TDateTimePicker;
+    ClaimRecvPicker: TDateTimePicker;
     JvLabel50: TJvLabel;
-    QtnIssuePicker: TDateTimePicker;
+    ClaimInputPicker: TDateTimePicker;
     JvLabel9: TJvLabel;
-    InqRecvPicker: TDateTimePicker;
+    ClaimReadyPicker: TDateTimePicker;
     JvLabel8: TJvLabel;
-    OrderInputPicker: TDateTimePicker;
+    ClaimClosedPicker: TDateTimePicker;
     JvLabel11: TJvLabel;
     InvoiceIssuePicker: TDateTimePicker;
     procedure FormCreate(Sender: TObject);
@@ -337,7 +337,7 @@ type
 
   public
     FTask,
-    FEmailDisplayTask: TSQLGSTask;
+    FEmailDisplayTask: TOrmHiconisASTask;
     FSQLGSFiles: TSQLGSFile;
 //    FFSMState: TFSMState;
     FFSMState: THiconisASStateMachine;
@@ -348,8 +348,8 @@ type
     FToDoCollect: TpjhToDoItemCollection;
     FRemoteIPAddress: string;
 
-    class procedure ShowEMailListFromTask(ATask: TSQLGSTask; ARemoteIPAddress, APort, ARoot: string);
-    class procedure LoadEmailListFromTask(ATask: TSQLGSTask; AForm: TEmailListViewF);
+    class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
+    class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TEmailListViewF);
     procedure ShowDTIForm;
     procedure SPType2Combo(ACombo: TComboBox; AFSMState: THiconisASStateMachine=nil);
     //Drag하여 파일 추가한 경우 AFileName <> ''
@@ -361,8 +361,8 @@ type
     procedure LoadCustomerFromCompanycode(ACompanyCode: string);
 //    procedure LoadCustomer2
 
-    procedure LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
-    procedure LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TSQLGSTask);
+    procedure LoadTaskVar2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
+    procedure LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
     procedure LoadTaskEditForm2Grid(AEditForm: TTaskEditF; AGrid: TNextGrid;
       ARow: integer);
     procedure LoadGrid2TaskEditForm(AGrid: TNextGrid; ARow: integer;
@@ -392,7 +392,7 @@ type
   end;
 
   function ProcessTaskJson(AJson: String): Boolean;
-  function DisplayTaskInfo2EditForm(var ATask: TSQLGSTask;
+  function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
       ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean = False): Boolean;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
@@ -414,7 +414,7 @@ uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
 function ProcessTaskJson(AJson: String): Boolean;
 var
   LDoc: variant;
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LUTF8: RawUTF8;
   LRaw: RawByteString;
   LHullNo, LPONO, LOrderNo: string;
@@ -481,14 +481,14 @@ begin
     ShowMessage('Signature is not correct');
 end;
 
-function DisplayTaskInfo2EditForm(var ATask: TSQLGSTask;
+function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
   ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean): Boolean;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
 //  LSubCon: TSQLSubCon;
   LMat4Proj: TSQLMaterial4Project;
-  LTask, LTask2: TSQLGSTask;
+  LTask, LTask2: TOrmHiconisASTask;
   LFiles: TSQLGSFile;
 //  LTaskIds: TIDDynArray;
   LSubConList: TObjectList<TSQLSubCon>;
@@ -608,7 +608,7 @@ end;
 function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
   ARemoteIPAddress, APort, ARoot: string): Boolean;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LCustomer: TSQLCustomer;
 //  LGSFile: TSQLGSFile;
   LSubCon: TSQLSubCon;
@@ -626,7 +626,7 @@ begin
     with LTaskEditF do
     begin
       FRemoteIPAddress := ARemoteIPAddress;
-      LTask := TSQLGSTask.Create;
+      LTask := TOrmHiconisASTask.Create;
 //      LGSFile := TSQLGSFile.Create;
       LCustomer := TSQLCustomer.Create;
       LSubCon := TSQLSubCon.Create;
@@ -821,7 +821,7 @@ end;
 
 function TTaskEditF.SaveCurrentTaskAndSelectedSubCon2File(ASubConID: TID): string;
 var
-  LTask: TSQLGSTask;
+  LTask: TOrmHiconisASTask;
   LFileName, LStr: string;
 begin
   Result := '';
@@ -1371,7 +1371,7 @@ begin
   end;
 end;
 
-class procedure TTaskEditF.LoadEmailListFromTask(ATask: TSQLGSTask;
+class procedure TTaskEditF.LoadEmailListFromTask(ATask: TOrmHiconisASTask;
   AForm: TEmailListViewF);
 var
   LIds: TIDDynArray;
@@ -1874,7 +1874,7 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TSQLGSTask);
+procedure TTaskEditF.LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
 var
 //  LSubConsArr: TRawUtf8DynArray;
   i: integer;
@@ -1929,7 +1929,7 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskVar2Form(AVar: TSQLGSTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
+procedure TTaskEditF.LoadTaskVar2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
 var
 //  LCurrentState: THiconisASState;
   LStr: string;
@@ -1951,19 +1951,21 @@ begin
     HullNoEdit.Text := AVar.HullNo;
     ShipNameEdit.Text := AVar.ShipName;
 //    CustomerNameEdit.Text := AVar.ReqCustomer;
+//    QTNNoEdit.Text := AVar.QTN_No;
+//    SubConPriceEdit.Text := AVar.SubConPrice;
+//    SEEdit.Text := AVar.SEList;
+//    SECountEdit.Text := IntToStr(AVar.SECount);
+//    SRRecvDatePicker.Date := TimeLogToDateTime(AVar.SRRecvDate);
+//    SubConInvoiceIssuePicker.Date := TimeLogToDateTime(AVar.SubConInvoiceIssueDate);
     PONoEdit.Text := AVar.PO_No;
-    QTNNoEdit.Text := AVar.QTN_No;
     OrderNoEdit.Text := AVar.Order_No;
     ProductTypeCB.ItemIndex := g_ElecProductType.ToOrdinal(AVar.ProductType);
     WorkSummaryEdit.Text := Avar.WorkSummary;
-//    SubConPriceEdit.Text := AVar.SubConPrice;
 
     NationPortEdit.Text := Avar.NationPort;
     EtcContentMemo.Text := Avar.EtcContent;
     SalesProcTypeCB.ItemIndex := Ord(AVar.SalesProcessType);
     ShipOwnerEdit.Text := AVar.ShipOwner;
-//    SEEdit.Text := AVar.SEList;
-//    SECountEdit.Text := IntToStr(AVar.SECount);
     SalesPriceEdit.Text := AVar.SalesPrice;
     ExchangeRateEdit.Text := AVar.ExchangeRate;
     ShippingNoEdit.Text := AVar.ShippingNo;
@@ -2006,8 +2008,6 @@ begin
     WorkBeginPicker.Date := TimeLogToDateTime(Avar.WorkBeginDate);
     WorkEndPicker.Date := TimeLogToDateTime(Avar.WorkEndDate);
     CurWorkFinishPicker.Date := TimeLogToDateTime(AVar.CurWorkFinishDate);
-//    SRRecvDatePicker.Date := TimeLogToDateTime(AVar.SRRecvDate);
-//    SubConInvoiceIssuePicker.Date := TimeLogToDateTime(AVar.SubConInvoiceIssueDate);
     SalesReqPicker.Date := TimeLogToDateTime(AVar.SalesReqDate);
     ShippingDatePicker.Date := TimeLogToDateTime(AVar.ShippingDate);
 
@@ -2247,7 +2247,7 @@ begin
   end;
 end;
 
-class procedure TTaskEditF.ShowEMailListFromTask(ATask: TSQLGSTask; ARemoteIPAddress, APort, ARoot: string);
+class procedure TTaskEditF.ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
 var
   LViewMailListF: TEmailListViewF;
   LUtf8: RawUTF8;
