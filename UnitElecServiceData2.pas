@@ -66,7 +66,6 @@ type
   TCalcInvoiceMethod = (cimNull, cimPerDay, cimPerHour, cimFinal);
 
   TASServiceChargeType = (assctNull, assctCharged, assctFree, assctFinal);
-  TASServiceType = (asstNull, asstFinal);
 
   THiconisASState = (hassNull,
     hassNewClaimRecv, //Claim Á¢¼ö

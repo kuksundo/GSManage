@@ -29,6 +29,8 @@ object TaskEditF: TTaskEditF
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
+      ExplicitLeft = 5
+      ExplicitTop = 28
       DesignSize = (
         599
         355)
@@ -102,7 +104,7 @@ object TaskEditF: TTaskEditF
       object JvLabel38: TJvLabel
         AlignWithMargins = True
         Left = 16
-        Top = 143
+        Top = 247
         Width = 100
         Height = 25
         Alignment = taCenter
@@ -234,6 +236,33 @@ object TaskEditF: TTaskEditF
         HotTrackFont.Name = #47569#51008' '#44256#46357
         HotTrackFont.Style = []
       end
+      object JvLabel16: TJvLabel
+        AlignWithMargins = True
+        Left = 17
+        Top = 126
+        Width = 100
+        Height = 25
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Claim '#49324#50976
+        Color = 14671839
+        FrameColor = clGrayText
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = #47569#51008' '#44256#46357
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        RoundedFrame = 3
+        Transparent = True
+        HotTrackFont.Charset = ANSI_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = #47569#51008' '#44256#46357
+        HotTrackFont.Style = []
+      end
       object WorkBeginPicker: TDateTimePicker
         Left = 120
         Top = 96
@@ -256,9 +285,9 @@ object TaskEditF: TTaskEditF
       end
       object EtcContentMemo: TMemo
         Left = 122
-        Top = 144
+        Top = 248
         Width = 431
-        Height = 208
+        Height = 104
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -321,6 +350,19 @@ object TaskEditF: TTaskEditF
         ParentFont = False
         TabOrder = 7
         OnClick = Button3Click
+      end
+      object ClaimReasonMemo: TMemo
+        Left = 123
+        Top = 126
+        Width = 431
+        Height = 104
+        Anchors = [akLeft, akTop, akBottom]
+        BevelInner = bvNone
+        BevelKind = bkFlat
+        ImeMode = imSHanguel
+        ImeName = 'Microsoft IME 2010'
+        ScrollBars = ssVertical
+        TabOrder = 8
       end
     end
     object TabSheet3: TTabSheet
@@ -2435,7 +2477,7 @@ object TaskEditF: TTaskEditF
       TabOrder = 0
       OnDropDown = ServiceChargeCBDropDown
     end
-    object ServiceTypeCB: TComboBox
+    object ClaimServiceKindCB: TComboBox
       Left = 410
       Top = 6
       Width = 191
@@ -2443,7 +2485,7 @@ object TaskEditF: TTaskEditF
       Style = csDropDownList
       ImeName = 'Microsoft IME 2010'
       TabOrder = 1
-      OnDropDown = ServiceTypeCBDropDown
+      OnDropDown = ClaimServiceKindCBDropDown
     end
   end
   object Panel4: TPanel
@@ -3064,7 +3106,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800DC0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800E00410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -4971,7 +5013,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400B00110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400B40110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

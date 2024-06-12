@@ -1336,6 +1336,7 @@ object DisplayTaskF: TDisplayTaskF
     TabStop = True
     OnCellDblClick = grid_ReqCellDblClick
     OnKeyDown = grid_ReqKeyDown
+    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1511,6 +1512,7 @@ object DisplayTaskF: TDisplayTaskF
       ParentFont = False
       Position = 9
       SortType = stDate
+      Visible = False
       NoneCaption = 'None'
       TodayCaption = 'Today'
     end
@@ -1634,6 +1636,50 @@ object DisplayTaskF: TDisplayTaskF
       SortType = stAlphabetic
       Visible = False
     end
+    object ClaimRecvDate: TNxTextColumn
+      Header.Caption = 'Claim '#51217#49688#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 19
+      SortType = stAlphabetic
+    end
+    object ClaimInputDate: TNxTextColumn
+      Header.Caption = 'Claim '#46321#47197#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 20
+      SortType = stAlphabetic
+    end
+    object ClaimReadyDate: TNxTextColumn
+      Header.Caption = 'Claim '#51312#52824#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 21
+      SortType = stAlphabetic
+    end
+    object ClaimClosedDate: TNxTextColumn
+      Header.Caption = 'Claim '#50756#47308#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 22
+      SortType = stAlphabetic
+    end
   end
   object StatusBarPro1: TStatusBarPro
     Left = 0
@@ -1666,7 +1712,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000880318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101010070008C0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -1976,7 +2022,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402980310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101020054029C0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2278,7 +2324,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800C00420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800C40420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

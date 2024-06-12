@@ -219,7 +219,7 @@ type
     JvLabel15: TJvLabel;
     ServiceChargeCB: TComboBox;
     JvLabel14: TJvLabel;
-    ServiceTypeCB: TComboBox;
+    ClaimServiceKindCB: TComboBox;
     Panel4: TPanel;
     JvLabel1: TJvLabel;
     ProductTypeCB: TComboBox;
@@ -252,6 +252,8 @@ type
     ClaimClosedPicker: TDateTimePicker;
     JvLabel11: TJvLabel;
     InvoiceIssuePicker: TDateTimePicker;
+    JvLabel16: TJvLabel;
+    ClaimReasonMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -298,8 +300,8 @@ type
     procedure Saveas1Click(Sender: TObject);
     procedure CurWorkCBChange(Sender: TObject);
     procedure ServiceChargeCBDropDown(Sender: TObject);
-    procedure ServiceTypeCBDropDown(Sender: TObject);
     procedure NextWorkCBDropDown(Sender: TObject);
+    procedure ClaimServiceKindCBDropDown(Sender: TObject);
   private
     FTaskJson: String;
 
@@ -885,11 +887,6 @@ begin
   MakeDocServiceOrder(LRec);
 end;
 
-procedure TTaskEditF.ServiceTypeCBDropDown(Sender: TObject);
-begin
-  g_ASServiceType.SetType2Combo(ServiceTypeCB);
-end;
-
 procedure TTaskEditF.CancelMailSelectBtnClick(Sender: TObject);
 begin
   if Assigned(FTask) then
@@ -906,6 +903,11 @@ begin
     PageControl1.TabIndex := 3;
     Result := False;
   end;
+end;
+
+procedure TTaskEditF.ClaimServiceKindCBDropDown(Sender: TObject);
+begin
+  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
 end;
 
 procedure TTaskEditF.Content2Clipboard(AContent: string);
@@ -1241,9 +1243,9 @@ begin
   Result.FCustomerInfo := CustomerAddressMemo.Text;
   Result.FCustomerInfo := Result.FCustomerInfo.Replace(#13, '');
 
-  LQTN := QTNNoEdit.Text;
-  if QTNNoEdit.Text = '' then
-    LQTN := HullNoEdit.Text + '-' + IntToStr(Random(9));
+//  LQTN := QTNNoEdit.Text;
+//  if QTNNoEdit.Text = '' then
+//    LQTN := HullNoEdit.Text + '-' + IntToStr(Random(9));
 
   Result.FQtnNo := LQTN;
   Result.FQtnDate := FormatDateTime('dd.mmm.yyyy', now);
@@ -1415,16 +1417,21 @@ begin
     ShipNameEdit.Text :=  CellByName['ShipName', ARow].AsString;
     ProductTypeCB.Text := CellByName['ProdType', ARow].AsString;
     PONoEdit.Text := CellByName['PONo', ARow].AsString;
-    QTNNoEdit.Text := CellByName['QtnNo', ARow].AsString;
+//    QTNNoEdit.Text := CellByName['QtnNo', ARow].AsString;
     OrderNoEdit.Text := CellByName['OrderNo', ARow].AsString;
 
     CustomerNameCB.Text := CellByName['CustomerName', ARow].AsString;
     CustomerAddressMemo.Text := CellByName['CustomerAddress', ARow].AsString;
 
-    QTNInputPicker.Date := CellByName['QtnInputDate', ARow].AsDateTime;
-    OrderInputPicker.Date := CellByName['OrderInputDate', ARow].AsDateTime;
-    InqRecvPicker.Date := CellByName['RecvDate', ARow].AsDateTime;
+//    QTNInputPicker.Date := CellByName['QtnInputDate', ARow].AsDateTime;
+//    OrderInputPicker.Date := CellByName['OrderInputDate', ARow].AsDateTime;
+//    InqRecvPicker.Date := CellByName['RecvDate', ARow].AsDateTime;
     InvoiceIssuePicker.Date := CellByName['InvoiceInputDate', ARow].AsDateTime;
+
+    ClaimRecvPicker.Date := CellByName['ClaimRecvDate', ARow].AsDateTime;
+    ClaimInputPicker.Date := CellByName['ClaimInputDate', ARow].AsDateTime;
+    ClaimReadyPicker.Date := CellByName['ClaimReadyDate', ARow].AsDateTime;
+    ClaimClosedPicker.Date := CellByName['ClaimClosedDate', ARow].AsDateTime;
   end;
 end;
 
@@ -1889,7 +1896,7 @@ begin
     AVar.ShipName := ShipNameEdit.Text;
 //    AVar.ReqCustomer := CustomerNameEdit.Text;
     AVar.PO_No := PONoEdit.Text;
-    AVar.QTN_No := QTNNoEdit.Text;
+//    AVar.QTN_No := QTNNoEdit.Text;
     AVar.Order_No := OrderNoEdit.Text;
     AVar.ProductType := ProductTypeCB.Text;
     Avar.WorkSummary := WorkSummaryEdit.Text;
@@ -1913,11 +1920,11 @@ begin
     AVar.EstimateType := EstimateTypeCB.ItemIndex;
     AVar.TermsOfPayment := TermsPaymentCB.ItemIndex;
 
-    AVar.QTNInputDate := TimeLogFromDateTime(QTNInputPicker.Date);
-    AVar.OrderInputDate := TimeLogFromDateTime(OrderInputPicker.Date);
+//    AVar.QTNInputDate := TimeLogFromDateTime(QTNInputPicker.Date);
+//    AVar.OrderInputDate := TimeLogFromDateTime(OrderInputPicker.Date);
     AVar.InvoiceIssueDate := TimeLogFromDateTime(InvoiceIssuePicker.Date);
-    Avar.QTNIssueDate := TimeLogFromDateTime(QtnIssuePicker.Date);
-    AVar.InqRecvDate := TimeLogFromDateTime(InqRecvPicker.Date);
+//    Avar.QTNIssueDate := TimeLogFromDateTime(QtnIssuePicker.Date);
+//    AVar.InqRecvDate := TimeLogFromDateTime(InqRecvPicker.Date);
     Avar.AttendScheduled := TimeLogFromDateTime(AttendSchedulePicker.Date);
     Avar.WorkBeginDate := TimeLogFromDateTime(WorkBeginPicker.Date);
     Avar.WorkEndDate := TimeLogFromDateTime(WorkEndPicker.Date);
@@ -1926,6 +1933,15 @@ begin
 //    AVar.SubConInvoiceIssueDate := TimeLogFromDateTime(SubConInvoiceIssuePicker.Date);
     AVar.SalesReqDate := TimeLogFromDateTime(SalesReqPicker.Date);
     AVar.ShippingDate := TimeLogFromDateTime(ShippingDatePicker.Date);
+
+    Avar.ClaimNo := ClaimNoEdit.Text;
+    Avar.ClaimReason := ClaimReasonMemo.Text;
+    Avar.Importance :=
+    Avar.ClaimServiceKind := ClaimServiceKindCB.ItemIndex;
+    Avar.ClaimRecvDate := TimeLogFromDateTime(ClaimRecvPicker.Date);
+    Avar.ClaimInputDate := TimeLogFromDateTime(ClaimInputPicker.Date);
+    Avar.ClaimReadyDate := TimeLogFromDateTime(ClaimReadyPicker.Date);
+    Avar.ClaimClosedDate := TimeLogFromDateTime(ClaimClosedPicker.Date);
   end;
 end;
 
@@ -1999,11 +2015,11 @@ begin
     FillNextWorkCB(CurWorkCB.ItemIndex);
     NextWorkCB.ItemIndex := AVar.NextWork;
 
-    QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
-    OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
+//    QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
+//    OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
     InvoiceIssuePicker.Date := TimeLogToDateTime(AVar.InvoiceIssueDate);
-    QtnIssuePicker.Date := TimeLogToDateTime(Avar.QTNIssueDate);
-    InqRecvPicker.Date := TimeLogToDateTime(AVar.InqRecvDate);
+//    QtnIssuePicker.Date := TimeLogToDateTime(Avar.QTNIssueDate);
+//    InqRecvPicker.Date := TimeLogToDateTime(AVar.InqRecvDate);
     AttendSchedulePicker.Date := TimeLogToDateTime(Avar.AttendScheduled);
     WorkBeginPicker.Date := TimeLogToDateTime(Avar.WorkBeginDate);
     WorkEndPicker.Date := TimeLogToDateTime(Avar.WorkEndDate);

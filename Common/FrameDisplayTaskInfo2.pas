@@ -126,6 +126,10 @@ type
     StatusBarPro1: TStatusBarPro;
     N22: TMenuItem;
     GetHullNoToClipboard1: TMenuItem;
+    ClaimRecvDate: TNxTextColumn;
+    ClaimInputDate: TNxTextColumn;
+    ClaimReadyDate: TNxTextColumn;
+    ClaimClosedDate: TNxTextColumn;
     procedure btn_SearchClick(Sender: TObject);
     procedure ComboBox1DropDown(Sender: TObject);
     procedure rg_periodClick(Sender: TObject);
