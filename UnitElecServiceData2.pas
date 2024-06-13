@@ -103,6 +103,10 @@ type
     cskYardPrepare, //조선소 준비
     cskPayCompensation,//보상금 지급
     cskFinal);
+
+  TClaimImportanceKind = (ciknull, cikA, cikB, cikC, cikD, cikFinal);
+  TDeliveryKind = (dkNull, dkDomesticDelivery, dkOverSeaDelivery, dkFinal);
+  TFreeOrCharge = (focNull, focFree, focCharge, focFinal);//유환/무환
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -190,11 +194,11 @@ const
     ''
      );
 
-  R_ASServiceType : array[Low(TASServiceType)..High(TASServiceType)] of string =
-    (
-    '',
-    ''
-     );
+//  R_ASServiceType : array[Low(TASServiceType)..High(TASServiceType)] of string =
+//    (
+//    '',
+//    ''
+//     );
 
   R_HiconisASState : array[Low(THiconisASState)..High(THiconisASState)] of string =
     (
@@ -242,6 +246,32 @@ const
     ''
      );
 
+  R_ClaimImportanceKind : array[Low(TClaimImportanceKind)..High(TClaimImportanceKind)] of string =
+    (
+    '',
+    'A:대형',
+    'B:주요',
+    'C:일반',
+    'D:단순',
+    ''
+     );
+
+  R_DeliveryKind : array[Low(TDeliveryKind)..High(TDeliveryKind)] of string =
+    (
+    '',
+    '국내택배',
+    '해외운송',
+    ''
+     );
+
+  R_FreeOrCharge : array[Low(TFreeOrCharge)..High(TFreeOrCharge)] of string =
+    (
+    '',
+    '무한',
+    '유환',
+    ''
+     );
+
 var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_EngineerKind: TLabelledEnum<TEngineerKind>;
@@ -253,11 +283,14 @@ var
   g_EngineerAgency: TLabelledEnum<TEngineerAgency>;
   g_GSInvoiceItemType: TLabelledEnum<TGSInvoiceItemType>;
   g_CalcInvoiceMethod: TLabelledEnum<TCalcInvoiceMethod>;
-  g_ASServiceType: TLabelledEnum<TASServiceType>;
+//  g_ASServiceType: TLabelledEnum<TASServiceType>;
   g_ASServiceChargeType: TLabelledEnum<TASServiceChargeType>;
   g_HiconisASState: TLabelledEnum<THiconisASState>;
   g_HiconisASTrigger: TLabelledEnum<THiconisASTrigger>;
   g_ClaimServiceKind: TLabelledEnum<TClaimServiceKind>;
+  g_ClaimImportanceKind: TLabelledEnum<TClaimImportanceKind>;
+  g_DeliveryKind: TLabelledEnum<TDeliveryKind>;
+  g_FreeOrCharge: TLabelledEnum<TFreeOrCharge>;
 
 procedure SalesProcess2List(AList: TStringList; AFSMState: TFSMState);
 
@@ -292,6 +325,9 @@ initialization
 //  g_HiconisASState.InitArrayRecord(R_HiconisASState);
 //  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
 //  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
+//  g_ClaimImportanceKind.InitArrayRecord(R_ClaimImportanceKind);
+//  g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
+//  g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
 
 finalization
 

@@ -18,7 +18,7 @@ uses
   {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
   {$ELSE}
-  UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport,
+  UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport, UnitElecServiceData2,
   {$ENDIF}
   UnitIniConfigSetting2, UnitUserDataRecord2, SBPro;
 
@@ -130,6 +130,9 @@ type
     ClaimInputDate: TNxTextColumn;
     ClaimReadyDate: TNxTextColumn;
     ClaimClosedDate: TNxTextColumn;
+    ClaimNo: TNxTextColumn;
+    ClaimServiceKind: TNxTextColumn;
+    Importance: TNxTextColumn;
     procedure btn_SearchClick(Sender: TObject);
     procedure ComboBox1DropDown(Sender: TObject);
     procedure rg_periodClick(Sender: TObject);
@@ -317,8 +320,8 @@ begin
       CellByName['Subject', ARow].AsString := EmailSubject;
 
     CellByName['ProdType', ARow].AsString := ProductType;
-    CellByName['PONo', ARow].AsString := PO_No;
-    CellByName['QtnNo', ARow].AsString := QTN_No;
+//    CellByName['PONo', ARow].AsString := PO_No;
+//    CellByName['QtnNo', ARow].AsString := QTN_No;
     CellByName['OrderNo', ARow].AsString := Order_No;
     CellByName['ReqCustomer', ARow].AsString := ShipOwner;
     CellByName['Status', ARow].AsString := g_SalesProcess.ToString(CurrentWorkStatus);
@@ -348,10 +351,16 @@ begin
 //      CellByName['CustomerName', ARow].AsString := ReqCustomer;
 //      CellByName['CustomerAddress', ARow].AsString := CustomerAddress;
 
-    CellByName['QtnInputDate', ARow].AsDateTime := TimeLogToDateTime(QTNInputDate);
-    CellByName['OrderInputDate', ARow].AsDateTime := TimeLogToDateTime(OrderInputDate);
+//    CellByName['QtnInputDate', ARow].AsDateTime := TimeLogToDateTime(QTNInputDate);
+//    CellByName['OrderInputDate', ARow].AsDateTime := TimeLogToDateTime(OrderInputDate);
     CellByName['RecvDate', ARow].AsDateTime := TimeLogToDateTime(InqRecvDate);
     CellByName['InvoiceInputDate', ARow].AsDateTime := TimeLogToDateTime(InvoiceIssueDate);
+    CellByName['ClaimNo', ARow].AsString := ClaimNo;
+    CellByName['ClaimServiceKind', ARow].AsString := g_ClaimServiceKind.ToString(ClaimServiceKind);
+    CellByName['ClaimRecvDate', ARow].AsDateTime := TimeLogToDateTime(ClaimRecvDate);
+    CellByName['ClaimInputDate', ARow].AsDateTime := TimeLogToDateTime(ClaimInputDate);
+    CellByName['ClaimReadyDate', ARow].AsDateTime := TimeLogToDateTime(ClaimReadyDate);
+    CellByName['ClaimClosedDate', ARow].AsDateTime := TimeLogToDateTime(ClaimClosedDate);
     TIDList(Row[ARow].Data).EmailId := EmailID;
   end;
 end;

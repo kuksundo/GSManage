@@ -38,7 +38,8 @@ uses
   UnitOLDataType in '..\..\OutlookAddIn2\UnitOLDataType.pas',
   FrmSelectProductType2 in '..\FrmSelectProductType2.pas' {SelectProductTypeF},
   UnitMacroRecorderMain2 in '..\..\MacroManage\UnitMacroRecorderMain2.pas' {MacroManageF},
-  UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas';
+  UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas',
+  FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF};
 
 {$R *.res}
 
@@ -51,6 +52,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisASManageF, HiconisASManageF);
+  Application.CreateForm(TASMaterialF, ASMaterialF);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

@@ -1409,6 +1409,18 @@ object DisplayTaskF: TDisplayTaskF
       SortType = stAlphabetic
       Width = 110
     end
+    object ClaimNo: TNxTextColumn
+      Alignment = taCenter
+      Header.Caption = 'Claim No.'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 4
+      SortType = stAlphabetic
+    end
     object Subject: TNxTextColumn
       DefaultWidth = 300
       Header.Caption = #44277#49324#49444#47749'('#47700#51068#51228#47785')'
@@ -1418,7 +1430,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 4
+      Position = 5
       SortType = stAlphabetic
       Width = 300
     end
@@ -1438,7 +1450,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 5
+      Position = 6
       SortType = stAlphabetic
       Width = 200
     end
@@ -1452,9 +1464,21 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 6
+      Position = 7
       SortType = stAlphabetic
       Width = 200
+    end
+    object ClaimServiceKind: TNxTextColumn
+      Alignment = taCenter
+      Header.Caption = 'Service'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 8
+      SortType = stAlphabetic
     end
     object ReqCustomer: TNxTextColumn
       Alignment = taCenter
@@ -1472,7 +1496,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 7
+      Position = 9
       SortType = stAlphabetic
       Width = 120
     end
@@ -1491,7 +1515,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 8
+      Position = 10
       SortType = stAlphabetic
     end
     object RecvDate: TNxDateColumn
@@ -1510,7 +1534,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 9
+      Position = 11
       SortType = stDate
       Visible = False
       NoneCaption = 'None'
@@ -1533,7 +1557,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coCanSort, coEditing, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 10
+      Position = 12
       SortType = stAlphabetic
       Width = 60
       OnButtonClick = EmailButtonClick
@@ -1553,7 +1577,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 11
+      Position = 13
       SortType = stAlphabetic
       Visible = False
     end
@@ -1563,7 +1587,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 12
+      Position = 14
       SortType = stAlphabetic
       Visible = False
     end
@@ -1573,7 +1597,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 13
+      Position = 15
       SortType = stAlphabetic
       Visible = False
     end
@@ -1583,37 +1607,11 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 14
+      Position = 16
       SortType = stAlphabetic
       Visible = False
     end
     object QtnInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Position = 15
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object OrderInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Position = 16
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object InvoiceInputDate: TNxDateColumn
       DefaultValue = '2017-04-18'
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -1626,13 +1624,39 @@ object DisplayTaskF: TDisplayTaskF
       NoneCaption = 'None'
       TodayCaption = 'Today'
     end
-    object CustomerAddress: TNxMemoColumn
+    object OrderInputDate: TNxDateColumn
+      DefaultValue = '2017-04-18'
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       Position = 18
+      SortType = stDate
+      Visible = False
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
+    end
+    object InvoiceInputDate: TNxDateColumn
+      DefaultValue = '2017-04-18'
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 19
+      SortType = stDate
+      Visible = False
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
+    end
+    object CustomerAddress: TNxMemoColumn
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 20
       SortType = stAlphabetic
       Visible = False
     end
@@ -1644,7 +1668,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 19
+      Position = 21
       SortType = stAlphabetic
     end
     object ClaimInputDate: TNxTextColumn
@@ -1655,7 +1679,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 20
+      Position = 22
       SortType = stAlphabetic
     end
     object ClaimReadyDate: TNxTextColumn
@@ -1666,7 +1690,7 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 21
+      Position = 23
       SortType = stAlphabetic
     end
     object ClaimClosedDate: TNxTextColumn
@@ -1677,7 +1701,19 @@ object DisplayTaskF: TDisplayTaskF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      Position = 22
+      Position = 24
+      SortType = stAlphabetic
+    end
+    object Importance: TNxTextColumn
+      Alignment = taCenter
+      Header.Caption = #51473#50836#46020
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Position = 25
       SortType = stAlphabetic
     end
   end
@@ -1712,7 +1748,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 16
     Top = 208
     Bitmap = {
-      494C0101010070008C0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000900318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2022,7 +2058,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 104
     Top = 208
     Bitmap = {
-      494C0101020054029C0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402A00310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2324,7 +2360,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800C40420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800C80420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, ShellApi,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, ShellApi, Rtti,
   JvExControls, JvLabel, NxColumnClasses, NxColumns, NxScrollControl, ActiveX,
   NxCustomGridControl, NxCustomGrid, NxGrid, AeroButtons, CurvyControls,
   Vcl.ImgList, AdvGlowButton, Vcl.ExtCtrls, Vcl.Menus, Vcl.Mask, JvExMask,
@@ -72,21 +72,7 @@ type
     CustManagerEdit: TEdit;
     JvLabel24: TJvLabel;
     CustEmailEdit: TEdit;
-    JvLabel25: TJvLabel;
-    PORNoEdit: TEdit;
-    JvLabel26: TJvLabel;
-    MaterialCodeListMemo: TMemo;
-    JvLabel27: TJvLabel;
-    DeliveryAddressMemo: TMemo;
-    JvLabel28: TJvLabel;
-    AWBEdit: TEdit;
-    JvLabel29: TJvLabel;
-    PORIssuePicker: TDateTimePicker;
     TabSheet5: TTabSheet;
-    JvLabel32: TJvLabel;
-    DeliveryCompanyEdit: TEdit;
-    JvLabel33: TJvLabel;
-    DeliveryChargeEdit: TEdit;
     CustAgentMemo: TMemo;
     JvLabel34: TJvLabel;
     JvLabel36: TJvLabel;
@@ -128,8 +114,6 @@ type
     DropEmptySource1: TDropEmptySource;
     JvLabel55: TJvLabel;
     NationEdit: TEdit;
-    JvLabel57: TJvLabel;
-    ShippingNoEdit: TEdit;
     TabSheet6: TTabSheet;
     JvLabel56: TJvLabel;
     SalesReqPicker: TDateTimePicker;
@@ -251,9 +235,35 @@ type
     JvLabel8: TJvLabel;
     ClaimClosedPicker: TDateTimePicker;
     JvLabel11: TJvLabel;
-    InvoiceIssuePicker: TDateTimePicker;
     JvLabel16: TJvLabel;
     ClaimReasonMemo: TMemo;
+    ImportanceCB: TComboBox;
+    MaterialGrid: TNextGrid;
+    PORNo: TNxTextColumn;
+    MaterialName: TNxTextColumn;
+    PORIssueDate: TNxTextColumn;
+    LeadTime: TNxTextColumn;
+    FreeOrCharge: TNxTextColumn;
+    SupplyCount: TNxTextColumn;
+    UnitPrice: TNxTextColumn;
+    ReqDeliveryDate: TNxDateColumn;
+    ReqArriveDate: TNxDateColumn;
+    DeliveryKind: TNxTextColumn;
+    StoreAddress: TNxTextColumn;
+    PortName: TNxTextColumn;
+    ShippingNo: TNxTextColumn;
+    DeliveryCharge: TNxTextColumn;
+    TermOfDelivery: TNxTextColumn;
+    NetWeight: TNxTextColumn;
+    GrossWeight: TNxTextColumn;
+    Measurement: TNxTextColumn;
+    CBM: TNxTextColumn;
+    NumOfPkg: TNxTextColumn;
+    MaterialCodeList: TNxTextColumn;
+    DeliveryAddress: TNxTextColumn;
+    Panel6: TPanel;
+    AeroButton5: TAeroButton;
+    AeroButton6: TAeroButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -301,11 +311,14 @@ type
     procedure CurWorkCBChange(Sender: TObject);
     procedure ServiceChargeCBDropDown(Sender: TObject);
     procedure NextWorkCBDropDown(Sender: TObject);
-    procedure ClaimServiceKindCBDropDown(Sender: TObject);
+    procedure MaterialGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
+    procedure AeroButton5Click(Sender: TObject);
+    procedure AeroButton6Click(Sender: TObject);
   private
     FTaskJson: String;
 
     procedure InitEnum;
+    procedure InitCB;
     function GetFileFromDropDataFormat(AFormat: TVirtualFileStreamDataFormat): TFileStream;
 
     function Get_Doc_Qtn_Rec: Doc_Qtn_Rec;
@@ -333,7 +346,9 @@ type
     procedure SaveCustEdit2MasterCustomer;
 
     procedure SubContractorAdd;
+    procedure MaterialEdit(const ARow: integer=-1);
     function GetNextSalesProcess2String(ASalesProcess: string): string;
+    procedure AddOrUpdateMaterial2GridFromVar(ADoc: Variant; const ARow: integer);
 
     procedure FillNextWorkCB(const AState: integer);
 
@@ -390,7 +405,8 @@ type
     procedure LoadSubConGrid2Var(ARow: integer; var ADoc: variant);
     procedure LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
     procedure LoadTaskForm2Material4Project(AForm: TTaskEditF;
-      AMaterial: TSQLMaterial4Project; ATaskID: TID = 0);
+      AMaterial: TSQLMaterial4Project; ARow: integer);
+    procedure LoadTaskForm2Material4ProjectNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
   end;
 
   function ProcessTaskJson(AJson: String): Boolean;
@@ -406,7 +422,7 @@ var
 implementation
 
 uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
-  UnitHiconisASVarJsonUtil,
+  UnitHiconisASVarJsonUtil, UnitNextGridUtil2, FrmASMaterialEdit,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
   UnitElecMasterData;
@@ -536,12 +552,24 @@ begin
         LSubConList.Free;
       end;
 
-      LMat4Proj := GetMaterial4ProjFromTask(LTask);
+      LMat4Proj := GetMaterial4ProjFromTask(LTask); //복수개가 반환됨
 
-      if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
-        LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
+      try
+        if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
+          LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
 
-      LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
+        if LMat4Proj.IsUpdate then
+        begin
+          LMat4Proj.FillRewind;
+
+          while LMat4Proj.FillOne do
+          begin
+            LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
+          end;//while
+        end;
+      finally
+        LMat4Proj.Free;
+      end;
 
       LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
       LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
@@ -591,8 +619,7 @@ begin
         //협력사 탭 정보 Load and Save To DB
         SaveSubConFromForm(LTaskEditF, LTask.ID);
         //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2Material4Project(LTaskEditF, LMat4Proj, LTask.ID);
-        AddOrUpdateMaterial4Project(LMat4Proj);
+        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, LTask.ID);
       end;//mrOK
     end;//with
   finally
@@ -602,7 +629,7 @@ begin
 
     FreeAndNil(LCustomer);
 //    FreeAndNil(LSubCon);
-    FreeAndNil(LMat4Proj);
+//    FreeAndNil(LMat4Proj);
     FreeAndNil(LTaskEditF);
   end;
 end;
@@ -697,7 +724,7 @@ begin
           LUtf8 := LDynArr.SaveToJSON;
           LDoc.SubCon := _JSON(LUtf8);
 
-          LoadTaskForm2Material4Project(LTaskEditF, LMat4Proj, LTask.TaskID);
+//          LoadTaskForm2Material4Project(LTaskEditF, LMat4Proj);
           LUtf8 := LMat4Proj.GetJSONValues(true, true, soSelect);
           LDoc.Material := _JSON(LUtf8);
           LUtf8 := LDoc;
@@ -713,6 +740,15 @@ begin
   finally
     FreeAndNil(LTaskEditF);
   end;
+end;
+
+procedure TTaskEditF.AddOrUpdateMaterial2GridFromVar(ADoc: Variant;
+  const ARow: integer);
+var
+  LIsAdd: Boolean;
+begin
+  LIsAdd := ARow = -1;
+  GetListFromVariant2NextGrid(MaterialGrid, ADoc, LIsAdd);
 end;
 
 procedure TTaskEditF.AdvGlowButton5Click(Sender: TObject);
@@ -774,6 +810,31 @@ end;
 procedure TTaskEditF.AeroButton4Click(Sender: TObject);
 begin
   ShowEMailListFromTask(FEmailDisplayTask, FRemoteIPAddress, HiconisASManageF.TDTF.FPortName, HiconisASManageF.TDTF.FRootName);
+end;
+
+procedure TTaskEditF.AeroButton5Click(Sender: TObject);
+begin
+  MaterialEdit();
+end;
+
+procedure TTaskEditF.AeroButton6Click(Sender: TObject);
+var
+  LRow: integer;
+begin
+  LRow := MaterialGrid.SelectedRow;
+
+  if LRow = -1 then
+    exit;
+
+  if MessageDlg('Aru you sure delete the selected item?.', mtConfirmation, [mbYes, mbNo],0) = mrYes then
+  begin
+    MaterialGrid.BeginUpdate;
+    try
+      MaterialGrid.Row[LRow].Visible := False;
+    finally
+      MaterialGrid.EndUpdate;
+    end;
+  end;
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -903,11 +964,6 @@ begin
     PageControl1.TabIndex := 3;
     Result := False;
   end;
-end;
-
-procedure TTaskEditF.ClaimServiceKindCBDropDown(Sender: TObject);
-begin
-  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
 end;
 
 procedure TTaskEditF.Content2Clipboard(AContent: string);
@@ -1129,14 +1185,12 @@ begin
   FFSMState := nil;
   g_RemoteIPAddress := '';
   InitEnum;
+  InitCB;
   (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
   (DataFormatAdapter3.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream2;
   FToDoCollect := TpjhToDoItemCollection.Create(TpjhTodoItem);
   FOLMessagesFromDrop := TStringList.Create;
   FSalesProcessList := TStringList.Create;
-  g_ElecProductType.SetType2Combo(ProductTypeCB);
-  g_SalesProcessType.SetType2Combo(SalesProcTypeCB);
-  CompanyType2Combo(CustCompanyTypeCB);
 
   PageControl1.ActivePageIndex := 0;
 end;
@@ -1312,15 +1366,28 @@ begin
   ShowSearchVesselForm;
 end;
 
+procedure TTaskEditF.InitCB;
+begin
+  g_ElecProductType.SetType2Combo(ProductTypeCB);
+  g_SalesProcessType.SetType2Combo(SalesProcTypeCB);
+  CompanyType2Combo(CustCompanyTypeCB);
+  g_ClaimImportanceKind.SetType2Combo(ImportanceCB);
+  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
+end;
+
 procedure TTaskEditF.InitEnum;
 begin
   g_ElecProductType.InitArrayRecord(R_ElecProductType);
   g_SalesProcessType.InitArrayRecord(R_SalesProcessType);
   g_GSDocType.InitArrayRecord(R_GSDocType);
   g_ASServiceChargeType.InitArrayRecord(R_ASServiceChargeType);
-  g_ASServiceType.InitArrayRecord(R_ASServiceType);
+  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
   g_HiconisASState.InitArrayRecord(R_HiconisASState);
   g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
+  g_ClaimImportanceKind.InitArrayRecord(R_ClaimImportanceKind);
+  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
+  g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
+  g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
 end;
 
 procedure TTaskEditF.INQInput1Click(Sender: TObject);
@@ -1410,6 +1477,8 @@ end;
 
 procedure TTaskEditF.LoadGrid2TaskEditForm(AGrid: TNextGrid; ARow: integer;
   AEditForm: TTaskEditF);
+var
+  LStr: string;
 begin
   with AEditForm, AGrid do
   begin
@@ -1426,7 +1495,12 @@ begin
 //    QTNInputPicker.Date := CellByName['QtnInputDate', ARow].AsDateTime;
 //    OrderInputPicker.Date := CellByName['OrderInputDate', ARow].AsDateTime;
 //    InqRecvPicker.Date := CellByName['RecvDate', ARow].AsDateTime;
-    InvoiceIssuePicker.Date := CellByName['InvoiceInputDate', ARow].AsDateTime;
+//    InvoiceIssuePicker.Date := CellByName['InvoiceInputDate', ARow].AsDateTime;
+
+    LStr := CellByName['ClaimServiceKind', ARow].AsString;
+    ClaimServiceKindCB.ItemIndex := g_ClaimServiceKind.ToOrdinal(LStr);
+    LStr := CellByName['Importance', ARow].AsString;
+    ImportanceCB.ItemIndex := g_ClaimImportanceKind.ToOrdinal(LStr);
 
     ClaimRecvPicker.Date := CellByName['ClaimRecvDate', ARow].AsDateTime;
     ClaimInputPicker.Date := CellByName['ClaimInputDate', ARow].AsDateTime;
@@ -1469,16 +1543,35 @@ end;
 
 procedure TTaskEditF.LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project;
   AForm: TTaskEditF);
+var
+  LRow: integer;
 begin
   with AForm do
   begin
-    PORNoEdit.Text := AMaterial.PORNo;
-    PORIssuePicker.Date := TimeLogToDateTime(AMaterial.PORIssueDate);
-    DeliveryCompanyEdit.Text := AMaterial.DeliveryCompany;
-    DeliveryChargeEdit.Text := AMaterial.DeliveryCharge;
-    AWBEdit.Text := AMaterial.AirWayBill;
-    MaterialCodeListMemo.Text := AMaterial.MaterialCodeList;
-    DeliveryAddressMemo.Text := AMaterial.DeliveryAddress;
+    LRow := MaterialGrid.AddRow();
+
+    MaterialGrid.CellsByName['PORNo', LRow] := AMaterial.PORNo;
+    MaterialGrid.CellsByName['MaterialName', LRow] := AMaterial.MaterialName;
+    MaterialGrid.CellByName['PORIssueDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.PORIssueDate);
+    MaterialGrid.CellsByName['LeadTime', LRow] := IntToStr(AMaterial.LeadTime);
+    MaterialGrid.CellsByName['FreeOrCharge', LRow] := g_FreeOrCharge.ToString(AMaterial.FreeOrCharge);
+    MaterialGrid.CellsByName['SupplyCount', LRow] := IntToStr(AMaterial.SupplyCount);
+    MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
+    MaterialGrid.CellByName['ReqDeliveryDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqDeliveryDate);
+    MaterialGrid.CellByName['ReqArriveDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqArriveDate);
+    MaterialGrid.CellsByName['DeliveryKind', LRow] := g_DeliveryKind.ToString(AMaterial.DeliveryKind);
+    MaterialGrid.CellsByName['StoreAddress', LRow] := AMaterial.StoreAddress;
+    MaterialGrid.CellsByName['PortName', LRow] := AMaterial.PortName;
+    MaterialGrid.CellsByName['ShippingNo', LRow] := AMaterial.ShippingNo;
+    MaterialGrid.CellsByName['DeliveryCharge', LRow] := AMaterial.DeliveryCharge;
+    MaterialGrid.CellsByName['TermOfDelivery', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['NetWeight', LRow] := AMaterial.DeliveryCharge;
+    MaterialGrid.CellsByName['GrossWeight', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['Measurement', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['CBM', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['MaterialCodeList', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.TermOfDelivery;
   end;
 end;
 
@@ -1672,15 +1765,18 @@ begin
     CellByName['ShipName', ARow].AsString := ShipNameEdit.Text;
     CellByName['ProdType', ARow].AsString := ProductTypeCB.Text;
     CellByName['PONo', ARow].AsString := PONoEdit.Text;
-    CellByName['QtnNo', ARow].AsString := QTNNoEdit.Text;
+    CellByName['ClaimNo', ARow].AsString := ClaimNoEdit.Text;
     CellByName['OrderNo', ARow].AsString := OrderNoEdit.Text;
     CellByName['CustomerName', ARow].AsString := CustomerNameCB.Text;
     CellByName['CustomerAddress', ARow].AsString := CustomerAddressMemo.Text;
 
-    CellByName['QtnInputDate', ARow].AsDateTime := QTNInputPicker.Date;
-    CellByName['OrderInputDate', ARow].AsDateTime := OrderInputPicker.Date;
-    CellByName['RecvDate', ARow].AsDateTime := InqRecvPicker.Date;
-    CellByName['InvoiceInputDate', ARow].AsDateTime := InvoiceIssuePicker.Date;
+    CellByName['ClaimServiceKind', ARow].AsString := g_ClaimServiceKind.ToString(ClaimServiceKindCB.ItemIndex);
+    CellByName['Importance', ARow].AsString := g_ClaimImportanceKind.ToString(ImportanceCB.ItemIndex);
+
+    CellByName['ClaimRecvDate', ARow].AsDateTime := ClaimRecvPicker.Date;
+    CellByName['ClaimInputDate', ARow].AsDateTime := ClaimInputPicker.Date;
+    CellByName['ClaimReadyDate', ARow].AsDateTime := ClaimReadyPicker.Date;
+    CellByName['ClaimClosedDate', ARow].AsDateTime := ClaimClosedPicker.Date;
   end;
 end;
 
@@ -1734,19 +1830,70 @@ begin
 end;
 
 procedure TTaskEditF.LoadTaskForm2Material4Project(AForm: TTaskEditF;
-  AMaterial: TSQLMaterial4Project; ATaskID: TID);
+  AMaterial: TSQLMaterial4Project; ARow: integer);
 begin
   with AForm do
   begin
-    AMaterial.TaskID := ATaskID;
-    AMaterial.PORNo := PORNoEdit.Text;
-    AMaterial.PORIssueDate := TimeLogFromDateTime(PORIssuePicker.Date);
-    AMaterial.DeliveryCompany := DeliveryCompanyEdit.Text;
-    AMaterial.DeliveryCharge := DeliveryChargeEdit.Text;
-    AMaterial.AirWayBill := AWBEdit.Text;
-    AMaterial.MaterialCodeList := MaterialCodeListMemo.Text;
-    AMaterial.DeliveryAddress := DeliveryAddressMemo.Text;
+//    while AMaterial.FillOne do
+//    begin
+      AMaterial.PORNo := MaterialGrid.CellsByName['PORNo', ARow];
+      AMaterial.MaterialName := MaterialGrid.CellsByName['MaterialName', ARow];
+      AMaterial.PORIssueDate := TimeLogFromDateTime(MaterialGrid.CellByName['PORIssueDate', ARow].AsDateTime);
+      AMaterial.LeadTime := StrToIntDef(MaterialGrid.CellsByName['LeadTime', ARow], 0);
+      AMaterial.FreeOrCharge := g_FreeOrCharge.ToOrdinal(MaterialGrid.CellsByName['FreeOrCharge', ARow]);
+      AMaterial.SupplyCount := StrToIntDef(MaterialGrid.CellsByName['SupplyCount', ARow], 0);
+      AMaterial.UnitPrice := MaterialGrid.CellsByName['UnitPrice', ARow];
+      AMaterial.ReqDeliveryDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqDeliveryDate', ARow].AsDateTime);
+      AMaterial.ReqArriveDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqArriveDate', ARow].AsDateTime);
+      AMaterial.DeliveryKind := g_DeliveryKind.ToOrdinal(MaterialGrid.CellsByName['DeliveryKind', ARow]);
+      AMaterial.StoreAddress := MaterialGrid.CellsByName['StoreAddress', ARow];
+      AMaterial.PortName := MaterialGrid.CellsByName['PortName', ARow];
+      AMaterial.ShippingNo := MaterialGrid.CellsByName['ShippingNo', ARow];
+      AMaterial.DeliveryCharge := MaterialGrid.CellsByName['DeliveryCharge', ARow];
+      AMaterial.TermOfDelivery := MaterialGrid.CellsByName['TermOfDelivery', ARow];
+      AMaterial.NetWeight := MaterialGrid.CellsByName['NetWeight', ARow];
+      AMaterial.GrossWeight := MaterialGrid.CellsByName['GrossWeight', ARow];
+      AMaterial.Measurement := MaterialGrid.CellsByName['Measurement', ARow];
+      AMaterial.CBM := MaterialGrid.CellsByName['CBM', ARow];
+      AMaterial.NumOfPkg := MaterialGrid.CellsByName['NumOfPkg', ARow];
+      AMaterial.MaterialCodeList := MaterialGrid.CellsByName['MaterialCodeList', ARow];
+      AMaterial.DeliveryAddress := MaterialGrid.CellsByName['DeliveryAddress', ARow];
+//    end;
   end;
+end;
+
+procedure TTaskEditF.LoadTaskForm2Material4ProjectNSave2DB(AForm: TTaskEditF;
+  ATaskID: TID);
+var
+  LRow: integer;
+  LPorNo: string;
+  LMat4Proj: TSQLMaterial4Project;
+begin
+  with AForm.MaterialGrid do
+  begin
+    //Grid에서 POR No 가져와서 DB 조회함
+    for LRow := 0 to RowCount - 1 do
+    begin
+      LPorNo := CellsByName['PORNo', LRow];
+      LMat4Proj := GetMaterial4ProjFromTaskIDNPORNo(ATaskID, LPorNo);
+      try
+        LoadTaskForm2Material4Project(AForm, LMat4Proj, LRow);
+
+        if LMat4Proj.IsUpdate then
+        begin
+        end
+        else
+        begin
+          LMat4Proj.TaskID := ATaskID;
+        end;
+
+        AddOrUpdateMaterial4Project(LMat4Proj);
+      finally
+        LMat4Proj.Free;
+      end;
+    end;
+  end;
+
 end;
 
 procedure TTaskEditF.SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID);
@@ -1912,7 +2059,7 @@ begin
 //    AVar.SECount := StrToIntDef(SECountEdit.Text,0);
     AVar.SalesPrice := SalesPriceEdit.Text;
     AVar.ExchangeRate := ExchangeRateEdit.Text;
-    AVar.ShippingNo := ShippingNoEdit.Text;
+//    AVar.ShippingNo := ShippingNoEdit.Text;
     AVar.CurrencyKind := CurrencyKindCB.ItemIndex;
 
     AVar.BaseProjectNo := BaseProjectNoEdit.Text;
@@ -1922,7 +2069,7 @@ begin
 
 //    AVar.QTNInputDate := TimeLogFromDateTime(QTNInputPicker.Date);
 //    AVar.OrderInputDate := TimeLogFromDateTime(OrderInputPicker.Date);
-    AVar.InvoiceIssueDate := TimeLogFromDateTime(InvoiceIssuePicker.Date);
+//    AVar.InvoiceIssueDate := TimeLogFromDateTime(InvoiceIssuePicker.Date);
 //    Avar.QTNIssueDate := TimeLogFromDateTime(QtnIssuePicker.Date);
 //    AVar.InqRecvDate := TimeLogFromDateTime(InqRecvPicker.Date);
     Avar.AttendScheduled := TimeLogFromDateTime(AttendSchedulePicker.Date);
@@ -1936,7 +2083,7 @@ begin
 
     Avar.ClaimNo := ClaimNoEdit.Text;
     Avar.ClaimReason := ClaimReasonMemo.Text;
-    Avar.Importance :=
+    Avar.Importance := ImportanceCB.ItemIndex;
     Avar.ClaimServiceKind := ClaimServiceKindCB.ItemIndex;
     Avar.ClaimRecvDate := TimeLogFromDateTime(ClaimRecvPicker.Date);
     Avar.ClaimInputDate := TimeLogFromDateTime(ClaimInputPicker.Date);
@@ -1984,7 +2131,7 @@ begin
     ShipOwnerEdit.Text := AVar.ShipOwner;
     SalesPriceEdit.Text := AVar.SalesPrice;
     ExchangeRateEdit.Text := AVar.ExchangeRate;
-    ShippingNoEdit.Text := AVar.ShippingNo;
+//    ShippingNoEdit.Text := AVar.ShippingNo;
     CurrencyKindCB.ItemIndex := AVar.CurrencyKind;
     BaseProjectNoEdit.Text := AVar.BaseProjectNo;
     DeliveryConditionCB.ItemIndex := AVar.DeliveryCondition;
@@ -2017,7 +2164,7 @@ begin
 
 //    QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
 //    OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
-    InvoiceIssuePicker.Date := TimeLogToDateTime(AVar.InvoiceIssueDate);
+//    InvoiceIssuePicker.Date := TimeLogToDateTime(AVar.InvoiceIssueDate);
 //    QtnIssuePicker.Date := TimeLogToDateTime(Avar.QTNIssueDate);
 //    InqRecvPicker.Date := TimeLogToDateTime(AVar.InqRecvDate);
     AttendSchedulePicker.Date := TimeLogToDateTime(Avar.AttendScheduled);
@@ -2026,6 +2173,16 @@ begin
     CurWorkFinishPicker.Date := TimeLogToDateTime(AVar.CurWorkFinishDate);
     SalesReqPicker.Date := TimeLogToDateTime(AVar.SalesReqDate);
     ShippingDatePicker.Date := TimeLogToDateTime(AVar.ShippingDate);
+
+    ClaimNoEdit.Text := Avar.ClaimNo;
+    ClaimReasonMemo.Text := Avar.ClaimReason;
+    ImportanceCB.ItemIndex := Avar.Importance;
+    ClaimServiceKindCB.ItemIndex := Avar.ClaimServiceKind;
+
+    ClaimRecvPicker.Date := TimeLogToDateTime(Avar.ClaimRecvDate);
+    ClaimInputPicker.Date := TimeLogToDateTime(Avar.ClaimInputDate);
+    ClaimReadyPicker.Date := TimeLogToDateTime(Avar.ClaimReadyDate);
+    ClaimClosedPicker.Date := TimeLogToDateTime(Avar.ClaimClosedDate);
 
     FSQLGSFiles := GetFilesFromTask(AVar);
     LoadGSFiles2Form(FSQLGSFiles, AForm);
@@ -2058,6 +2215,31 @@ begin
   LRaw := SynLZCompress(LRaw);
   LUtf8 := BinToBase64(LRaw);
   Result := UTF8ToString(LUtf8);
+end;
+
+procedure TTaskEditF.MaterialEdit(const ARow: integer);
+var
+  LDoc: variant;
+begin
+  if ARow = -1 then //Add
+  begin
+    TDocVariant.New(LDoc);
+    LDoc.PorNo := '';
+  end
+  else
+  begin
+    LDoc := GetNxGridRow2Variant(MaterialGrid, ARow);
+  end;
+
+  //"저장" 버튼을 누르면 True
+  if DisplayMaterial2EditForm(LDoc) then
+    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
+end;
+
+procedure TTaskEditF.MaterialGridCellDblClick(Sender: TObject; ACol,
+  ARow: Integer);
+begin
+  MaterialEdit(ARow);
 end;
 
 procedure TTaskEditF.N18Click(Sender: TObject);

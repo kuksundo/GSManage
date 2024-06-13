@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899-12-30 00:00:00.000.767,C:\Users\Administrator\Documents\RAD Studio\Projects\ProjectGroup1.groupproj=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiconisMgr.groupproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.767,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiconisMgr.groupproj=C:\Users\Administrator\Documents\RAD Studio\Projects\ProjectGroup1.groupproj</Transaction>
   </Transactions>
 	<Default.Personality>
 		<Projects ActiveProject="E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiconisASManageR.dproj"/>

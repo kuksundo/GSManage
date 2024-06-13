@@ -162,6 +162,10 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas"/>
+        <DCCReference Include="FrmASMaterialEdit.pas">
+            <Form>ASMaterialF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
