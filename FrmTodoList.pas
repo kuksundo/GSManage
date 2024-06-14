@@ -63,6 +63,7 @@ type
   end;
 
   //ATaskId = TaskID
+  //AIsDisplayComplete: True = 완료된(Complete = True) 것도 표시
   function Create_ToDoList_Frm(ATaskId: string; var AToDoCollect: TpjhToDoItemCollection;
     AIsDisplayComplete: Boolean = False;
     AInsertOrUpdateToDoList2DB: TInsertOrUpdateToDoList2DB = nil;
@@ -103,8 +104,8 @@ begin
 
       for i := 0 to FToDoCollect.Count - 1 do
       begin
-        if (ATaskId <> '') and (FToDoCollect.Items[i].TaskCode <> ATaskId) then
-          Continue;
+//        if (ATaskId <> '') and (FToDoCollect.Items[i].TaskCode <> ATaskId) then
+//          Continue;
 
         if not AIsDisplayComplete then
           if FToDoCollect.Items[i].Complete then

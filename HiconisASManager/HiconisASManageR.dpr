@@ -36,7 +36,7 @@ uses
   FrameOLEmailList2 in '..\..\..\common\Frame\FrameOLEmailList2.pas' {Frame2: TFrame},
   FrmEditEmailInfo2 in '..\FrmEditEmailInfo2.pas' {EmailInfoF},
   UnitOLDataType in '..\..\OutlookAddIn2\UnitOLDataType.pas',
-  FrmSelectProductType2 in '..\FrmSelectProductType2.pas' {SelectProductTypeF},
+  FrmSelectCheckBox in '..\..\..\common\Form\FrmSelectCheckBox.pas' {SelectChcekBoxF},
   UnitMacroRecorderMain2 in '..\..\MacroManage\UnitMacroRecorderMain2.pas' {MacroManageF},
   UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas',
   FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF};

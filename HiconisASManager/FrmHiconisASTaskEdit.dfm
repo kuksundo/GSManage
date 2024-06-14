@@ -22,13 +22,15 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet4
+    ActivePage = TabSheet5
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
+      ExplicitLeft = 5
+      ExplicitTop = 28
       DesignSize = (
         599
         355)
@@ -161,7 +163,7 @@ object TaskEditF: TTaskEditF
         Height = 25
         Alignment = taCenter
         AutoSize = False
-        Caption = #51089#50629#50976#54805
+        Caption = #49436#48708#49828#50976#54805
         Color = 14671839
         FrameColor = clGrayText
         Font.Charset = ANSI_CHARSET
@@ -304,16 +306,6 @@ object TaskEditF: TTaskEditF
         TabOrder = 3
         OnChange = CurWorkCBChange
       end
-      object SalesProcTypeCB: TComboBox
-        Left = 122
-        Top = 3
-        Width = 472
-        Height = 24
-        Style = csDropDownList
-        ImeName = 'Microsoft IME 2010'
-        TabOrder = 4
-        OnDropDown = SalesProcTypeCBDropDown
-      end
       object CurWorkFinishPicker: TDateTimePicker
         Left = 504
         Top = 32
@@ -322,7 +314,7 @@ object TaskEditF: TTaskEditF
         Date = 42843.827708518520000000
         Time = 42843.827708518520000000
         ImeName = 'Microsoft IME 2010'
-        TabOrder = 5
+        TabOrder = 4
       end
       object NextWorkCB: TComboBox
         Left = 122
@@ -331,7 +323,7 @@ object TaskEditF: TTaskEditF
         Height = 24
         Style = csDropDownList
         ImeName = 'Microsoft IME 2010'
-        TabOrder = 6
+        TabOrder = 5
         OnDropDown = NextWorkCBDropDown
       end
       object Button3: TButton
@@ -346,7 +338,7 @@ object TaskEditF: TTaskEditF
         Font.Name = #47569#51008' '#44256#46357
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 7
+        TabOrder = 6
         OnClick = Button3Click
       end
       object ClaimReasonMemo: TMemo
@@ -360,6 +352,15 @@ object TaskEditF: TTaskEditF
         ImeMode = imSHanguel
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
+        TabOrder = 7
+      end
+      object ClaimServiceKindCB: TComboBox
+        Left = 122
+        Top = 2
+        Width = 191
+        Height = 24
+        Style = csDropDownList
+        ImeName = 'Microsoft IME 2010'
         TabOrder = 8
       end
     end
@@ -1590,6 +1591,25 @@ object TaskEditF: TTaskEditF
           SortType = stAlphabetic
           Visible = False
         end
+        object CompanyName2: TNxTextColumn
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = #54924#49324#47749'2'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 29
+          SortType = stAlphabetic
+          Visible = False
+          Width = 200
+        end
       end
     end
     object TabSheet4: TTabSheet
@@ -2007,6 +2027,60 @@ object TaskEditF: TTaskEditF
           Header.Font.Style = []
           ParentFont = False
           Position = 21
+          SortType = stAlphabetic
+        end
+        object PriceAmount: TNxTextColumn
+          Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = #52509#44552#50529
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 22
+          SortType = stAlphabetic
+        end
+        object DeliveryCompany: TNxTextColumn
+          Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = #50868#49569#54924#49324
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 23
+          SortType = stAlphabetic
+        end
+        object AirWayBill: TNxTextColumn
+          Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = 'AWB'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 24
           SortType = stAlphabetic
         end
       end
@@ -2594,11 +2668,11 @@ object TaskEditF: TTaskEditF
       ImageIndex = 0
     end
     object JvLabel14: TJvLabel
-      Left = 304
+      Left = 322
       Top = 8
-      Width = 88
+      Width = 82
       Height = 21
-      Caption = #49436#48708#49828' '#50976#54805
+      Caption = #44256#44061' '#50976#54805' :'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -2624,14 +2698,15 @@ object TaskEditF: TTaskEditF
       TabOrder = 0
       OnDropDown = ServiceChargeCBDropDown
     end
-    object ClaimServiceKindCB: TComboBox
-      Left = 410
-      Top = 6
-      Width = 191
+    object SalesProcTypeCB: TComboBox
+      Left = 408
+      Top = 7
+      Width = 186
       Height = 24
       Style = csDropDownList
       ImeName = 'Microsoft IME 2010'
       TabOrder = 1
+      OnDropDown = SalesProcTypeCBDropDown
     end
   end
   object Panel4: TPanel
@@ -3251,7 +3326,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800E80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800EC0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5158,7 +5233,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400BC0110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400C00110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

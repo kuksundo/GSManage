@@ -85,7 +85,6 @@ type
     JvLabel39: TJvLabel;
     CurWorkCB: TComboBox;
     JvLabel40: TJvLabel;
-    SalesProcTypeCB: TComboBox;
     JvLabel41: TJvLabel;
     CustCompanyTypeCB: TComboBox;
     JvLabel44: TJvLabel;
@@ -203,7 +202,6 @@ type
     JvLabel15: TJvLabel;
     ServiceChargeCB: TComboBox;
     JvLabel14: TJvLabel;
-    ClaimServiceKindCB: TComboBox;
     Panel4: TPanel;
     JvLabel1: TJvLabel;
     ProductTypeCB: TComboBox;
@@ -264,6 +262,12 @@ type
     Panel6: TPanel;
     AeroButton5: TAeroButton;
     AeroButton6: TAeroButton;
+    PriceAmount: TNxTextColumn;
+    DeliveryCompany: TNxTextColumn;
+    AirWayBill: TNxTextColumn;
+    SalesProcTypeCB: TComboBox;
+    ClaimServiceKindCB: TComboBox;
+    CompanyName2: TNxTextColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -548,7 +552,7 @@ begin
           LoadSubConFromVariant2Form(ADoc, ADocIsFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
         end;
       finally
-        LSubConList.Clear;
+//        LSubConList.Clear;
         LSubConList.Free;
       end;
 
@@ -1115,6 +1119,7 @@ end;
 procedure TTaskEditF.Button3Click(Sender: TObject);
 begin
   FToDoCollect.Clear;
+  //TaskID 별로 ToDoList를 Select하여 FToDoCollect에 저장함
   LoadToDoCollectFromTask(FEmailDisplayTask, FToDoCollect);
 
   Create_ToDoList_Frm(IntToStr(FEmailDisplayTask.ID), FToDoCollect, False,
@@ -1557,6 +1562,7 @@ begin
     MaterialGrid.CellsByName['FreeOrCharge', LRow] := g_FreeOrCharge.ToString(AMaterial.FreeOrCharge);
     MaterialGrid.CellsByName['SupplyCount', LRow] := IntToStr(AMaterial.SupplyCount);
     MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
+    MaterialGrid.CellsByName['PriceAmount', LRow] := IntToStr(AMaterial.PriceAmount);
     MaterialGrid.CellByName['ReqDeliveryDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqDeliveryDate);
     MaterialGrid.CellByName['ReqArriveDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqArriveDate);
     MaterialGrid.CellsByName['DeliveryKind', LRow] := g_DeliveryKind.ToString(AMaterial.DeliveryKind);
@@ -1564,14 +1570,17 @@ begin
     MaterialGrid.CellsByName['PortName', LRow] := AMaterial.PortName;
     MaterialGrid.CellsByName['ShippingNo', LRow] := AMaterial.ShippingNo;
     MaterialGrid.CellsByName['DeliveryCharge', LRow] := AMaterial.DeliveryCharge;
+    MaterialGrid.CellsByName['DeliveryCompany', LRow] := AMaterial.DeliveryCompany;
+    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
     MaterialGrid.CellsByName['TermOfDelivery', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['NetWeight', LRow] := AMaterial.DeliveryCharge;
-    MaterialGrid.CellsByName['GrossWeight', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['Measurement', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['CBM', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['MaterialCodeList', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.TermOfDelivery;
+    MaterialGrid.CellsByName['NetWeight', LRow] := AMaterial.NetWeight;
+    MaterialGrid.CellsByName['GrossWeight', LRow] := AMaterial.GrossWeight;
+    MaterialGrid.CellsByName['Measurement', LRow] := AMaterial.Measurement;
+    MaterialGrid.CellsByName['CBM', LRow] := AMaterial.CBM;
+    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
+    MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.NumOfPkg;
+    MaterialGrid.CellsByName['MaterialCodeList', LRow] := AMaterial.MaterialCodeList;
+    MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.DeliveryAddress;
   end;
 end;
 
@@ -1650,6 +1659,7 @@ begin
   ADoc.Action := StrToIntDef(LStr, 0);
 
   ADoc.CompanyName := SubConGrid.CellsByName['CompanyName', ARow];
+  ADoc.CompanyName2 := SubConGrid.CellsByName['CompanyName2', ARow];
   ADoc.OfficePhone := SubConGrid.CellsByName['OfficePhone', ARow];
   ADoc.MobilePhone := SubConGrid.CellsByName['MobilePhone', ARow];
   ADoc.EMail := SubConGrid.CellsByName['EMail', ARow];
@@ -1843,6 +1853,7 @@ begin
       AMaterial.FreeOrCharge := g_FreeOrCharge.ToOrdinal(MaterialGrid.CellsByName['FreeOrCharge', ARow]);
       AMaterial.SupplyCount := StrToIntDef(MaterialGrid.CellsByName['SupplyCount', ARow], 0);
       AMaterial.UnitPrice := MaterialGrid.CellsByName['UnitPrice', ARow];
+      AMaterial.PriceAmount := StrToIntDef(MaterialGrid.CellsByName['PriceAmount', ARow],0);
       AMaterial.ReqDeliveryDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqDeliveryDate', ARow].AsDateTime);
       AMaterial.ReqArriveDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqArriveDate', ARow].AsDateTime);
       AMaterial.DeliveryKind := g_DeliveryKind.ToOrdinal(MaterialGrid.CellsByName['DeliveryKind', ARow]);
@@ -1850,11 +1861,14 @@ begin
       AMaterial.PortName := MaterialGrid.CellsByName['PortName', ARow];
       AMaterial.ShippingNo := MaterialGrid.CellsByName['ShippingNo', ARow];
       AMaterial.DeliveryCharge := MaterialGrid.CellsByName['DeliveryCharge', ARow];
+      AMaterial.DeliveryCompany := MaterialGrid.CellsByName['DeliveryCompany', ARow];
+      AMaterial.AirWayBill := MaterialGrid.CellsByName['AirWayBill', ARow];
       AMaterial.TermOfDelivery := MaterialGrid.CellsByName['TermOfDelivery', ARow];
       AMaterial.NetWeight := MaterialGrid.CellsByName['NetWeight', ARow];
       AMaterial.GrossWeight := MaterialGrid.CellsByName['GrossWeight', ARow];
       AMaterial.Measurement := MaterialGrid.CellsByName['Measurement', ARow];
       AMaterial.CBM := MaterialGrid.CellsByName['CBM', ARow];
+      AMaterial.AirWayBill := MaterialGrid.CellsByName['AirWayBill', ARow];
       AMaterial.NumOfPkg := MaterialGrid.CellsByName['NumOfPkg', ARow];
       AMaterial.MaterialCodeList := MaterialGrid.CellsByName['MaterialCodeList', ARow];
       AMaterial.DeliveryAddress := MaterialGrid.CellsByName['DeliveryAddress', ARow];
@@ -1877,23 +1891,29 @@ begin
       LPorNo := CellsByName['PORNo', LRow];
       LMat4Proj := GetMaterial4ProjFromTaskIDNPORNo(ATaskID, LPorNo);
       try
-        LoadTaskForm2Material4Project(AForm, LMat4Proj, LRow);
-
-        if LMat4Proj.IsUpdate then
+        if Row[LRow].Visible then
         begin
+          LoadTaskForm2Material4Project(AForm, LMat4Proj, LRow);
+
+          if LMat4Proj.IsUpdate then
+          begin
+          end
+          else
+          begin
+            LMat4Proj.TaskID := ATaskID;
+          end;
+
+          AddOrUpdateMaterial4Project(LMat4Proj);
         end
-        else
+        else//Visuble = False면 삭제한 Item임
         begin
-          LMat4Proj.TaskID := ATaskID;
+          g_ProjectDetailDB.Delete(TSQLMaterial4Project, LMat4Proj.ID);
         end;
-
-        AddOrUpdateMaterial4Project(LMat4Proj);
       finally
         LMat4Proj.Free;
       end;
-    end;
-  end;
-
+    end;//for
+  end;//with
 end;
 
 procedure TTaskEditF.SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID);
@@ -2081,6 +2101,7 @@ begin
     AVar.SalesReqDate := TimeLogFromDateTime(SalesReqPicker.Date);
     AVar.ShippingDate := TimeLogFromDateTime(ShippingDatePicker.Date);
 
+    AVar.ASServiceChargeType := ServiceChargeCB.ItemIndex;
     Avar.ClaimNo := ClaimNoEdit.Text;
     Avar.ClaimReason := ClaimReasonMemo.Text;
     Avar.Importance := ImportanceCB.ItemIndex;
@@ -2174,6 +2195,7 @@ begin
     SalesReqPicker.Date := TimeLogToDateTime(AVar.SalesReqDate);
     ShippingDatePicker.Date := TimeLogToDateTime(AVar.ShippingDate);
 
+    ServiceChargeCB.ItemIndex := AVar.ASServiceChargeType;
     ClaimNoEdit.Text := Avar.ClaimNo;
     ClaimReasonMemo.Text := Avar.ClaimReason;
     ImportanceCB.ItemIndex := Avar.Importance;

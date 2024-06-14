@@ -5,10 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
-  JvExControls, JvLabel,
+  JvExControls, JvLabel, CurvyControls,
   mormot.core.datetime,
 
-  UnitHiconisMasterRecord, AeroButtons, CurvyControls;
+  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2;
 
 type
   TASMaterialF = class(TForm)
@@ -65,8 +65,11 @@ type
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
+
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+    procedure InitEnum;
+    procedure InitCombo;
   public
     procedure LoadMaterialOrm2Form(AMaterial4Project: TSQLMaterial4Project);
     procedure LoadMaterialOrmFromForm(AMaterial4Project: TSQLMaterial4Project);
@@ -117,6 +120,24 @@ end;
 
 { TASMaterialF }
 
+procedure TASMaterialF.FormCreate(Sender: TObject);
+begin
+  InitEnum();
+  InitCombo();
+end;
+
+procedure TASMaterialF.InitCombo;
+begin
+  g_FreeOrCharge.SetType2Combo(FreeOrChargeCB);
+  g_DeliveryKind.SetType2Combo(DeliveryKindCB);
+end;
+
+procedure TASMaterialF.InitEnum;
+begin
+  g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
+  g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
+end;
+
 procedure TASMaterialF.LoadMaterialOrm2Form(
   AMaterial4Project: TSQLMaterial4Project);
 begin
@@ -127,6 +148,7 @@ begin
   FreeOrChargeCB.ItemIndex := AMaterial4Project.FreeOrCharge;
   SupplyCountEdit.Text := IntToStr(AMaterial4Project.SupplyCount);
   UnitPriceEdit.Text := AMaterial4Project.UnitPrice;
+  PriceAmountEdit.Text := IntToStr(AMaterial4Project.PriceAmount);
   ReqDeliveryDatePicker.Date := TimeLogToDateTime(AMaterial4Project.ReqDeliveryDate);
   ReqArriveDatePicker.Date := TimeLogToDateTime(AMaterial4Project.ReqArriveDate);
   DeliveryKindCB.ItemIndex := AMaterial4Project.DeliveryKind;
@@ -134,11 +156,13 @@ begin
   PortNameEdit.Text := AMaterial4Project.PortName;
   ShippingNoEdit.Text := AMaterial4Project.ShippingNo;
   DeliveryChargeEdit.Text := AMaterial4Project.DeliveryCharge;
+  DeliveryCompanyEdit.Text := AMaterial4Project.DeliveryCompany;
   TermOfDeliveryEdit.Text := AMaterial4Project.TermOfDelivery;
   NetWeightEdit.Text := AMaterial4Project.NetWeight;
   GrossWeightEdit.Text := AMaterial4Project.GrossWeight;
   MeasurementEdit.Text := AMaterial4Project.Measurement;
   CBMEdit.Text := AMaterial4Project.CBM;
+  AWBEdit.Text := AMaterial4Project.AirWayBill;
   NumOfPkgEdit.Text := AMaterial4Project.NumOfPkg;
   MaterialCodeListMemo.Text := AMaterial4Project.MaterialCodeList;
   DeliveryAddressMemo.Text := AMaterial4Project.DeliveryAddress;
@@ -154,6 +178,7 @@ begin
   AMaterial4Project.FreeOrCharge := FreeOrChargeCB.ItemIndex;
   AMaterial4Project.SupplyCount := StrToIntDef(SupplyCountEdit.Text, 0);
   AMaterial4Project.UnitPrice := UnitPriceEdit.Text;
+  AMaterial4Project.PriceAmount := StrToIntDef(PriceAmountEdit.Text, 0);
   AMaterial4Project.ReqDeliveryDate := TimeLogFromDateTime(ReqDeliveryDatePicker.Date);
   AMaterial4Project.ReqArriveDate := TimeLogFromDateTime(ReqArriveDatePicker.Date);
   AMaterial4Project.DeliveryKind := DeliveryKindCB.ItemIndex;
@@ -161,11 +186,13 @@ begin
   AMaterial4Project.PortName := PortNameEdit.Text;
   AMaterial4Project.ShippingNo := ShippingNoEdit.Text;
   AMaterial4Project.DeliveryCharge := DeliveryChargeEdit.Text;
+  AMaterial4Project.DeliveryCompany := DeliveryCompanyEdit.Text;
   AMaterial4Project.TermOfDelivery := TermOfDeliveryEdit.Text;
   AMaterial4Project.NetWeight := NetWeightEdit.Text;
   AMaterial4Project.GrossWeight := GrossWeightEdit.Text;
   AMaterial4Project.Measurement := MeasurementEdit.Text;
   AMaterial4Project.CBM := CBMEdit.Text;
+  AMaterial4Project.AirWayBill := AWBEdit.Text;
   AMaterial4Project.NumOfPkg := NumOfPkgEdit.Text;
   AMaterial4Project.MaterialCodeList := MaterialCodeListMemo.Text;
   AMaterial4Project.DeliveryAddress := DeliveryAddressMemo.Text;
@@ -177,21 +204,24 @@ begin
   MaterialNameEdit.Text := AVar.MaterialName;
   PORIssuePicker.Date := VarToDateTime(AVar.PORIssueDate);
   LeadTimeEdit.Text := IntToStr(AVar.LeadTime);
-  FreeOrChargeCB.ItemIndex := StrToIntDef(AVar.FreeOrCharge, 0);
+  FreeOrChargeCB.ItemIndex := g_FreeOrCharge.ToOrdinal(AVar.FreeOrCharge);
   SupplyCountEdit.Text := IntToStr(AVar.SupplyCount);
   UnitPriceEdit.Text := AVar.UnitPrice;
+  PriceAmountEdit.Text := AVar.PriceAmount;
   ReqDeliveryDatePicker.Date := VarToDateTime(AVar.ReqDeliveryDate);
   ReqArriveDatePicker.Date := VarToDateTime(AVar.ReqArriveDate);
-  DeliveryKindCB.ItemIndex := StrToIntDef(AVar.DeliveryKind, 0);
+  DeliveryKindCB.ItemIndex := g_DeliveryKind.ToOrdinal(AVar.DeliveryKind);
   StoreAddressEdit.Text := AVar.StoreAddress;
   PortNameEdit.Text := AVar.PortName;
   ShippingNoEdit.Text := AVar.ShippingNo;
   DeliveryChargeEdit.Text := AVar.DeliveryCharge;
+  DeliveryCompanyEdit.Text := AVar.DeliveryCompany;
   TermOfDeliveryEdit.Text := AVar.TermOfDelivery;
   NetWeightEdit.Text := AVar.NetWeight;
   GrossWeightEdit.Text := AVar.GrossWeight;
   MeasurementEdit.Text := AVar.Measurement;
   CBMEdit.Text := AVar.CBM;
+  AWBEdit.Text := AVar.AirWayBill;
   NumOfPkgEdit.Text := AVar.NumOfPkg;
   MaterialCodeListMemo.Text := AVar.MaterialCodeList;
   DeliveryAddressMemo.Text := AVar.DeliveryAddress;
@@ -203,21 +233,24 @@ begin
   AVar.MaterialName := MaterialNameEdit.Text;
   AVar.PORIssueDate := VarFromDateTime(PORIssuePicker.Date);
   AVar.LeadTime := StrToIntDef(LeadTimeEdit.Text, 0);
-  AVar.FreeOrCharge := FreeOrChargeCB.ItemIndex;
+  AVar.FreeOrCharge := g_FreeOrCharge.ToString(FreeOrChargeCB.ItemIndex);
   AVar.SupplyCount := StrToIntDef(SupplyCountEdit.Text, 0);
   AVar.UnitPrice := UnitPriceEdit.Text;
+  AVar.PriceAmount := PriceAmountEdit.Text;
   AVar.ReqDeliveryDate := VarFromDateTime(ReqDeliveryDatePicker.Date);
   AVar.ReqArriveDate := VarFromDateTime(ReqArriveDatePicker.Date);
-  AVar.DeliveryKind := DeliveryKindCB.ItemIndex;
+  AVar.DeliveryKind := g_DeliveryKind.ToString(DeliveryKindCB.ItemIndex);
   AVar.StoreAddress := StoreAddressEdit.Text;
   AVar.PortName := PortNameEdit.Text;
   AVar.ShippingNo := ShippingNoEdit.Text;
   AVar.DeliveryCharge := DeliveryChargeEdit.Text;
+  AVar.DeliveryCompany := DeliveryCompanyEdit.Text;
   AVar.TermOfDelivery := TermOfDeliveryEdit.Text;
   AVar.NetWeight := NetWeightEdit.Text;
   AVar.GrossWeight := GrossWeightEdit.Text;
   AVar.Measurement := MeasurementEdit.Text;
   AVar.CBM := CBMEdit.Text;
+  AVar.AirWayBill := AWBEdit.Text;
   AVar.NumOfPkg := NumOfPkgEdit.Text;
   AVar.MaterialCodeList := MaterialCodeListMemo.Text;
   AVar.DeliveryAddress := DeliveryAddressMemo.Text;

@@ -81,10 +81,11 @@ type
 
     FAlarmType,
     FAlarmTime2, //AlarmType이 2인 경우(분)
-    FAlarmFlag,
+    FAlarmFlag
+    : integer;
     FAlarm2Msg,
     FAlarm2Note,
-    FAlarm2Email: integer;
+    FAlarm2Email: Boolean;
 
     FAlarmTime1, //AlarmType이 1인 경우 시각
     FModDate: TDateTime;

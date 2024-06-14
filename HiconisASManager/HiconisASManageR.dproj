@@ -153,8 +153,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\OutlookAddIn2\UnitOLDataType.pas"/>
-        <DCCReference Include="..\FrmSelectProductType2.pas">
-            <Form>SelectProductTypeF</Form>
+        <DCCReference Include="..\..\..\common\Form\FrmSelectCheckBox.pas">
+            <Form>SelectChcekBoxF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\MacroManage\UnitMacroRecorderMain2.pas">

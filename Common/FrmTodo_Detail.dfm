@@ -109,6 +109,7 @@ object ToDoDetailF: TToDoDetailF
       Height = 88
       Align = alTop
       TabOrder = 1
+      ExplicitTop = -2
       object Label2: TLabel
         Left = 16
         Top = 19
@@ -237,12 +238,28 @@ object ToDoDetailF: TToDoDetailF
         TabOrder = 6
       end
       object NoteCB: TCheckBox
-        Left = 495
+        Left = 480
         Top = 51
         Width = 58
         Height = 17
         Caption = #51901#51648
         TabOrder = 7
+      end
+      object EmailCB: TCheckBox
+        Left = 530
+        Top = 51
+        Width = 58
+        Height = 17
+        Caption = #51060#47700#51068
+        TabOrder = 8
+      end
+      object PopupCB: TCheckBox
+        Left = 594
+        Top = 51
+        Width = 58
+        Height = 17
+        Caption = #54045#50629#52285
+        TabOrder = 9
       end
     end
   end

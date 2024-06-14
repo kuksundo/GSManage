@@ -12,6 +12,7 @@ object ASMaterialF: TASMaterialF
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object JvLabel25: TJvLabel
@@ -934,9 +935,6 @@ object ASMaterialF: TASMaterialF
     Align = alBottom
     Rounding = 4
     TabOrder = 25
-    ExplicitLeft = -16
-    ExplicitTop = 609
-    ExplicitWidth = 607
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 524
@@ -950,7 +948,6 @@ object ASMaterialF: TASMaterialF
       Caption = #45803#44592
       ModalResult = 2
       TabOrder = 0
-      ExplicitLeft = 540
     end
     object AeroButton1: TAeroButton
       AlignWithMargins = True
@@ -964,7 +961,6 @@ object ASMaterialF: TASMaterialF
       Caption = #51200#51109
       ModalResult = 1
       TabOrder = 1
-      ExplicitLeft = 459
     end
   end
 end
