@@ -117,8 +117,9 @@ begin
 
     AlarmType := 2;
     AlarmTime2 := GetAlarmInterval(AlarmCombo.ItemIndex);
-    Alarm2Msg := Integer(MsgCB.Checked);
-    Alarm2Note := Integer(NoteCB.Checked);
+    Alarm2Msg := MsgCB.Checked;
+    Alarm2Note := NoteCB.Checked;
+    Alarm2Popup := PopupCB.Checked;
   end;
 end;
 

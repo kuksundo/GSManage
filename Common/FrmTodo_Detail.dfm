@@ -109,7 +109,6 @@ object ToDoDetailF: TToDoDetailF
       Height = 88
       Align = alTop
       TabOrder = 1
-      ExplicitTop = -2
       object Label2: TLabel
         Left = 16
         Top = 19

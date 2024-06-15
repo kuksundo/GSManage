@@ -85,7 +85,8 @@ type
     : integer;
     FAlarm2Msg,
     FAlarm2Note,
-    FAlarm2Email: Boolean;
+    FAlarm2Email,
+    FAlarm2Popup: Boolean;
 
     FAlarmTime1, //AlarmType이 1인 경우 시각
     FModDate: TDateTime;
@@ -124,9 +125,10 @@ type
     property AlarmType: integer read FAlarmType write FAlarmType;
     property AlarmTime2: integer read FAlarmTime2 write FAlarmTime2;
     property AlarmFlag: integer read FAlarmFlag write FAlarmFlag;
-    property Alarm2Msg: integer read FAlarm2Msg write FAlarm2Msg;
-    property Alarm2Note: integer read FAlarm2Note write FAlarm2Note;
-    property Alarm2Email: integer read FAlarm2Email write FAlarm2Email;
+    property Alarm2Msg: Boolean read FAlarm2Msg write FAlarm2Msg;
+    property Alarm2Note: Boolean read FAlarm2Note write FAlarm2Note;
+    property Alarm2Email: Boolean read FAlarm2Email write FAlarm2Email;
+    property Alarm2Popup: Boolean read FAlarm2Popup write FAlarm2Popup;
 
     property AlarmTime1: TDateTime read FAlarmTime1 write FAlarmTime1;
     property ModDate: TDateTime read FModDate write FModDate;
