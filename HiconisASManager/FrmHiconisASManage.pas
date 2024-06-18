@@ -194,7 +194,7 @@ var
 implementation
 
 Uses System.DateUtils, OtlParallel, Clipbrd, UnitIPCModule2,
-  Vcl.ogutil, UnitDragUtil, UnitHiconisASVarJsonUtil, FrmEmailListView2,
+  Vcl.ogutil, UnitDragUtil, UnitHiconisASVarJsonUtil, FrmOLControl,//FrmEmailListView2,
   UnitBase64Util2, UnitCmdExecService,
   FrmEditTariff2, UnitGSTariffRecord2, FrmDisplayTariff2, OLMailWSCallbackInterface2;
 
@@ -267,7 +267,7 @@ begin
                   if LEmailMsg2.FillOne then //동일한 제목의 메일이 존재하면
                   begin
                     LIsAddTask := False;
-                    LTask.EmailMsg.SourceGet(g_ProjectDB.Orm, LEmailMsg2.ID, LTaskIds);
+//                    LTask.EmailMsg.SourceGet(g_ProjectDB.Orm, LEmailMsg2.ID, LTaskIds);
 
                     try
                       for i:= low(LTaskIds) to high(LTaskIds) do
@@ -278,7 +278,7 @@ begin
                     finally
                       if LTask2.ID <> 0 then
                       begin
-                        LTask2.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask2.ID, LEMailMsg.ID, True);
+//                        LTask2.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask2.ID, LEMailMsg.ID, True);
                         FreeAndNil(LTask2);
                       end;
                     end;
@@ -1213,10 +1213,10 @@ end;
 
 procedure THiconisASManageF.TestRemoteTaskEmailList(ATask: TOrmHiconisASTask);
 var
-  LViewMailListF: TEmailListViewF;
+  LViewMailListF: TOLControlF;
   LUtf8: RawUTF8;
 begin
-  LViewMailListF := TEmailListViewF.Create(nil);
+  LViewMailListF := TOLControlF.Create(nil);
   try
     begin
 //      LViewMailListF.FTask := ATask;
@@ -1224,7 +1224,7 @@ begin
       LUtf8 := MakeCommand4Server(CMD_REQ_TASK_EAMIL_LIST, LUtf8);
       LUtf8 := ServerExecuteFromClient(LUtf8);
       LUtf8 := MakeBase64ToUTF8(LUtf8);
-      ShowEmailListFromJson(LViewMailListF.FrameOLMailList.grid_Mail, LUtf8);
+      ShowEmailListFromJson(LViewMailListF.OLEmailListFr.grid_Mail, LUtf8);
 
       if LViewMailListF.ShowModal = mrOK then
       begin

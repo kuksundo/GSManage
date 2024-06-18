@@ -532,7 +532,7 @@ begin
   begin
     LUtf8 := ATask.GetJSONValues(true, true, soSelect);
 
-    ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
+//    ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
     LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIDDynArray(LIds));
     try
       LMailCount := 0;
@@ -665,7 +665,7 @@ begin
     if LSQLGSTask.IsUpdate then
     begin
       LDynArr.Init(TypeInfo(TRawUTF8DynArray), LDynUtf8);
-      LSQLGSTask.EmailMsg.DestGet(g_ProjectDB.Orm, LSQLGSTask.ID, LIds);
+//      LSQLGSTask.EmailMsg.DestGet(g_ProjectDB.Orm, LSQLGSTask.ID, LIds);
       LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIdDynArray(LIds));
 
       while LSQLEmailMsg.FillOne do

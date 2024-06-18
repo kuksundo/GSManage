@@ -24,7 +24,6 @@ uses
   UnitCmdExecService in '..\Common\UnitCmdExecService.pas',
   UnitMAPSMacro2 in '..\Common\UnitMAPSMacro2.pas',
   JvgXMLSerializer_pjh in '..\..\..\..\..\..\project\common\JvgXMLSerializer_pjh.pas',
-  UnitStrategy4OLEmailInterface2 in '..\..\OutlookAddIn2\UnitStrategy4OLEmailInterface2.pas',
   UnitHiconisMasterRecord in '..\..\..\NoGitHub\RecordUnit2\HiconisASManager\UnitHiconisMasterRecord.pas',
   UnitDFMUtil in '..\..\..\..\..\..\project\common\UnitDFMUtil.pas',
   UnitMacroListClass2 in '..\..\MacroManage\UnitMacroListClass2.pas',
@@ -32,14 +31,16 @@ uses
   UnitVesselData2 in '..\VesselList\UnitVesselData2.pas',
   UnitEngineMasterData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitEngineMasterData.pas',
   UnitElecMasterData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitElecMasterData.pas',
-  FrmEmailListView2 in '..\FrmEmailListView2.pas' {EmailListViewF},
-  FrameOLEmailList2 in '..\..\..\common\Frame\FrameOLEmailList2.pas' {Frame2: TFrame},
   FrmEditEmailInfo2 in '..\FrmEditEmailInfo2.pas' {EmailInfoF},
-  UnitOLDataType in '..\..\OutlookAddIn2\UnitOLDataType.pas',
   FrmSelectCheckBox in '..\..\..\common\Form\FrmSelectCheckBox.pas' {SelectChcekBoxF},
   UnitMacroRecorderMain2 in '..\..\MacroManage\UnitMacroRecorderMain2.pas' {MacroManageF},
   UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas',
-  FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF};
+  FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF},
+  UnitOLDataType in '..\..\Outlook\UnitOLDataType.pas',
+  UnitStrategy4OLEmailInterface2 in '..\..\Outlook\UnitStrategy4OLEmailInterface2.pas',
+  OLMailWSCallbackInterface2 in '..\..\Outlook\OLMailWSCallbackInterface2.pas',
+  FrmOLControl in '..\..\RPA\Outlook\Util\FrmOLControl.pas' {OLControlF},
+  UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas';
 
 {$R *.res}
 
@@ -52,7 +53,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisASManageF, HiconisASManageF);
-  Application.CreateForm(TASMaterialF, ASMaterialF);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

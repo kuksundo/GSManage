@@ -466,15 +466,23 @@ object HiconisASManageF: THiconisASManageF
     end
     inherited grid_Req: TNextGrid
       Height = 417
+      SelectionColor = 16777175
       OnMouseDown = TDTFgrid_ReqMouseDown
+      ExplicitTop = 167
       ExplicitHeight = 417
       inherited OrderNo: TNxTextColumn
+        ParentFont = False
+      end
+      inherited ClaimNo: TNxTextColumn
         ParentFont = False
       end
       inherited Subject: TNxTextColumn
         ParentFont = False
       end
       inherited NextProcess: TNxTextColumn
+        ParentFont = False
+      end
+      inherited ClaimServiceKind: TNxTextColumn
         ParentFont = False
       end
       inherited PONo: TNxTextColumn
@@ -498,6 +506,21 @@ object HiconisASManageF: THiconisASManageF
       inherited CustomerAddress: TNxMemoColumn
         ParentFont = False
       end
+      inherited ClaimRecvDate: TNxTextColumn
+        ParentFont = False
+      end
+      inherited ClaimInputDate: TNxTextColumn
+        ParentFont = False
+      end
+      inherited ClaimReadyDate: TNxTextColumn
+        ParentFont = False
+      end
+      inherited ClaimClosedDate: TNxTextColumn
+        ParentFont = False
+      end
+      inherited Importance: TNxTextColumn
+        ParentFont = False
+      end
     end
     inherited StatusBarPro1: TStatusBarPro
       Top = 584
@@ -505,7 +528,7 @@ object HiconisASManageF: THiconisASManageF
     end
     inherited imagelist24x24: TImageList
       Bitmap = {
-        494C010101007000C80318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+        494C010101007000D80318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000600000001800000001002000000000000024
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000005C43
@@ -811,7 +834,7 @@ object HiconisASManageF: THiconisASManageF
     end
     inherited ImageList16x16: TImageList
       Bitmap = {
-        494C010102005402D80310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+        494C010102005402E80310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000001000000001002000000000000010
         000000000000000000000000000000000000000000000505052E101010521717
         17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -1020,7 +1043,7 @@ object HiconisASManageF: THiconisASManageF
     end
     inherited ImageList32x32: TImageList
       Bitmap = {
-        494C01010300C800D80420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+        494C01010300C800E80420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000800000002000000001002000000000000040
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

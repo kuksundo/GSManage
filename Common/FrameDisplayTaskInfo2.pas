@@ -376,7 +376,7 @@ begin
   if not Assigned(AVar) then
     exit;
 
-  AVar.EmailMsg.DestGet(g_ProjectDB.Orm, AVar.ID, LIds);
+//  AVar.EmailMsg.DestGet(g_ProjectDB.Orm, AVar.ID, LIds);
   LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIDDynArray(LIds));
   try
     LMailCount := 0;

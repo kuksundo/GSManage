@@ -16,8 +16,8 @@ uses
   mormot.core.datetime,
 
   CommonData2, UnitTodoCollect2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
-  FrmEmailListView2, UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2,
-  FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2
+  UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLControl,//FrmEmailListView2
+  FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2
   ;
 
 type
@@ -370,7 +370,7 @@ type
     FRemoteIPAddress: string;
 
     class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
-    class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TEmailListViewF);
+    class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TOLControlF);
     procedure ShowDTIForm;
     procedure SPType2Combo(ACombo: TComboBox; AFSMState: THiconisASStateMachine=nil);
     //Drag하여 파일 추가한 경우 AFileName <> ''
@@ -429,7 +429,7 @@ uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
   UnitHiconisASVarJsonUtil, UnitNextGridUtil2, FrmASMaterialEdit,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
-  UnitElecMasterData;
+  UnitElecMasterData, UnitOutlookUtil2;
 
 {$R *.dfm}
 
@@ -601,7 +601,7 @@ begin
             ShowMessage('Task 및 Email Add 완료');
           end;
 
-          LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, ASQLEmailMsg.ID, True)
+//          LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, ASQLEmailMsg.ID, True)
         end
         else
         begin
@@ -1446,38 +1446,24 @@ begin
 end;
 
 class procedure TTaskEditF.LoadEmailListFromTask(ATask: TOrmHiconisASTask;
-  AForm: TEmailListViewF);
+  AForm: TOLControlF);
 var
-  LIds: TIDDynArray;
-
-  procedure SetMoveFolderCB;
-  var
-    i,j,k: integer;
-    LFolderPath: string;
-  begin
-    for i := 0 to AForm.FrameOLMailList.grid_Mail.RowCount - 1 do
-    begin
-      LFolderPath := AForm.FrameOLMailList.grid_Mail.CellByName['FolderPath',i].AsString;
-
-      for j := 0 to AForm.FrameOLMailList.MoveFolderCB.Items.Count - 1 do
-      begin
-        k := Pos(AForm.FrameOLMailList.MoveFolderCB.Items.Strings[j], LFolderPath);
-
-        if k > 0 then
-        begin
-          AForm.FrameOLMailList.MoveFolderCB.ItemIndex := j;
-          Exit;
-        end;
-      end;
-    end;
-  end;
+  LOLEmailSrchRec: TOLEmailSrchRec;
+//  LIds: TIDDynArray;
 begin
-  AForm.FrameOLMailList.FillInMoveFolderCB;
-  ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
-  ShowEmailListFromIDs(AForm.FrameOLMailList.grid_Mail, LIds);
+//폼 생성 후 2초후에 FFolderListFromOL가 채워 지므로 아래 함수는 값이 0임
+//  AForm.OLEmailListFr.FillInMoveFolderCB;
+
+  LOLEmailSrchRec.FHullNo := ATask.HullNo;
+  LOLEmailSrchRec.FProjectNo := ATask.Order_No;
+  LOLEmailSrchRec.FClaimNo := ATask.ClaimNo;
+
+  AForm.ShowEmailListFromSrchRec(LOLEmailSrchRec);
+//  ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
+//  ShowEmailListFromIDs(AForm.OLEmailListFr.grid_Mail, LIds);
 //  LFolderPath := AForm.grid_Mail.CellByName['FolderPath',].AsString;
-  SetMoveFolderCB;//(AForm.MoveFolderCB, AForm.grid_Mail);
-  AForm.FrameOLMailList.SubFolderNameEdit.Text := ATask.Order_No;
+//  AForm.OLEmailListFr.SetMoveFolderCBByFolderPath();//(AForm.MoveFolderCB, AForm.grid_Mail);
+  AForm.OLEmailListFr.SubFolderNameEdit.Text := ATask.HullNo + '\' + ATask.ClaimNo;
 end;
 
 procedure TTaskEditF.LoadGrid2TaskEditForm(AGrid: TNextGrid; ARow: integer;
@@ -2469,10 +2455,10 @@ end;
 
 class procedure TTaskEditF.ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
 var
-  LViewMailListF: TEmailListViewF;
+  LViewMailListF: TOLControlF;
   LUtf8: RawUTF8;
 begin
-  LViewMailListF := TEmailListViewF.Create(nil);
+  LViewMailListF := TOLControlF.Create(nil);
   try
     begin
 //      LViewMailListF.FTask := ATask;
@@ -2481,12 +2467,12 @@ begin
         LoadEmailListFromTask(ATask, LViewMailListF)
       else
       begin
-        LViewMailListF.FrameOLMailList.FRemoteIPAddress := ARemoteIPAddress;
+        LViewMailListF.OLEmailListFr.FRemoteIPAddress := ARemoteIPAddress;
         LUtf8 := IntToStr(ATask.TaskID);
         LUtf8 := SendReq2Server_Http(ARemoteIPAddress, APort, ARoot,
           CMD_REQ_TASK_EAMIL_LIST, LUtf8);
         LUtf8 := MakeBase64ToUTF8(LUtf8);
-        ShowEmailListFromJson(LViewMailListF.FrameOLMailList.grid_Mail, LUtf8);
+        ShowEmailListFromJson(LViewMailListF.OLEmailListFr.grid_Mail, LUtf8);
       end;
 
       if LViewMailListF.ShowModal = mrOK then
