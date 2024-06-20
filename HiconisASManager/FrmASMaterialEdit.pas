@@ -202,14 +202,14 @@ procedure TASMaterialF.LoadMaterialVar2Form(AVar: variant);
 begin
   PORNoEdit.Text := AVar.PORNo;
   MaterialNameEdit.Text := AVar.MaterialName;
-  PORIssuePicker.Date := TimeLogToDateTime(AVar.PORIssueDate);//VarToDateTime(AVar.PORIssueDate);
+  PORIssuePicker.Date := VarToDateTime(AVar.PORIssueDate);//TimeLogToDateTime(AVar.PORIssueDate);
   LeadTimeEdit.Text := IntToStr(AVar.LeadTime);
   FreeOrChargeCB.ItemIndex := g_FreeOrCharge.ToOrdinal(AVar.FreeOrCharge);
   SupplyCountEdit.Text := IntToStr(AVar.SupplyCount);
   UnitPriceEdit.Text := AVar.UnitPrice;
   PriceAmountEdit.Text := AVar.PriceAmount;
-  ReqDeliveryDatePicker.Date := TimeLogToDateTime(AVar.ReqDeliveryDate);//VarToDateTime(AVar.ReqDeliveryDate);
-  ReqArriveDatePicker.Date := TimeLogToDateTime(AVar.ReqArriveDate);
+  ReqDeliveryDatePicker.Date := VarToDateTime(AVar.ReqDeliveryDate);//;TimeLogToDateTime(AVar.ReqDeliveryDate)
+  ReqArriveDatePicker.Date := VarToDateTime(AVar.ReqArriveDate);//TimeLogToDateTime(AVar.ReqArriveDate);
   DeliveryKindCB.ItemIndex := g_DeliveryKind.ToOrdinal(AVar.DeliveryKind);
   StoreAddressEdit.Text := AVar.StoreAddress;
   PortNameEdit.Text := AVar.PortName;
@@ -231,14 +231,14 @@ procedure TASMaterialF.LoadMaterialVarFromForm(var AVar: variant);
 begin
   AVar.PORNo := PORNoEdit.Text;
   AVar.MaterialName := MaterialNameEdit.Text;
-  AVar.PORIssueDate := TimeLogFromDateTime(PORIssuePicker.Date);
+  AVar.PORIssueDate := VarFromDateTime(PORIssuePicker.Date);
   AVar.LeadTime := StrToIntDef(LeadTimeEdit.Text, 0);
   AVar.FreeOrCharge := g_FreeOrCharge.ToString(FreeOrChargeCB.ItemIndex);
   AVar.SupplyCount := StrToIntDef(SupplyCountEdit.Text, 0);
   AVar.UnitPrice := UnitPriceEdit.Text;
   AVar.PriceAmount := PriceAmountEdit.Text;
-  AVar.ReqDeliveryDate := TimeLogFromDateTime(ReqDeliveryDatePicker.Date);
-  AVar.ReqArriveDate := TimeLogFromDateTime(ReqArriveDatePicker.Date);
+  AVar.ReqDeliveryDate := VarFromDateTime(ReqDeliveryDatePicker.Date);
+  AVar.ReqArriveDate := VarFromDateTime(ReqArriveDatePicker.Date);
   AVar.DeliveryKind := g_DeliveryKind.ToString(DeliveryKindCB.ItemIndex);
   AVar.StoreAddress := StoreAddressEdit.Text;
   AVar.PortName := PortNameEdit.Text;

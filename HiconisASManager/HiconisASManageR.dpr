@@ -26,24 +26,21 @@ uses
   JvgXMLSerializer_pjh in '..\..\..\..\..\..\project\common\JvgXMLSerializer_pjh.pas',
   UnitHiconisMasterRecord in '..\..\..\NoGitHub\RecordUnit2\HiconisASManager\UnitHiconisMasterRecord.pas',
   UnitDFMUtil in '..\..\..\..\..\..\project\common\UnitDFMUtil.pas',
-  UnitMacroListClass2 in '..\..\MacroManage\UnitMacroListClass2.pas',
   UnitVesselMasterRecord2 in '..\VesselList\UnitVesselMasterRecord2.pas',
   UnitVesselData2 in '..\VesselList\UnitVesselData2.pas',
   UnitEngineMasterData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitEngineMasterData.pas',
   UnitElecMasterData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitElecMasterData.pas',
   FrmEditEmailInfo2 in '..\FrmEditEmailInfo2.pas' {EmailInfoF},
   FrmSelectCheckBox in '..\..\..\common\Form\FrmSelectCheckBox.pas' {SelectChcekBoxF},
-  UnitMacroRecorderMain2 in '..\..\MacroManage\UnitMacroRecorderMain2.pas' {MacroManageF},
   UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas',
   FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF},
-  UnitOLDataType in '..\..\Outlook\UnitOLDataType.pas',
-  UnitStrategy4OLEmailInterface2 in '..\..\Outlook\UnitStrategy4OLEmailInterface2.pas',
-  OLMailWSCallbackInterface2 in '..\..\Outlook\OLMailWSCallbackInterface2.pas',
   FrmOLControl in '..\..\RPA\Outlook\Util\FrmOLControl.pas' {OLControlF},
   UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas',
   UnitOLControlWorker in '..\..\RPA\Outlook\Util\UnitOLControlWorker.pas',
   FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame},
-  FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas';
+  FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas',
+  FrmSerialCommConfig in '..\..\..\..\..\..\project\util\MacroManagement\FrmSerialCommConfig.pas' {SerialCommConfigF},
+  UnitNameEdit in '..\..\..\..\..\..\project\util\MacroManagement\UnitNameEdit.pas' {NameEditF};
 
 {$R *.res}
 
@@ -56,6 +53,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisASManageF, HiconisASManageF);
+  Application.CreateForm(TNameEditF, NameEditF);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

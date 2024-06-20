@@ -958,7 +958,7 @@ object ASMaterialF: TASMaterialF
       ImagePos = ipTop
       Version = '1.0.0.1'
       Align = alRight
-      Caption = #51200#51109
+      Caption = #51201#50857
       ModalResult = 1
       TabOrder = 1
     end
