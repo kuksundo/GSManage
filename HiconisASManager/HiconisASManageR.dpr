@@ -40,7 +40,10 @@ uses
   UnitStrategy4OLEmailInterface2 in '..\..\Outlook\UnitStrategy4OLEmailInterface2.pas',
   OLMailWSCallbackInterface2 in '..\..\Outlook\OLMailWSCallbackInterface2.pas',
   FrmOLControl in '..\..\RPA\Outlook\Util\FrmOLControl.pas' {OLControlF},
-  UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas';
+  UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas',
+  UnitOLControlWorker in '..\..\RPA\Outlook\Util\UnitOLControlWorker.pas',
+  FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame},
+  FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas';
 
 {$R *.res}
 

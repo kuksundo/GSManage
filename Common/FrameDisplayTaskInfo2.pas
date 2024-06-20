@@ -20,7 +20,7 @@ uses
   {$ELSE}
   UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport, UnitElecServiceData2,
   {$ENDIF}
-  UnitIniConfigSetting2, UnitUserDataRecord2, SBPro;
+  UnitIniConfigSetting2, UnitUserDataRecord2, SBPro, UnitOLEmailRecord2;
 
 type
   TDisplayTaskF = class(TFrame)
@@ -369,39 +369,17 @@ procedure TDisplayTaskF.LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGr
   ARow: integer);
 var
   LIds: TIDDynArray;
-  LSQLEmailMsg: TSQLEmailMsg;
   LSubject: string;
   LMailCount: integer;
 begin
   if not Assigned(AVar) then
     exit;
 
-//  AVar.EmailMsg.DestGet(g_ProjectDB.Orm, AVar.ID, LIds);
-  LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIDDynArray(LIds));
-  try
-    LMailCount := 0;
-    LSubject := '';
+  AVar.NumOfEMails := GetEmailCountFromTaskID(AVar.TaskID);
+//  AVar.EmailSubject := LSubject;
+  AVar.TaskID := AVar.ID;
 
-    while LSQLEmailMsg.FillOne do
-    begin
-      if (LSubject = '') and (LSQLEmailMsg.ParentID = '') then
-      begin
-        LSubject := LSQLEmailMsg.Subject;
-//        break;
-      end;
-
-      Inc(LMailCount);
-    end;
-
-    AVar.NumOfEMails := LMailCount;
-    AVar.EmailSubject := LSubject;
-    AVar.EmailID := LSQLEmailMsg.ID;
-    AVar.TaskID := AVar.ID;
-
-    LoadGSTask2Grid(AVar, AGrid, ARow);
-  finally
-    FreeAndNil(LSQLEmailMsg);
-  end;
+  LoadGSTask2Grid(AVar, AGrid, ARow);
 end;
 
 procedure TDisplayTaskF.MakeCustReg(ARow: integer);
@@ -1651,15 +1629,19 @@ end;
 procedure TDisplayTaskF.ShowTaskFormFromDB(AIDList: TIDList; ARow: integer);
 var
   LTask: TOrmHiconisASTask;
+  LResult: integer;
 begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
+  LTask.TaskID := LTask.ID;
   try
   {$IFDEF GAMANAGER}
-    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ELSE}
     TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ENDIF}
-    LoadTaskVar2Grid(LTask, grid_Req, ARow);
+    //Task Edit Form에서 "저장" 버튼을 누른 경우
+    if LResult = mrOK then
+      LoadTaskVar2Grid(LTask, grid_Req, ARow);
   finally
     if Assigned(LTask) then
       FreeAndNil(LTask);

@@ -4,6 +4,7 @@ interface
 
 uses Windows, Sysutils, Dialogs, Classes, System.Variants, DateUtils,
   mormot.core.variants, mormot.core.base, mormot.core.unicode, mormot.core.json,
+  mormot.core.text,
   UnitExcelUtil, CommonData2, Word2010, Excel2010, UnitJHPFileData,
   UnitJHPFileRecord;
 
@@ -133,6 +134,9 @@ type
   procedure MakeSubConInvoice(ACompanyName: string; ADoc_Invoice_Rec:Doc_Invoice_Rec);
   procedure MakeSubConInvoice_SANISN(ADoc_Invoice_Rec:Doc_Invoice_Rec);
   procedure MakeSubConInvoice_LUXCO(ADoc_Invoice_Rec:Doc_Invoice_Rec);
+
+  //Claim Info를 Json으로 반환 함
+  function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
 
   //힘센엔진 견적서
 var
@@ -1062,6 +1066,84 @@ begin
     LRange := LWorksheet.range['G24'];
     LRange.FormulaR1C1 := LTotalPrice2;
   end;
+end;
+
+function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LWorksheet: OleVariant;
+  LRange: OleVariant;
+  LDoc: IDocDict;
+begin
+  if not FileExists(AXlsFileName) then
+  begin
+    ShowMessage('File(' + AXlsFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LDoc := DocDict('{}');
+
+  LExcel := GetActiveExcelOleObject(True);
+  LWorkBook := LExcel.Workbooks.Open(AXlsFileName);
+  LExcel.Visible := true;
+  LWorksheet := LExcel.ActiveSheet;
+
+  LRange := LWorksheet.range['F2'];
+  LDoc.S['ShipName'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['R2'];
+  LDoc.S['HullNo'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['Z2'];
+  LDoc.S['ClaimNo'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F3'];
+  LDoc.S['Subject'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['Z3'];
+  LDoc.S['IssueDate'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F4'];
+  LDoc.S['Supplier'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F5'];
+  LDoc.S['Category'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F6'];
+  LDoc.S['System'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F7'];
+  LDoc.S['Location'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F8'];
+  LDoc.S['DefectType'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F9'];
+  LDoc.S['Cause'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['A12'];
+  LDoc.S['ProblemDesc'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['A14'];
+  LDoc.S['ByShipStaff'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['Q14'];
+  LDoc.S['PartsRequired'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['A15'];
+  LDoc.S['SE'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['Q15'];
+  LDoc.S['TSInfo'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['A17'];
+  LDoc.S['OwnerComment'] := LRange.FormulaR1C1;
+
+  LRange := LWorksheet.range['F18'];
+  LDoc.S['AgentDetail'] := LRange.FormulaR1C1;
+
+  Result := LDoc.ToJson(jsonUnquotedPropNameCompact)
 end;
 
 end.

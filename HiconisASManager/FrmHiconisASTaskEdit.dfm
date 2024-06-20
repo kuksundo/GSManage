@@ -22,7 +22,7 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
@@ -365,10 +365,6 @@ object TaskEditF: TTaskEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -616,10 +612,6 @@ object TaskEditF: TTaskEditF
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         599
         355)
@@ -1050,10 +1042,6 @@ object TaskEditF: TTaskEditF
     object SubConTS: TTabSheet
       Caption = #54801#47141#49324
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 185
@@ -1626,10 +1614,6 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object MaterialGrid: TNextGrid
         Left = 0
         Top = 33
@@ -1678,7 +1662,7 @@ object TaskEditF: TTaskEditF
           Position = 1
           SortType = stAlphabetic
         end
-        object PORIssueDate: TNxTextColumn
+        object PORIssueDate: TNxDateColumn
           Alignment = taCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1694,7 +1678,9 @@ object TaskEditF: TTaskEditF
           Header.Font.Style = []
           ParentFont = False
           Position = 2
-          SortType = stAlphabetic
+          SortType = stDate
+          NoneCaption = 'None'
+          TodayCaption = 'Today'
         end
         object LeadTime: TNxTextColumn
           Alignment = taCenter
@@ -2137,10 +2123,6 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -3345,7 +3327,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800F40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800040510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5233,26 +5215,26 @@ object TaskEditF: TTaskEditF
     Target = fileGrid
     WinTarget = 0
     Left = 12
-    Top = 588
+    Top = 612
   end
   object DataFormatAdapterTarget: TDataFormatAdapter
     DragDropComponent = DropEmptyTarget1
     DataFormatName = 'TVirtualFileStreamDataFormat'
     Left = 40
-    Top = 588
+    Top = 612
   end
   object DataFormatAdapter1: TDataFormatAdapter
     DragDropComponent = DropEmptyTarget1
     DataFormatName = 'TFileDataFormat'
     Left = 74
-    Top = 588
+    Top = 612
   end
   object Imglist16x16: TImageList
     ColorDepth = cd32Bit
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400C80110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400D80110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5923,18 +5905,18 @@ object TaskEditF: TTaskEditF
     DragDropComponent = DropEmptySource1
     DataFormatName = 'TVirtualFileStreamDataFormat'
     Left = 44
-    Top = 619
+    Top = 643
   end
   object DropEmptySource1: TDropEmptySource
     DragTypes = [dtCopy, dtMove]
     Left = 12
-    Top = 619
+    Top = 643
   end
   object DataFormatAdapter3: TDataFormatAdapter
     DragDropComponent = DropEmptySource1
     DataFormatName = 'TVirtualFileStreamDataFormat'
     Left = 76
-    Top = 623
+    Top = 639
   end
   object PopupMenu2: TPopupMenu
     Left = 272

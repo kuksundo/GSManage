@@ -18,14 +18,18 @@ type
 
   TEngineerKind = (ekNone, ekSuperIntendent, ekServiceEngineer, ekServiceEngineer_Elec, ekTechnician, ekFinal);
 
+//  TGSDocType = (dtNull,
+//              dtQuote2Cust4Material, dtQuote2Cust4Service, dtQuoteFromSubCon,
+//              dtPOFromCustomer, dtPO2SubCon,
+//              dtInvoice2Customer, dtInvoiceFromSubCon,
+//              dtSRFromSubCon,
+//              dtTaxBill2Customer, dtTaxBillFromSubCon,
+//              dtCompanySelection, dtConfirmComplete, dtBudgetApproval,
+//              dtContract, dtCert, dtFinal);
+
   TGSDocType = (dtNull,
-              dtQuote2Cust4Material, dtQuote2Cust4Service, dtQuoteFromSubCon,
-              dtPOFromCustomer, dtPO2SubCon,
-              dtInvoice2Customer, dtInvoiceFromSubCon,
-              dtSRFromSubCon,
-              dtTaxBill2Customer, dtTaxBillFromSubCon,
-              dtCompanySelection, dtConfirmComplete, dtBudgetApproval,
-              dtContract, dtCert, dtFinal);
+              dtClaimReport,
+              dtFinal);
 
   TSalesProcess = (spNone, spQtnReqRecvFromCust, spQtnReq2SubCon, spQtnRecvFromSubCon, spQtnSend2Cust,
     spSEAttendReqFromCust, spVslSchedReq2Cust, spSECanAvail2SubCon, spSEAvailRecvFromSubCon,
@@ -117,12 +121,15 @@ const
       'Technician', ''
     );
 
+//  R_GSDocType : array[Low(TGSDocType)..High(TGSDocType)] of string =
+//    ('', '부품 견적서(To 고객)', '서비스 견적서(To 고객)', '부품 견적서(From 협력사)',
+//      'PO(From 고객)', 'PO(To 협력사)', 'Invoice(To 고객)', 'Invoice(From 협력사)',
+//      'Service Report', '세금계산서(To 고객)', '세금계산서(From 협력사)',
+//      '업체선정품의서', '공사완료확인서', '예산승인품의서', '계약서',
+//      '인증서', '');
+
   R_GSDocType : array[Low(TGSDocType)..High(TGSDocType)] of string =
-    ('', '부품 견적서(To 고객)', '서비스 견적서(To 고객)', '부품 견적서(From 협력사)',
-      'PO(From 고객)', 'PO(To 협력사)', 'Invoice(To 고객)', 'Invoice(From 협력사)',
-      'Service Report', '세금계산서(To 고객)', '세금계산서(From 협력사)',
-      '업체선정품의서', '공사완료확인서', '예산승인품의서', '계약서',
-      '인증서', '');
+    ('', 'Claim Report', '');
 
   R_SalesProcess : array[Low(TSalesProcess)..High(TSalesProcess)] of string =
     ('', '견적요청접수 <- 고객', '견적요청 -> 협력사', '젼적서입수 <- 협력사',

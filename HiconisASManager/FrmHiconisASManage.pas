@@ -152,7 +152,7 @@ type
     procedure ExecMethod(MethodName:string; const Args: array of TValue);
 
     function SaveCurrentTask2File(AFileName: string = '') : string;
-    procedure CreateNewTask;
+    procedure CreateNewTask(AJson: RawUtf8='');
 
     //Websocket-b
     procedure CreateHttpServer4WS(APort, ATransmissionKey: string;
@@ -168,6 +168,9 @@ type
 
     procedure TestRemoteTaskList;
     procedure TestRemoteTaskDetail;
+
+    //g_GSDocType 반환함
+    function ShowFileSelectForm(): integer;
   public
     //Main or 단순 조회: Main := 0, 단순 조회 := 1
     FProgMode: integer;
@@ -195,8 +198,8 @@ implementation
 
 Uses System.DateUtils, OtlParallel, Clipbrd, UnitIPCModule2,
   Vcl.ogutil, UnitDragUtil, UnitHiconisASVarJsonUtil, FrmOLControl,//FrmEmailListView2,
-  UnitBase64Util2, UnitCmdExecService,
-  FrmEditTariff2, UnitGSTariffRecord2, FrmDisplayTariff2, OLMailWSCallbackInterface2;
+  UnitBase64Util2, UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
+  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitMakeReport2;
 
 {$R *.dfm}
 
@@ -211,7 +214,7 @@ begin
   Parallel.Async(
     procedure (const task: IOmniTask)
     var
-      i: integer;
+      i, LResult: integer;
       handles: array [0..1] of THandle;
       msg    : TOmniMessage;
       rec    : TOLMsgFileRecord;
@@ -291,7 +294,7 @@ begin
   //                  LIsAddTask := True;
                     LTask.InqRecvDate := TimeLogFromDateTime(rec.FReceiveDate);
                     LTask.ChargeInPersonId := rec.FUserEmail;
-                    LIsAddTask := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,LEmailMsg,null);
+                    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,LEmailMsg,null);
     //                g_ProjectDB.Add(LTask, true);
     //                LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, LEmailMsg.ID, true);
                   end;
@@ -391,13 +394,19 @@ begin
 //  FCommModes := FCommModes + [cmWebSocket];
 end;
 
-procedure THiconisASManageF.CreateNewTask;
+procedure THiconisASManageF.CreateNewTask(AJson: RawUtf8);
 var
   LTask: TOrmHiconisASTask;
+  LResult: integer;
 begin
   LTask := TOrmHiconisASTask.Create;
   try
-  if FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null) then
+    if AJson = '' then
+      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null)
+    else
+      LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
+
+  if LResult = mrOK then
     TDTF.LoadTaskVar2Grid(LTask, TDTF.grid_Req);
   finally
     LTask.Free;
@@ -436,78 +445,63 @@ procedure THiconisASManageF.DropEmptyTarget1Drop(Sender: TObject;
   ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
 var
   LTargetStream: TStream;
-  LStr: RawByteString;
-  LProcessOK: Boolean;
-  LFileName: string;
-  rec    : TOLMsgFileRecord;
-  LOmniValue: TOmniValue;
+  LRawByte: RawByteString;
+  LFromOutlook: Boolean;
+  LFileName, LFileExt: string;
+  LJson: RawUtf8;
+  LDocType: integer;
 begin
   LFileName := '';
-  // 윈도우 탐색기에서 Drag 했을 경우 LFileName에 Drag한 File Name이 존재함
-  // OutLook에서 Drag한 경우에는 LFileName = '' 임
+  LFromOutlook := False;
   if (DataFormatAdapter1.DataFormat <> nil) then
   begin
     LFileName := (DataFormatAdapter1.DataFormat as TFileDataFormat).Files.Text;
 
-    if LFileName <> '' then
+    // OutLook에서 Drag한 경우에는 LFileName = '' 임
+    if LFileName = '' then
     begin
-      if ExtractFileExt(LFileName) <> '.hms' then
+      // OutLook에서 첨부파일을 Drag 했을 경우
+      if (TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count > 0) then
       begin
-        ShowMessage('This file is not auto created by HMS from explorer');
-        exit;
+        LFileName := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames[0];
+        LFileExt := ExtractFileExt(LFileName);
+
+        if LFileExt = '.xlsx' then
+        begin
+          LTargetStream := GetStreamFromDropDataFormat(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat));
+          try
+            if not Assigned(LTargetStream) then
+              ShowMessage('Not Assigned');
+
+            LRawByte := StreamToRawByteString(LTargetStream);
+            LFromOutlook := True;
+          finally
+            if Assigned(LTargetStream) then
+              LTargetStream.Free;
+          end;
+        end;
       end;
-
-      LStr := StringFromFile(LFileName);
-      rec.FSubject := LStr;
-      LOmniValue := TOmniValue.FromRecord<TOLMsgFileRecord>(rec);
-      FIPCMQFromOL.Enqueue(TOmniMessage.Create(3, LOmniValue));
-//      LProcessOK := ProcessTaskJson(LStr);
-      exit;
-    end;
-  end;
-
-  // OutLook에서 첨부파일을 Drag 했을 경우
-  if (TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count > 0) then
-  begin
-    LFileName := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames[0];
-
-    if ExtractFileExt(LFileName) <> '.msg' then
+    end
+    else// 윈도우 탐색기에서 Drag 했을 경우 LFileName에 Drag한 File Name이 존재함
     begin
-      if ExtractFileExt(LFileName) <> '.hms' then
+      LFileExt := ExtractFileExt(LFileName);
+
+      if LFileExt = '.xlsx' then
       begin
-        ShowMessage('This file is not auto created by HMS');
-        exit;
-      end;
-
-      LTargetStream := GetStreamFromDropDataFormat(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat));
-      try
-        if not Assigned(LTargetStream) then
-          ShowMessage('Not Assigned');
-
-        LStr := StreamToRawByteString(LTargetStream);
-  //      LStr := LTargetStream.DataString;
-
-        rec.FSubject := LStr;
-        LOmniValue := TOmniValue.FromRecord<TOLMsgFileRecord>(rec);
-        FIPCMQFromOL.Enqueue(TOmniMessage.Create(Ord(dkmqFileFromDrag), LOmniValue));
-        exit;
-//        LProcessOK := ProcessTaskJson(LStr);
-
-  //      LTargetStream.Seek(0,soBeginning);
-  //      LStr := ReadStringFromStream(LTargetStream);
-  //      ShowMessage(LStr);
-      finally
-        if Assigned(LTargetStream) then
-          LTargetStream.Free;
+        LRawByte := StringFromFile(LFileName);
       end;
     end;
   end;
 
-  // OutLook에서 메일을 Drag 했을 경우
-  if not LProcessOK and (DataFormatAdapterOutlook.DataFormat <> nil) then
+  if LFileName <> '' then
   begin
-    SendReqOLEmailInfo;
-//    ShowMessage('Outlook Mail Dropped');
+    LDocType := ShowFileSelectForm();
+
+    if g_GSDocType.ToType(LDocType) = dtClaimReport then
+    begin
+      LJson := GetClaimInfoJsonFromReport_Xls(LFileName);
+      CreateNewTask(LJson);
+    end;
   end;
 end;
 
@@ -593,6 +587,7 @@ begin
   AsynDisplayOLMsg2Grid();
   TDTF.rg_periodClick(nil);
   g_ExecuteFunction := ExecFunc;
+  g_GSDocType.InitArrayRecord(R_GSDocType);
 
   TDTF.LoadConfigFromFile;
 end;
@@ -1098,6 +1093,29 @@ function THiconisASManageF.SessionCreate(Sender: TRestServer; Session: TAuthSess
   Ctxt: TRestServerURIContext): boolean;
 begin
 
+end;
+
+function THiconisASManageF.ShowFileSelectForm: integer;
+var
+  LFileSelectF: TFileSelectF;
+begin
+  LFileSelectF := TFileSelectF.Create(nil);
+  try
+    with LFileSelectF do
+    begin
+      JvFilenameEdit1.Visible := False;
+      Label2.Visible := False;
+
+      g_GSDocType.SetType2Combo(LFileSelectF.DocTypeCombo);
+
+      if ShowModal = mrOK then
+      begin
+        Result := LFileSelectF.DocTypeCombo.ItemIndex;
+      end;
+    end;
+  finally
+    LFileSelectF.Free;
+  end;
 end;
 
 procedure THiconisASManageF.TDTFbtn_CloseClick(Sender: TObject);

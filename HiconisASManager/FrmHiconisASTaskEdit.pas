@@ -239,7 +239,6 @@ type
     MaterialGrid: TNextGrid;
     PORNo: TNxTextColumn;
     MaterialName: TNxTextColumn;
-    PORIssueDate: TNxTextColumn;
     LeadTime: TNxTextColumn;
     FreeOrCharge: TNxTextColumn;
     SupplyCount: TNxTextColumn;
@@ -268,6 +267,7 @@ type
     SalesProcTypeCB: TComboBox;
     ClaimServiceKindCB: TComboBox;
     CompanyName2: TNxTextColumn;
+    PORIssueDate: TNxDateColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -415,9 +415,12 @@ type
 
   function ProcessTaskJson(AJson: String): Boolean;
   function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-      ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean = False): Boolean;
+      ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean = False): integer;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
+
+  //Manager Form에서 Claim Report.xls를 Drop 했을때 실행
+  function ShowEditFormFromClaimReportVar(ATask: TOrmHiconisASTask; AJson: RawUtf8): integer;
 
 var
 //  TaskEditF: TTaskEditF;
@@ -504,7 +507,7 @@ begin
 end;
 
 function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-  ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean): Boolean;
+  ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean): integer;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
@@ -517,6 +520,8 @@ var
   i: integer;
   LID: TID;
 begin
+  Result := -1;
+
   LTaskEditF := TTaskEditF.Create(nil);
   try
     with LTaskEditF do
@@ -578,10 +583,11 @@ begin
       LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
       LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
 
+      Result := LTaskEditF.ShowModal;
+
       //"저장" 버튼을 누른 경우
-      if LTaskEditF.ShowModal = mrOK then
+      if Result = mrOK then
       begin
-        Result := True;
         LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
 
         //IPC를 통해서  Email을 수신한 경우
@@ -658,9 +664,16 @@ begin
   try
     with LTaskEditF do
     begin
-      FRemoteIPAddress := ARemoteIPAddress;
+      if ARemoteIPAddress = '' then
+      begin
+
+      end
+      else
+      begin
+        FRemoteIPAddress := ARemoteIPAddress;
+      end;
+
       LTask := TOrmHiconisASTask.Create;
-//      LGSFile := TSQLGSFile.Create;
       LCustomer := TSQLCustomer.Create;
       LSubCon := TSQLSubCon.Create;
       LMat4Proj := TSQLMaterial4Project.Create;
@@ -744,6 +757,93 @@ begin
   finally
     FreeAndNil(LTaskEditF);
   end;
+end;
+
+function ShowEditFormFromClaimReportVar(ATask: TOrmHiconisASTask; AJson: RawUtf8): integer;
+var
+  LTaskEditF: TTaskEditF;
+  LDoc: IDocDict;
+  LTask: TOrmHiconisASTask;
+  LCustomer: TSQLCustomer;
+  LMat4Proj: TSQLMaterial4Project;
+  LFiles: TSQLGSFile;
+  LSubConList: TObjectList<TSQLSubCon>;
+begin
+  //신규 생성시 TaskId가 정해지지 않았음
+  LTaskEditF := TTaskEditF.Create(nil);
+  LTask := ATask;
+  LFiles := TSQLGSFile.Create;
+  try
+    LDoc := DocDict(AJson);
+
+    with LTaskEditF do
+    begin
+      ClaimNoEdit.Text := LDoc['ClaimNo'];
+      HullNoEdit.Text := LDoc['HullNo'];
+      ShipNameEdit.Text := LDoc['ShipName'];
+      WorkSummaryEdit.Text := LDoc['Subject'];
+      ClaimReasonMemo.Text := LDoc['Cause'];
+      CustAgentMemo.Text := LDoc['AgentDetail'];
+
+      LCustomer := GetCustomerFromTask(LTask);
+//      LoadCustomer2Form(LCustomer, LTaskEditF);
+//
+//      LSubConList := TObjectList<TSQLSubCon>.Create;
+//      try
+//        GetSubConFromTaskIDWithInvoiceItems(LTask.ID, LSubConList);
+//        LoadSubConList2Form(LSubConList, LTaskEditF);
+//      finally
+//        LSubConList.Free;
+//      end;
+//
+//      LMat4Proj := GetMaterial4ProjFromTask(LTask); //복수개가 반환됨
+//      try
+//        if LMat4Proj.IsUpdate then
+//        begin
+//          LMat4Proj.FillRewind;
+//
+//          while LMat4Proj.FillOne do
+//          begin
+//            LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
+//          end;//while
+//        end;
+//      finally
+//        LMat4Proj.Free;
+//      end;
+
+      Result := ShowModal();
+
+      //"저장" 버튼을 누른 경우
+      if Result = mrOK then
+      begin
+        LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
+        AddOrUpdateTask(LTask);
+
+        if High(FSQLGSFiles.Files) >= 0 then
+        begin
+          g_FileDB.Delete(TSQLGSFile, FSQLGSFiles.ID);
+          FSQLGSFiles.TaskID := LTask.ID;
+          g_FileDB.Add(FSQLGSFiles, true);
+        end
+        else
+          g_FileDB.Delete(TSQLGSFile, FSQLGSFiles.ID);
+
+        //고객정보 탭 정보 Load -> LCustomer
+        LoadTaskForm2Customer(LTaskEditF, LCustomer, LTask.ID);
+        AddOrUpdateCustomer(LCustomer);
+        //협력사 탭 정보 Load and Save To DB
+        SaveSubConFromForm(LTaskEditF, LTask.ID);
+        //자재정보 탭 Load -> LMat4Proj
+        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, LTask.ID);
+      end;
+    end;//with
+
+  finally
+    LCustomer.Free;
+    LFiles.Free;
+    LTaskEditF.Free;
+  end;
+
 end;
 
 procedure TTaskEditF.AddOrUpdateMaterial2GridFromVar(ADoc: Variant;
@@ -1447,18 +1547,18 @@ end;
 
 class procedure TTaskEditF.LoadEmailListFromTask(ATask: TOrmHiconisASTask;
   AForm: TOLControlF);
-var
-  LOLEmailSrchRec: TOLEmailSrchRec;
+//var
+//  LOLEmailSrchRec: TOLEmailSrchRec;
 //  LIds: TIDDynArray;
 begin
 //폼 생성 후 2초후에 FFolderListFromOL가 채워 지므로 아래 함수는 값이 0임
 //  AForm.OLEmailListFr.FillInMoveFolderCB;
 
-  LOLEmailSrchRec.FHullNo := ATask.HullNo;
-  LOLEmailSrchRec.FProjectNo := ATask.Order_No;
-  LOLEmailSrchRec.FClaimNo := ATask.ClaimNo;
+//  LOLEmailSrchRec.FHullNo := ATask.HullNo;
+//  LOLEmailSrchRec.FProjectNo := ATask.Order_No;
+//  LOLEmailSrchRec.FClaimNo := ATask.ClaimNo;
 
-  AForm.ShowEmailListFromSrchRec(LOLEmailSrchRec);
+  AForm.OLEmailListFr.ShowEmailListFromSrchRec();
 //  ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
 //  ShowEmailListFromIDs(AForm.OLEmailListFr.grid_Mail, LIds);
 //  LFolderPath := AForm.grid_Mail.CellByName['FolderPath',].AsString;
@@ -2456,11 +2556,18 @@ end;
 class procedure TTaskEditF.ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
 var
   LViewMailListF: TOLControlF;
+  LOLEmailSrchRec: TOLEmailSrchRec;
   LUtf8: RawUTF8;
 begin
   LViewMailListF := TOLControlF.Create(nil);
   try
     begin
+      LOLEmailSrchRec.FTaskID := ATask.TaskID;
+      LOLEmailSrchRec.FProjectNo := ATask.Order_No;
+      LOLEmailSrchRec.FHullNo := ATask.HullNo;
+      LOLEmailSrchRec.FClaimNo := ATask.ClaimNo;
+
+      LViewMailListF.OLEmailListFr.SetOLEmailSrchRec(LOLEmailSrchRec);
 //      LViewMailListF.FTask := ATask;
 //      LViewMailListF.SetMoveFolderIndex; //모든 StoredID가 동일하여 효과 없음
       if ARemoteIPAddress = '' then
