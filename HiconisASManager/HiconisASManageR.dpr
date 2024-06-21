@@ -40,7 +40,12 @@ uses
   FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame},
   FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas',
   FrmSerialCommConfig in '..\..\..\..\..\..\project\util\MacroManagement\FrmSerialCommConfig.pas' {SerialCommConfigF},
-  UnitNameEdit in '..\..\..\..\..\..\project\util\MacroManagement\UnitNameEdit.pas' {NameEditF};
+  UnitNameEdit in '..\..\..\..\..\..\project\util\MacroManagement\UnitNameEdit.pas' {NameEditF},
+  UnitHiASMaterialRecord in 'UnitHiASMaterialRecord.pas',
+  UnitHiASSubConRecord in 'UnitHiASSubConRecord.pas',
+  UnitHiASToDoRecord in 'UnitHiASToDoRecord.pas',
+  FrmToDoList2 in '..\..\..\Common\Form\FrmToDoList2.pas' {ToDoListF2},
+  UnitToDoList in '..\..\..\Common\UnitToDoList.pas';
 
 {$R *.res}
 
@@ -53,7 +58,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisASManageF, HiconisASManageF);
-  Application.CreateForm(TNameEditF, NameEditF);
+  Application.CreateForm(TToDoListF2, ToDoListF2);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

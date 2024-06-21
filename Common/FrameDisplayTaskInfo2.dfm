@@ -101,8 +101,8 @@ object DisplayTaskF: TDisplayTaskF
     end
     object JvLabel1: TJvLabel
       AlignWithMargins = True
-      Left = 556
-      Top = 10
+      Left = 754
+      Top = 70
       Width = 80
       Height = 25
       Alignment = taCenter
@@ -182,13 +182,13 @@ object DisplayTaskF: TDisplayTaskF
     end
     object JvLabel4: TJvLabel
       AlignWithMargins = True
-      Left = 759
-      Top = 40
+      Left = 556
+      Top = 9
       Width = 80
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'QTN'#48264#54840
+      Caption = 'Claim No.'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -209,8 +209,8 @@ object DisplayTaskF: TDisplayTaskF
     end
     object JvLabel8: TJvLabel
       AlignWithMargins = True
-      Left = 759
-      Top = 70
+      Left = 754
+      Top = 9
       Width = 80
       Height = 25
       Alignment = taCenter
@@ -236,9 +236,9 @@ object DisplayTaskF: TDisplayTaskF
     end
     object JvLabel9: TJvLabel
       AlignWithMargins = True
-      Left = 758
-      Top = 11
-      Width = 80
+      Left = 754
+      Top = 39
+      Width = 79
       Height = 25
       Alignment = taCenter
       AutoSize = False
@@ -371,9 +371,9 @@ object DisplayTaskF: TDisplayTaskF
       end
     end
     object ProductTypeCombo: TComboBox
-      Left = 639
-      Top = 10
-      Width = 118
+      Left = 837
+      Top = 68
+      Width = 109
       Height = 25
       Style = csDropDownList
       Font.Charset = ANSI_CHARSET
@@ -387,9 +387,9 @@ object DisplayTaskF: TDisplayTaskF
       OnDropDown = ProductTypeComboDropDown
     end
     object CustomerCombo: TComboBox
-      Left = 642
+      Left = 639
       Top = 39
-      Width = 115
+      Width = 112
       Height = 25
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -403,7 +403,7 @@ object DisplayTaskF: TDisplayTaskF
     object SubjectEdit: TEdit
       Left = 441
       Top = 69
-      Width = 317
+      Width = 311
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
@@ -537,9 +537,9 @@ object DisplayTaskF: TDisplayTaskF
         #54788#51116#51089#50629
         #45796#51020#51089#50629)
     end
-    object QtnNoEdit: TEdit
-      Left = 842
-      Top = 43
+    object ClaimNoEdit: TEdit
+      Left = 639
+      Top = 12
       Width = 112
       Height = 21
       CharCase = ecUpperCase
@@ -548,8 +548,8 @@ object DisplayTaskF: TDisplayTaskF
       OnKeyPress = HullNoEditKeyPress
     end
     object OrderNoEdit: TEdit
-      Left = 842
-      Top = 73
+      Left = 837
+      Top = 10
       Width = 112
       Height = 21
       CharCase = ecUpperCase
@@ -558,8 +558,8 @@ object DisplayTaskF: TDisplayTaskF
       OnKeyPress = HullNoEditKeyPress
     end
     object PONoEdit: TEdit
-      Left = 841
-      Top = 14
+      Left = 837
+      Top = 39
       Width = 112
       Height = 21
       CharCase = ecUpperCase
@@ -1747,7 +1747,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 16
     Top = 208
     Bitmap = {
-      494C0101010070009C0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000A00318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2057,7 +2057,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402AC0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402B00310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2280,6 +2280,13 @@ object DisplayTaskF: TDisplayTaskF
         Caption = #47588#52636' '#52376#47532' '#50836#52397
       end
     end
+    object N23: TMenuItem
+      Caption = '-'
+    end
+    object oDOList1: TMenuItem
+      Caption = 'To Do List'
+      OnClick = oDOList1Click
+    end
     object N22: TMenuItem
       Caption = '-'
     end
@@ -2359,7 +2366,7 @@ object DisplayTaskF: TDisplayTaskF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800D40420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800D80420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

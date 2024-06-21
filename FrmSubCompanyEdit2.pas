@@ -14,7 +14,7 @@ uses
 
   UnitElecMasterData, FrmSearchCustomer2, CommonData2,
   {$IFDEF GAMANAGER}
-  UnitHiconisMasterRecord,
+  UnitHiconisMasterRecord, UnitHiASSubConRecord,
   {$ELSE}
   UElecDataRecord,
   {$ENDIF}
@@ -179,10 +179,10 @@ begin
 
           if not LSubCon.IsUpdate then
           begin
-            LSubCon.SubConID := LSubCon.ID;
+//            LSubCon.SubConID := LSubCon.ID;
             LSubCon.IsUpdate := True;
             AddOrUpdateSubCon(LSubCon);
-            ASubConID := LSubCon.SubConID;
+//            ASubConID := LSubCon.SubConID;
           end;
         end;
       finally

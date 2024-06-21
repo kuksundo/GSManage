@@ -9,7 +9,7 @@ uses System.Classes, Dialogs, System.Rtti,
   mormot.core.base, mormot.orm.core, mormot.core.variants, mormot.core.datetime,
   mormot.core.data, mormot.orm.base, mormot.core.text, mormot.core.buffers,
   mormot.core.json,
-  UnitBase64Util2, UnitGSFileRecord2,
+  UnitBase64Util2, UnitGSFileRecord2, UnitHiASSubConRecord, UnitHiASMaterialRecord,
   UnitMustacheUtil2, UnitHiconisMasterRecord, CommonData2;
 
 function MakeEmailHTMLBody(ATask: TOrmHiconisASTask; AMailType: integer;

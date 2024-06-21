@@ -11,12 +11,13 @@ uses
   CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
   mormot.core.base, mormot.core.datetime, mormot.core.data, mormot.core.variants,
-  mormot.orm.base, mormot.core.text, mormot.core.unicode, mormot.core.json,
+  mormot.orm.base, mormot.core.text, mormot.core.unicode, mormot.core.json, mormot.core.collections,
   VarRecUtils,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, FrmInqManageConfig, UnitElecMasterData,
   {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
+  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitToDoList,
   {$ELSE}
   UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport, UnitElecServiceData2,
   {$ENDIF}
@@ -99,7 +100,7 @@ type
     N10: TMenuItem;
     AeroButton1: TAeroButton;
     JvLabel4: TJvLabel;
-    QtnNoEdit: TEdit;
+    ClaimNoEdit: TEdit;
     JvLabel8: TJvLabel;
     OrderNoEdit: TEdit;
     GetJsonValues1: TMenuItem;
@@ -133,6 +134,9 @@ type
     ClaimNo: TNxTextColumn;
     ClaimServiceKind: TNxTextColumn;
     Importance: TNxTextColumn;
+    oDOList1: TMenuItem;
+    N23: TMenuItem;
+
     procedure btn_SearchClick(Sender: TObject);
     procedure ComboBox1DropDown(Sender: TObject);
     procedure rg_periodClick(Sender: TObject);
@@ -167,6 +171,7 @@ type
     procedure N21Click(Sender: TObject);
     procedure PICCBChange(Sender: TObject);
     procedure GetHullNoToClipboard1Click(Sender: TObject);
+    procedure oDOList1Click(Sender: TObject);
   private
     procedure ExecuteSearch(Key: Char);
 
@@ -204,6 +209,7 @@ type
     FTempJsonList,
     FUserList: TStringList;//Remote에서 Task요청시 Result Json저장함
     FToDoCollect: TpjhToDoItemCollection;
+    FpjhToDoList: TpjhToDoList;
     FSettings : TConfigSettings;
     FIniFileName,
     FMyIPAddress,
@@ -248,6 +254,9 @@ type
     procedure ShowTodoListFormFromData(ARow: integer);
     procedure ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 
+    procedure ShowTodoListFormFromDBByGridRow(ARow: integer);
+    procedure ShowToDoListFormFromList(AToDoList: TpjhToDoList);
+
     procedure SetUserNameNIPAddressFromRegServer;
 
     //--> Remote Command Proess
@@ -260,7 +269,7 @@ implementation
 uses System.Rtti, UnitIPCModule2, ClipBrd, System.RegularExpressions,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
   {$IFDEF GAMANAGER}
-  UnitHiconisASVarJsonUtil,
+  UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
   {$ELSE}
   UnitVariantJsonUtil,
   {$ENDIF}
@@ -565,6 +574,18 @@ begin
 //  MakeDocSubConInvoiceList2(LWorkSheet, LRec, LRow);
 end;
 
+procedure TDisplayTaskF.oDOList1Click(Sender: TObject);
+begin
+  if grid_Req.SelectedCount = 0 then
+  begin
+    ShowMessage('Task를 선택 하세요.');
+    exit;
+  end;
+
+//  ShowTodoListFormFromData(grid_Req.SelectedRow);
+  ShowTodoListFormFromDBByGridRow(grid_Req.SelectedRow);
+end;
+
 procedure TDisplayTaskF.PICCBChange(Sender: TObject);
 begin
   GetIsRemote(FRemoteIPAddress);
@@ -732,7 +753,8 @@ begin
     FCurWork :=  CurWorkCB.ItemIndex;
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
-    FQtnNo := QtnNoEdit.Text;
+    FClaimNo := ClaimNoEdit.Text;
+//    FQtnNo := QtnNoEdit.Text;
     FOrderNo := OrderNoEdit.Text;
     FPoNo := PONoEdit.Text;
 
@@ -1171,13 +1193,14 @@ begin
   ShipNameEdit.Text := '';
   CustomerCombo.Text := '';
   PONoEdit.Text := '';
-  QtnNoEdit.Text := '';
+  ClaimNoEdit.Text := '';
   SubjectEdit.Text := '';
   OrderNoEdit.Text := '';
   ComboBox1.ItemIndex := -1;
   ProductTypeCombo.ItemIndex := -1;
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
+  PICCB.ItemIndex := -1;
 end;
 
 procedure TDisplayTaskF.Invoice4Click(Sender: TObject);
@@ -1243,8 +1266,21 @@ begin
 end;
 
 procedure TDisplayTaskF.AeroButton1Click(Sender: TObject);
+var
+  LRow: integer;
 begin
-  ShowTodoListFormFromData(-1);
+  if grid_Req.SelectedCount > 0 then
+  begin
+    if MessageDlg('선택한 Task의ToDo List 만  조회 할까요?.' + #13#10 +
+      '"No" 를 선택하면 Grid에 표시된 모든 Task에 대한 ToDo List를 조회 합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
+      LRow := -1
+    else
+      LRow := grid_Req.SelectedRow;
+  end
+  else
+    LRow := -1;
+
+  ShowTodoListFormFromData(LRow);
 end;
 
 procedure TDisplayTaskF.ApplyConfigChanged;
@@ -1256,6 +1292,11 @@ procedure TDisplayTaskF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollec
 begin
   Create_ToDoList_Frm('', AToDoCollect, True,
     InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+end;
+
+procedure TDisplayTaskF.ShowToDoListFormFromList(AToDoList: TpjhToDoList);
+begin
+  Create_ToDoList_Frm2(0, AToDoList, True);
 end;
 
 procedure TDisplayTaskF.TaskTabChange(Sender: TObject);
@@ -1374,10 +1415,18 @@ begin
   if grid_Req.SelectedRow = -1 then
     exit;
 
+  if MessageDlg('선택한 Task를 삭제 할까요?.' + #13#10 +
+    'Task에 연결 저장된 파일/자재/협력사/고객사 정보등이 함께 삭제 됩니다.' + #13#10 +
+    '삭제 후에는 복원이 안 됩니다..' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
+    exit;
+
   if grid_Req.Row[grid_Req.SelectedRow].Data <> nil then
   begin
     LIdList := TIDList(grid_Req.Row[grid_Req.SelectedRow].Data);
     DeleteTask(LIdList.TaskId);
+
+    ShowMessage('Task 삭제가 완료 되었습니다.');
+
     btn_SearchClick(nil);
   end;
 end;
@@ -1465,6 +1514,14 @@ begin
       if LWhere <> '' then
         LWhere := LWhere + ' and ';
       LWhere := LWhere + ' ProductType = ? ';
+    end;
+
+    if ASearchCondRec.FClaimNo <> '' then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimNo]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' ClaimNo = ? ';
     end;
 
     if ASearchCondRec.FCurWork > 0 then
@@ -1747,7 +1804,7 @@ begin
   end
   else
   begin
-    LID := GetTaskIdFromGrid(i);
+    LID := GetTaskIdFromGrid(ARow);
 
     if LID = -1 then
       exit;
@@ -1762,6 +1819,48 @@ begin
 
   FToDoCollect.Sort(1);
   ShowToDoListFromCollect(FToDoCollect);
+end;
+
+procedure TDisplayTaskF.ShowTodoListFormFromDBByGridRow(ARow: integer);
+var
+  LTask: TOrmHiconisASTask;
+  LID : TID;
+  i: integer;
+
+  procedure _GetToDoListFromTask(AId: TID);
+  begin
+    LTask := CreateOrGetLoadTask(LID);
+    try
+      LoadToDoListFromTask(LTask, FpjhToDoList);
+    finally
+      FreeAndNil(LTask);
+    end;
+  end;
+begin
+  if not Assigned(FpjhToDoList) then
+    FpjhToDoList := Collections.NewList<TpjhTodoItemRec>
+  else
+    FpjhToDoList.Clear;
+
+  if ARow = -1 then //Grid의 모든 Task에대한 TodoList 가져옴
+  begin
+    for i := 0 to grid_Req.RowCount - 1 do
+    begin
+      LID := GetTaskIdFromGrid(i);
+
+      if LID = -1 then
+        continue;
+
+      _GetToDoListFromTask(LID);
+    end;
+  end
+  else //ARow에 있는 Task의 Todo List만 보여줌
+  begin
+    LID := GetTaskIdFromGrid(ARow);
+    _GetToDoListFromTask(LID);
+  end;
+
+  ShowToDoListFormFromList(FpjhToDoList);
 end;
 
 procedure TDisplayTaskF.SetConfig;

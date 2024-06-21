@@ -22,7 +22,7 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet4
+    ActivePage = SubConTS
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
@@ -1333,12 +1333,13 @@ object TaskEditF: TTaskEditF
           SortType = stAlphabetic
           Visible = False
         end
-        object SubConID: TNxTextColumn
+        object RowID: TNxTextColumn
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          Header.Caption = 'SubConID'
           Header.Font.Charset = DEFAULT_CHARSET
           Header.Font.Color = clWindowText
           Header.Font.Height = -11
@@ -1664,6 +1665,7 @@ object TaskEditF: TTaskEditF
         end
         object PORIssueDate: TNxDateColumn
           Alignment = taCenter
+          DefaultValue = '2024-06-21'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -3327,7 +3329,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800040510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800080510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5234,7 +5236,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400D80110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400DC0110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

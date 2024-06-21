@@ -8,7 +8,7 @@ uses
   JvLabel, CurvyControls, Vcl.ExtCtrls, NxColumnClasses, NxColumns,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
   {$IFDEF GAMANAGER}
-  UnitHiconisMasterRecord,
+  UnitHiconisMasterRecord, UnitHiASSubConRecord,
   {$ELSE}
   UElecDataRecord,
   {$ENDIF}

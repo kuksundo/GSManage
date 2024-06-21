@@ -17,7 +17,8 @@ uses
 
   CommonData2, UnitTodoCollect2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLControl,//FrmEmailListView2
-  FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2
+  FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
+  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord
   ;
 
 type
@@ -179,7 +180,7 @@ type
     SECount: TNxTextColumn;
     SubConPrice: TNxTextColumn;
     CompanyName: TNxTextColumn;
-    SubConID: TNxTextColumn;
+    RowID: TNxTextColumn;
     InvoiceItems: TNxMemoColumn;
     UniqueSubConID: TNxTextColumn;
     InvoiceFiles: TNxMemoColumn;
@@ -1689,7 +1690,7 @@ var
     SubConGrid.CellsByName['Position', LRow] := ASubCon.Position;
     SubConGrid.CellsByName['ServicePO', LRow] := ASubCon.ServicePO;
     SubConGrid.CellByName['TaskID', LRow].AsInteger := ASubCon.TaskID;
-    SubConGrid.CellByName['SubConID', LRow].AsInteger := ASubCon.SubConID;
+    SubConGrid.CellByName['RowID', LRow].AsInteger := ASubCon.ID;
     SubConGrid.CellsByName['UniqueSubConID', LRow] := ASubCon.UniqueSubConID;
     SubConGrid.CellByName['BusinessAreas', LRow].AsInteger := TBusinessArea_SetToInt(ASubCon.BusinessAreas);
 //    SubConGrid.CellByName['ShipProductTypes', ARow].AsInteger := ASubCon.ShipProductTypes;
@@ -1762,7 +1763,7 @@ begin
   ADoc.SECount := SubConGrid.CellsByName['SECount', ARow];
   ADoc.SubConPrice := SubConGrid.CellsByName['SubConPrice', ARow];
   ADoc.TaskID := SubConGrid.CellsByName['TaskID', ARow];
-  ADoc.SubConID := SubConGrid.CellsByName['SubConID', ARow];
+  ADoc.SubConID := SubConGrid.CellsByName['RowID', ARow];
   ADoc.UniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', ARow];
   ADoc.SubConInvoiceNo := SubConGrid.CellsByName['SubConInvoiceNo', ARow];
   ADoc.BusinessAreas := SubConGrid.CellsByName['BusinessAreas', ARow];
@@ -1993,7 +1994,7 @@ begin
         end
         else//Visuble = False면 삭제한 Item임
         begin
-          g_ProjectDetailDB.Delete(TSQLMaterial4Project, LMat4Proj.ID);
+          g_HiASMaterialDB.Delete(TSQLMaterial4Project, LMat4Proj.ID);
         end;
       finally
         LMat4Proj.Free;
@@ -2004,14 +2005,14 @@ end;
 
 procedure TTaskEditF.SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID);
 var
-  i: integer;
+  LRow, i: integer;
   LSubConID: TID;
   LSubCon: TSQLSubCon;
   LItemList: TObjectList<TSQLSubConInvoiceItem>;
   LFileList: TObjectList<TSQLSubConInvoiceFile>;
-  LDocItem, LDocFile: variant;
+  LDocSubCon, LDocItem, LDocFile: variant;
   LAction: integer;
-  LStr, LUniqueSubConID: string;
+  LStr: string;
 
   procedure LoadSubConFromGrid;
   begin
@@ -2050,7 +2051,7 @@ var
     begin
       LSubCon.IsUpdate := True;
 
-      LSubCon.SubConID := LSubCon.ID;
+//      LSubCon.SubConID := LSubCon.ID;
       AddOrUpdateSubCon(LSubCon);
     end;
 
@@ -2068,64 +2069,97 @@ var
 begin
   LItemList := TObjectList<TSQLSubConInvoiceItem>.Create;
   LFileList := TObjectList<TSQLSubConInvoiceFile>.Create;
+  TDocVariant.New(LDocSubCon);
   try
-    with AForm do
+    with AForm.SubConGrid do
     begin
-      for i := 0 to SubConGrid.RowCount - 1 do
+      //Grid에서 SubConID 가져와서 DB 조회함
+      for LRow := 0 to RowCount - 1 do
       begin
-        //Action이 없을 경우 Add or Update함
-        LAction := StrToIntDef(SubConGrid.CellsByName['Action', i],0);
+        //SubConID를 RowID로 대체함
+        LSubConID := StrToIntDef(CellsByName['RowID', LRow],0);
+        LSubCon := GetSubConFromTaskIDNSubConID(ATaskID, LSubConID);
+        try
+          if Row[LRow].Visible then
+          begin
+            LoadSubConGrid2Var(LRow, LDocSubCon);
+            LoadSubConFromVariant(LSubCon, LDocSubCon, False);
 
-        case LAction of
-          0: begin
-//            LSubConID := StrToIntDef(SubConGrid.CellsByName['SubConID', i], -1);
-//            LSubCon := GetSubConFromSubConID(LSubConID);
-            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
-            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
-            try
-              LoadSubConFromGrid;
-            finally
-              LSubCon.Free;
+            if LSubCon.IsUpdate then
+            begin
+            end
+            else
+            begin
+              LSubCon.TaskID := ATaskID;
             end;
+
+            AddOrUpdateSubCon(LSubCon);
+          end
+          else//Visuble = False면 삭제한 Item임
+          begin
+            g_HiASSubConDB.Delete(TSQLSubCon, LSubCon.ID);
           end;
-          1: begin //Add
-            LSubCon := TSQLSubCon.Create;
-            try
-              LoadSubConFromGrid;
-            finally
-              LSubCon.Free;
-            end;
-          end;
-          2: begin //Delete
-//            LSubConID := StrToIntDef(SubConGrid.CellsByName['SubConID', i], -1);
-//            LSubCon := GetSubConFromSubConID(LSubConID);
-            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
-            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
-            try
-              if LSubCon.IsUpdate then
-              begin
-                DeleteSubConFromSubConID(LSubCon.ID);
-                DeleteSubConInvoiceItemNFileFromUniqueSubConID(LUniqueSubConID);
-              end;
-            finally
-              LSubCon.Free;
-            end;
-          end;
-          3: begin //Update
-//            LSubConID := StrToIntDef(SubConGrid.CellsByName['SubConID', i], -1);
-//            LSubCon := GetSubConFromSubConID(LSubConID);
-            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
-            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
-            try
-              if LSubCon.IsUpdate then
-                LoadSubConFromGrid;
-            finally
-              LSubCon.Free;
-            end;
-          end;
+        finally
+          LSubCon.Free;
         end;
-      end;
-    end;
+      end;//for
+    end;//with
+
+//      for i := 0 to SubConGrid.RowCount - 1 do
+//      begin
+//        //Action이 없을 경우 Add or Update함
+//        LAction := StrToIntDef(SubConGrid.CellsByName['Action', i],0);
+//
+//        case LAction of
+//          0: begin
+////            LSubConID := StrToIntDef(SubConGrid.CellsByName['RowID', i], -1);
+////            LSubCon := GetSubConFromSubConID(LSubConID);
+//            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
+//            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
+//            try
+//              LoadSubConFromGrid;
+//            finally
+//              LSubCon.Free;
+//            end;
+//          end;
+//          1: begin //Add
+//            LSubCon := TSQLSubCon.Create;
+//            try
+//              LoadSubConFromGrid;
+//            finally
+//              LSubCon.Free;
+//            end;
+//          end;
+//          2: begin //Delete
+////            LSubConID := StrToIntDef(SubConGrid.CellsByName['RowID', i], -1);
+////            LSubCon := GetSubConFromSubConID(LSubConID);
+//            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
+//            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
+//            try
+//              if LSubCon.IsUpdate then
+//              begin
+//                DeleteSubConFromSubConID(LSubCon.ID);
+//                DeleteSubConInvoiceItemNFileFromUniqueSubConID(LUniqueSubConID);
+//              end;
+//            finally
+//              LSubCon.Free;
+//            end;
+//          end;
+//          3: begin //Update
+////            LSubConID := StrToIntDef(SubConGrid.CellsByName['RowID', i], -1);
+////            LSubCon := GetSubConFromSubConID(LSubConID);
+//            LUniqueSubConID := SubConGrid.CellsByName['UniqueSubConID', i];
+//            LSubCon := GetSubConFromUniqueSubConID(LUniqueSubConID);
+//            try
+//              if LSubCon.IsUpdate then
+//                LoadSubConFromGrid;
+//            finally
+//              LSubCon.Free;
+//            end;
+//          end;
+//        end;
+//      end;
+//    end;
   finally
     LFileList.Clear;
     LFileList.Free;
@@ -2776,7 +2810,7 @@ begin
       LSubCon := TSQLSubCon.Create;
       try
         LSubCon.TaskID := StrToIntDef(LDoc.TaskID, 0);
-        LSubCon.SubConID := StrToIntDef(LDoc.SubConID, 0);
+//        LSubCon.SubConID := StrToIntDef(LDoc.SubConID, 0);
         LSubCon.UniqueSubConID := LDoc.UniqueSubConID;
         LSubCompanyEditF.LoadEditForm2SQLSubCon(LSubCon);
         LoadSubCon2Form(LSubCon, Self, ARow);
@@ -2860,7 +2894,7 @@ begin
     if SubConGrid.SelectedRow = -1 then
       exit;
 
-    LSubConID := StrToIntDef(SubConGrid.CellsByName['SubConID', SubConGrid.SelectedRow],-1);
+    LSubConID := StrToIntDef(SubConGrid.CellsByName['RowID', SubConGrid.SelectedRow],-1);
     TVirtualFileStreamDataFormat(DataFormatAdapter3.DataFormat).FileNames.Clear;
     LFileName := SaveCurrentTaskAndSelectedSubCon2File(LSubConID);
 

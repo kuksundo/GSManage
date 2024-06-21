@@ -118,7 +118,7 @@ begin
           Completion := FToDoCollect.Items[i].Completion;
           DueDate := FToDoCollect.Items[i].DueDate;
           CreationDate := FToDoCollect.Items[i].CreationDate;
-          Priority := FToDoCollect.Items[i].Priority;
+          Priority := TTodoPriority(FToDoCollect.Items[i].Priority);
           Resource := FToDoCollect.Items[i].Resource;
           Category := FToDoCollect.Items[i].Category;
           Project :=  FToDoCollect.Items[i].Project;
@@ -141,9 +141,9 @@ begin
     Subject := '货 老沥';
     Notes.Text := '老沥 惑技';
 //    Completion := Random(100);
-    DueDate := Now + 60;
-    CreationDate := Now;
-    Priority := tpNormal;
+    DueDate := TimeLogFromDateTIme(Now + 60);
+    CreationDate := TimeLogFromDateTIme(Now);
+    Priority := Ord(tpNormal);
     Resource := 'Unassigned';
 
 //    LoadToDoItemFromCollect(Index);
@@ -321,8 +321,8 @@ begin
     Time_End.Time := EncodeTime(myHour, myMin, mySec, myMilli);
     NoteMemo.Lines.Assign(Notes);
     AlarmCombo.ItemIndex := GetAlarmComboIndex(AlarmTime2);
-    MsgCB.Checked := Alarm2Msg = 1;
-    NoteCB.Checked := Alarm2Note = 1;
+    MsgCB.Checked := Alarm2Msg;
+    NoteCB.Checked := Alarm2Note;
   end;
 end;
 
@@ -367,24 +367,23 @@ begin
 
     DecodeDate(dt_begin.Date,myYear, myMonth, myDay);
     DecodeTime(Time_Begin.Time, myHour, myMin, mySec, myMilli);
-    CreationDate := EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli);
+    CreationDate := TimeLogFromDateTime(EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli));
 
     DecodeDate(dt_end.Date,myYear, myMonth, myDay);
     DecodeTime(Time_End.Time, myHour, myMin, mySec, myMilli);
-    DueDate := EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli);
+    DueDate := TimeLogFromDateTime(EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli));
 
     Notes.Assign(NoteMemo.Lines);
 
     AlarmType := 2;
     AlarmTime2 := GetAlarmInterval(AlarmCombo.ItemIndex);
-    Alarm2Msg := Integer(MsgCB.Checked);
-    Alarm2Note := Integer(NoteCB.Checked);
-    Moddate := now;
+    Alarm2Msg := MsgCB.Checked;
+    Alarm2Note := NoteCB.Checked;
+    Moddate := TimeLogFromDateTime(now);
 
     if LIsAdd then
     begin
       TodoCode := FormatDateTime('yyyymmddhhmmsszzz', now);
-      TaskCode := FTaskNo;
       PlanCode := FPlanNo;
       Project := FPlanNo;
       ModId := '';//DM1.FUserInfo.UserID;

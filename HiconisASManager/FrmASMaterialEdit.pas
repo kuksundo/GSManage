@@ -8,7 +8,7 @@ uses
   JvExControls, JvLabel, CurvyControls,
   mormot.core.datetime,
 
-  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2;
+  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord;
 
 type
   TASMaterialF = class(TForm)

@@ -13,7 +13,7 @@ type
     FQueryDate: TQueryDateType;
     FHullNo, FShipName, FCustomer, FProdType, FSubject: string;
     FCurWork, FBefAft, FWorkKind: integer;
-    FQtnNo, FOrderNo, FPoNo, FRemoteIPAddress: string
+    FQtnNo, FOrderNo, FPoNo, FRemoteIPAddress, FClaimNo: string
   end;
 
   TEngineerKind = (ekNone, ekSuperIntendent, ekServiceEngineer, ekServiceEngineer_Elec, ekTechnician, ekFinal);
