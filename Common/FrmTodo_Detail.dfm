@@ -74,11 +74,12 @@ object ToDoDetailF: TToDoDetailF
       Height = 30
       Align = alClient
       TabOrder = 1
-      object SubjectEdit: TEdit
+      object Subject: TEdit
         Left = 1
         Top = 1
         Width = 640
         Height = 28
+        Hint = 'Text'
         Align = alClient
         ImeName = 'Microsoft IME 2010'
         TabOrder = 0
@@ -93,11 +94,12 @@ object ToDoDetailF: TToDoDetailF
     Height = 442
     Align = alClient
     TabOrder = 2
-    object NoteMemo: TMemo
+    object Notes: TMemo
       Left = 1
       Top = 89
       Width = 674
       Height = 352
+      Hint = 'Text'
       Align = alClient
       ImeName = 'Microsoft IME 2010'
       TabOrder = 0
@@ -137,22 +139,24 @@ object ToDoDetailF: TToDoDetailF
         Height = 13
         Caption = #50508#47548#48169#48277':'
       end
-      object dt_begin: TDateTimePicker
+      object BeginDate: TDateTimePicker
         Left = 74
         Top = 15
         Width = 175
         Height = 25
+        Hint = 'Date'
         Date = 42132.710435775470000000
         Time = 42132.710435775470000000
         DateFormat = dfLong
         ImeName = 'Microsoft IME 2010'
         TabOrder = 0
       end
-      object Time_Begin: TDateTimePicker
+      object BeginTime: TDateTimePicker
         Left = 255
         Top = 15
         Width = 90
         Height = 25
+        Hint = 'Time'
         Date = 41527.000000000000000000
         Format = 'tt h:mm'
         Time = 41527.000000000000000000
@@ -161,22 +165,24 @@ object ToDoDetailF: TToDoDetailF
         Kind = dtkTime
         TabOrder = 1
       end
-      object dt_end: TDateTimePicker
+      object EndDate: TDateTimePicker
         Left = 74
         Top = 46
         Width = 175
         Height = 25
+        Hint = 'Date'
         Date = 42132.710435775470000000
         Time = 42132.710435775470000000
         DateFormat = dfLong
         ImeName = 'Microsoft IME 2010'
         TabOrder = 2
       end
-      object Time_End: TDateTimePicker
+      object EndTime: TDateTimePicker
         Left = 255
         Top = 46
         Width = 90
         Height = 25
+        Hint = 'Time'
         Date = 41527.710435775470000000
         Format = 'tt h:mm'
         Time = 41527.710435775470000000
@@ -185,11 +191,12 @@ object ToDoDetailF: TToDoDetailF
         Kind = dtkTime
         TabOrder = 3
       end
-      object AlarmCombo: TComboBox
+      object AlarmType: TComboBox
         Left = 426
         Top = 16
         Width = 145
         Height = 21
+        Hint = 'ItemIndex'
         ImeName = 'Microsoft IME 2010'
         TabOrder = 4
         Items.Strings = (
@@ -228,35 +235,39 @@ object ToDoDetailF: TToDoDetailF
         Visible = False
         OnClick = Button1Click
       end
-      object MsgCB: TCheckBox
+      object Alarm2Msg: TCheckBox
         Left = 432
         Top = 51
-        Width = 57
+        Width = 46
         Height = 17
+        Hint = 'Checked'
         Caption = #47928#51088
         TabOrder = 6
       end
-      object NoteCB: TCheckBox
+      object Alarm2Note: TCheckBox
         Left = 480
         Top = 51
-        Width = 58
+        Width = 46
         Height = 17
+        Hint = 'Checked'
         Caption = #51901#51648
         TabOrder = 7
       end
-      object EmailCB: TCheckBox
+      object Alarm2Email: TCheckBox
         Left = 530
         Top = 51
         Width = 58
         Height = 17
+        Hint = 'Checked'
         Caption = #51060#47700#51068
         TabOrder = 8
       end
-      object PopupCB: TCheckBox
+      object Alarm2Popup: TCheckBox
         Left = 594
         Top = 51
         Width = 58
         Height = 17
+        Hint = 'Checked'
         Caption = #54045#50629#52285
         TabOrder = 9
       end

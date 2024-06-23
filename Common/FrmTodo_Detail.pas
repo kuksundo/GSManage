@@ -20,8 +20,8 @@ type
     Panel4: TPanel;
     Panel5: TPanel;
     Label1: TLabel;
-    SubjectEdit: TEdit;
-    NoteMemo: TMemo;
+    Subject: TEdit;
+    Notes: TMemo;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     Panel6: TPanel;
@@ -29,16 +29,16 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
-    dt_begin: TDateTimePicker;
-    Time_Begin: TDateTimePicker;
-    dt_end: TDateTimePicker;
-    Time_End: TDateTimePicker;
-    AlarmCombo: TComboBox;
+    BeginDate: TDateTimePicker;
+    BeginTime: TDateTimePicker;
+    EndDate: TDateTimePicker;
+    EndTime: TDateTimePicker;
+    AlarmType: TComboBox;
     Button1: TButton;
-    MsgCB: TCheckBox;
-    NoteCB: TCheckBox;
-    EmailCB: TCheckBox;
-    PopupCB: TCheckBox;
+    Alarm2Msg: TCheckBox;
+    Alarm2Note: TCheckBox;
+    Alarm2Email: TCheckBox;
+    Alarm2Popup: TCheckBox;
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -47,16 +47,19 @@ type
     { Private declarations }
   public
     procedure LoadTodoItemFromForm(ApjhTodoItem: TpjhTodoItem);
+
+    function GetTodoItem2JsonFromForm: string;
+    procedure SetTodoItemFromJson2Form(AJson: string);
   end;
 
   function GetAlarmInterval(AInterval: integer): longint;
-  function GetAlarmComboIndex(AAlarmMinute: integer): integer;
+  function GetAlarmFlagIndex(AAlarmMinute: integer): integer;
 var
   ToDoDetailF: TToDoDetailF;
 
 implementation
 
-uses UnitDateUtil;
+uses UnitDateUtil, UnitRttiUtil2;
 
 {$R *.dfm}
 
@@ -77,22 +80,29 @@ var
   Ldt: TDateTime;
   LMin: integer;
 begin
-  DecodeDate(dt_begin.Date,myYear, myMonth, myDay);
-  DecodeTime(Time_Begin.Time, myHour, myMin, mySec, myMilli);
+  DecodeDate(BeginDate.Date,myYear, myMonth, myDay);
+  DecodeTime(BeginTime.Time, myHour, myMin, mySec, myMilli);
   Ldt := EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli);
-  LMin := GetAlarmInterval(AlarmCombo.ItemIndex);
+  LMin := GetAlarmInterval(AlarmType.ItemIndex);
   Ldt := DateTimeMinusInteger(Ldt, LMin, 2, '-');
-  dt_end.date := Ldt;
+  EndDate.date := Ldt;
   DecodeTime(Ldt, myHour, myMin, mySec, myMilli);
-  Time_End.Time := EncodeTime(myHour, myMin, mySec, myMilli);
+  EndTime.Time := EncodeTime(myHour, myMin, mySec, myMilli);
 end;
 
 procedure TToDoDetailF.FormCreate(Sender: TObject);
 begin
-  dt_begin.DateTime := now;
-  Time_Begin.DateTime := now;
-  dt_end.DateTime := now;
-  Time_end.DateTime := now;
+  BeginDate.DateTime := now;
+  BeginTime.DateTime := now;
+  EndDate.DateTime := now;
+  EndTime.DateTime := now;
+end;
+
+function TToDoDetailF.GetTodoItem2JsonFromForm: string;
+begin
+  //Form에 있는 {Component Name = Value} 형식의 Json으로 반홤
+  //각 Component Hint = Value가 있는 Field 명을 입력해야 함(예: Text/Checked/ItemIndex)
+  Result := GetCompNameValue2JsonFromForm(Self);
 end;
 
 procedure TToDoDetailF.LoadTodoItemFromForm(ApjhTodoItem: TpjhTodoItem);
@@ -102,25 +112,30 @@ var
 begin
   with ApjhTodoItem do
   begin
-    Subject := SubjectEdit.Text;
-    Category := AlarmCombo.Text;
+    Subject := Self.Subject.Text;
+    Category := Self.AlarmType.Text;
 
-    DecodeDate(dt_begin.Date,myYear, myMonth, myDay);
-    DecodeTime(Time_Begin.Time, myHour, myMin, mySec, myMilli);
+    DecodeDate(BeginDate.Date,myYear, myMonth, myDay);
+    DecodeTime(BeginTime.Time, myHour, myMin, mySec, myMilli);
     CreationDate := EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli);
 
-    DecodeDate(dt_end.Date,myYear, myMonth, myDay);
-    DecodeTime(Time_End.Time, myHour, myMin, mySec, myMilli);
+    DecodeDate(EndDate.Date,myYear, myMonth, myDay);
+    DecodeTime(EndTime.Time, myHour, myMin, mySec, myMilli);
     DueDate := EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli);
 
-    Notes := NoteMemo.Lines.Text;
+    Notes := Self.Notes.Lines.Text;
 
     AlarmType := 2;
-    AlarmTime2 := GetAlarmInterval(AlarmCombo.ItemIndex);
-    Alarm2Msg := MsgCB.Checked;
-    Alarm2Note := NoteCB.Checked;
-    Alarm2Popup := PopupCB.Checked;
+    AlarmTime2 := GetAlarmInterval(Self.AlarmType.ItemIndex);
+    Alarm2Msg := Self.Alarm2Msg.Checked;
+    Alarm2Note := Self.Alarm2Note.Checked;
+    Alarm2Popup := Self.Alarm2Popup.Checked;
   end;
+end;
+
+procedure TToDoDetailF.SetTodoItemFromJson2Form(AJson: string);
+begin
+  SetCompNameValueFromJson2Form(Self, AJson);
 end;
 
 //분단위 숫자 반환
@@ -154,7 +169,7 @@ begin
   end;
 end;
 
-function GetAlarmComboIndex(AAlarmMinute: integer): integer;
+function GetAlarmFlagIndex(AAlarmMinute: integer): integer;
 begin
   case AAlarmMinute of
     -1 : Result := ord(aiNone);

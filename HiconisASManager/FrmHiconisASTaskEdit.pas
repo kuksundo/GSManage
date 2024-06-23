@@ -15,10 +15,10 @@ uses
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime,
 
-  CommonData2, UnitTodoCollect2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
+  CommonData2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState, UnitTodoCollect2,
   UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLControl,//FrmEmailListView2
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
-  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord
+  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList
   ;
 
 type
@@ -367,7 +367,8 @@ type
     //현재 Task의 작업순서 List
     FSalesProcessList: TStringList;
     FFileContent: RawByteString;
-    FToDoCollect: TpjhToDoItemCollection;
+//    FToDoCollect: TpjhToDoItemCollection;
+    FToDoList: TpjhToDoList;
     FRemoteIPAddress: string;
 
     class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
@@ -1219,12 +1220,12 @@ end;
 
 procedure TTaskEditF.Button3Click(Sender: TObject);
 begin
-  FToDoCollect.Clear;
-  //TaskID 별로 ToDoList를 Select하여 FToDoCollect에 저장함
-  LoadToDoCollectFromTask(FEmailDisplayTask, FToDoCollect);
-
-  Create_ToDoList_Frm(IntToStr(FEmailDisplayTask.ID), FToDoCollect, False,
-    InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+//  FToDoCollect.Clear;
+//  //TaskID 별로 ToDoList를 Select하여 FToDoCollect에 저장함
+//  LoadToDoCollectFromTask(FEmailDisplayTask, FToDoCollect);
+//
+//  Create_ToDoList_Frm(IntToStr(FEmailDisplayTask.ID), FToDoCollect, False,
+//    InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
 end;
 
 procedure TTaskEditF.fileGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
@@ -1294,7 +1295,7 @@ begin
   InitCB;
   (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
   (DataFormatAdapter3.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream2;
-  FToDoCollect := TpjhToDoItemCollection.Create(TpjhTodoItem);
+//  FToDoCollect := TpjhToDoItemCollection.Create(TpjhTodoItem);
   FOLMessagesFromDrop := TStringList.Create;
   FSalesProcessList := TStringList.Create;
 
@@ -1316,11 +1317,11 @@ begin
   if Assigned(FTask) then
     FreeAndNil(FTask);
 
-  if Assigned(FToDoCollect) then
-  begin
-    FToDoCollect.Clear;
-    FreeAndNil(FToDoCollect);
-  end;
+//  if Assigned(FToDoCollect) then
+//  begin
+//    FToDoCollect.Clear;
+//    FreeAndNil(FToDoCollect);
+//  end;
 
   if Assigned(FSQLGSFiles) then
     FSQLGSFiles.Free;

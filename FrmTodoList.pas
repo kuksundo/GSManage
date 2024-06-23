@@ -310,19 +310,19 @@ var
 begin
   Lidx := AToDoItem.Tag;
 
-  with AToDoDetailF, FToDoCollect.Items[Lidx] do
+  with FToDoCollect.Items[Lidx] do
   begin
-    SubjectEdit.Text := Subject;
-    dt_begin.Date := CreationDate;
+    AToDoDetailF.Subject.Text := Subject;
+    AToDoDetailF.BeginDate.Date := CreationDate;
     DecodeTime(CreationDate, myHour, myMin, mySec, myMilli);
-    Time_Begin.Time := EncodeTime(myHour, myMin, mySec, myMilli);
-    dt_end.date := DueDate;
+    AToDoDetailF.BeginTime.Time := EncodeTime(myHour, myMin, mySec, myMilli);
+    AToDoDetailF.EndDate.date := DueDate;
     DecodeTime(DueDate, myHour, myMin, mySec, myMilli);
-    Time_End.Time := EncodeTime(myHour, myMin, mySec, myMilli);
-    NoteMemo.Lines.Assign(Notes);
-    AlarmCombo.ItemIndex := GetAlarmComboIndex(AlarmTime2);
-    MsgCB.Checked := Alarm2Msg;
-    NoteCB.Checked := Alarm2Note;
+    AToDoDetailF.EndTime.Time := EncodeTime(myHour, myMin, mySec, myMilli);
+    AToDoDetailF.Notes.Lines.Assign(Notes);
+    AToDoDetailF.AlarmType.ItemIndex := GetAlarmFlagIndex(AlarmTime2);
+    AToDoDetailF.Alarm2Msg.Checked := Alarm2Msg;
+    AToDoDetailF.Alarm2Note.Checked := Alarm2Note;
   end;
 end;
 
@@ -360,25 +360,25 @@ begin
   else
     LToDoItem := FToDoCollect.Items[AIndex];
 
-  with AToDoDetailF, LToDoItem do
+  with LToDoItem do
   begin
-    Subject := SubjectEdit.Text;
-    Category := AlarmCombo.Text;
+    Subject := AToDoDetailF.Subject.Text;
+    Category := AToDoDetailF.AlarmType.Text;
 
-    DecodeDate(dt_begin.Date,myYear, myMonth, myDay);
-    DecodeTime(Time_Begin.Time, myHour, myMin, mySec, myMilli);
+    DecodeDate(AToDoDetailF.BeginDate.Date,myYear, myMonth, myDay);
+    DecodeTime(AToDoDetailF.BeginTime.Time, myHour, myMin, mySec, myMilli);
     CreationDate := TimeLogFromDateTime(EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli));
 
-    DecodeDate(dt_end.Date,myYear, myMonth, myDay);
-    DecodeTime(Time_End.Time, myHour, myMin, mySec, myMilli);
+    DecodeDate(AToDoDetailF.EndDate.Date,myYear, myMonth, myDay);
+    DecodeTime(AToDoDetailF.EndTime.Time, myHour, myMin, mySec, myMilli);
     DueDate := TimeLogFromDateTime(EncodeDateTime(myYear, myMonth, myDay, myHour, myMin, mySec, myMilli));
 
-    Notes.Assign(NoteMemo.Lines);
+    Notes.Assign(AToDoDetailF.Notes.Lines);
 
     AlarmType := 2;
-    AlarmTime2 := GetAlarmInterval(AlarmCombo.ItemIndex);
-    Alarm2Msg := MsgCB.Checked;
-    Alarm2Note := NoteCB.Checked;
+    AlarmTime2 := GetAlarmInterval(AToDoDetailF.AlarmType.ItemIndex);
+    Alarm2Msg := AToDoDetailF.Alarm2Msg.Checked;
+    Alarm2Note := AToDoDetailF.Alarm2Note.Checked;
     Moddate := TimeLogFromDateTime(now);
 
     if LIsAdd then

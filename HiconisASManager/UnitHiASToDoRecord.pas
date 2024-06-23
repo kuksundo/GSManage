@@ -7,15 +7,14 @@ uses SysUtils, Classes, Generics.Collections,
   mormot.rest.sqlite3, mormot.orm.base, mormot.core.data, mormot.core.variants,
   mormot.core.datetime, mormot.core.json, mormot.core.collections,
 
-  UnitHiconisMasterRecord, CommonData2, UnitTodoCollect2, UnitToDoList
+  UnitHiconisMasterRecord, CommonData2, UnitToDoList
   ;
 
 type
   TSQLToDoItem = class(TSQLRecord)
   private
     fTaskID: TID;
-
-    FToDo_Code,
+    FUniqueID, //ToDo 생성 시에 RowID를 알기 어렵기 때문에 UniqueID를 대신 사용하여 CRUD를 수행함
     FAppointmentEntryId,
     FAppointmentStoreId,
     FEmailEntryId,
@@ -63,7 +62,7 @@ type
     property AppointmentStoreId: string read FAppointmentStoreId write FAppointmentStoreId;
     property EmailEntryId: string read FEmailEntryId write FEmailEntryId;
     property EmailStoreId: string read FEmailStoreId write FEmailStoreId;
-    property ToDo_Code: string read FToDo_Code write FToDo_Code;
+    property UniqueID: string read FUniqueID write FUniqueID;
     property Plan_Code: string read FPlan_Code write FPlan_Code;
     property Subject: string read FSubject write FSubject;
     property Notes: string read FNotes write FNotes;
@@ -99,16 +98,24 @@ type
   procedure InitHiASToDoClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiASToDoClient();
 
-  function GetToDoItemFromTask(ATask: TOrmHiconisASTask): TSQLToDoItem;
+  //TaskID 모든 TodoItem을 Get
+  function GetOrmToDoListFromDBByTask(ATask: TOrmHiconisASTask): TSQLToDoItem;
+  //한개의 Item만 Get
+  function GetOrmToDoItemFromDBByTodoItemRec(ApjhTodoItem: TpjhTodoItemRec): TSQLToDoItem;
+  //TaskID 모든 TodoItem을 Get
+  procedure GetToDoListFromDBByTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
+  //TaskID 모든 TodoItem을 Delete
   procedure DeleteToDoListFromTask(ATask: TOrmHiconisASTask);
-  procedure DeleteToDoListFromDB(ApjhTodoItem: TpjhTodoItem; ADB: TSQLRestClientURI=nil);
+  //한개의 Item만 Delete
+  procedure DeleteToDoItemFromDB(ApjhTodoItem: TpjhTodoItemRec; ADB: TSQLRestClientURI=nil);
+  function DeleteToDoRecFromDBByUniqueID(AUniqueID: string; ADB: TSQLRestClientURI=nil): Boolean;
 
-  procedure InsertOrUpdateToDoList2DB(ApjhTodoItem: TpjhTodoItem; AIdAdd: Boolean; ADB: TSQLRestClientURI=nil );
-  procedure LoadToDoCollectFromTask(ATask: TOrmHiconisASTask; var AToDoCollect: TpjhToDoItemCollection);
-  procedure LoadToDoListFromTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
+  procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; AIdAdd: Boolean; ADB: TSQLRestClientURI=nil );
+  procedure AddOrUpdateToDoItem2DBByJson(AJson: RawUtf8; ADB: TSQLRestClientURI=nil );
+  procedure AddToDoListFromTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
 
-  procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItem; ASQLToDoItem: TSQLToDoItem);
-  procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItem);
+  procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItemRec; ASQLToDoItem: TSQLToDoItem);
+  procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItemRec);
 
 var
   g_HiASToDoDB: TSQLRestClientURI;
@@ -167,7 +174,7 @@ begin
     FreeAndNil(HiASToDoModel);
 end;
 
-function GetToDoItemFromTask(ATask: TOrmHiconisASTask): TSQLToDoItem;
+function GetOrmToDoListFromDBByTask(ATask: TOrmHiconisASTask): TSQLToDoItem;
 begin
   Result := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.orm, 'TaskID = ?', [ATask.ID]);
 
@@ -177,11 +184,42 @@ begin
     Result.IsUpdate := False;
 end;
 
+function GetOrmToDoItemFromDBByTodoItemRec(ApjhTodoItem: TpjhTodoItemRec): TSQLToDoItem;
+begin
+  Result := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.orm,
+    'TaskID = ? and UniqueID = ?',
+    [ApjhTodoItem.TaskID, ApjhTodoItem.UniqueID]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+procedure GetToDoListFromDBByTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
+var
+  LSQLToDoItem: TSQLToDoItem;
+  LpjhTodoItem: TpjhTodoItemRec;
+  LDoc: variant;
+begin
+  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.orm, 'TaskID = ?', [ATask.ID]);
+  try
+    while LSQLToDoItem.FillOne do
+    begin
+      LoadRecordPropertyToVariant(LSQLToDoItem, LDoc);
+      LoadRecordFieldFromVariant(LpjhTodoItem, TypeInfo(TpjhTodoItemRec), LDoc);
+      AToDoList.Add(LpjhTodoItem);
+    end;
+  finally
+    LSQLToDoItem.Free;
+  end;
+end;
+
 procedure DeleteToDoListFromTask(ATask: TOrmHiconisASTask);
 var
   LSQLToDoItem: TSQLToDoItem;
 begin
-//  LSQLToDoItem := GetToDoItemFromTask(ATask);
+//  LSQLToDoItem := GetOrmToDoListFromDBByTask(ATask);
 //  try
 //    LSQLToDoItem.FillRewind;
 
@@ -192,7 +230,7 @@ begin
 //  end;
 end;
 
-procedure InsertOrUpdateToDoList2DB(ApjhTodoItem: TpjhTodoItem; AIdAdd: Boolean; ADB: TSQLRestClientURI);
+procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; AIdAdd: Boolean; ADB: TSQLRestClientURI);
 var
   LSQLToDoItem: TSQLToDoItem;
   LTaskID: TID;
@@ -200,7 +238,7 @@ begin
   if not Assigned(ADB) then
     ADB := g_HiASToDoDB;
 
-  LTaskID := ApjhTodoItem.TaskID;
+  LTaskID := ApjhTodoItemRec.TaskID;
   LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(ADB.Orm, 'TaskID = ?', [LTaskID]);
 
   try
@@ -210,7 +248,7 @@ begin
       LSQLToDoItem.IsUpdate := False;
 
 //    if LSQLToDoItem.IsUpdate then
-    AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem, LSQLToDoItem);
+    AssignpjhTodoItemToSQLToDoItem(ApjhTodoItemRec, LSQLToDoItem);
 
     if AIdAdd then
       g_HiASToDoDB.Add(LSQLToDoItem, True)
@@ -221,48 +259,60 @@ begin
   end;
 end;
 
-procedure DeleteToDoListFromDB(ApjhTodoItem: TpjhTodoItem; ADB: TSQLRestClientURI);
+procedure AddOrUpdateToDoItem2DBByJson(AJson: RawUtf8; ADB: TSQLRestClientURI=nil );
 var
   LSQLToDoItem: TSQLToDoItem;
-  LTaskID: TID;
+  LRec: TpjhTodoItemRec;
+  LDoc: variant;
 begin
   if not Assigned(ADB) then
     ADB := g_HiASToDoDB;
 
-  LTaskID := ApjhTodoItem.TaskID;
-  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(ADB.Orm, 'TaskID = ? and ToDo_Code = ?', [LTaskID, ApjhTodoItem.TodoCode]);
+  RecordLoadJson(LRec, AJson, TypeInfo(TpjhTodoItemRec));
+
+  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(ADB.Orm, 'TaskID = ? and UniqueID = ?', [LRec.TaskID, LRec.UniqueID]);
 
   try
     if LSQLToDoItem.FillOne then
-    begin
-      g_HiASToDoDB.Delete(TSQLToDoItem, LSQLToDoItem.ID);
-    end;
+      LSQLToDoItem.IsUpdate := True
+    else
+      LSQLToDoItem.IsUpdate := False;
+
+//    if LSQLToDoItem.IsUpdate then
+//    AssignpjhTodoItemToSQLToDoItem(ApjhTodoItemRec, LSQLToDoItem);
+    LDoc := _JSON(AJson);
+    LoadRecordPropertyFromVariant(LSQLToDoItem, LDoc);
+
+    if LSQLToDoItem.IsUpdate then
+      g_HiASToDoDB.Update(LSQLToDoItem)
+    else
+      g_HiASToDoDB.Add(LSQLToDoItem, True);
   finally
     FreeAndNil(LSQLToDoItem);
   end;
 end;
 
-procedure LoadToDoCollectFromTask(ATask: TOrmHiconisASTask; var AToDoCollect: TpjhToDoItemCollection);
+procedure DeleteToDoItemFromDB(ApjhTodoItem: TpjhTodoItemRec; ADB: TSQLRestClientURI);
 var
   LSQLToDoItem: TSQLToDoItem;
-  LpjhToDoItem: TpjhToDoItem;
 begin
-//  AToDoCollect.Clear;
+  if not Assigned(ADB) then
+    ADB := g_HiASToDoDB;
 
-  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.orm, 'TaskID = ?', [ATask.ID]);
-  try
-    while LSQLToDoItem.FillOne do
-    begin
-      LpjhToDoItem := AToDoCollect.Add;
-      LSQLToDoItem.Project := ATask.HullNo;
-      AssignSQLToDoItemTopjhTodoItem(LSQLToDoItem, LpjhToDoItem);
-    end;
-  finally
-    FreeAndNil(LSQLToDoItem);
-  end;
+  g_HiASToDoDB.Delete(TSQLToDoItem, 'TaskID = ? and UniqueID = ?', [ApjhTodoItem.TaskID, ApjhTodoItem.UniqueID]);
 end;
 
-procedure LoadToDoListFromTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
+function DeleteToDoRecFromDBByUniqueID(AUniqueID: string; ADB: TSQLRestClientURI=nil):Boolean;
+var
+  LSQLToDoItem: TSQLToDoItem;
+begin
+  if not Assigned(ADB) then
+    ADB := g_HiASToDoDB;
+
+  Result := g_HiASToDoDB.Delete(TSQLToDoItem, 'UniqueID = ?', [AUniqueID]);
+end;
+
+procedure AddToDoListFromTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
 var
   LSQLToDoItem: TSQLToDoItem;
   LUtf8: RawUtf8;
@@ -281,7 +331,7 @@ begin
   end;
 end;
 
-procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItem; ASQLToDoItem: TSQLToDoItem);
+procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItemRec; ASQLToDoItem: TSQLToDoItem);
 begin
   ASQLToDoItem.fTaskID := ApjhTodoItem.TaskID;
 
@@ -292,7 +342,7 @@ begin
   ASQLToDoItem.CreationDate := TimeLogFromDateTime(ApjhTodoItem.CreationDate);
   ASQLToDoItem.DueDate := TimeLogFromDateTime(ApjhTodoItem.DueDate);
   ASQLToDoItem.ImageIndex := ApjhTodoItem.ImageIndex;
-  ASQLToDoItem.Notes := ApjhTodoItem.Notes.Text;
+  ASQLToDoItem.Notes := ApjhTodoItem.Notes;
   ASQLToDoItem.Priority := Ord(ApjhTodoItem.Priority);
   ASQLToDoItem.Project := ApjhTodoItem.Project;
   ASQLToDoItem.Resource := ApjhTodoItem.Resource;
@@ -301,7 +351,7 @@ begin
   ASQLToDoItem.Tag := ApjhTodoItem.Tag;
   ASQLToDoItem.TotalTime := ApjhTodoItem.TotalTime;
 
-  ASQLToDoItem.Todo_Code := ApjhTodoItem.TodoCode;
+  ASQLToDoItem.UniqueID := ApjhTodoItem.UniqueID;
   ASQLToDoItem.Plan_Code := ApjhTodoItem.PlanCode;
   ASQLToDoItem.ModId := ApjhTodoItem.ModId;
 
@@ -316,7 +366,7 @@ begin
   ASQLToDoItem.ModDate := TimeLogFromDateTime(ApjhTodoItem.ModDate);
 end;
 
-procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItem);
+procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItemRec);
 begin
   ApjhTodoItem.TaskID := ASQLToDoItem.fTaskID;
 
@@ -327,7 +377,7 @@ begin
   ApjhTodoItem.CreationDate := ASQLToDoItem.CreationDate;
   ApjhTodoItem.DueDate := ASQLToDoItem.DueDate;
   ApjhTodoItem.ImageIndex := ASQLToDoItem.ImageIndex;
-  ApjhTodoItem.Notes.Text := ASQLToDoItem.Notes;
+  ApjhTodoItem.Notes := ASQLToDoItem.Notes;
   ApjhTodoItem.Priority := ASQLToDoItem.Priority;
   ApjhTodoItem.Project := ASQLToDoItem.Project;
   ApjhTodoItem.Resource := ASQLToDoItem.Resource;
@@ -336,7 +386,7 @@ begin
   ApjhTodoItem.Tag := ASQLToDoItem.Tag;
   ApjhTodoItem.TotalTime := ASQLToDoItem.TotalTime;
 
-  ApjhTodoItem.TodoCode := ASQLToDoItem.Todo_Code;
+  ApjhTodoItem.UniqueID := ASQLToDoItem.UniqueID;
   ApjhTodoItem.PlanCode := ASQLToDoItem.Plan_Code;
   ApjhTodoItem.ModId := ASQLToDoItem.ModId;
 

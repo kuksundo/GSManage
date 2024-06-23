@@ -255,7 +255,7 @@ type
     procedure ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 
     procedure ShowTodoListFormFromDBByGridRow(ARow: integer);
-    procedure ShowToDoListFormFromList(AToDoList: TpjhToDoList);
+    procedure ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
 
     procedure SetUserNameNIPAddressFromRegServer;
 
@@ -1280,7 +1280,8 @@ begin
   else
     LRow := -1;
 
-  ShowTodoListFormFromData(LRow);
+//  ShowTodoListFormFromData(LRow);
+  ShowTodoListFormFromDBByGridRow(LRow);
 end;
 
 procedure TDisplayTaskF.ApplyConfigChanged;
@@ -1291,12 +1292,12 @@ end;
 procedure TDisplayTaskF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 begin
   Create_ToDoList_Frm('', AToDoCollect, True,
-    InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+    nil, nil);//InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
 end;
 
-procedure TDisplayTaskF.ShowToDoListFormFromList(AToDoList: TpjhToDoList);
+procedure TDisplayTaskF.ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
 begin
-  Create_ToDoList_Frm2(0, AToDoList, True);
+  Create_ToDoList_Frm2(ATaskId, AToDoList, True);
 end;
 
 procedure TDisplayTaskF.TaskTabChange(Sender: TObject);
@@ -1796,7 +1797,7 @@ begin
 
       LTask := CreateOrGetLoadTask(LID);
       try
-        LoadToDoCollectFromTask(LTask, FToDoCollect);
+//        LoadToDoCollectFromTask(LTask, FToDoCollect);
       finally
         FreeAndNil(LTask);
       end;
@@ -1811,7 +1812,7 @@ begin
 
     LTask := CreateOrGetLoadTask(LID);
     try
-      LoadToDoCollectFromTask(LTask, FToDoCollect);
+//      LoadToDoCollectFromTask(LTask, FToDoCollect);
     finally
       FreeAndNil(LTask);
     end;
@@ -1831,7 +1832,7 @@ var
   begin
     LTask := CreateOrGetLoadTask(LID);
     try
-      LoadToDoListFromTask(LTask, FpjhToDoList);
+      GetToDoListFromDBByTask(LTask, FpjhToDoList);
     finally
       FreeAndNil(LTask);
     end;
@@ -1860,7 +1861,7 @@ begin
     _GetToDoListFromTask(LID);
   end;
 
-  ShowToDoListFormFromList(FpjhToDoList);
+  ShowToDoListFormFromList(LID, FpjhToDoList);
 end;
 
 procedure TDisplayTaskF.SetConfig;
