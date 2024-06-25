@@ -137,6 +137,9 @@ type
 
   //Claim Info를 Json으로 반환 함
   function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
+  //Outlook에서 Drag한 경우 File이 RawByteString으로 전달됨
+  //Claim Info를 Json으로 반환 함
+  function GetClaimInfoJsonFromXlsString(AXlsFile: RawByteString): RawUtf8;
 
   //힘센엔진 견적서
 var
@@ -144,7 +147,7 @@ var
 
 implementation
 
-uses UnitStringUtil,
+uses UnitStringUtil, UnitStreamUtil,
   {$IFDEF GAMANAGER} UnitHiconisASVarJsonUtil,
   {$ELSE} UnitVariantJsonUtil2,
   {$ENDIF}
@@ -1088,6 +1091,10 @@ begin
   LWorkBook := LExcel.Workbooks.Open(AXlsFileName);
   LExcel.Visible := true;
   LWorksheet := LExcel.ActiveSheet;
+  AXlsFileName := LWorkSheet.Name;
+
+  if UpperCase(AXlsFileName) <> 'CLAIM REPORT' then
+    LWorksheet := LWorkBook.Sheets.Item['Claim Report'];
 
   LRange := LWorksheet.range['F2'];
   LDoc.S['ShipName'] := LRange.FormulaR1C1;
@@ -1144,6 +1151,23 @@ begin
   LDoc.S['AgentDetail'] := LRange.FormulaR1C1;
 
   Result := LDoc.ToJson(jsonUnquotedPropNameCompact)
+end;
+
+function GetClaimInfoJsonFromXlsString(AXlsFile: RawByteString): RawUtf8;
+var
+  LStream: TStream;
+  LTmpXlsFileName: string;
+begin
+  Result := '';
+
+  try
+    LStream := RawByteStringToStream(AXlsFile);
+    //'c:\Temp\Temp.xls' 에 LStream을 저장함
+    LTmpXlsFileName := GetFileNameFromStream(LStream);
+    Result := GetClaimInfoJsonFromReport_Xls(LTmpXlsFileName);
+  finally
+    LStream.Free
+  end;
 end;
 
 end.

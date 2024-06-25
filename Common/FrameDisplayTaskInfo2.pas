@@ -136,6 +136,7 @@ type
     Importance: TNxTextColumn;
     oDOList1: TMenuItem;
     N23: TMenuItem;
+    ClaimStatus: TNxTextColumn;
 
     procedure btn_SearchClick(Sender: TObject);
     procedure ComboBox1DropDown(Sender: TObject);

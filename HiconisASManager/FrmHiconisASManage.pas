@@ -407,7 +407,8 @@ begin
       LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
 
   if LResult = mrOK then
-    TDTF.LoadTaskVar2Grid(LTask, TDTF.grid_Req);
+    if not LTask.IsUpdate then
+      TDTF.LoadTaskVar2Grid(LTask, TDTF.grid_Req);
   finally
     LTask.Free;
   end;
@@ -466,7 +467,7 @@ begin
         LFileName := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames[0];
         LFileExt := ExtractFileExt(LFileName);
 
-        if LFileExt = '.xlsx' then
+        if UpperCase(LFileExt) = '.XLSX' then
         begin
           LTargetStream := GetStreamFromDropDataFormat(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat));
           try
@@ -499,7 +500,13 @@ begin
 
     if g_GSDocType.ToType(LDocType) = dtClaimReport then
     begin
-      LJson := GetClaimInfoJsonFromReport_Xls(LFileName);
+      if LFromOutlook then
+      begin
+        LJson := GetClaimInfoJsonFromXlsString(LRawByte);
+      end
+      else
+        LJson := GetClaimInfoJsonFromReport_Xls(LFileName);
+
       CreateNewTask(LJson);
     end;
   end;

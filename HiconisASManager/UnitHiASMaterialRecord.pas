@@ -11,31 +11,10 @@ uses SysUtils, Classes, Generics.Collections,
   ;
 
 type
-  //자재정보
-  TSQLMaterial = class(TSQLRecord)
+  TSQLMaterial4Project = class(TSQLRecord)
   private
     fTaskID: TID;
-    fMaterialCode, //자재코드
     fMaterialName, //자재명
-    fUnitPrice//자재 단가
-    : RawUTF8;
-    fLeadTime: integer;
-
-    FIsUpdate: Boolean;
-  public
-    //True : DB Update, False: DB Add
-    property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
-  published
-    property TaskID: TID read fTaskID write fTaskID;
-    property MaterialCodeList: RawUTF8 read fMaterialCode write fMaterialCode;
-    property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
-    property UnitPrice: RawUTF8 read fUnitPrice write fUnitPrice;
-
-    property LeadTime: integer read fLeadTime write fLeadTime;
-  end;
-
-  TSQLMaterial4Project = class(TSQLMaterial)
-  private
     fPORNo: RawUTF8;
     fSupplyCount,//공급수량
     fPriceAmount, //총금액 : 단가 x 공급수량
@@ -61,8 +40,14 @@ uses SysUtils, Classes, Generics.Collections,
     fCBM, //Cubic Meter
     fNumOfPkg //포장수량
     : RawUTF8;
+    FIsUpdate: Boolean;
+  public
+    //True : DB Update, False: DB Add
+    property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
+    property TaskID: TID read fTaskID write fTaskID;
     property PORNo: RawUTF8 read fPORNo write fPORNo;
+    property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
     property SupplyCount: integer read fSupplyCount write fSupplyCount;
     property PriceAmount: integer read fPriceAmount write fPriceAmount;
     property FreeOrCharge: integer read fFreeOrCharge write fFreeOrCharge;
@@ -92,6 +77,8 @@ uses SysUtils, Classes, Generics.Collections,
   function GetMaterial4ProjFromTask(ATask: TOrmHiconisASTask): TSQLMaterial4Project;
   function GetMaterial4ProjFromTaskID(const ATaskID: TID): TSQLMaterial4Project;
   function GetMaterial4ProjFromTaskIDNPORNo(const ATaskID: TID; const APorNo: string): TSQLMaterial4Project;
+
+  function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
 
   procedure AddOrUpdateMaterial4Project(AMaterial4Project: TSQLMaterial4Project);
 
@@ -187,6 +174,28 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+var
+  LMaterial4Project: TSQLMaterial4Project;
+begin
+  LMaterial4Project := GetMaterial4ProjFromTask(ATask);
+  try
+    if LMaterial4Project.FillOne then
+    begin
+      Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'TaskID = ? and PORNo = ?', [ATask.ID, LMaterial4Project.PO_No]);
+
+      if Result.FillOne then
+        Result.IsUpdate := True
+      else
+        Result.IsUpdate := False;
+    end
+    else
+      Result := TSQLMaterialDetail.Create;
+  finally
+    LMaterial4Project.Free;
+  end;
 end;
 
 procedure DeleteMaterial4ProjFromTask(ATask: TOrmHiconisASTask);

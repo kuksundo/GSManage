@@ -180,6 +180,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\Common\UnitToDoList.pas"/>
+        <DCCReference Include="UnitHiASMaterialDetailRecord.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

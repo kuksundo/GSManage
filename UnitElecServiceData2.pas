@@ -111,6 +111,7 @@ type
   TClaimImportanceKind = (ciknull, cikA, cikB, cikC, cikD, cikFinal);
   TDeliveryKind = (dkNull, dkDomesticDelivery, dkOverSeaDelivery, dkFinal);
   TFreeOrCharge = (focNull, focFree, focCharge, focFinal);//유환/무환
+  TClaimStatus = (csNull, csOpen, csReady, csDock, csClosed, csFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -279,6 +280,16 @@ const
     ''
      );
 
+  R_ClaimStatus : array[Low(TClaimStatus)..High(TClaimStatus)] of string =
+    (
+    '',
+    'OPEN',
+    'READY',
+    'DOCK',
+    'CLOSED',
+    ''
+     );
+
 var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_EngineerKind: TLabelledEnum<TEngineerKind>;
@@ -298,6 +309,7 @@ var
   g_ClaimImportanceKind: TLabelledEnum<TClaimImportanceKind>;
   g_DeliveryKind: TLabelledEnum<TDeliveryKind>;
   g_FreeOrCharge: TLabelledEnum<TFreeOrCharge>;
+  g_ClaimStatus: TLabelledEnum<TClaimStatus>;
 
 procedure SalesProcess2List(AList: TStringList; AFSMState: TFSMState);
 
@@ -335,6 +347,7 @@ initialization
 //  g_ClaimImportanceKind.InitArrayRecord(R_ClaimImportanceKind);
 //  g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
 //  g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
+//  g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
 
 finalization
 

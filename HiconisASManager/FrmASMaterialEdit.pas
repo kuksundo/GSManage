@@ -6,9 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   JvExControls, JvLabel, CurvyControls,
-  mormot.core.datetime,
+  mormot.core.datetime, mormot.core.base, mormot.orm.base, mormot.core.variants,
 
-  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord;
+  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord,
+  NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
+  NxCustomGrid, NxGrid;
 
 type
   TASMaterialF = class(TForm)
@@ -60,11 +62,19 @@ type
     NumOfPkgEdit: TEdit;
     JvLabel26: TJvLabel;
     JvLabel27: TJvLabel;
-    MaterialCodeListMemo: TMemo;
     DeliveryAddressMemo: TMemo;
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
+    MaterialGrid: TNextGrid;
+    PORNo: TNxTextColumn;
+    MaterialName: TNxTextColumn;
+    MaterialCode: TNxDateColumn;
+    LeadTime: TNxTextColumn;
+    NeedCount: TNxTextColumn;
+    UnitPrice: TNxTextColumn;
+    NeedDate: TNxDateColumn;
+    TaskID: TNxTextColumn;
 
     procedure FormCreate(Sender: TObject);
   private
@@ -75,6 +85,12 @@ type
     procedure LoadMaterialOrmFromForm(AMaterial4Project: TSQLMaterial4Project);
     procedure LoadMaterialVar2Form(AVar: variant);
     procedure LoadMaterialVarFromForm(var AVar: variant);
+
+    procedure LoadMaterialDetailOrm2Form(AMaterial4Project: TSQLMaterial4Project);
+    procedure LoadMaterialDetailOrmFromForm(AMaterialDetail: TSQLMaterialDetail);
+    procedure LoadMaterialDetailVar2Form(AVar: variant);
+    procedure LoadMaterialDetailVarFromForm(var AVar: variant);
+
   end;
 
   function DisplayMaterial2EditForm(var ADoc: variant): Boolean;
@@ -83,6 +99,8 @@ var
   ASMaterialF: TASMaterialF;
 
 implementation
+
+uses UnitNextGridUtil2, UnitRttiUtil2;
 
 {$R *.dfm}
 
@@ -138,16 +156,53 @@ begin
   g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
 end;
 
+procedure TASMaterialF.LoadMaterialDetailOrm2Form(
+  AMaterial4Project: TSQLMaterial4Project);
+var
+  LMaterialDetail: TSQLMaterialDetail;
+  LUtf8: RawUtf8;
+  LVar: variant;
+begin
+  LMaterialDetail := GetMaterialDetailFromTask(AMaterial4Project);
+  try
+    LUtf8 := LMaterialDetail.GetJsonValues(true, true, soSelect);
+    LVar := _JSON(LUtf8);
+    LoadMaterialDetailVar2Form(LVar);
+  finally
+    LMaterialDetail.Free;
+  end;
+end;
+
+procedure TASMaterialF.LoadMaterialDetailOrmFromForm(
+  AMaterialDetail: TSQLMaterialDetail);
+var
+  LVar: variant;
+begin
+  TDocVariant.New(LVar);
+  LoadMaterialDetailVarFromForm(LVar);
+  LoadRecordPropertyFromVariant(AMaterialDetail, LVar);
+end;
+
+procedure TASMaterialF.LoadMaterialDetailVar2Form(AVar: variant);
+begin
+  AddNextGridRowsFromVariant2(MaterialGrid, AVar);
+end;
+
+procedure TASMaterialF.LoadMaterialDetailVarFromForm(var AVar: variant);
+begin
+  AVar := NextGrid2Variant(MaterialGrid);
+end;
+
 procedure TASMaterialF.LoadMaterialOrm2Form(
   AMaterial4Project: TSQLMaterial4Project);
 begin
   PORNoEdit.Text := AMaterial4Project.PORNo;
   MaterialNameEdit.Text := AMaterial4Project.MaterialName;
   PORIssuePicker.Date := TimeLogToDateTime(AMaterial4Project.PORIssueDate);
-  LeadTimeEdit.Text := IntToStr(AMaterial4Project.LeadTime);
+//  LeadTimeEdit.Text := IntToStr(AMaterial4Project.LeadTime);
   FreeOrChargeCB.ItemIndex := AMaterial4Project.FreeOrCharge;
   SupplyCountEdit.Text := IntToStr(AMaterial4Project.SupplyCount);
-  UnitPriceEdit.Text := AMaterial4Project.UnitPrice;
+//  UnitPriceEdit.Text := AMaterial4Project.UnitPrice;
   PriceAmountEdit.Text := IntToStr(AMaterial4Project.PriceAmount);
   ReqDeliveryDatePicker.Date := TimeLogToDateTime(AMaterial4Project.ReqDeliveryDate);
   ReqArriveDatePicker.Date := TimeLogToDateTime(AMaterial4Project.ReqArriveDate);
@@ -164,7 +219,6 @@ begin
   CBMEdit.Text := AMaterial4Project.CBM;
   AWBEdit.Text := AMaterial4Project.AirWayBill;
   NumOfPkgEdit.Text := AMaterial4Project.NumOfPkg;
-  MaterialCodeListMemo.Text := AMaterial4Project.MaterialCodeList;
   DeliveryAddressMemo.Text := AMaterial4Project.DeliveryAddress;
 end;
 
@@ -174,10 +228,10 @@ begin
   AMaterial4Project.PORNo := PORNoEdit.Text;
   AMaterial4Project.MaterialName := MaterialNameEdit.Text;
   AMaterial4Project.PORIssueDate := TimeLogFromDateTime(PORIssuePicker.Date);
-  AMaterial4Project.LeadTime := StrToIntDef(LeadTimeEdit.Text, 0);
+//  AMaterial4Project.LeadTime := StrToIntDef(LeadTimeEdit.Text, 0);
   AMaterial4Project.FreeOrCharge := FreeOrChargeCB.ItemIndex;
   AMaterial4Project.SupplyCount := StrToIntDef(SupplyCountEdit.Text, 0);
-  AMaterial4Project.UnitPrice := UnitPriceEdit.Text;
+//  AMaterial4Project.UnitPrice := UnitPriceEdit.Text;
   AMaterial4Project.PriceAmount := StrToIntDef(PriceAmountEdit.Text, 0);
   AMaterial4Project.ReqDeliveryDate := TimeLogFromDateTime(ReqDeliveryDatePicker.Date);
   AMaterial4Project.ReqArriveDate := TimeLogFromDateTime(ReqArriveDatePicker.Date);
@@ -194,7 +248,6 @@ begin
   AMaterial4Project.CBM := CBMEdit.Text;
   AMaterial4Project.AirWayBill := AWBEdit.Text;
   AMaterial4Project.NumOfPkg := NumOfPkgEdit.Text;
-  AMaterial4Project.MaterialCodeList := MaterialCodeListMemo.Text;
   AMaterial4Project.DeliveryAddress := DeliveryAddressMemo.Text;
 end;
 
@@ -223,7 +276,6 @@ begin
   CBMEdit.Text := AVar.CBM;
   AWBEdit.Text := AVar.AirWayBill;
   NumOfPkgEdit.Text := AVar.NumOfPkg;
-  MaterialCodeListMemo.Text := AVar.MaterialCodeList;
   DeliveryAddressMemo.Text := AVar.DeliveryAddress;
 end;
 
@@ -252,7 +304,6 @@ begin
   AVar.CBM := CBMEdit.Text;
   AVar.AirWayBill := AWBEdit.Text;
   AVar.NumOfPkg := NumOfPkgEdit.Text;
-  AVar.MaterialCodeList := MaterialCodeListMemo.Text;
   AVar.DeliveryAddress := DeliveryAddressMemo.Text;
 end;
 

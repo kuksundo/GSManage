@@ -2,7 +2,7 @@ object ASMaterialF: TASMaterialF
   Left = 0
   Top = 0
   Caption = 'ASMaterialF'
-  ClientHeight = 567
+  ClientHeight = 658
   ClientWidth = 591
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -638,13 +638,13 @@ object ASMaterialF: TASMaterialF
   end
   object JvLabel26: TJvLabel
     AlignWithMargins = True
-    Left = 8
-    Top = 328
+    Left = 0
+    Top = 448
     Width = 100
     Height = 25
     Alignment = taCenter
     AutoSize = False
-    Caption = #51088#51116#53076#46300
+    Caption = #51088#51116#47532#49828#53944
     Color = 14671839
     FrameColor = clGrayText
     Font.Charset = ANSI_CHARSET
@@ -666,7 +666,7 @@ object ASMaterialF: TASMaterialF
   object JvLabel27: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 402
+    Top = 328
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -900,21 +900,9 @@ object ASMaterialF: TASMaterialF
     ImeName = 'Microsoft IME 2010'
     TabOrder = 22
   end
-  object MaterialCodeListMemo: TMemo
-    Left = 114
-    Top = 327
-    Width = 378
-    Height = 74
-    BevelInner = bvNone
-    BevelKind = bkFlat
-    ImeMode = imSHanguel
-    ImeName = 'Microsoft IME 2010'
-    ScrollBars = ssVertical
-    TabOrder = 23
-  end
   object DeliveryAddressMemo: TMemo
     Left = 114
-    Top = 407
+    Top = 325
     Width = 378
     Height = 118
     BevelInner = bvNone
@@ -922,19 +910,20 @@ object ASMaterialF: TASMaterialF
     ImeMode = imSHanguel
     ImeName = 'Microsoft IME 2010'
     ScrollBars = ssVertical
-    TabOrder = 24
+    TabOrder = 23
   end
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 528
+    Top = 619
     Width = 591
     Height = 36
     Margins.Left = 0
     Margins.Right = 0
     Align = alBottom
     Rounding = 4
-    TabOrder = 25
+    TabOrder = 24
+    ExplicitTop = 528
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 524
@@ -961,6 +950,174 @@ object ASMaterialF: TASMaterialF
       Caption = #51201#50857
       ModalResult = 1
       TabOrder = 1
+    end
+  end
+  object MaterialGrid: TNextGrid
+    Left = 0
+    Top = 472
+    Width = 591
+    Height = 144
+    Touch.InteractiveGestures = [igPan, igPressAndTap]
+    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
+    Align = alBottom
+    Caption = ''
+    TabOrder = 25
+    TabStop = True
+    object PORNo: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 120
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'POR No'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 0
+      SortType = stAlphabetic
+      Width = 120
+    end
+    object MaterialName: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 150
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #54408#47749
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 1
+      SortType = stAlphabetic
+      Width = 150
+    end
+    object MaterialCode: TNxDateColumn
+      Alignment = taCenter
+      DefaultValue = '2024-06-21'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51088#51116#48264#54840
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 2
+      SortType = stDate
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
+    end
+    object LeadTime: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49548#50836#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 3
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object NeedCount: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #50836#52397#49688#47049
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 4
+      SortType = stAlphabetic
+    end
+    object UnitPrice: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #45800#44032
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 5
+      SortType = stAlphabetic
+    end
+    object NeedDate: TNxDateColumn
+      Alignment = taCenter
+      DefaultValue = '2024-06-13'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49548#50836#51068#51088
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 6
+      SortType = stDate
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
+    end
+    object TaskID: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'TaskID'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 7
+      SortType = stAlphabetic
+      Visible = False
     end
   end
 end

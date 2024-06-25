@@ -22,7 +22,7 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
@@ -261,6 +261,33 @@ object TaskEditF: TTaskEditF
         HotTrackFont.Name = #47569#51008' '#44256#46357
         HotTrackFont.Style = []
       end
+      object JvLabel17: TJvLabel
+        AlignWithMargins = True
+        Left = 398
+        Top = 3
+        Width = 100
+        Height = 25
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Claim Status'
+        Color = 14671839
+        FrameColor = clGrayText
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = #47569#51008' '#44256#46357
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        RoundedFrame = 3
+        Transparent = True
+        HotTrackFont.Charset = ANSI_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -13
+        HotTrackFont.Name = #47569#51008' '#44256#46357
+        HotTrackFont.Style = []
+      end
       object WorkBeginPicker: TDateTimePicker
         Left = 120
         Top = 96
@@ -361,14 +388,19 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         TabOrder = 8
       end
+      object ClaimStatusCombo: TComboBox
+        Left = 503
+        Top = 3
+        Width = 90
+        Height = 24
+        Style = csDropDownList
+        ImeName = 'Microsoft IME 2010'
+        TabOrder = 9
+      end
     end
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -1619,10 +1651,6 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object MaterialGrid: TNextGrid
         Left = 0
         Top = 33
@@ -2004,24 +2032,6 @@ object TaskEditF: TTaskEditF
           Position = 19
           SortType = stAlphabetic
         end
-        object MaterialCodeList: TNxTextColumn
-          Alignment = taCenter
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Header.Caption = #51088#51116#53076#46300
-          Header.Alignment = taCenter
-          Header.Font.Charset = DEFAULT_CHARSET
-          Header.Font.Color = clWindowText
-          Header.Font.Height = -11
-          Header.Font.Name = 'Tahoma'
-          Header.Font.Style = []
-          ParentFont = False
-          Position = 20
-          SortType = stAlphabetic
-        end
         object DeliveryAddress: TNxTextColumn
           Alignment = taCenter
           Font.Charset = DEFAULT_CHARSET
@@ -2037,7 +2047,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 21
+          Position = 20
           SortType = stAlphabetic
         end
         object PriceAmount: TNxTextColumn
@@ -2055,7 +2065,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 22
+          Position = 21
           SortType = stAlphabetic
         end
         object DeliveryCompany: TNxTextColumn
@@ -2073,7 +2083,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 23
+          Position = 22
           SortType = stAlphabetic
         end
         object AirWayBill: TNxTextColumn
@@ -2091,7 +2101,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 24
+          Position = 23
           SortType = stAlphabetic
         end
       end
@@ -2133,10 +2143,6 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -3341,7 +3347,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C0101300098000C0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800140510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5227,6 +5233,7 @@ object TaskEditF: TTaskEditF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop2
     Target = fileGrid
+    WinTarget = 0
     Left = 12
     Top = 612
   end
@@ -5247,7 +5254,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400E00110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400E80110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

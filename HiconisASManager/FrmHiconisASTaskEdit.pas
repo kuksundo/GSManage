@@ -257,7 +257,6 @@ type
     Measurement: TNxTextColumn;
     CBM: TNxTextColumn;
     NumOfPkg: TNxTextColumn;
-    MaterialCodeList: TNxTextColumn;
     DeliveryAddress: TNxTextColumn;
     Panel6: TPanel;
     AeroButton5: TAeroButton;
@@ -269,6 +268,8 @@ type
     ClaimServiceKindCB: TComboBox;
     CompanyName2: TNxTextColumn;
     PORIssueDate: TNxDateColumn;
+    JvLabel17: TJvLabel;
+    ClaimStatusCombo: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -409,10 +410,19 @@ type
       ADocIsFromRemote: Boolean = false);
     procedure SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID = 0);
     procedure LoadSubConGrid2Var(ARow: integer; var ADoc: variant);
+
     procedure LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
     procedure LoadTaskForm2Material4Project(AForm: TTaskEditF;
       AMaterial: TSQLMaterial4Project; ARow: integer);
     procedure LoadTaskForm2Material4ProjectNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
+
+    procedure LoadMaterial2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
+    procedure LoadTaskForm2Material(AForm: TTaskEditF;
+      AMaterial: TSQLMaterial4Project; ARow: integer);
+    procedure LoadTaskForm2MaterialNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
+
+    //HiconisASTask를 DB에 저장 할려면 반드시 HullNo/ProjectNo/ClaimNo가 있어야 함
+    function CheckTaskDBKeyFromForm(): Boolean;
   end;
 
   function ProcessTaskJson(AJson: String): Boolean;
@@ -590,6 +600,12 @@ begin
       //"저장" 버튼을 누른 경우
       if Result = mrOK then
       begin
+        if not CheckTaskDBKeyFromForm then
+        begin
+          ShowMessage('HullNo/ProjectNo/ClaimNo 정보가 없습니다.');
+          exit;
+        end;
+
         LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
 
         //IPC를 통해서  Email을 수신한 경우
@@ -773,7 +789,7 @@ var
 begin
   //신규 생성시 TaskId가 정해지지 않았음
   LTaskEditF := TTaskEditF.Create(nil);
-  LTask := ATask;
+//  LTask := ATask;
   LFiles := TSQLGSFile.Create;
   try
     LDoc := DocDict(AJson);
@@ -787,7 +803,13 @@ begin
       ClaimReasonMemo.Text := LDoc['Cause'];
       CustAgentMemo.Text := LDoc['AgentDetail'];
 
-      LCustomer := GetCustomerFromTask(LTask);
+      LCustomer := GetCustomerFromTask(ATask);
+
+      if not Assigned(FSQLGSFiles) then
+        FSQLGSFiles := GetGSFilesFromID(-1)
+      else
+        FSQLGSFiles.DynArray('Files').Clear;
+
 //      LoadCustomer2Form(LCustomer, LTaskEditF);
 //
 //      LSubConList := TObjectList<TSQLSubCon>.Create;
@@ -818,25 +840,44 @@ begin
       //"저장" 버튼을 누른 경우
       if Result = mrOK then
       begin
-        LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
-        AddOrUpdateTask(LTask);
+        if not CheckTaskDBKeyFromForm then
+        begin
+          ShowMessage('HullNo/ProjectNo/ClaimNo 정보가 없습니다.');
+          exit;
+        end;
+
+        //기존에 존재하는 클레임인지 Check
+        LTask := GetTaskFromHullNoNOrderNoNClaimNo(HullNoEdit.Text, OrderNoEdit.Text, ClaimNoEdit.Text);
+        try
+          if LTask.IsUpdate then
+          begin
+            ATask.IsUpdate := True;
+            ShowMessage('클레임이 이미 존재 합니다.' + #13#10 + 'ClaimNo : ' + ClaimNoEdit.Text);
+            exit;
+          end;
+        finally
+          LTask.Free;
+        end;
+
+        LoadTaskForm2SQLGSTask(LTaskEditF, ATask);
+        AddOrUpdateTask(ATask);
 
         if High(FSQLGSFiles.Files) >= 0 then
         begin
           g_FileDB.Delete(TSQLGSFile, FSQLGSFiles.ID);
-          FSQLGSFiles.TaskID := LTask.ID;
+          FSQLGSFiles.TaskID := ATask.ID;
           g_FileDB.Add(FSQLGSFiles, true);
         end
         else
           g_FileDB.Delete(TSQLGSFile, FSQLGSFiles.ID);
 
         //고객정보 탭 정보 Load -> LCustomer
-        LoadTaskForm2Customer(LTaskEditF, LCustomer, LTask.ID);
+        LoadTaskForm2Customer(LTaskEditF, LCustomer, ATask.ID);
         AddOrUpdateCustomer(LCustomer);
         //협력사 탭 정보 Load and Save To DB
-        SaveSubConFromForm(LTaskEditF, LTask.ID);
+        SaveSubConFromForm(LTaskEditF, ATask.ID);
         //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, LTask.ID);
+        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, ATask.ID);
       end;
     end;//with
 
@@ -1070,6 +1111,11 @@ begin
     PageControl1.TabIndex := 3;
     Result := False;
   end;
+end;
+
+function TTaskEditF.CheckTaskDBKeyFromForm: Boolean;
+begin
+  Result := (ClaimNoEdit.Text <> '') and (OrderNoEdit.Text <> '') and (HullNoEdit.Text <> '');
 end;
 
 procedure TTaskEditF.Content2Clipboard(AContent: string);
@@ -1480,6 +1526,7 @@ begin
   CompanyType2Combo(CustCompanyTypeCB);
   g_ClaimImportanceKind.SetType2Combo(ImportanceCB);
   g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
+  g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
 end;
 
 procedure TTaskEditF.InitEnum;
@@ -1495,6 +1542,7 @@ begin
   g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
   g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
   g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
+  g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
 end;
 
 procedure TTaskEditF.INQInput1Click(Sender: TObject);
@@ -1592,6 +1640,7 @@ begin
 
     LStr := CellByName['ClaimServiceKind', ARow].AsString;
     ClaimServiceKindCB.ItemIndex := g_ClaimServiceKind.ToOrdinal(LStr);
+    ClaimStatusCombo.ItemIndex := g_ClaimStatus.ToOrdinal(CellByName['ClaimStatus', ARow].AsString);
     LStr := CellByName['Importance', ARow].AsString;
     ImportanceCB.ItemIndex := g_ClaimImportanceKind.ToOrdinal(LStr);
 
@@ -1634,6 +1683,12 @@ begin
   end;
 end;
 
+procedure TTaskEditF.LoadMaterial2Form(AMaterial: TSQLMaterial4Project;
+  AForm: TTaskEditF);
+begin
+
+end;
+
 procedure TTaskEditF.LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project;
   AForm: TTaskEditF);
 var
@@ -1646,10 +1701,10 @@ begin
     MaterialGrid.CellsByName['PORNo', LRow] := AMaterial.PORNo;
     MaterialGrid.CellsByName['MaterialName', LRow] := AMaterial.MaterialName;
     MaterialGrid.CellByName['PORIssueDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.PORIssueDate);
-    MaterialGrid.CellsByName['LeadTime', LRow] := IntToStr(AMaterial.LeadTime);
+//    MaterialGrid.CellsByName['LeadTime', LRow] := IntToStr(AMaterial.LeadTime);
     MaterialGrid.CellsByName['FreeOrCharge', LRow] := g_FreeOrCharge.ToString(AMaterial.FreeOrCharge);
     MaterialGrid.CellsByName['SupplyCount', LRow] := IntToStr(AMaterial.SupplyCount);
-    MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
+//    MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
     MaterialGrid.CellsByName['PriceAmount', LRow] := IntToStr(AMaterial.PriceAmount);
     MaterialGrid.CellByName['ReqDeliveryDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqDeliveryDate);
     MaterialGrid.CellByName['ReqArriveDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqArriveDate);
@@ -1667,7 +1722,6 @@ begin
     MaterialGrid.CellsByName['CBM', LRow] := AMaterial.CBM;
     MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
     MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.NumOfPkg;
-    MaterialGrid.CellsByName['MaterialCodeList', LRow] := AMaterial.MaterialCodeList;
     MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.DeliveryAddress;
   end;
 end;
@@ -1870,6 +1924,7 @@ begin
 
     CellByName['ClaimServiceKind', ARow].AsString := g_ClaimServiceKind.ToString(ClaimServiceKindCB.ItemIndex);
     CellByName['Importance', ARow].AsString := g_ClaimImportanceKind.ToString(ImportanceCB.ItemIndex);
+    CellByName['ClaimStatus', ARow].AsString := g_ClaimStatus.ToString(ClaimStatusCombo.ItemIndex);
 
     CellByName['ClaimRecvDate', ARow].AsDateTime := ClaimRecvPicker.Date;
     CellByName['ClaimInputDate', ARow].AsDateTime := ClaimInputPicker.Date;
@@ -1927,6 +1982,12 @@ begin
   end;
 end;
 
+procedure TTaskEditF.LoadTaskForm2Material(AForm: TTaskEditF;
+  AMaterial: TSQLMaterial4Project; ARow: integer);
+begin
+
+end;
+
 procedure TTaskEditF.LoadTaskForm2Material4Project(AForm: TTaskEditF;
   AMaterial: TSQLMaterial4Project; ARow: integer);
 begin
@@ -1937,10 +1998,10 @@ begin
       AMaterial.PORNo := MaterialGrid.CellsByName['PORNo', ARow];
       AMaterial.MaterialName := MaterialGrid.CellsByName['MaterialName', ARow];
       AMaterial.PORIssueDate := TimeLogFromDateTime(MaterialGrid.CellByName['PORIssueDate', ARow].AsDateTime);
-      AMaterial.LeadTime := StrToIntDef(MaterialGrid.CellsByName['LeadTime', ARow], 0);
+//      AMaterial.LeadTime := StrToIntDef(MaterialGrid.CellsByName['LeadTime', ARow], 0);
       AMaterial.FreeOrCharge := g_FreeOrCharge.ToOrdinal(MaterialGrid.CellsByName['FreeOrCharge', ARow]);
       AMaterial.SupplyCount := StrToIntDef(MaterialGrid.CellsByName['SupplyCount', ARow], 0);
-      AMaterial.UnitPrice := MaterialGrid.CellsByName['UnitPrice', ARow];
+//      AMaterial.UnitPrice := MaterialGrid.CellsByName['UnitPrice', ARow];
       AMaterial.PriceAmount := StrToIntDef(MaterialGrid.CellsByName['PriceAmount', ARow],0);
       AMaterial.ReqDeliveryDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqDeliveryDate', ARow].AsDateTime);
       AMaterial.ReqArriveDate := TimeLogFromDateTime(MaterialGrid.CellByName['ReqArriveDate', ARow].AsDateTime);
@@ -1958,7 +2019,6 @@ begin
       AMaterial.CBM := MaterialGrid.CellsByName['CBM', ARow];
       AMaterial.AirWayBill := MaterialGrid.CellsByName['AirWayBill', ARow];
       AMaterial.NumOfPkg := MaterialGrid.CellsByName['NumOfPkg', ARow];
-      AMaterial.MaterialCodeList := MaterialGrid.CellsByName['MaterialCodeList', ARow];
       AMaterial.DeliveryAddress := MaterialGrid.CellsByName['DeliveryAddress', ARow];
 //    end;
   end;
@@ -2002,6 +2062,12 @@ begin
       end;
     end;//for
   end;//with
+end;
+
+procedure TTaskEditF.LoadTaskForm2MaterialNSave2DB(AForm: TTaskEditF;
+  ATaskID: TID);
+begin
+
 end;
 
 procedure TTaskEditF.SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID);
@@ -2227,6 +2293,7 @@ begin
     Avar.ClaimReason := ClaimReasonMemo.Text;
     Avar.Importance := ImportanceCB.ItemIndex;
     Avar.ClaimServiceKind := ClaimServiceKindCB.ItemIndex;
+    Avar.ClaimStatus := ClaimStatusCombo.ItemIndex;
     Avar.ClaimRecvDate := TimeLogFromDateTime(ClaimRecvPicker.Date);
     Avar.ClaimInputDate := TimeLogFromDateTime(ClaimInputPicker.Date);
     Avar.ClaimReadyDate := TimeLogFromDateTime(ClaimReadyPicker.Date);
@@ -2321,6 +2388,7 @@ begin
     ClaimReasonMemo.Text := Avar.ClaimReason;
     ImportanceCB.ItemIndex := Avar.Importance;
     ClaimServiceKindCB.ItemIndex := Avar.ClaimServiceKind;
+    ClaimStatusCombo.ItemIndex := Avar.ClaimStatus;
 
     ClaimRecvPicker.Date := TimeLogToDateTime(Avar.ClaimRecvDate);
     ClaimInputPicker.Date := TimeLogToDateTime(Avar.ClaimInputDate);

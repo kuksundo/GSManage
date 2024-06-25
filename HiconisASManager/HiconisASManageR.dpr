@@ -45,7 +45,8 @@ uses
   UnitHiASSubConRecord in 'UnitHiASSubConRecord.pas',
   UnitHiASToDoRecord in 'UnitHiASToDoRecord.pas',
   FrmToDoList2 in '..\..\..\Common\Form\FrmToDoList2.pas' {ToDoListF2},
-  UnitToDoList in '..\..\..\Common\UnitToDoList.pas';
+  UnitToDoList in '..\..\..\Common\UnitToDoList.pas',
+  UnitHiASMaterialDetailRecord in 'UnitHiASMaterialDetailRecord.pas';
 
 {$R *.res}
 
