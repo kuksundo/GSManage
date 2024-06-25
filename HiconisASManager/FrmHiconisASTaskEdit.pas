@@ -355,6 +355,7 @@ type
     procedure MaterialEdit(const ARow: integer=-1);
     function GetNextSalesProcess2String(ASalesProcess: string): string;
     procedure AddOrUpdateMaterial2GridFromVar(ADoc: Variant; const ARow: integer);
+    procedure AddOrUpdateMaterialDetail2GridFromVar(ADoc: Variant; const ARow: integer);
 
     procedure FillNextWorkCB(const AState: integer);
 
@@ -890,6 +891,15 @@ begin
 end;
 
 procedure TTaskEditF.AddOrUpdateMaterial2GridFromVar(ADoc: Variant;
+  const ARow: integer);
+var
+  LIsAdd: Boolean;
+begin
+  LIsAdd := ARow = -1;
+  GetListFromVariant2NextGrid(MaterialGrid, ADoc, LIsAdd);
+end;
+
+procedure TTaskEditF.AddOrUpdateMaterialDetail2GridFromVar(ADoc: Variant;
   const ARow: integer);
 var
   LIsAdd: Boolean;
@@ -2443,8 +2453,10 @@ begin
   end;
 
   //"저장" 버튼을 누르면 True
-  if DisplayMaterial2EditForm(LDoc) then
+  if LoadMaterialDetailVar2Form(LDoc) then
     AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
+//  if DisplayMaterial2EditForm(LDoc) then
+//    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
 end;
 
 procedure TTaskEditF.MaterialGridCellDblClick(Sender: TObject; ACol,
