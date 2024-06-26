@@ -181,6 +181,7 @@
         </DCCReference>
         <DCCReference Include="..\..\..\Common\UnitToDoList.pas"/>
         <DCCReference Include="UnitHiASMaterialDetailRecord.pas"/>
+        <DCCReference Include="..\..\..\Common\UnitStateMachineUtil.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

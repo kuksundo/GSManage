@@ -923,7 +923,6 @@ object ASMaterialF: TASMaterialF
     Align = alBottom
     Rounding = 4
     TabOrder = 24
-    ExplicitTop = 528
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 524

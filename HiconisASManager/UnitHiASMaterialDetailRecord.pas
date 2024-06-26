@@ -2,7 +2,7 @@ unit UnitHiASMaterialDetailRecord;
 
 interface
 
-uses SysUtils, Classes, Generics.Collections,
+uses SysUtils, Classes, Generics.Collections, Forms,
   mormot.core.base, mormot.orm.core, mormot.rest.client, mormot.core.os,
   mormot.rest.sqlite3, mormot.orm.base, mormot.core.data, mormot.core.variants,
   mormot.core.datetime, mormot.core.json,
@@ -44,11 +44,16 @@ uses SysUtils, Classes, Generics.Collections,
   procedure InitHiASMaterialDetailClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiASMaterialDetailClient();
 
-var
+  function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+
+
+var
   g_HiASMaterialDetailDB: TSQLRestClientURI;
   HiASMaterialDetailModel: TSQLModel;
 
 implementation
+
+uses UnitHiASMaterialRecord, UnitFolderUtil2;
 
 function CreateModel_HiASMaterialDetail: TSQLModel;
 begin
@@ -59,7 +64,7 @@ procedure InitHiASMaterialDetailClient(AExeName: string; ADBFileName: string='')
 var
   LStr, LFileName, LFilePath: string;
 begin
-  if Assigned(g_HiASMaterialDB) then
+  if Assigned(g_HiASMaterialDetailDB) then
     exit;
 
   if AExeName = '' then
@@ -83,16 +88,43 @@ begin
   else
     LStr := ADBFileName;
 
-  HiASMaterialModel:= CreateModel_HiASMaterialDetail;
+  HiASMaterialDetailModel:= CreateModel_HiASMaterialDetail;
 
-  g_HiASMaterialDB:= TSQLRestClientDB.Create(HiASMaterialModel, CreateModel_HiASMaterialDetail,
+  g_HiASMaterialDetailDB:= TSQLRestClientDB.Create(HiASMaterialDetailModel, CreateModel_HiASMaterialDetail,
     LStr, TSQLRestServerDB);
-  TSQLRestClientDB(g_HiASMaterialDB).Server.CreateMissingTables;
+  TSQLRestClientDB(g_HiASMaterialDetailDB).Server.CreateMissingTables;
 end;
 
 procedure DestroyHiASMaterialDetailClient();
 begin
-
+  if Assigned(g_HiASMaterialDetailDB) then
+    FreeAndNil(g_HiASMaterialDetailDB);
+
+  if Assigned(HiASMaterialDetailModel) then
+    FreeAndNil(HiASMaterialDetailModel);
+end;
+
+function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+var
+  LMaterial4Project: TSQLMaterial4Project;
+begin
+  LMaterial4Project := GetMaterial4ProjFromTask(ATask);
+  try
+    if LMaterial4Project.FillOne then
+    begin
+      Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'TaskID = ? and PORNo = ?', [ATask.ID, LMaterial4Project.PORNo]);
+
+      if Result.FillOne then
+        Result.IsUpdate := True
+      else
+        Result.IsUpdate := False;
+    end
+    else
+      Result := TSQLMaterialDetail.Create;
+  finally
+    LMaterial4Project.Free;
+  end;
 end;
-
-end.
+
+
+end.

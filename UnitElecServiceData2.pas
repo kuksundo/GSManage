@@ -75,25 +75,106 @@ type
     hassNewClaimRecv, //Claim 접수
     hassNewClaimRegistered, //Claim 등록
     hassNewClaimCancelled, //Claim 취소
+    hassTSRecv, //Trouble Shoot 수신
     hassTSSent, //Trouble Shoot 송부
+    hassTechInfoCompleted, //기술정보제공완료
     hassSupplyPart, //자재 공급
     hassSEOnboard, //Service Engineer 방선
+
+    hassClaimReviewRecv, //Claim 검토 결과 수신
+
     hassReqQuote4SE, //용역 - 견적요청
     hassConfirmQuote4SE, //용역 - 견적확정
     hassAppoveQouto, //용역 - 견적품의
+    hassOrderMade4SubCon, //용역 - 발주서 작성 완료
     hassSendOrder2SubCon, //용역 - 발주서 송부
+    hassOnboardSE, //용역 - SE 방선
+
+    hassRecvInvoiceFromSubCon, //용역 - Invoice 접수
     hassReceitProcess,//용역 - 전표처리
+
+    hassReclaimMatRecv, //자재 - Reclaim 자재 수령
     hassCheckMatCode,//자재 - 코드확인
     hassIssueMatPOR,//자재 - POR 발행
     hassCheckMatBudget,//자재 - 예산확인(보증예산정보)
     hassSendMatPOR,//자재 - POR 전송(POR관리탭에서 재전송)
+    hassReqMatStore, //자재 - 입고 요청
+    hassConfirmMatStore, //자재 - 입고 확인
+    hassRecvDestAddress2Customer, //자재 - 배송지 주소 수신
+    hassOrderShipment2BMEA, //자재 - 출하지시 To BMEA(조선기자재창고)
+    hassOrderShipment2Domestic, //자재 - 출하지시 To 국내 배송지
+    hassOrderShipment2Oversea, //자재 - 출하지시 To 해외 배송지
+    hassDomesticTranportReq, //자재 - 국내운송의뢰서 작성 완료 및 품의
+    hassOverseaTranportReq, //자재 - 해외운송의뢰서 작성 완료 및 품의
+    hassApprovedDomesticTranportReq, //자재 - 국내운송의뢰서 품의 완료
+    hassApprovedOverseaTranportReq, //자재 - 해외운송의뢰서 품의 완료
+    hassDeliveryTagRecv, //자재- 배송 Tag 수신(BMEA-조선기자재창고 입고시 필요)
+    hassPackingInfoRecv, //자재- 포장정보 수신 From 물류부(해외 운송시 CIPL 작성시 필요)
+    hassDomesticDeliveryReserv, //자재- 국내택배예약(우체국택배)
+    hassDomesticReceitProcess, //자재- 국내택배전표처리
+    hassOverseaDeliveryReserv, //자재- 해외택배예약(Fedex)
+    hassOverseaReceitProcess, //자재- 해외택배전표처리
+    hassCIPLMade, //자재- Commercial Invoice & Price List(CIPL) 작성 완료
+    hassDeliveryInvoiceRecv, //자재- 송장 입수 완료 From 물류부
+    hassDlvInvoiceNCIPSent, //자재- 송장+CIPL 송부 To 고객
+    hassDomesticShipmentCompleted, //자재- 국내송품완료
+    hassOverseaShipmentCompleted, //자재- 해외송품완료
+    hassPickUpRequested2Logistic, //자재- Pick-up 요청 To 물류부(Reclaim 자재)
+    hassConfirmRecvMatFromCustomer, //자재- 자재수신확인 From 고객
+    hassConfirmClaimClose, //Claim 종료 수신 From 고객
+
     hassClaimClosed, //Claim 종료
     hassFinal);
 
   THiconisASTrigger = (hastNull,
     hastRegister2Maps, //Maps에 등록
     hastCancelRegisgter, //Maps 등록 취소
+
+    hastReqClaimReview, //Claim 검토 요청
     hastReqTS2Lab, //Trouble Shooting 요청(담당자)
+    hastSendTS2Customer, //Trouble Shooting 송부 To 고객
+    hastTechInfo2Customer, //기술정보제공완료
+
+    hastReqQuote4SE, //용역 - 견적요청
+    hastConfirmQuote4SE, //용역 - 견적확정
+    hastAppoveQouto, //용역 - 견적품의
+    hastMakeOrder4SubCon, //용역 - 발주서 작성
+    hastSendOrder2SubCon, //용역 - 발주서 송부
+    hastOnboardSE, //용역 - SE 방선
+    hastReqInvoiceFromSubCon, //용역 - Invoice 요청
+    hastReqReceitProcess,//용역 - 전표처리요청(김희진)
+
+    hastReqReclaimMat, //자재 - Reclaim 자재 요청
+    hastReqkMatCode,//자재 - 코드확인 요청
+    hastReqIssueMatPOR,//자재 - POR 발행 요청
+    hastReqCheckMatBudget,//자재 - 예산증액 요청(보증예산정보)
+    hastSendMatPOR,//자재 - POR 전송(POR관리탭에서 재전송)
+    hastReqMatStore, //자재 - 입고 요청
+    hastCofirmMatStore, //자재 - 입고 확인
+    hastReqDestAddress2Customer, //자재 - 배송지 주소 문의 To 고객
+    hastOrderShipment2BMEA, //자재 - 출하지시 To BMEA(조선기자재창고)
+    hastOrderShipment2Domestic, //자재 - 출하지시 To 국내 배송지
+    hastOrderShipment2Oversea, //자재 - 출하지시 To 해외 배송지
+    hastMakeDomesticTranportReq, //자재 - 국내운송의뢰서 작성
+    hastMakeOverseaTranportReq, //자재 - 해외운송의뢰서 작성
+    hastReqDomesticTranportApproval, //자재 - 국내운송의뢰서 품의 결재 요청
+    hastReqOverseaTranportApproval, //자재 - 해외운송의뢰서 품의 결재 요청
+    hastReqDeliveryTag, //자재- 배송 Tag 요청 To 호선 담당자
+    hastReqPackingInfo2Logistic, //자재 - 포장정보 요청 To 물류부
+    hastReqDomesticDeliveryReserv, //자재- 국내택배예약(우체국택배)
+    hastReqDomesticReceitProcess, //자재- 국내택배전표처리 요청
+    hastReqOverseaDeliveryReserv, //자재- 해외택배예약(Fedex)
+    hastReqOverseaReceitProcess, //자재- 해외택배전표처리 요청
+    hastMakeCIPL, //자재- Commercial Invoice & Price List(CIPL) 작성
+    hastReqDeliveryInvoice, //자재- 송장 요청 To 물류부
+    hastSendDlvInvoiceNCIP, //자재- 송장+CIPL 송부 To 고객
+    hastShipmentDomestic, //자재- 국내송품
+    hastShipmentOversea, //자재- 해외송품
+    hastReqPickUp2Logistic, //자재- Pick-up 요청 To 물류부(Reclaim 자재)
+    hastReqClaimClose2Customer, //Claim 종료 요청 To 고객
+    hastReqConfirmRecvMat2Customer, //자재수신확인 요청 To 고객
+    hastReqClaimClose, //Claim 종료
+
     hastFinal);
 
   TClaimServiceKind = (cskNull,
@@ -214,19 +295,55 @@ const
     'Claim 접수',
     'Claim 등록',
     'Claim 취소',
+    'Trouble Shoot 수신',
     'Trouble Shoot 송부',
+    '기술정보제공',
     '자재 공급',
     'Service Engineer 방선',
+
+    'Claim 검토 결과 수신',
+
     '용역 - 견적요청',
     '용역 - 견적확정',
     '용역 - 견적품의',
+    '용역 - 발주서 작성 완료',
     '용역 - 발주서 송부',
+    '용역 - SE 방선',
+    '용역 - Invoice 접수',
     '용역 - 전표처리',
+
+    '자재 - Reclaim 자재 수령',
     '자재 - 코드확인',
     '자재 - POR 발행',
     '자재 - 예산확인(보증예산정보)',
     '자재 - POR 전송(POR관리탭에서 재전송)',
+    '자재 - 입고 요청',
+    '자재 - 입고 확인',
+    '자재 - 배송지 주소 수신',
+    '자재 - 출하지시 To BMEA(조선기자재창고)',
+    '자재 - 출하지시 To 국내 배송지',
+    '자재 - 출하지시 To 해외 배송지',
+    '자재 - 국내운송의뢰서 작성 완료 및 품의',
+    '자재 - 해외운송의뢰서 작성 완료 및 품의',
+    '자재 - 국내운송의뢰서 품의 완료',
+    '자재 - 해외운송의뢰서 품의 완료',
+    '자재- 배송 Tag 수신(BMEA-조선기자재창고 입고시 필요)',
+    '자재- 포장정보 수신 From 물류부(해외 운송시 CIPL 작성시 필요)',
+    '자재- 국내택배예약(우체국택배)',
+    '자재- 국내택배전표처리',
+    '자재- 해외택배예약(Fedex)',
+    '자재- 해외택배전표처리',
+    '자재- Commercial Invoice & Price List(CIPL) 작성 완료',
+    '자재- 송장 입수 완료 From 물류부',
+    '자재- 송장+CIPL 송부 To 고객',
+    '자재- 국내송품완료',
+    '자재- 해외송품완료',
+    '자재- Pick-up 요청 To 물류부(Reclaim 자재)',
+    '자재- 자재수신확인 From 고객',
+    'Claim 종료 수신 From 고객',
+
     'Claim 종료',
+
     ''
      );
 
@@ -235,7 +352,51 @@ const
     '',
     'Maps에 등록',
     'Maps 등록 취소',
+
+    'Claim 검토 요청',
     'Trouble Shooting 요청(담당자)',
+    'Trouble Shooting 송부 To 고객',
+    '기술정보제공완료',
+
+    '용역 - 견적요청',
+    '용역 - 견적확정',
+    '용역 - 견적품의',
+    '용역 - 발주서 작성',
+    '용역 - 발주서 송부',
+    '용역 - SE 방선',
+    '용역 - Invoice 요청',
+    '용역 - 전표처리요청(김희진)',
+
+    '자재 - Reclaim 자재 요청',
+    '자재 - 코드확인 요청',
+    '자재 - POR 발행 요청',
+    '자재 - 예산증액 요청(보증예산정보)',
+    '자재 - POR 전송(POR관리탭에서 재전송)',
+    '자재 - 입고 요청',
+    '자재 - 입고 확인',
+    '자재 - 배송지 주소 문의 To 고객',
+    '자재 - 출하지시 To BMEA(조선기자재창고)',
+    '자재 - 출하지시 To 국내 배송지',
+    '자재 - 출하지시 To 해외 배송지',
+    '자재 - 국내운송의뢰서 작성',
+    '자재 - 해외운송의뢰서 작성',
+    '자재 - 국내운송의뢰서 품의 결재 요청',
+    '자재 - 해외운송의뢰서 품의 결재 요청',
+    '자재- 배송 Tag 요청 To 호선 담당자',
+    '자재 - 포장정보 요청 To 물류부',
+    '자재- 국내택배예약(우체국택배)',
+    '자재- 국내택배전표처리 요청',
+    '자재- 해외택배예약(Fedex)',
+    '자재- 해외택배전표처리 요청',
+    '자재- Commercial Invoice & Price List(CIPL) 작성',
+    '자재- 송장 요청 To 물류부',
+    '자재- 송장+CIPL 송부 To 고객',
+    '자재- 국내송품',
+    '자재- 해외송품',
+    '자재- Pick-up 요청 To 물류부(Reclaim 자재)',
+    'Claim 종료 요청 To 고객',
+    '자재수신확인 요청 To 고객',
+    'Claim 종료',
     ''
      );
 
@@ -286,7 +447,7 @@ const
     'OPEN',
     'READY',
     'DOCK',
-    'CLOSED',
+    'CLOSEDC',
     ''
      );
 

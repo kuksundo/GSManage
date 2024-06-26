@@ -325,6 +325,8 @@ type
 
     procedure InitEnum;
     procedure InitCB;
+    procedure InitCurWorkCB();
+    procedure InitNextWorkCB();
     function GetFileFromDropDataFormat(AFormat: TVirtualFileStreamDataFormat): TFileStream;
 
     function Get_Doc_Qtn_Rec: Doc_Qtn_Rec;
@@ -445,7 +447,7 @@ uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
   UnitHiconisASVarJsonUtil, UnitNextGridUtil2, FrmASMaterialEdit,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
-  UnitElecMasterData, UnitOutlookUtil2;
+  UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil;
 
 {$R *.dfm}
 
@@ -1537,6 +1539,20 @@ begin
   g_ClaimImportanceKind.SetType2Combo(ImportanceCB);
   g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
   g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
+
+  InitCurWorkCB();
+  InitNextWorkCB();
+end;
+
+procedure TTaskEditF.InitCurWorkCB;
+begin
+  case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
+    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, CurWorkCB);
+    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, CurWorkCB);
+    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, CurWorkCB);
+    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, CurWorkCB);
+    cskOverDue: ;
+  end;
 end;
 
 procedure TTaskEditF.InitEnum;
@@ -1553,6 +1569,28 @@ begin
   g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
   g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
   g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+end;
+
+procedure TTaskEditF.InitNextWorkCB;
+var
+  LState: THiconisASState;
+begin
+  case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
+    cskPartSupply: begin
+      LState := CurWorkCB.ItemIndex;
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_Mat, NextWorkCB);
+    end;
+    cskPartSupplyNSE: begin
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_SE_Mat, NextWorkCB);
+    end;
+    cskSEOnboard: begin
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_SE, NextWorkCB);
+    end;
+    cskTechInfo: begin
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_TechInfo, NextWorkCB);
+    end;
+    cskOverDue: ;
+  end;
 end;
 
 procedure TTaskEditF.INQInput1Click(Sender: TObject);
@@ -2453,7 +2491,7 @@ begin
   end;
 
   //"저장" 버튼을 누르면 True
-  if LoadMaterialDetailVar2Form(LDoc) then
+  if DisplayMaterial2EditForm(LDoc) then
     AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
 //  if DisplayMaterial2EditForm(LDoc) then
 //    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);

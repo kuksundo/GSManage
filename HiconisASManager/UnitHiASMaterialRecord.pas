@@ -78,8 +78,6 @@ uses SysUtils, Classes, Generics.Collections,
   function GetMaterial4ProjFromTaskID(const ATaskID: TID): TSQLMaterial4Project;
   function GetMaterial4ProjFromTaskIDNPORNo(const ATaskID: TID; const APorNo: string): TSQLMaterial4Project;
 
-  function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
-
   procedure AddOrUpdateMaterial4Project(AMaterial4Project: TSQLMaterial4Project);
 
   procedure DeleteMaterial4ProjFromTask(ATask: TOrmHiconisASTask);
@@ -174,28 +172,6 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
-end;
-
-function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
-var
-  LMaterial4Project: TSQLMaterial4Project;
-begin
-  LMaterial4Project := GetMaterial4ProjFromTask(ATask);
-  try
-    if LMaterial4Project.FillOne then
-    begin
-      Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'TaskID = ? and PORNo = ?', [ATask.ID, LMaterial4Project.PO_No]);
-
-      if Result.FillOne then
-        Result.IsUpdate := True
-      else
-        Result.IsUpdate := False;
-    end
-    else
-      Result := TSQLMaterialDetail.Create;
-  finally
-    LMaterial4Project.Free;
-  end;
 end;
 
 procedure DeleteMaterial4ProjFromTask(ATask: TOrmHiconisASTask);

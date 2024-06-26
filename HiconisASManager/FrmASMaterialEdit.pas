@@ -6,11 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   JvExControls, JvLabel, CurvyControls,
+  NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
+  NxCustomGrid, NxGrid,
+
   mormot.core.datetime, mormot.core.base, mormot.orm.base, mormot.core.variants,
 
   UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord,
-  NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
-  NxCustomGrid, NxGrid;
+  UnitHiASMaterialDetailRecord
+  ;
 
 type
   TASMaterialF = class(TForm)
@@ -86,7 +89,7 @@ type
     procedure LoadMaterialVar2Form(AVar: variant);
     procedure LoadMaterialVarFromForm(var AVar: variant);
 
-    procedure LoadMaterialDetailOrm2Form(AMaterial4Project: TSQLMaterial4Project);
+    procedure LoadMaterialDetailOrm2Form(AMaterialDetail: TSQLMaterialDetail);
     procedure LoadMaterialDetailOrmFromForm(AMaterialDetail: TSQLMaterialDetail);
     procedure LoadMaterialDetailVar2Form(AVar: variant);
     procedure LoadMaterialDetailVarFromForm(var AVar: variant);
@@ -157,19 +160,19 @@ begin
 end;
 
 procedure TASMaterialF.LoadMaterialDetailOrm2Form(
-  AMaterial4Project: TSQLMaterial4Project);
+  AMaterialDetail: TSQLMaterialDetail);
 var
-  LMaterialDetail: TSQLMaterialDetail;
+//  LMaterialDetail: TSQLMaterialDetail;
   LUtf8: RawUtf8;
   LVar: variant;
 begin
-  LMaterialDetail := GetMaterialDetailFromTask(AMaterial4Project);
+//  LMaterialDetail := GetMaterialDetailFromTask(AMaterial4Project);
   try
-    LUtf8 := LMaterialDetail.GetJsonValues(true, true, soSelect);
+    LUtf8 := AMaterialDetail.GetJsonValues(true, true, soSelect);
     LVar := _JSON(LUtf8);
     LoadMaterialDetailVar2Form(LVar);
   finally
-    LMaterialDetail.Free;
+//    LMaterialDetail.Free;
   end;
 end;
 
