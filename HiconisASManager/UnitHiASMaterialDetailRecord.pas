@@ -45,7 +45,10 @@ uses SysUtils, Classes, Generics.Collections, Forms,
   procedure DestroyHiASMaterialDetailClient();
 
   function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
-
+  function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
+
+  procedure AddOrUpdateMaterialDetail(AOrm: TSQLMaterialDetail);
+
 
 var
   g_HiASMaterialDetailDB: TSQLRestClientURI;
@@ -110,6 +113,8 @@ procedure DestroyHiASMaterialDetailClient();
 begin
   LMaterial4Project := GetMaterial4ProjFromTask(ATask);
   try
+    LMaterial4Project.FillRewind;
+
     if LMaterial4Project.FillOne then
     begin
       Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'TaskID = ? and PORNo = ?', [ATask.ID, LMaterial4Project.PORNo]);
@@ -126,5 +131,32 @@ begin
   end;
 end;
 
+function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
+begin
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PORNo = ? and MaterialCode = ?', [APorNo, AMatCode]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+procedure AddOrUpdateMaterialDetail(AOrm: TSQLMaterialDetail);
+begin
+  if AOrm.IsUpdate then
+  begin
+    g_HiASMaterialDetailDB.Update(AOrm);
+//    ShowMessage('자재 Update 완료');
+  end
+  else
+  begin
+    g_HiASMaterialDetailDB.Add(AOrm, true);
+//    ShowMessage('자재 Add 완료');
+  end;
+end;
+
+initialization
+finalization
+  DestroyHiASMaterialDetailClient();
 
 end.

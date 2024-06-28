@@ -47,7 +47,8 @@ uses
   FrmToDoList2 in '..\..\..\Common\Form\FrmToDoList2.pas' {ToDoListF2},
   UnitToDoList in '..\..\..\Common\UnitToDoList.pas',
   UnitHiASMaterialDetailRecord in 'UnitHiASMaterialDetailRecord.pas',
-  UnitStateMachineUtil in '..\..\..\Common\UnitStateMachineUtil.pas';
+  UnitStateMachineUtil in '..\..\..\Common\UnitStateMachineUtil.pas',
+  FrmASMaterialDetailEdit in 'FrmASMaterialDetailEdit.pas' {MaterialDetailF};
 
 {$R *.res}
 
@@ -61,6 +62,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisASManageF, HiconisASManageF);
   Application.CreateForm(TToDoListF2, ToDoListF2);
+  Application.CreateForm(TMaterialDetailF, MaterialDetailF);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

@@ -182,6 +182,10 @@
         <DCCReference Include="..\..\..\Common\UnitToDoList.pas"/>
         <DCCReference Include="UnitHiASMaterialDetailRecord.pas"/>
         <DCCReference Include="..\..\..\Common\UnitStateMachineUtil.pas"/>
+        <DCCReference Include="FrmASMaterialDetailEdit.pas">
+            <Form>MaterialDetailF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

@@ -2,7 +2,7 @@ object ASMaterialF: TASMaterialF
   Left = 0
   Top = 0
   Caption = 'ASMaterialF'
-  ClientHeight = 658
+  ClientHeight = 540
   ClientWidth = 591
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -636,33 +636,6 @@ object ASMaterialF: TASMaterialF
     HotTrackFont.Name = #47569#51008' '#44256#46357
     HotTrackFont.Style = []
   end
-  object JvLabel26: TJvLabel
-    AlignWithMargins = True
-    Left = 0
-    Top = 448
-    Width = 100
-    Height = 25
-    Alignment = taCenter
-    AutoSize = False
-    Caption = #51088#51116#47532#49828#53944
-    Color = 14671839
-    FrameColor = clGrayText
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #47569#51008' '#44256#46357
-    Font.Style = [fsBold]
-    Layout = tlCenter
-    ParentColor = False
-    ParentFont = False
-    RoundedFrame = 3
-    Transparent = True
-    HotTrackFont.Charset = ANSI_CHARSET
-    HotTrackFont.Color = clWindowText
-    HotTrackFont.Height = -13
-    HotTrackFont.Name = #47569#51008' '#44256#46357
-    HotTrackFont.Style = []
-  end
   object JvLabel27: TJvLabel
     AlignWithMargins = True
     Left = 8
@@ -690,221 +663,245 @@ object ASMaterialF: TASMaterialF
     HotTrackFont.Name = #47569#51008' '#44256#46357
     HotTrackFont.Style = []
   end
-  object PORNoEdit: TEdit
+  object PORNo: TEdit
     Left = 117
     Top = 16
     Width = 165
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 0
   end
-  object AWBEdit: TEdit
+  object AWB: TEdit
     Left = 114
     Top = 298
     Width = 378
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 1
   end
-  object PORIssuePicker: TDateTimePicker
+  object PORIssueDate: TDateTimePicker
     Left = 117
     Top = 46
     Width = 89
     Height = 24
+    Hint = 'Date'
     Date = 42843.827708518520000000
     Time = 42843.827708518520000000
     ImeName = 'Microsoft IME 2010'
     TabOrder = 2
   end
-  object DeliveryCompanyEdit: TEdit
+  object DeliveryCompany: TEdit
     Left = 114
     Top = 174
     Width = 164
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 3
   end
-  object DeliveryChargeEdit: TEdit
+  object DeliveryCharge: TEdit
     Left = 114
     Top = 206
     Width = 92
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 4
   end
-  object ShippingNoEdit: TEdit
+  object ShippingNo: TEdit
     Left = 394
     Top = 174
     Width = 189
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 5
   end
-  object MaterialNameEdit: TEdit
+  object MaterialName: TEdit
     Left = 394
     Top = 18
     Width = 196
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 6
   end
-  object SupplyCountEdit: TEdit
+  object SupplyCount: TEdit
     Left = 114
     Top = 82
     Width = 92
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 7
   end
-  object UnitPriceEdit: TEdit
+  object UnitPrice: TEdit
     Left = 318
     Top = 81
     Width = 82
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 8
   end
-  object LeadTimeEdit: TEdit
+  object LeadTime: TEdit
     Left = 318
     Top = 47
     Width = 82
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 9
   end
-  object PriceAmountEdit: TEdit
+  object PriceAmount: TEdit
     Left = 512
     Top = 80
     Width = 70
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 10
   end
-  object FreeOrChargeCB: TComboBox
+  object FreeOrCharge: TComboBox
     Left = 512
     Top = 45
     Width = 68
     Height = 21
+    Hint = 'ItemIndex'
     Style = csDropDownList
     ImeName = 'Microsoft IME 2010'
     TabOrder = 11
   end
-  object ReqDeliveryDatePicker: TDateTimePicker
+  object ReqDeliveryDate: TDateTimePicker
     Left = 114
     Top = 112
     Width = 89
     Height = 24
+    Hint = 'Date'
     Date = 42843.827708518520000000
     Time = 42843.827708518520000000
     ImeName = 'Microsoft IME 2010'
     TabOrder = 12
   end
-  object ReqArriveDatePicker: TDateTimePicker
+  object ReqArriveDate: TDateTimePicker
     Left = 318
     Top = 111
-    Width = 89
+    Width = 82
     Height = 24
+    Hint = 'Date'
     Date = 42843.827708518520000000
     Time = 42843.827708518520000000
     ImeName = 'Microsoft IME 2010'
     TabOrder = 13
   end
-  object StoreAddressEdit: TEdit
+  object StoreAddress: TEdit
     Left = 114
     Top = 144
     Width = 165
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 14
   end
-  object PortNameEdit: TEdit
+  object PortName: TEdit
     Left = 394
     Top = 144
     Width = 189
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 15
   end
-  object DeliveryKindCB: TComboBox
+  object DeliveryKind: TComboBox
     Left = 512
     Top = 110
     Width = 68
     Height = 21
+    Hint = 'ItemIndex'
     Style = csDropDownList
     ImeName = 'Microsoft IME 2010'
     TabOrder = 16
   end
-  object TermOfDeliveryEdit: TEdit
+  object TermOfDelivery: TEdit
     Left = 318
     Top = 207
     Width = 82
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 17
   end
-  object NetWeightEdit: TEdit
+  object NetWeight: TEdit
     Left = 114
     Top = 236
     Width = 92
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 18
   end
-  object GrossWeightEdit: TEdit
+  object GrossWeight: TEdit
     Left = 318
     Top = 234
     Width = 82
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 19
   end
-  object MeasurementEdit: TEdit
+  object Measurement: TEdit
     Left = 512
     Top = 234
     Width = 70
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 20
   end
-  object CBMEdit: TEdit
+  object CBM: TEdit
     Left = 114
     Top = 267
     Width = 92
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 21
   end
-  object NumOfPkgEdit: TEdit
+  object NumOfPkg: TEdit
     Left = 318
     Top = 266
     Width = 82
     Height = 21
+    Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 22
   end
-  object DeliveryAddressMemo: TMemo
+  object DeliveryAddress: TMemo
     Left = 114
     Top = 325
     Width = 378
     Height = 118
+    Hint = 'Text'
     BevelInner = bvNone
     BevelKind = bkFlat
     ImeMode = imSHanguel
@@ -915,7 +912,7 @@ object ASMaterialF: TASMaterialF
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 619
+    Top = 501
     Width = 591
     Height = 36
     Margins.Left = 0
@@ -949,174 +946,6 @@ object ASMaterialF: TASMaterialF
       Caption = #51201#50857
       ModalResult = 1
       TabOrder = 1
-    end
-  end
-  object MaterialGrid: TNextGrid
-    Left = 0
-    Top = 472
-    Width = 591
-    Height = 144
-    Touch.InteractiveGestures = [igPan, igPressAndTap]
-    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
-    Align = alBottom
-    Caption = ''
-    TabOrder = 25
-    TabStop = True
-    object PORNo: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 120
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'POR No'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 0
-      SortType = stAlphabetic
-      Width = 120
-    end
-    object MaterialName: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 150
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #54408#47749
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 1
-      SortType = stAlphabetic
-      Width = 150
-    end
-    object MaterialCode: TNxDateColumn
-      Alignment = taCenter
-      DefaultValue = '2024-06-21'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #51088#51116#48264#54840
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 2
-      SortType = stDate
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object LeadTime: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #49548#50836#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 3
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object NeedCount: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #50836#52397#49688#47049
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 4
-      SortType = stAlphabetic
-    end
-    object UnitPrice: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #45800#44032
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 5
-      SortType = stAlphabetic
-    end
-    object NeedDate: TNxDateColumn
-      Alignment = taCenter
-      DefaultValue = '2024-06-13'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #49548#50836#51068#51088
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 6
-      SortType = stDate
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object TaskID: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'TaskID'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 7
-      SortType = stAlphabetic
-      Visible = False
     end
   end
 end

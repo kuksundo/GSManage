@@ -18,7 +18,8 @@ uses
   CommonData2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState, UnitTodoCollect2,
   UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLControl,//FrmEmailListView2
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
-  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList
+  UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
+  UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit
   ;
 
 type
@@ -237,39 +238,26 @@ type
     JvLabel16: TJvLabel;
     ClaimReasonMemo: TMemo;
     ImportanceCB: TComboBox;
+    Panel6: TPanel;
+    AeroButton5: TAeroButton;
+    AeroButton6: TAeroButton;
+    SalesProcTypeCB: TComboBox;
+    ClaimServiceKindCB: TComboBox;
+    CompanyName2: TNxTextColumn;
+    JvLabel17: TJvLabel;
+    ClaimStatusCombo: TComboBox;
     MaterialGrid: TNextGrid;
     PORNo: TNxTextColumn;
     MaterialName: TNxTextColumn;
     LeadTime: TNxTextColumn;
-    FreeOrCharge: TNxTextColumn;
-    SupplyCount: TNxTextColumn;
+    NeedCount: TNxTextColumn;
     UnitPrice: TNxTextColumn;
-    ReqDeliveryDate: TNxDateColumn;
-    ReqArriveDate: TNxDateColumn;
-    DeliveryKind: TNxTextColumn;
-    StoreAddress: TNxTextColumn;
-    PortName: TNxTextColumn;
-    ShippingNo: TNxTextColumn;
-    DeliveryCharge: TNxTextColumn;
-    TermOfDelivery: TNxTextColumn;
-    NetWeight: TNxTextColumn;
-    GrossWeight: TNxTextColumn;
-    Measurement: TNxTextColumn;
-    CBM: TNxTextColumn;
-    NumOfPkg: TNxTextColumn;
-    DeliveryAddress: TNxTextColumn;
-    Panel6: TPanel;
-    AeroButton5: TAeroButton;
-    AeroButton6: TAeroButton;
-    PriceAmount: TNxTextColumn;
-    DeliveryCompany: TNxTextColumn;
-    AirWayBill: TNxTextColumn;
-    SalesProcTypeCB: TComboBox;
-    ClaimServiceKindCB: TComboBox;
-    CompanyName2: TNxTextColumn;
-    PORIssueDate: TNxDateColumn;
-    JvLabel17: TJvLabel;
-    ClaimStatusCombo: TComboBox;
+    NeedDate: TNxDateColumn;
+    NxTextColumn5: TNxTextColumn;
+    AeroButton7: TAeroButton;
+    MaterialCode: TNxTextColumn;
+    JvLabel18: TJvLabel;
+    PORNoEdit: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -317,11 +305,15 @@ type
     procedure CurWorkCBChange(Sender: TObject);
     procedure ServiceChargeCBDropDown(Sender: TObject);
     procedure NextWorkCBDropDown(Sender: TObject);
-    procedure MaterialGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure AeroButton5Click(Sender: TObject);
     procedure AeroButton6Click(Sender: TObject);
+    procedure ClaimServiceKindCBChange(Sender: TObject);
+    procedure NextGrid1CellDblClick(Sender: TObject; ACol, ARow: Integer);
+    procedure AeroButton7Click(Sender: TObject);
   private
-    FTaskJson: String;
+    FTaskJson,
+    FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
+    : String;
 
     procedure InitEnum;
     procedure InitCB;
@@ -354,13 +346,18 @@ type
     procedure SaveCustEdit2MasterCustomer;
 
     procedure SubContractorAdd;
-    procedure MaterialEdit(const ARow: integer=-1);
+    procedure MaterialEdit();
+    procedure MaterialDetailEdit(const ARow: integer=-1);
     function GetNextSalesProcess2String(ASalesProcess: string): string;
     procedure AddOrUpdateMaterial2GridFromVar(ADoc: Variant; const ARow: integer);
     procedure AddOrUpdateMaterialDetail2GridFromVar(ADoc: Variant; const ARow: integer);
 
-    procedure FillNextWorkCB(const AState: integer);
+    procedure LoadMaterialDetailVar2Grid(AVar: variant; ARow: integer=-1);
+    procedure LoadMaterialDetailVarFromGrid(var AVar: variant; const ARow: integer=-1);
+    procedure LoadMaterialDetailOrm2Form(AMaterialDetail: TSQLMaterialDetail);
+    procedure LoadMaterialDetailOrmFromForm(AMaterialDetail: TSQLMaterialDetail);
 
+    function GetPorNoFromJson(const AJson: string): string;
   public
     FTask,
     FEmailDisplayTask: TOrmHiconisASTask;
@@ -388,8 +385,15 @@ type
     procedure LoadCustomerFromCompanycode(ACompanyCode: string);
 //    procedure LoadCustomer2
 
-    procedure LoadTaskVar2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
-    procedure LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
+    procedure LoadTaskOrm2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF);
+    procedure LoadTaskForm2TaskOrm(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
+    procedure LoadTaskForm2Variant(AForm: TTaskEditF; out AVar: Variant);
+    procedure LoadTaskFormFromVariant(AForm: TTaskEditF; const AVar: Variant);
+
+    procedure LoadMaterialGrid2Variant(AGrid: TNextGrid; out AVar: Variant);
+    procedure LoadMaterialGridFromVariant(AGrid: TNextGrid; const AVar: Variant);
+    procedure LoadMatGridRow2MaterialDetailOrm(AGrid: TNextGrid; ARow: integer; AOrm: TSQLMaterialDetail);
+
     procedure LoadTaskEditForm2Grid(AEditForm: TTaskEditF; AGrid: TNextGrid;
       ARow: integer);
     procedure LoadGrid2TaskEditForm(AGrid: TNextGrid; ARow: integer;
@@ -414,10 +418,11 @@ type
     procedure SaveSubConFromForm(AForm: TTaskEditF; ATaskID: TID = 0);
     procedure LoadSubConGrid2Var(ARow: integer; var ADoc: variant);
 
-    procedure LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
+    procedure LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project; AForm: TASMaterialF);
     procedure LoadTaskForm2Material4Project(AForm: TTaskEditF;
       AMaterial: TSQLMaterial4Project; ARow: integer);
-    procedure LoadTaskForm2Material4ProjectNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
+    procedure LoadTaskForm2MaterialDetailNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
+    procedure LoadTaskForm2Material4ProjectNSave2DB(ATaskID: TID);
 
     procedure LoadMaterial2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
     procedure LoadTaskForm2Material(AForm: TTaskEditF;
@@ -444,9 +449,9 @@ var
 implementation
 
 uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
-  UnitHiconisASVarJsonUtil, UnitNextGridUtil2, FrmASMaterialEdit,
+  UnitHiconisASVarJsonUtil, UnitNextGridUtil2,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
-  DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2,
+  DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil;
 
 {$R *.dfm}
@@ -528,6 +533,7 @@ var
   LCustomer: TSQLCustomer;
 //  LSubCon: TSQLSubCon;
   LMat4Proj: TSQLMaterial4Project;
+  LMatDetail: TSQLMaterialDetail;
   LTask, LTask2: TOrmHiconisASTask;
   LFiles: TSQLGSFile;
 //  LTaskIds: TIDDynArray;
@@ -552,7 +558,7 @@ begin
       if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
         LoadTaskFromVariant(LTask, ADoc.Task);
 
-      LoadTaskVar2Form(LTask, LTaskEditF, g_FSMClass);
+      LoadTaskOrm2Form(LTask, LTaskEditF);
       LCustomer := GetCustomerFromTask(LTask);
 
       if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
@@ -576,7 +582,8 @@ begin
         LSubConList.Free;
       end;
 
-      LMat4Proj := GetMaterial4ProjFromTask(LTask); //복수개가 반환됨
+      //배송정보
+      LMat4Proj := GetMaterial4ProjFromTaskID(LTask.ID);
 
       try
         if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
@@ -584,16 +591,21 @@ begin
 
         if LMat4Proj.IsUpdate then
         begin
-          LMat4Proj.FillRewind;
+          FMatDeliveryInfoJson := Utf8ToString(LMat4Proj.GetJsonValues(true, true, soSelect));
+          PORNoEdit.Text := GetPorNoFromJson(FMatDeliveryInfoJson);
 
-          while LMat4Proj.FillOne do
-          begin
-            LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
-          end;//while
+          //자재리스트
+          LMatDetail := GetMaterialDetailFromTask(LTask);
+          try
+            LoadMaterialDetailOrm2Form(LMatDetail);
+          finally
+            LMatDetail.Free;
+          end;
         end;
       finally
         LMat4Proj.Free;
       end;
+
 
       LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
       LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
@@ -609,7 +621,7 @@ begin
           exit;
         end;
 
-        LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
+        LoadTaskForm2TaskOrm(LTaskEditF, LTask);
 
         //IPC를 통해서  Email을 수신한 경우
         if Assigned(ASQLEmailMsg) then
@@ -650,7 +662,8 @@ begin
         //협력사 탭 정보 Load and Save To DB
         SaveSubConFromForm(LTaskEditF, LTask.ID);
         //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, LTask.ID);
+        LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, LTask.ID);
+        LoadTaskForm2Material4ProjectNSave2DB(LTask.ID);
       end;//mrOK
     end;//with
   finally
@@ -700,7 +713,7 @@ begin
       LMat4Proj := TSQLMaterial4Project.Create;
       try
         LoadTaskFromVariant(LTask, ADoc.Task);
-        LoadTaskVar2Form(LTask, LTaskEditF, g_FSMClass);
+        LoadTaskOrm2Form(LTask, LTaskEditF);
 
         if not Assigned(FSQLGSFiles) then
           FSQLGSFiles := GetGSFilesFromID(-1)
@@ -722,14 +735,14 @@ begin
         end;
 
         LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material);
-        LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
+//        LoadMaterial4Project2Form(LMat4Proj, LTaskEditF);
 
         if ShowModal = mrOK then
         begin
           TDocVariant.New(LDoc);
           TDocVariant.New(LDoc2);
           //LTaskEditF 내용을 LTask 옮김
-          LoadTaskForm2SQLGSTask(LTaskEditF, LTask);
+          LoadTaskForm2TaskOrm(LTaskEditF, LTask);
           LUtf8 := LTask.GetJSONValues(true, true, soSelect);
           LDoc.Task := _JSON(LUtf8);//Escape(\)가 제거됨
           LDoc.Task.RowID := LTask.TaskID;
@@ -862,7 +875,7 @@ begin
           LTask.Free;
         end;
 
-        LoadTaskForm2SQLGSTask(LTaskEditF, ATask);
+        LoadTaskForm2TaskOrm(LTaskEditF, ATask);
         AddOrUpdateTask(ATask);
 
         if High(FSQLGSFiles.Files) >= 0 then
@@ -880,7 +893,7 @@ begin
         //협력사 탭 정보 Load and Save To DB
         SaveSubConFromForm(LTaskEditF, ATask.ID);
         //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2Material4ProjectNSave2DB(LTaskEditF, ATask.ID);
+        LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, ATask.ID);
       end;
     end;//with
 
@@ -973,7 +986,7 @@ end;
 
 procedure TTaskEditF.AeroButton5Click(Sender: TObject);
 begin
-  MaterialEdit();
+  MaterialDetailEdit();
 end;
 
 procedure TTaskEditF.AeroButton6Click(Sender: TObject);
@@ -994,6 +1007,11 @@ begin
       MaterialGrid.EndUpdate;
     end;
   end;
+end;
+
+procedure TTaskEditF.AeroButton7Click(Sender: TObject);
+begin
+  MaterialEdit();
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -1130,6 +1148,11 @@ begin
   Result := (ClaimNoEdit.Text <> '') and (OrderNoEdit.Text <> '') and (HullNoEdit.Text <> '');
 end;
 
+procedure TTaskEditF.ClaimServiceKindCBChange(Sender: TObject);
+begin
+  InitCurWorkCB();
+end;
+
 procedure TTaskEditF.Content2Clipboard(AContent: string);
 begin
   Clipboard.AsText := AContent;
@@ -1137,7 +1160,7 @@ end;
 
 procedure TTaskEditF.CurWorkCBChange(Sender: TObject);
 begin
-  NextWorkCB.Text := GetNextSalesProcess2String(CurWorkCB.Text);
+  InitNextWorkCB();
 end;
 
 procedure TTaskEditF.CurWorkCBDropDown(Sender: TObject);
@@ -1331,18 +1354,6 @@ begin
   end;
 end;
 
-procedure TTaskEditF.FillNextWorkCB(const AState: integer);
-var
-  LStrList: TStringList;
-begin
-  try
-    LStrList := GetStateOrTriggers2Strings(AState);
-    NextWorkCB.Items.Assign(LStrList);
-  finally
-    LStrList.Free;
-  end;
-end;
-
 procedure TTaskEditF.FormCreate(Sender: TObject);
 begin
   FTask := nil;
@@ -1423,6 +1434,14 @@ begin
     LSalesProcess := g_SalesProcess.ToType(ASalesProcess);
     Result := g_SalesProcess.ToString(LSalesProcess);
   end;
+end;
+
+function TTaskEditF.GetPorNoFromJson(const AJson: string): string;
+var
+  LVar: Variant;
+begin
+  LVar := TDocVariant.NewJson(StringToUtf8(AJson));
+  Result := LVar.PORNo;
 end;
 
 function TTaskEditF.GetQTN_InqContent: string;
@@ -1540,17 +1559,17 @@ begin
   g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
   g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
 
-  InitCurWorkCB();
-  InitNextWorkCB();
+//  InitCurWorkCB();
+//  InitNextWorkCB();
 end;
 
 procedure TTaskEditF.InitCurWorkCB;
 begin
   case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
-    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, CurWorkCB);
-    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, CurWorkCB);
-    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, CurWorkCB);
-    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, CurWorkCB);
+    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, g_HiconisASState, CurWorkCB);
+    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, g_HiconisASState, CurWorkCB);
+    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, g_HiconisASState, CurWorkCB);
+    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, g_HiconisASState, CurWorkCB);
     cskOverDue: ;
   end;
 end;
@@ -1575,19 +1594,20 @@ procedure TTaskEditF.InitNextWorkCB;
 var
   LState: THiconisASState;
 begin
+  LState := g_HiconisASState.ToType(CurWorkCB.Text);
+
   case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
     cskPartSupply: begin
-      LState := CurWorkCB.ItemIndex;
-      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_Mat, NextWorkCB);
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetTriggers2ComboByStateUsingEnumHelper(g_FSM_Mat, LState, g_HiconisASTrigger, NextWorkCB);
     end;
     cskPartSupplyNSE: begin
-      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_SE_Mat, NextWorkCB);
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetTriggers2ComboByStateUsingEnumHelper(g_FSM_SE_Mat, LState, g_HiconisASTrigger, NextWorkCB);
     end;
     cskSEOnboard: begin
-      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_SE, NextWorkCB);
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetTriggers2ComboByStateUsingEnumHelper(g_FSM_SE, LState, g_HiconisASTrigger, NextWorkCB);
     end;
     cskTechInfo: begin
-      TFSMHelper<THiconisASState,THiconisASTrigger>.GetStateNTriggers2ComboUsingEnumHelper(g_FSM_TechInfo, NextWorkCB);
+      TFSMHelper<THiconisASState,THiconisASTrigger>.GetTriggers2ComboByStateUsingEnumHelper(g_FSM_TechInfo, LState, g_HiconisASTrigger, NextWorkCB);
     end;
     cskOverDue: ;
   end;
@@ -1738,40 +1758,109 @@ begin
 end;
 
 procedure TTaskEditF.LoadMaterial4Project2Form(AMaterial: TSQLMaterial4Project;
-  AForm: TTaskEditF);
+  AForm: TASMaterialF);
 var
-  LRow: integer;
+  LUtf8: RawUTF8;
+  LVar: variant;
 begin
-  with AForm do
-  begin
-    LRow := MaterialGrid.AddRow();
+  LUtf8 := AMaterial.GetJsonValues(true, true, soSelect);
+  SetCompNameValueFromJson2Form(AForm, Utf8ToString(LUtf8));
 
-    MaterialGrid.CellsByName['PORNo', LRow] := AMaterial.PORNo;
-    MaterialGrid.CellsByName['MaterialName', LRow] := AMaterial.MaterialName;
-    MaterialGrid.CellByName['PORIssueDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.PORIssueDate);
-//    MaterialGrid.CellsByName['LeadTime', LRow] := IntToStr(AMaterial.LeadTime);
-    MaterialGrid.CellsByName['FreeOrCharge', LRow] := g_FreeOrCharge.ToString(AMaterial.FreeOrCharge);
-    MaterialGrid.CellsByName['SupplyCount', LRow] := IntToStr(AMaterial.SupplyCount);
-//    MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
-    MaterialGrid.CellsByName['PriceAmount', LRow] := IntToStr(AMaterial.PriceAmount);
-    MaterialGrid.CellByName['ReqDeliveryDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqDeliveryDate);
-    MaterialGrid.CellByName['ReqArriveDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqArriveDate);
-    MaterialGrid.CellsByName['DeliveryKind', LRow] := g_DeliveryKind.ToString(AMaterial.DeliveryKind);
-    MaterialGrid.CellsByName['StoreAddress', LRow] := AMaterial.StoreAddress;
-    MaterialGrid.CellsByName['PortName', LRow] := AMaterial.PortName;
-    MaterialGrid.CellsByName['ShippingNo', LRow] := AMaterial.ShippingNo;
-    MaterialGrid.CellsByName['DeliveryCharge', LRow] := AMaterial.DeliveryCharge;
-    MaterialGrid.CellsByName['DeliveryCompany', LRow] := AMaterial.DeliveryCompany;
-    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
-    MaterialGrid.CellsByName['TermOfDelivery', LRow] := AMaterial.TermOfDelivery;
-    MaterialGrid.CellsByName['NetWeight', LRow] := AMaterial.NetWeight;
-    MaterialGrid.CellsByName['GrossWeight', LRow] := AMaterial.GrossWeight;
-    MaterialGrid.CellsByName['Measurement', LRow] := AMaterial.Measurement;
-    MaterialGrid.CellsByName['CBM', LRow] := AMaterial.CBM;
-    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
-    MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.NumOfPkg;
-    MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.DeliveryAddress;
-  end;
+//  with AForm do
+//  begin
+//    LRow := MaterialGrid.AddRow();
+//
+//    MaterialGrid.CellsByName['PORNo', LRow] := AMaterial.PORNo;
+//    MaterialGrid.CellsByName['MaterialName', LRow] := AMaterial.MaterialName;
+//    MaterialGrid.CellByName['PORIssueDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.PORIssueDate);
+////    MaterialGrid.CellsByName['LeadTime', LRow] := IntToStr(AMaterial.LeadTime);
+//    MaterialGrid.CellsByName['FreeOrCharge', LRow] := g_FreeOrCharge.ToString(AMaterial.FreeOrCharge);
+//    MaterialGrid.CellsByName['SupplyCount', LRow] := IntToStr(AMaterial.SupplyCount);
+////    MaterialGrid.CellsByName['UnitPrice', LRow] := AMaterial.UnitPrice;
+//    MaterialGrid.CellsByName['PriceAmount', LRow] := IntToStr(AMaterial.PriceAmount);
+//    MaterialGrid.CellByName['ReqDeliveryDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqDeliveryDate);
+//    MaterialGrid.CellByName['ReqArriveDate', LRow].AsDateTime := TimeLogToDateTime(AMaterial.ReqArriveDate);
+//    MaterialGrid.CellsByName['DeliveryKind', LRow] := g_DeliveryKind.ToString(AMaterial.DeliveryKind);
+//    MaterialGrid.CellsByName['StoreAddress', LRow] := AMaterial.StoreAddress;
+//    MaterialGrid.CellsByName['PortName', LRow] := AMaterial.PortName;
+//    MaterialGrid.CellsByName['ShippingNo', LRow] := AMaterial.ShippingNo;
+//    MaterialGrid.CellsByName['DeliveryCharge', LRow] := AMaterial.DeliveryCharge;
+//    MaterialGrid.CellsByName['DeliveryCompany', LRow] := AMaterial.DeliveryCompany;
+//    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
+//    MaterialGrid.CellsByName['TermOfDelivery', LRow] := AMaterial.TermOfDelivery;
+//    MaterialGrid.CellsByName['NetWeight', LRow] := AMaterial.NetWeight;
+//    MaterialGrid.CellsByName['GrossWeight', LRow] := AMaterial.GrossWeight;
+//    MaterialGrid.CellsByName['Measurement', LRow] := AMaterial.Measurement;
+//    MaterialGrid.CellsByName['CBM', LRow] := AMaterial.CBM;
+//    MaterialGrid.CellsByName['AirWayBill', LRow] := AMaterial.AirWayBill;
+//    MaterialGrid.CellsByName['NumOfPkg', LRow] := AMaterial.NumOfPkg;
+//    MaterialGrid.CellsByName['DeliveryAddress', LRow] := AMaterial.DeliveryAddress;
+//  end;
+end;
+
+procedure TTaskEditF.LoadMaterialDetailOrm2Form(
+  AMaterialDetail: TSQLMaterialDetail);
+var
+  LUtf8: RawUtf8;
+  LVar: variant;
+begin
+  LUtf8 :=AMaterialDetail.FillTable.GetJsonValues(True);
+//  LUtf8 := AMaterialDetail.GetJsonValues(true, true, soSelect);
+  LVar := _JSON(LUtf8);
+  LoadMaterialDetailVar2Grid(LVar);
+end;
+
+procedure TTaskEditF.LoadMaterialDetailOrmFromForm(
+  AMaterialDetail: TSQLMaterialDetail);
+var
+  LVar: variant;
+begin
+  TDocVariant.New(LVar);
+  LoadMaterialDetailVarFromGrid(LVar);
+  LoadRecordPropertyFromVariant(AMaterialDetail, LVar);
+end;
+
+procedure TTaskEditF.LoadMaterialDetailVar2Grid(AVar: variant; ARow: integer);
+begin
+  if ARow = -1 then
+  begin
+    if TDocVariantData(AVar).IsArray then
+      AddNextGridRowsFromVariant2(MaterialGrid, AVar)
+    else
+      AddNextGridRowFromVariant(MaterialGrid, AVar, True);
+  end
+  else
+    SetNxGridRowFromVar(MaterialGrid, ARow, AVar);
+end;
+
+procedure TTaskEditF.LoadMaterialDetailVarFromGrid(var AVar: variant;
+  const ARow: integer);
+begin
+  if ARow = -1 then
+    AVar := NextGrid2Variant(MaterialGrid)
+  else
+    AVar := GetNxGridRow2Variant(MaterialGrid, ARow);
+end;
+
+procedure TTaskEditF.LoadMaterialGrid2Variant(AGrid: TNextGrid;
+  out AVar: Variant);
+begin
+  AVar := NextGrid2Variant(MaterialGrid);
+end;
+
+procedure TTaskEditF.LoadMaterialGridFromVariant(AGrid: TNextGrid;
+  const AVar: Variant);
+begin
+  AddNextGridRowsFromVariant2(AGrid, AVar);
+end;
+
+procedure TTaskEditF.LoadMatGridRow2MaterialDetailOrm(AGrid: TNextGrid;
+  ARow: integer; AOrm: TSQLMaterialDetail);
+var
+  LVar: variant;
+begin
+  LVar := GetNxGridRow2Variant(AGrid, ARow);
+  LoadRecordPropertyFromVariant(AOrm, LVar);
 end;
 
 procedure TTaskEditF.LoadSubCon2Form(ASubCon: TSQLSubCon; AForm: TTaskEditF; ARow: integer);
@@ -2072,12 +2161,31 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskForm2Material4ProjectNSave2DB(AForm: TTaskEditF;
+procedure TTaskEditF.LoadTaskForm2Material4ProjectNSave2DB(ATaskID: TID);//AOrm: TSQLMaterial4Project);
+var
+  LVar: variant;
+  LMaterial: TSQLMaterial4Project;
+begin
+  LMaterial := GetMaterial4ProjFromTaskID(ATaskID);
+  try
+    LVar := _JSON(FMatDeliveryInfoJson);
+    LoadRecordPropertyFromVariant(LMaterial, LVar);
+
+    if not LMaterial.IsUpdate then
+      LMaterial.TaskID := ATaskID;
+
+    AddOrUpdateMaterial4Project(LMaterial);
+  finally
+    LMaterial.Free;
+  end;
+end;
+
+procedure TTaskEditF.LoadTaskForm2MaterialDetailNSave2DB(AForm: TTaskEditF;
   ATaskID: TID);
 var
   LRow: integer;
-  LPorNo: string;
-  LMat4Proj: TSQLMaterial4Project;
+  LPorNo, LMatCode: string;
+  LMatDetail: TSQLMaterialDetail;
 begin
   with AForm.MaterialGrid do
   begin
@@ -2085,28 +2193,30 @@ begin
     for LRow := 0 to RowCount - 1 do
     begin
       LPorNo := CellsByName['PORNo', LRow];
-      LMat4Proj := GetMaterial4ProjFromTaskIDNPORNo(ATaskID, LPorNo);
+      LMatCode := CellsByName['MaterialCode', LRow];
+
+      LMatDetail := GetMaterialDetailByPorNoNMatCode(LPorNo, LMatCode);
       try
         if Row[LRow].Visible then
         begin
-          LoadTaskForm2Material4Project(AForm, LMat4Proj, LRow);
+          LoadMatGridRow2MaterialDetailOrm(AForm.MaterialGrid, LRow, LMatDetail);
 
-          if LMat4Proj.IsUpdate then
+          if LMatDetail.IsUpdate then
           begin
           end
           else
           begin
-            LMat4Proj.TaskID := ATaskID;
+            LMatDetail.TaskID := ATaskID;
           end;
 
-          AddOrUpdateMaterial4Project(LMat4Proj);
+          AddOrUpdateMaterialDetail(LMatDetail);
         end
         else//Visuble = False면 삭제한 Item임
         begin
-          g_HiASMaterialDB.Delete(TSQLMaterial4Project, LMat4Proj.ID);
+          g_HiASMaterialDetailDB.Delete(TSQLMaterialDetail, LMatDetail.ID);
         end;
       finally
-        LMat4Proj.Free;
+        LMatDetail.Free;
       end;
     end;//for
   end;//with
@@ -2283,7 +2393,7 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskForm2SQLGSTask(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
+procedure TTaskEditF.LoadTaskForm2TaskOrm(AForm: TTaskEditF; out AVar: TOrmHiconisASTask);
 var
 //  LSubConsArr: TRawUtf8DynArray;
   i: integer;
@@ -2305,8 +2415,8 @@ begin
 //    AVar.SubConPrice := SubConPriceEdit.Text;
     Avar.NationPort := NationPortEdit.Text;
     Avar.EtcContent := EtcContentMemo.Text;
-    AVar.CurrentWorkStatus := CurWorkCB.ItemIndex;
-    AVar.NextWork := NextWorkCB.ItemIndex;
+    AVar.CurrentWorkStatus := g_HiconisASState.ToOrdinal(CurWorkCB.Text);
+    AVar.NextWork := g_HiconisASTrigger.ToOrdinal(NextWorkCB.Text);
     AVar.SalesProcessType := g_SalesProcessType.ToType(SalesProcTypeCB.ItemIndex);
     AVar.ShipOwner := ShipOwnerEdit.Text;
 //    AVar.CompanyType := TCompanyType(CustCompanyTypeCB.ItemIndex);
@@ -2349,7 +2459,25 @@ begin
   end;
 end;
 
-procedure TTaskEditF.LoadTaskVar2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF; AFSMClass: THiconisASStateMachine);
+procedure TTaskEditF.LoadTaskForm2Variant(AForm: TTaskEditF; out AVar: Variant);
+var
+  LJson: string;
+begin
+  LJson := GetCompNameValue2JsonFromForm(AForm);
+
+  AVar := _JSON(StringToUtf8(LJson));
+end;
+
+procedure TTaskEditF.LoadTaskFormFromVariant(AForm: TTaskEditF;
+  const AVar: Variant);
+var
+  LJson: string;
+begin
+  LJson := VariantToString(AVar);
+  SetCompNameValueFromJson2Form(AForm, LJson);
+end;
+
+procedure TTaskEditF.LoadTaskOrm2Form(AVar: TOrmHiconisASTask; AForm: TTaskEditF);
 var
 //  LCurrentState: THiconisASState;
   LStr: string;
@@ -2403,21 +2531,13 @@ begin
     if Assigned(FSalesProcessList) then
       FreeAndNil(FSalesProcessList);
 
-    //현재 State의 Trigger List : TTriggerHolder List를 저장함
-//    FSalesProcessList := GetStateOrTriggers2Strings(Ord(LCurrentState));
-
-    //StateMachine에 등록 된 모든 State List를 저장함
-    FSalesProcessList := GetStateOrTriggers2Strings();
-
-    CurWorkCB.Items.Assign(FSalesProcessList);
-    CurWorkCB.ItemIndex := AVar.CurrentWorkStatus;
+//    CurWorkCB.Items.Assign(FSalesProcessList);
 //    CurWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
 //      AVar.CurrentWorkStatus));
 //    NextWorkCB.ItemIndex := FSalesProcessList.IndexOf(g_SalesProcess.ToString(
 //      AVar.NextWork));
 //    end;
-    FillNextWorkCB(CurWorkCB.ItemIndex);
-    NextWorkCB.ItemIndex := AVar.NextWork;
+//    FillNextWorkCB(CurWorkCB.ItemIndex);
 
 //    QTNInputPicker.Date := TimeLogToDateTime(AVar.QTNInputDate);
 //    OrderInputPicker.Date := TimeLogToDateTime(AVar.OrderInputDate);
@@ -2435,8 +2555,18 @@ begin
     ClaimNoEdit.Text := Avar.ClaimNo;
     ClaimReasonMemo.Text := Avar.ClaimReason;
     ImportanceCB.ItemIndex := Avar.Importance;
-    ClaimServiceKindCB.ItemIndex := Avar.ClaimServiceKind;
     ClaimStatusCombo.ItemIndex := Avar.ClaimStatus;
+
+    ClaimServiceKindCB.ItemIndex := Avar.ClaimServiceKind;
+    InitCurWorkCB();
+    //ClaimServiceKindCB OnChange 이벤트에 CurWorkCB Fill-In 됨
+    //때문에 ClaimServiceKindCB 변경 이후에 CurWorkCB를 선택해야 함
+    CurWorkCB.ItemIndex := CurWorkCB.Items.IndexOf(g_HiconisASState.ToString(AVar.CurrentWorkStatus));
+    InitNextWorkCB();
+    //CurWorkCB OnChange 이벤트에 NextWorkCB Fill-In 됨
+    //때문에 CurWorkCB 변경 이후에 NextWorkCB 선택해야 함
+    NextWorkCB.ItemIndex := NextWorkCB.Items.IndexOf(g_HiconisASTrigger.ToString(AVar.NextWork));
+
 
     ClaimRecvPicker.Date := TimeLogToDateTime(Avar.ClaimRecvDate);
     ClaimInputPicker.Date := TimeLogToDateTime(Avar.ClaimInputDate);
@@ -2476,31 +2606,56 @@ begin
   Result := UTF8ToString(LUtf8);
 end;
 
-procedure TTaskEditF.MaterialEdit(const ARow: integer);
+procedure TTaskEditF.MaterialDetailEdit(const ARow: integer);
+var
+  LVar: variant;
+begin
+  if PORNoEdit.Text = '' then
+  begin
+    ShowMessage('POR No가 공란입니다.' + #13#10 + '"배송정보" 버튼을 이용하여 POR No를 먼저 생성하세요.');
+    exit;
+  end;
+
+  if ARow = -1 then //Add
+  begin
+    TDocVariant.New(LVar);
+  end
+  else
+  begin
+    LVar := GetNxGridRow2Variant(MaterialGrid, ARow);
+  end;
+
+  LVar.PORNo := PORNoEdit.Text;
+
+  //"저장" 버튼을 누르면 True
+  if DisplayMaterialDetail2EditForm(LVar) = mrOK then
+    LoadMaterialDetailVar2Grid(LVar, ARow);
+//    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
+end;
+
+procedure TTaskEditF.MaterialEdit();
 var
   LDoc: variant;
 begin
-  if ARow = -1 then //Add
+  if FMatDeliveryInfoJson = '' then //Add
   begin
     TDocVariant.New(LDoc);
     LDoc.PorNo := '';
   end
   else
   begin
-    LDoc := GetNxGridRow2Variant(MaterialGrid, ARow);
+    LDoc := _JSON(StringToUtf8(FMatDeliveryInfoJson));
   end;
 
   //"저장" 버튼을 누르면 True
   if DisplayMaterial2EditForm(LDoc) then
-    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
+  begin
+    FMatDeliveryInfoJson := Utf8ToString(LDoc);
+    PORNoEdit.Text := GetPorNoFromJson(FMatDeliveryInfoJson);
+  end;
+//    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
 //  if DisplayMaterial2EditForm(LDoc) then
 //    AddOrUpdateMaterial2GridFromVar(LDoc, ARow);
-end;
-
-procedure TTaskEditF.MaterialGridCellDblClick(Sender: TObject; ACol,
-  ARow: Integer);
-begin
-  MaterialEdit(ARow);
 end;
 
 procedure TTaskEditF.N18Click(Sender: TObject);
@@ -2574,10 +2729,23 @@ begin
   MakeDocCustomerRegistration(LRec);
 end;
 
+procedure TTaskEditF.NextGrid1CellDblClick(Sender: TObject; ACol,
+  ARow: Integer);
+var
+  LVar: variant;
+begin
+  TDocVariant.New(LVar);
+  LoadMaterialDetailVarFromGrid(LVar, ARow);
+
+  //"적용" 버튼을 누른 경우 True
+  if DisplayMaterialDetail2EditForm(LVar) = mrOK then
+    LoadMaterialDetailVar2Grid(LVar, ARow);
+end;
+
 procedure TTaskEditF.NextWorkCBDropDown(Sender: TObject);
 begin
 //  if CurWorkCB.Items.Count = 0 then
-    FillNextWorkCB(CurWorkCB.ItemIndex);
+//    FillNextWorkCB(CurWorkCB.ItemIndex);
 end;
 
 procedure TTaskEditF.oCustomer1Click(Sender: TObject);
