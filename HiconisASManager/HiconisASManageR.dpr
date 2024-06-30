@@ -3,9 +3,7 @@ program HiconisASManageR;
 uses
   Vcl.Forms,
   mormot.db.raw.sqlite3.static,
-  FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisASManageF},
   FrmHiconisASTaskEdit in 'FrmHiconisASTaskEdit.pas' {TaskEditF},
-  FrameDisplayTaskInfo2 in '..\Common\FrameDisplayTaskInfo2.pas' {DisplayTaskF: TFrame},
   FrmFileSelect in '..\..\..\..\..\..\project\util\GSManage\FrmFileSelect.pas' {FileSelectF},
   FrmEditSubCon2 in '..\FrmEditSubCon2.pas' {Form2},
   UnitStringUtil in '..\..\..\..\..\..\project\common\UnitStringUtil.pas',
@@ -34,7 +32,7 @@ uses
   FrmSelectCheckBox in '..\..\..\common\Form\FrmSelectCheckBox.pas' {SelectChcekBoxF},
   UnitGSTriffData in '..\..\..\..\..\..\project\util\GSManage\UnitGSTriffData.pas',
   FrmASMaterialEdit in 'FrmASMaterialEdit.pas' {ASMaterialF},
-  FrmOLControl in '..\..\RPA\Outlook\Util\FrmOLControl.pas' {OLControlF},
+  FrmOLEmailList in '..\..\RPA\Outlook\Util\FrmOLEmailList.pas' {OLEmailListF},
   UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas',
   UnitOLControlWorker in '..\..\RPA\Outlook\Util\UnitOLControlWorker.pas',
   FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame},
@@ -48,7 +46,8 @@ uses
   UnitToDoList in '..\..\..\Common\UnitToDoList.pas',
   UnitHiASMaterialDetailRecord in 'UnitHiASMaterialDetailRecord.pas',
   UnitStateMachineUtil in '..\..\..\Common\UnitStateMachineUtil.pas',
-  FrmASMaterialDetailEdit in 'FrmASMaterialDetailEdit.pas' {MaterialDetailF};
+  FrmASMaterialDetailEdit in 'FrmASMaterialDetailEdit.pas' {MaterialDetailF},
+  FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisAsManageF};
 
 {$R *.res}
 
@@ -60,9 +59,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(THiconisASManageF, HiconisASManageF);
-  Application.CreateForm(TToDoListF2, ToDoListF2);
-  Application.CreateForm(TMaterialDetailF, MaterialDetailF);
+  Application.CreateForm(THiconisAsManageF, HiconisAsManageF);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

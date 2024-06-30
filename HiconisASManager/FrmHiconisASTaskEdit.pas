@@ -13,10 +13,10 @@ uses
   DragDrop, DropTarget, DropSource, DragDropFile,
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
-  mormot.core.datetime,
+  mormot.core.datetime, mormot.core.rtti,
 
   CommonData2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState, UnitTodoCollect2,
-  UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLControl,//FrmEmailListView2
+  UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLEmailList,//FrmEmailListView2
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
   UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit
@@ -361,6 +361,7 @@ type
   public
     FTask,
     FEmailDisplayTask: TOrmHiconisASTask;
+    FTaskEditConfig: THiconisASTaskEditConfig;
     FSQLGSFiles: TSQLGSFile;
 //    FFSMState: TFSMState;
     FFSMState: THiconisASStateMachine;
@@ -372,8 +373,8 @@ type
     FToDoList: TpjhToDoList;
     FRemoteIPAddress: string;
 
-    class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
-    class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TOLControlF);
+    class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; AOLEmailSrchRec: TOLEmailSrchRec; ARemoteIPAddress, APort, ARoot: string);
+    class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TOLEmailListF);
     procedure ShowDTIForm;
     procedure SPType2Combo(ACombo: TComboBox; AFSMState: THiconisASStateMachine=nil);
     //Drag하여 파일 추가한 경우 AFileName <> ''
@@ -435,7 +436,7 @@ type
 
   function ProcessTaskJson(AJson: String): Boolean;
   function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-      ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean = False): integer;
+      ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
 
@@ -448,7 +449,7 @@ var
 
 implementation
 
-uses FrmHiconisASManage, FrmDisplayTaskInfo2, DragDropInternet, DragDropFormats,
+uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   UnitHiconisASVarJsonUtil, UnitNextGridUtil2,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,
@@ -460,6 +461,7 @@ function ProcessTaskJson(AJson: String): Boolean;
 var
   LDoc: variant;
   LTask: TOrmHiconisASTask;
+  LTaskEditConfig: THiconisASTaskEditConfig;
   LUTF8: RawUTF8;
   LRaw: RawByteString;
   LHullNo, LPONO, LOrderNo: string;
@@ -513,11 +515,7 @@ begin
     end;
 
     try
-    {$IFDEF GAMANAGER}
-      FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LIsFromInvoiceManage);
-    {$ELSE}
-      TaskForm.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LIsFromInvoiceManage);
-    {$ENDIF}
+      FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LTaskEditConfig);
     finally
       FreeAndNil(LTask);
     end;
@@ -527,7 +525,7 @@ begin
 end;
 
 function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-  ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ADocIsFromInvoiceManage: Boolean): integer;
+  ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
@@ -547,6 +545,8 @@ begin
   try
     with LTaskEditF do
     begin
+      RecordCopy(FTaskEditConfig, ATaskEditConfig, TypeInfo(THiconisASTaskEditConfig));
+
       LTask := ATask;
 
       if LTask.IsUpdate then
@@ -555,13 +555,13 @@ begin
         Caption := Caption + ' (New)';
 
       //InvoiceManage로부터 오는 Json은 Task와 Customer에 대한 변경 내용이 없음
-      if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
+      if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
         LoadTaskFromVariant(LTask, ADoc.Task);
 
       LoadTaskOrm2Form(LTask, LTaskEditF);
       LCustomer := GetCustomerFromTask(LTask);
 
-      if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
+      if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
         LoadCustomerFromVariant(LCustomer, ADoc.Customer);
 
       LoadCustomer2Form(LCustomer, LTaskEditF);
@@ -575,7 +575,7 @@ begin
         begin
           //ADocIsFromInvoiceManage = True인 경우 ADoc.InvoiceItem가 존재함
           //InqManager에서 생성한 *.hgs 인 경우임 : ADoc.SubCon이 복수개([] 배열 형식임)
-          LoadSubConFromVariant2Form(ADoc, ADocIsFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
+          LoadSubConFromVariant2Form(ADoc, ATaskEditConfig.IsDocFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
         end;
       finally
 //        LSubConList.Clear;
@@ -586,7 +586,7 @@ begin
       LMat4Proj := GetMaterial4ProjFromTaskID(LTask.ID);
 
       try
-        if (not ADocIsFromInvoiceManage) and (ADoc <> null) then
+        if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
           LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
 
         if LMat4Proj.IsUpdate then
@@ -980,8 +980,17 @@ begin
 end;
 
 procedure TTaskEditF.AeroButton4Click(Sender: TObject);
+var
+  LOLEmailSrchRec: TOLEmailSrchRec;
 begin
-  ShowEMailListFromTask(FEmailDisplayTask, FRemoteIPAddress, HiconisASManageF.TDTF.FPortName, HiconisASManageF.TDTF.FRootName);
+  LOLEmailSrchRec.FTaskID := FEmailDisplayTask.TaskID;
+  LOLEmailSrchRec.FProjectNo := FEmailDisplayTask.Order_No;
+  LOLEmailSrchRec.FHullNo := FEmailDisplayTask.HullNo;
+  LOLEmailSrchRec.FClaimNo := FEmailDisplayTask.ClaimNo;
+  LOLEmailSrchRec.FTaskEditConfig := FTaskEditConfig;
+
+  ShowEMailListFromTask(FEmailDisplayTask, LOLEmailSrchRec, FRemoteIPAddress,
+    HiconisASManageF.FPortName, HiconisASManageF.FRootName);
 end;
 
 procedure TTaskEditF.AeroButton5Click(Sender: TObject);
@@ -996,7 +1005,10 @@ begin
   LRow := MaterialGrid.SelectedRow;
 
   if LRow = -1 then
+  begin
+    ShowMessage('Select Item');
     exit;
+  end;
 
   if MessageDlg('Aru you sure delete the selected item?.', mtConfirmation, [mbYes, mbNo],0) = mrYes then
   begin
@@ -1623,7 +1635,7 @@ end;
 
 procedure TTaskEditF.JvLabel5Click(Sender: TObject);
 begin
-  FrmHiconisASManage.HiconisASManageF.TestRemoteTaskEmailList(FEmailDisplayTask);
+//  FrmHiconisASManage.HiconisASManageF.TestRemoteTaskEmailList(FEmailDisplayTask);
 end;
 
 procedure TTaskEditF.LoadCustomer2Form(ACustomer: TSQLCustomer;
@@ -1664,7 +1676,7 @@ begin
 end;
 
 class procedure TTaskEditF.LoadEmailListFromTask(ATask: TOrmHiconisASTask;
-  AForm: TOLControlF);
+  AForm: TOLEmailListF);
 //var
 //  LOLEmailSrchRec: TOLEmailSrchRec;
 //  LIds: TIDDynArray;
@@ -2206,9 +2218,9 @@ begin
           end
           else
           begin
-            LMatDetail.TaskID := ATaskID;
           end;
 
+          LMatDetail.TaskID := ATaskID;
           AddOrUpdateMaterialDetail(LMatDetail);
         end
         else//Visuble = False면 삭제한 Item임
@@ -2660,37 +2672,37 @@ end;
 
 procedure TTaskEditF.N18Click(Sender: TObject);
 begin
-  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    HiconisASManageF.TDTF.FSettings,
-    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+//  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
+//    HiconisASManageF.TDTF.FSettings,
+//    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N19Click(Sender: TObject);
 begin
-  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    HiconisASManageF.TDTF.FSettings,
-    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+//  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
+//    HiconisASManageF.TDTF.FSettings,
+//    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N20Click(Sender: TObject);
 begin
-  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    HiconisASManageF.TDTF.FSettings,
-    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+//  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
+//    HiconisASManageF.TDTF.FSettings,
+//    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N21Click(Sender: TObject);
 begin
-  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    HiconisASManageF.TDTF.FSettings,
-    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+//  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
+//    HiconisASManageF.TDTF.FSettings,
+//    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N22Click(Sender: TObject);
 begin
-  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
-    HiconisASManageF.TDTF.FSettings,
-    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
+//  SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, FEmailDisplayTask,
+//    HiconisASManageF.TDTF.FSettings,
+//    HiconisASManageF.TDTF.GetRecvEmailAddress(TMenuItem(Sender).Tag));
 end;
 
 procedure TTaskEditF.N23Click(Sender: TObject);
@@ -2836,61 +2848,56 @@ begin
 end;
 
 procedure TTaskEditF.ShowDTIForm;
-var
-  LDisplayTaskInfoF: TDisplayTaskInfoF;
-  LIdList: TIDList;
-  LRow: integer;
-  LGrid: TNextGrid;
+//var
+//  LDisplayTaskInfoF: TDisplayTaskInfoF;
+//  LIdList: TIDList;
+//  LRow: integer;
+//  LGrid: TNextGrid;
 begin
-  if MessageDlg('대표메일을 선택하면 현재 화면에 입력한 내용은 저장 되지 않고' + #13#10 +
-                '대표메일의 내용으로 대체 됩니다.' + #13#10 + '그래도 계속 하시겠습니까?'
-                , mtConfirmation, [mbYes, mbNo], 0)= mrNo then
-  begin
-    exit;
-  end;
-
-  LDisplayTaskInfoF := TDisplayTaskInfoF.Create(nil);
-  try
-    if LDisplayTaskInfoF.ShowModal = mrOK then
-    begin
-      LRow := LDisplayTaskInfoF.FSelectedRow;
-
-      if LRow <> -1 then
-      begin
-        LGrid := LDisplayTaskInfoF.TDisplayTaskF1.grid_Req;
-        if LGrid.Row[LRow].Data <> nil then
-        begin
-          if Assigned(FTask) then
-            FTask.Free;
-
-          FTask := nil;
-          LIdList := TIDList(LGrid.Row[LRow].Data);
-          FTask := CreateOrGetLoadTask(LIdList.fTaskId);
-        end;
-      end;
-    end;
-  finally
-    LDisplayTaskInfoF.Free;
-  end;
+//  if MessageDlg('대표메일을 선택하면 현재 화면에 입력한 내용은 저장 되지 않고' + #13#10 +
+//                '대표메일의 내용으로 대체 됩니다.' + #13#10 + '그래도 계속 하시겠습니까?'
+//                , mtConfirmation, [mbYes, mbNo], 0)= mrNo then
+//  begin
+//    exit;
+//  end;
+//
+//  LDisplayTaskInfoF := TDisplayTaskInfoF.Create(nil);
+//  try
+//    if LDisplayTaskInfoF.ShowModal = mrOK then
+//    begin
+//      LRow := LDisplayTaskInfoF.FSelectedRow;
+//
+//      if LRow <> -1 then
+//      begin
+//        LGrid := LDisplayTaskInfoF.TDisplayTaskF1.grid_Req;
+//        if LGrid.Row[LRow].Data <> nil then
+//        begin
+//          if Assigned(FTask) then
+//            FTask.Free;
+//
+//          FTask := nil;
+//          LIdList := TIDList(LGrid.Row[LRow].Data);
+//          FTask := CreateOrGetLoadTask(LIdList.fTaskId);
+//        end;
+//      end;
+//    end;
+//  finally
+//    LDisplayTaskInfoF.Free;
+//  end;
 end;
 
-class procedure TTaskEditF.ShowEMailListFromTask(ATask: TOrmHiconisASTask; ARemoteIPAddress, APort, ARoot: string);
+class procedure TTaskEditF.ShowEMailListFromTask(ATask: TOrmHiconisASTask;
+  AOLEmailSrchRec: TOLEmailSrchRec;
+  ARemoteIPAddress, APort, ARoot: string);
 var
-  LViewMailListF: TOLControlF;
-  LOLEmailSrchRec: TOLEmailSrchRec;
+  LViewMailListF: TOLEmailListF;
   LUtf8: RawUTF8;
 begin
-  LViewMailListF := TOLControlF.Create(nil);
+  LViewMailListF := TOLEmailListF.Create(nil);
   try
     begin
-      LOLEmailSrchRec.FTaskID := ATask.TaskID;
-      LOLEmailSrchRec.FProjectNo := ATask.Order_No;
-      LOLEmailSrchRec.FHullNo := ATask.HullNo;
-      LOLEmailSrchRec.FClaimNo := ATask.ClaimNo;
+      LViewMailListF.OLEmailListFr.InitVarFromOwner(AOLEmailSrchRec);
 
-      LViewMailListF.OLEmailListFr.SetOLEmailSrchRec(LOLEmailSrchRec);
-//      LViewMailListF.FTask := ATask;
-//      LViewMailListF.SetMoveFolderIndex; //모든 StoredID가 동일하여 효과 없음
       if ARemoteIPAddress = '' then
         LoadEmailListFromTask(ATask, LViewMailListF)
       else

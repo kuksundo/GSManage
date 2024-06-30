@@ -1237,11 +1237,12 @@ end;
 procedure TDisplayTaskF.DisplayTaskInfo2EditForm(const ATaskID: integer);
 var
   LTask: TOrmHiconisASTask;
+  LTaskEditConfig: THiconisASTaskEditConfig;
 begin
   LTask:= CreateOrGetLoadTask(ATaskID);
   try
   {$IFDEF GAMANAGER}
-    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
+    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, LTaskEditConfig);
   {$ELSE}
     TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ENDIF}
@@ -1688,13 +1689,14 @@ end;
 procedure TDisplayTaskF.ShowTaskFormFromDB(AIDList: TIDList; ARow: integer);
 var
   LTask: TOrmHiconisASTask;
+  LTaskEditConfig: THiconisASTaskEditConfig;
   LResult: integer;
 begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   LTask.TaskID := LTask.ID;
   try
   {$IFDEF GAMANAGER}
-    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null);
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, LTaskEditConfig);
   {$ELSE}
     TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
   {$ENDIF}
@@ -1933,6 +1935,7 @@ procedure TDisplayTaskF.ShowEmailListFormFromData(ARow: integer);
 var
   LTask: TOrmHiconisASTask;
   LID : TID;
+  LOLEmailSrchRec: TOLEmailSrchRec;
 begin
   LID := GetTaskIdFromGrid(ARow);
 
@@ -1941,6 +1944,12 @@ begin
 
   LTask := CreateOrGetLoadTask(LID);
   try
+    LOLEmailSrchRec.FTaskID := LTask.TaskID;
+    LOLEmailSrchRec.FProjectNo := LTask.Order_No;
+    LOLEmailSrchRec.FHullNo := LTask.HullNo;
+    LOLEmailSrchRec.FClaimNo := LTask.ClaimNo;
+    LOLEmailSrchRec.IsUseOLControlWorker := LTask.IsUseOLControlWorker;
+
     TTaskEditF.ShowEMailListFromTask(LTask, '', '', '');
   finally
     FreeAndNil(LTask);

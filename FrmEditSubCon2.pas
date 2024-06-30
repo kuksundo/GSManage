@@ -7,11 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, AeroButtons, JvExControls,
   JvLabel, CurvyControls, Vcl.ExtCtrls, NxColumnClasses, NxColumns,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
-  {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord, UnitHiASSubConRecord,
-  {$ELSE}
-  UElecDataRecord,
-  {$ENDIF}
   CommonData2, VarRecUtils;
 
 type
