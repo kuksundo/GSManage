@@ -44,6 +44,15 @@ object ToDoDetailF: TToDoDetailF
       TabOrder = 1
       OnClick = BitBtn2Click
     end
+    object UniqueID: TEdit
+      Left = 16
+      Top = 24
+      Width = 330
+      Height = 21
+      Hint = 'Text'
+      TabOrder = 2
+      Visible = False
+    end
   end
   object Panel2: TPanel
     Left = 0

@@ -47,7 +47,8 @@ uses
   UnitHiASMaterialDetailRecord in 'UnitHiASMaterialDetailRecord.pas',
   UnitStateMachineUtil in '..\..\..\Common\UnitStateMachineUtil.pas',
   FrmASMaterialDetailEdit in 'FrmASMaterialDetailEdit.pas' {MaterialDetailF},
-  FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisAsManageF};
+  FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisAsManageF},
+  UnitCommonFormUtil in '..\Common\UnitCommonFormUtil.pas';
 
 {$R *.res}
 

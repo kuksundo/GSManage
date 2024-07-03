@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2;
+  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2,
+  UnitOLEmailRecord2;
 
 type
   ALARM_INTERVAL = (aiNone, ai0Min,ai5Min,ai10Min,ai15Min,ai30Min,
@@ -39,13 +40,15 @@ type
     Alarm2Note: TCheckBox;
     Alarm2Email: TCheckBox;
     Alarm2Popup: TCheckBox;
+    UniqueID: TEdit;
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
   public
+    FTaskEditConfig: THiconisASTaskEditConfig;
+
     procedure LoadTodoItemFromForm(ApjhTodoItem: TpjhTodoItem);
 
     function GetTodoItem2JsonFromForm: string;

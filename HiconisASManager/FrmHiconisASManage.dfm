@@ -28,6 +28,8 @@ object HiconisAsManageF: THiconisAsManageF
     Align = alTop
     Rounding = 4
     TabOrder = 0
+    ExplicitLeft = 5
+    ExplicitTop = 0
     object JvLabel2: TJvLabel
       AlignWithMargins = True
       Left = 8
@@ -111,13 +113,13 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel1: TJvLabel
       AlignWithMargins = True
-      Left = 754
+      Left = 556
       Top = 70
       Width = 80
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #51228#54408#44396#48516
+      Caption = 'Claim Status'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -145,33 +147,6 @@ object HiconisAsManageF: THiconisAsManageF
       Alignment = taCenter
       AutoSize = False
       Caption = #50836#52397#49324
-      Color = 14671839
-      FrameColor = clGrayText
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = [fsBold]
-      Layout = tlCenter
-      ParentColor = False
-      ParentFont = False
-      RoundedFrame = 3
-      Transparent = True
-      HotTrackFont.Charset = ANSI_CHARSET
-      HotTrackFont.Color = clWindowText
-      HotTrackFont.Height = -13
-      HotTrackFont.Name = #47569#51008' '#44256#46357
-      HotTrackFont.Style = []
-    end
-    object JvLabel7: TJvLabel
-      AlignWithMargins = True
-      Left = 358
-      Top = 70
-      Width = 80
-      Height = 25
-      Alignment = taCenter
-      AutoSize = False
-      Caption = #51089#50629#50836#50557
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -252,7 +227,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'PO'#48264#54840
+      Caption = #51088#51116'Por No.'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -280,6 +255,76 @@ object HiconisAsManageF: THiconisAsManageF
       Alignment = taCenter
       AutoSize = False
       Caption = #45812#45817#51088
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object MakeCertButton: TAdvToolButton
+      Left = 754
+      Top = 101
+      Width = 80
+      Height = 29
+      Hint = #44033' MenuItem Tag'#50640' Claim'#50896#51064' '#49440#53469#44050' '#51200#51109#46120
+      AutoThemeAdapt = False
+      ColorDown = 14210002
+      ColorHot = 13289415
+      DropDownButton = True
+      DropDownMenu = ClaimPopup
+      Caption = 'Claim '#50896#51064
+      ImageIndex = 4
+      Rounded = True
+      Version = '1.6.1.1'
+    end
+    object JvLabel40: TJvLabel
+      AlignWithMargins = True
+      Left = 358
+      Top = 70
+      Width = 80
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #49436#48708#49828#50976#54805
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel7: TJvLabel
+      AlignWithMargins = True
+      Left = 754
+      Top = 70
+      Width = 79
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51088#51116#48264#54840
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -380,9 +425,9 @@ object HiconisAsManageF: THiconisAsManageF
         OnDropDown = ComboBox1DropDown
       end
     end
-    object ProductTypeCombo: TComboBox
-      Left = 837
-      Top = 68
+    object ClaimStatusCombo: TComboBox
+      Left = 639
+      Top = 70
       Width = 109
       Height = 25
       Style = csDropDownList
@@ -394,7 +439,7 @@ object HiconisAsManageF: THiconisAsManageF
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
       TabOrder = 1
-      OnDropDown = ProductTypeComboDropDown
+      OnDropDown = ClaimStatusComboDropDown
     end
     object CustomerCombo: TComboBox
       Left = 639
@@ -410,16 +455,6 @@ object HiconisAsManageF: THiconisAsManageF
       ParentFont = False
       TabOrder = 2
     end
-    object SubjectEdit: TEdit
-      Left = 441
-      Top = 69
-      Width = 311
-      Height = 21
-      CharCase = ecUpperCase
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 3
-      OnKeyPress = SubjectEditKeyPress
-    end
     object HullNoEdit: TEdit
       Left = 441
       Top = 12
@@ -427,7 +462,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 4
+      TabOrder = 3
       OnKeyPress = HullNoEditKeyPress
     end
     object ShipNameEdit: TEdit
@@ -437,12 +472,12 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 5
+      TabOrder = 4
       OnKeyPress = ShipNameEditKeyPress
     end
     object BefAftCB: TComboBox
-      Left = 764
-      Top = 101
+      Left = 679
+      Top = 102
       Width = 57
       Height = 24
       Style = csDropDownList
@@ -453,27 +488,11 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 5
       Items.Strings = (
         ''
         #51060#51204
         #51060#54980)
-    end
-    object CurWorkCB: TComboBox
-      Left = 441
-      Top = 101
-      Width = 317
-      Height = 24
-      Style = csDropDownList
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ImeName = 'Microsoft IME 2010'
-      ParentFont = False
-      TabOrder = 7
-      OnDropDown = CurWorkCBDropDown
     end
     object Panel1: TPanel
       Left = 955
@@ -481,7 +500,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 205
       Height = 134
       Align = alRight
-      TabOrder = 8
+      TabOrder = 6
       object btn_Search: TAeroButton
         AlignWithMargins = True
         Left = 3
@@ -542,7 +561,7 @@ object HiconisAsManageF: THiconisAsManageF
       ImeName = 'Microsoft IME 2010'
       ItemIndex = 0
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 7
       Text = #54788#51116#51089#50629
       Items.Strings = (
         #54788#51116#51089#50629
@@ -555,7 +574,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 10
+      TabOrder = 8
       OnKeyPress = HullNoEditKeyPress
     end
     object OrderNoEdit: TEdit
@@ -565,26 +584,25 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 11
+      TabOrder = 9
       OnKeyPress = HullNoEditKeyPress
     end
-    object PONoEdit: TEdit
+    object PORNoEdit: TEdit
       Left = 837
       Top = 39
       Width = 112
       Height = 21
-      CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 12
+      TabOrder = 10
       OnKeyPress = HullNoEditKeyPress
     end
     object DisplayFinalCheck: TCheckBox
-      Left = 832
-      Top = 104
+      Left = 840
+      Top = 105
       Width = 114
       Height = 17
       Caption = #50756#47308#51089#50629' '#54364#49884
-      TabOrder = 13
+      TabOrder = 11
     end
     object Button1: TButton
       Left = 277
@@ -592,7 +610,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 75
       Height = 25
       Caption = 'Clear'
-      TabOrder = 14
+      TabOrder = 12
       OnClick = Button1Click
     end
     object PICCB: TComboBox
@@ -608,8 +626,43 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 15
+      TabOrder = 13
       OnChange = PICCBChange
+    end
+    object CurWorkCB: TComboBox
+      Left = 441
+      Top = 101
+      Width = 232
+      Height = 24
+      Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ImeName = 'Microsoft IME 2010'
+      ParentFont = False
+      TabOrder = 14
+      OnDropDown = CurWorkCBDropDown
+    end
+    object ClaimServiceKindCB: TComboBox
+      Left = 442
+      Top = 70
+      Width = 113
+      Height = 21
+      Style = csDropDownList
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 15
+      OnDropDown = ClaimServiceKindCBDropDown
+    end
+    object MaterialCodeEdit: TEdit
+      Left = 837
+      Top = 70
+      Width = 112
+      Height = 21
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 16
+      OnKeyPress = HullNoEditKeyPress
     end
   end
   object TaskTab: TAdvOfficeTabSet
@@ -1339,7 +1392,7 @@ object HiconisAsManageF: THiconisAsManageF
     AppearanceOptions = [aoBoldTextSelection, aoHideSelection]
     Caption = ''
     HeaderSize = 23
-    HighlightedTextColor = clHotLight
+    HighlightedTextColor = 16777088
     Options = [goGrid, goHeader, goSelectFullRow]
     RowSize = 18
     PopupMenu = PopupMenu1
@@ -1347,6 +1400,7 @@ object HiconisAsManageF: THiconisAsManageF
     TabStop = True
     OnCellDblClick = grid_ReqCellDblClick
     OnKeyDown = grid_ReqKeyDown
+    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1387,7 +1441,6 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object HullNo: TNxTextColumn
       Alignment = taCenter
-      DefaultWidth = 110
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -1403,7 +1456,6 @@ object HiconisAsManageF: THiconisAsManageF
       ParentFont = False
       Position = 2
       SortType = stAlphabetic
-      Width = 110
     end
     object ShipName: TNxTextColumn
       Alignment = taCenter
@@ -1450,7 +1502,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = #44277#49324#49444#47749'('#47700#51068#51228#47785')'
+      Header.Caption = #44277#49324#49444#47749
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -1520,15 +1572,14 @@ object HiconisAsManageF: THiconisAsManageF
       Position = 8
       SortType = stAlphabetic
     end
-    object ReqCustomer: TNxTextColumn
+    object ClaimStatus: TNxTextColumn
       Alignment = taCenter
-      DefaultWidth = 120
-      Font.Charset = ANSI_CHARSET
+      Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
+      Font.Height = -11
+      Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = #50836#52397#49324
+      Header.Caption = 'Status'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -1538,47 +1589,6 @@ object HiconisAsManageF: THiconisAsManageF
       ParentFont = False
       Position = 9
       SortType = stAlphabetic
-      Width = 120
-    end
-    object ProdType: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #51228#54408#44396#48516
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 10
-      SortType = stAlphabetic
-    end
-    object RecvDate: TNxDateColumn
-      Alignment = taCenter
-      DefaultValue = '2014-01-24'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #51217#49688#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 11
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
     end
     object Email: TNxButtonColumn
       Alignment = taCenter
@@ -1597,10 +1607,71 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coCanSort, coEditing, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 12
+      Position = 10
       SortType = stAlphabetic
       Width = 60
       OnButtonClick = EmailButtonClick
+    end
+    object ReqCustomer: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 120
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = []
+      Header.Caption = #50836#52397#49324
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 11
+      SortType = stAlphabetic
+      Visible = False
+      Width = 120
+    end
+    object ProdType: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = []
+      Header.Caption = #51228#54408#44396#48516
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 12
+      SortType = stAlphabetic
+    end
+    object RecvDate: TNxDateColumn
+      Alignment = taCenter
+      DefaultValue = '2014-01-24'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = []
+      Header.Caption = #51217#49688#51068
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 13
+      SortType = stDate
+      Visible = False
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
     end
     object EMailID: TNxTextColumn
       Alignment = taCenter
@@ -1617,7 +1688,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 13
+      Position = 14
       SortType = stAlphabetic
       Visible = False
     end
@@ -1633,7 +1704,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 14
+      Position = 15
       SortType = stAlphabetic
       Visible = False
     end
@@ -1649,7 +1720,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 15
+      Position = 16
       SortType = stAlphabetic
       Visible = False
     end
@@ -1665,30 +1736,11 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 16
+      Position = 17
       SortType = stAlphabetic
       Visible = False
     end
     object QtnInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 17
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object OrderInputDate: TNxDateColumn
       DefaultValue = '2017-04-18'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -1707,7 +1759,7 @@ object HiconisAsManageF: THiconisAsManageF
       NoneCaption = 'None'
       TodayCaption = 'Today'
     end
-    object InvoiceInputDate: TNxDateColumn
+    object OrderInputDate: TNxDateColumn
       DefaultValue = '2017-04-18'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -1726,7 +1778,8 @@ object HiconisAsManageF: THiconisAsManageF
       NoneCaption = 'None'
       TodayCaption = 'Today'
     end
-    object CustomerAddress: TNxMemoColumn
+    object InvoiceInputDate: TNxDateColumn
+      DefaultValue = '2017-04-18'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1739,6 +1792,24 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Style = []
       ParentFont = False
       Position = 20
+      SortType = stDate
+      Visible = False
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
+    end
+    object CustomerAddress: TNxMemoColumn
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 21
       SortType = stAlphabetic
       Visible = False
     end
@@ -1756,7 +1827,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 21
+      Position = 22
       SortType = stAlphabetic
     end
     object ClaimInputDate: TNxTextColumn
@@ -1773,7 +1844,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 22
+      Position = 23
       SortType = stAlphabetic
     end
     object ClaimReadyDate: TNxTextColumn
@@ -1790,7 +1861,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 23
+      Position = 24
       SortType = stAlphabetic
     end
     object ClaimClosedDate: TNxTextColumn
@@ -1807,7 +1878,7 @@ object HiconisAsManageF: THiconisAsManageF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 24
+      Position = 25
       SortType = stAlphabetic
     end
     object Importance: TNxTextColumn
@@ -1818,24 +1889,6 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Name = 'Tahoma'
       Font.Style = []
       Header.Caption = #51473#50836#46020
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 25
-      SortType = stAlphabetic
-    end
-    object ClaimStatus: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Status'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -1878,7 +1931,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000B80318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000CC0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2188,7 +2241,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402C80310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402DC0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2414,9 +2467,9 @@ object HiconisAsManageF: THiconisAsManageF
     object N23: TMenuItem
       Caption = '-'
     end
-    object oDOList1: TMenuItem
+    object ToDOList1: TMenuItem
       Caption = 'To Do List'
-      OnClick = oDOList1Click
+      OnClick = ToDOList1Click
     end
     object N22: TMenuItem
       Caption = '-'
@@ -2465,6 +2518,20 @@ object HiconisAsManageF: THiconisAsManageF
   object MainMenu1: TMainMenu
     Left = 16
     Top = 264
+    object File1: TMenuItem
+      Caption = #54028#51068
+      object CreateNewTask1: TMenuItem
+        Caption = 'Create New Task'
+        OnClick = CreateNewTask1Click
+      end
+      object N24: TMenuItem
+        Caption = '-'
+      end
+      object Close1: TMenuItem
+        Caption = 'Close'
+        OnClick = Close1Click
+      end
+    end
     object MenuItem1: TMenuItem
       Caption = #50629#47924#51208#52264
       object MenuItem2: TMenuItem
@@ -2489,6 +2556,24 @@ object HiconisAsManageF: THiconisAsManageF
         end
       end
     end
+    object N25: TMenuItem
+      Caption = #49444#51221
+      object N26: TMenuItem
+        Caption = #54872#44221#49444#51221
+        OnClick = N26Click
+      end
+    end
+    object ariff1: TMenuItem
+      Caption = 'Tariff'
+      object ViewTariff1: TMenuItem
+        Caption = 'View Tariff'
+        OnClick = ViewTariff1Click
+      end
+      object EditTariff1: TMenuItem
+        Caption = 'Edit Tariff'
+        OnClick = EditTariff1Click
+      end
+    end
   end
   object ImageList32x32: TImageList
     ColorDepth = cd32Bit
@@ -2497,7 +2582,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800F00420002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800040520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3035,6 +3120,7 @@ object HiconisAsManageF: THiconisAsManageF
   object DropEmptyTarget1: TDropEmptyTarget
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop
+    WinTarget = 0
     Left = 212
     Top = 212
   end
@@ -3077,5 +3163,29 @@ object HiconisAsManageF: THiconisAsManageF
     Filter = 'Excel Files|*.xls;*.xlsx|All Files|*.*'
     Left = 104
     Top = 264
+  end
+  object ClaimPopup: TPopupMenu
+    Left = 160
+    Top = 264
+    object Category1: TMenuItem
+      Caption = 'Category'
+      OnClick = Category1Click
+    end
+    object Location1: TMenuItem
+      Caption = 'Location'
+      OnClick = Location1Click
+    end
+    object CauseKind1: TMenuItem
+      Caption = 'CauseKind'
+      OnClick = CauseKind1Click
+    end
+    object CauseHW1: TMenuItem
+      Caption = 'CauseHW'
+      OnClick = CauseHW1Click
+    end
+    object CauseSW1: TMenuItem
+      Caption = 'CauseSW'
+      OnClick = CauseSW1Click
+    end
   end
 end

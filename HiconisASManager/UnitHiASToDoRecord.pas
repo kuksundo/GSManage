@@ -11,6 +11,26 @@ uses SysUtils, Classes, Generics.Collections,
   ;
 
 type
+  TToDoSearchRec = record
+    From, FTo: TDateTime;
+    QueryDate: TTodoQueryDateType;
+
+    TaskID: TID;
+    HullNo,
+    ShipName,
+    OrderNo,
+    ClaimNo,
+    Subject
+    : RawUtf8;
+
+    CreationDate,
+    DueDate,
+    CompletionDate,
+    ModDate,
+    AlarmTime1 //알람 발생 시각
+    : TTimeLog;
+  end;
+
   TSQLToDoItem = class(TSQLRecord)
   private
     fTaskID: TID;
@@ -110,12 +130,14 @@ type
   procedure DeleteToDoItemFromDB(ApjhTodoItem: TpjhTodoItemRec; ADB: TSQLRestClientURI=nil);
   function DeleteToDoRecFromDBByUniqueID(AUniqueID: string; ADB: TSQLRestClientURI=nil): Boolean;
 
-  procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; AIdAdd: Boolean; ADB: TSQLRestClientURI=nil );
+  procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; ADB: TSQLRestClientURI=nil );
   procedure AddOrUpdateToDoItem2DBByJson(AJson: RawUtf8; ADB: TSQLRestClientURI=nil );
   procedure AddToDoListFromTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
 
   procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItemRec; ASQLToDoItem: TSQLToDoItem);
   procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItemRec);
+
+  function GetTodoListOrmFromSearchRec(ASearchRec: TToDoSearchRec): TSQLToDoItem;
 
 var
   g_HiASToDoDB: TSQLRestClientURI;
@@ -123,7 +145,8 @@ var
 
 implementation
 
-uses UnitFolderUtil2, UnitHiconisASVarJsonUtil, UnitRttiUtil2, Forms, TodoList;
+uses UnitFolderUtil2, UnitHiconisASVarJsonUtil, UnitRttiUtil2, Forms, TodoList,
+  VarRecUtils;
 
 function CreateModel_HiASToDo: TSQLModel;
 begin
@@ -201,14 +224,19 @@ var
   LSQLToDoItem: TSQLToDoItem;
   LpjhTodoItem: TpjhTodoItemRec;
   LDoc: variant;
+  LJson: string;
 begin
+//  TDocVariant.New(LDoc);
   LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.orm, 'TaskID = ?', [ATask.ID]);
   try
     while LSQLToDoItem.FillOne do
     begin
-      LoadRecordPropertyToVariant(LSQLToDoItem, LDoc);
-      LoadRecordFieldFromVariant(LpjhTodoItem, TypeInfo(TpjhTodoItemRec), LDoc);
-      AToDoList.Add(LpjhTodoItem);
+//      LoadRecordPropertyToVariant(LSQLToDoItem, LDoc, False, False, True);
+//      LoadRecordFieldFromVariant(LpjhTodoItem, TypeInfo(TpjhTodoItemRec), LDoc);
+      LDoc := TDocVariant.NewJson(LSQLToDoItem.GetJsonValues(True, True, ooSelect));
+      LJson := Utf8ToString(LDoc);
+      TRecordHlpr<TpjhTodoItemRec>.FromJson(LJson, LpjhTodoItem);
+      AToDoList.Add(LSQLToDoItem.UniqueID, LpjhTodoItem);
     end;
   finally
     LSQLToDoItem.Free;
@@ -230,16 +258,14 @@ begin
 //  end;
 end;
 
-procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; AIdAdd: Boolean; ADB: TSQLRestClientURI);
+procedure AddOrUpdateToDoItemRec2DB(ApjhTodoItemRec: TpjhTodoItemRec; ADB: TSQLRestClientURI);
 var
   LSQLToDoItem: TSQLToDoItem;
-  LTaskID: TID;
 begin
   if not Assigned(ADB) then
     ADB := g_HiASToDoDB;
 
-  LTaskID := ApjhTodoItemRec.TaskID;
-  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(ADB.Orm, 'TaskID = ?', [LTaskID]);
+  LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(ADB.Orm, 'TaskID = ? and UniqueID = ?', [ApjhTodoItemRec.TaskID, ApjhTodoItemRec.UniqueID]);
 
   try
     if LSQLToDoItem.FillOne then
@@ -250,10 +276,10 @@ begin
 //    if LSQLToDoItem.IsUpdate then
     AssignpjhTodoItemToSQLToDoItem(ApjhTodoItemRec, LSQLToDoItem);
 
-    if AIdAdd then
-      g_HiASToDoDB.Add(LSQLToDoItem, True)
+    if LSQLToDoItem.IsUpdate then
+      g_HiASToDoDB.Update(LSQLToDoItem)
     else
-      g_HiASToDoDB.Update(LSQLToDoItem);
+      g_HiASToDoDB.Add(LSQLToDoItem, True);
   finally
     FreeAndNil(LSQLToDoItem);
   end;
@@ -278,8 +304,6 @@ begin
     else
       LSQLToDoItem.IsUpdate := False;
 
-//    if LSQLToDoItem.IsUpdate then
-//    AssignpjhTodoItemToSQLToDoItem(ApjhTodoItemRec, LSQLToDoItem);
     LDoc := _JSON(AJson);
     LoadRecordPropertyFromVariant(LSQLToDoItem, LDoc);
 
@@ -324,7 +348,7 @@ begin
     begin
       LUtf8 := LSQLToDoItem.GetJSONValues(False, True, ooSelect);
       RecordLoadJson(LpjhTodoItemRec, LUtf8, TypeInfo(TpjhTodoItemRec));
-      AToDoList.Add(LpjhTodoItemRec);
+      AToDoList.Add(LSQLToDoItem.UniqueID, LpjhTodoItemRec);
     end;
   finally
     FreeAndNil(LSQLToDoItem);
@@ -332,38 +356,44 @@ begin
 end;
 
 procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItemRec; ASQLToDoItem: TSQLToDoItem);
+var
+  LDoc: variant;
 begin
-  ASQLToDoItem.fTaskID := ApjhTodoItem.TaskID;
+  TDocVariant.New(LDoc);
+  LDoc := TRecordHlpr<TpjhTodoItemRec>.ToVariant(ApjhTodoItem);
+  LoadRecordPropertyFromVariant(ASQLTodoItem, LDoc);
 
-  ASQLToDoItem.Category := ApjhTodoItem.Category;
-  ASQLToDoItem.Complete := ApjhTodoItem.Complete;
-  ASQLToDoItem.Completion := ApjhTodoItem.Completion;
-  ASQLToDoItem.CompletionDate := TimeLogFromDateTime(ApjhTodoItem.CompletionDate);
-  ASQLToDoItem.CreationDate := TimeLogFromDateTime(ApjhTodoItem.CreationDate);
-  ASQLToDoItem.DueDate := TimeLogFromDateTime(ApjhTodoItem.DueDate);
-  ASQLToDoItem.ImageIndex := ApjhTodoItem.ImageIndex;
-  ASQLToDoItem.Notes := ApjhTodoItem.Notes;
-  ASQLToDoItem.Priority := Ord(ApjhTodoItem.Priority);
-  ASQLToDoItem.Project := ApjhTodoItem.Project;
-  ASQLToDoItem.Resource := ApjhTodoItem.Resource;
-  ASQLToDoItem.Status := Ord(ApjhTodoItem.Status);
-  ASQLToDoItem.Subject := ApjhTodoItem.Subject;
-  ASQLToDoItem.Tag := ApjhTodoItem.Tag;
-  ASQLToDoItem.TotalTime := ApjhTodoItem.TotalTime;
-
-  ASQLToDoItem.UniqueID := ApjhTodoItem.UniqueID;
-  ASQLToDoItem.Plan_Code := ApjhTodoItem.PlanCode;
-  ASQLToDoItem.ModId := ApjhTodoItem.ModId;
-
-  ASQLToDoItem.AlarmType := ApjhTodoItem.AlarmType;
-  ASQLToDoItem.AlarmTime1 := TimeLogFromDateTime(ApjhTodoItem.AlarmTime);
-  ASQLToDoItem.AlarmTime2 := ApjhTodoItem.AlarmTime2;
-  ASQLToDoItem.AlarmFlag := ApjhTodoItem.AlarmFlag;
-  ASQLToDoItem.Alarm2Msg := ApjhTodoItem.Alarm2Msg;
-  ASQLToDoItem.Alarm2Note := ApjhTodoItem.Alarm2Note;
-  ASQLToDoItem.Alarm2Email := ApjhTodoItem.Alarm2Email;
-
-  ASQLToDoItem.ModDate := TimeLogFromDateTime(ApjhTodoItem.ModDate);
+//  ASQLToDoItem.fTaskID := ApjhTodoItem.TaskID;
+//
+//  ASQLToDoItem.Category := ApjhTodoItem.Category;
+//  ASQLToDoItem.Complete := ApjhTodoItem.Complete;
+//  ASQLToDoItem.Completion := ApjhTodoItem.Completion;
+//  ASQLToDoItem.CompletionDate := TimeLogFromDateTime(ApjhTodoItem.CompletionDate);
+//  ASQLToDoItem.CreationDate := TimeLogFromDateTime(ApjhTodoItem.CreationDate);
+//  ASQLToDoItem.DueDate := TimeLogFromDateTime(ApjhTodoItem.DueDate);
+//  ASQLToDoItem.ImageIndex := ApjhTodoItem.ImageIndex;
+//  ASQLToDoItem.Notes := ApjhTodoItem.Notes;
+//  ASQLToDoItem.Priority := Ord(ApjhTodoItem.Priority);
+//  ASQLToDoItem.Project := ApjhTodoItem.Project;
+//  ASQLToDoItem.Resource := ApjhTodoItem.Resource;
+//  ASQLToDoItem.Status := Ord(ApjhTodoItem.Status);
+//  ASQLToDoItem.Subject := ApjhTodoItem.Subject;
+//  ASQLToDoItem.Tag := ApjhTodoItem.Tag;
+//  ASQLToDoItem.TotalTime := ApjhTodoItem.TotalTime;
+//
+//  ASQLToDoItem.UniqueID := ApjhTodoItem.UniqueID;
+//  ASQLToDoItem.Plan_Code := ApjhTodoItem.PlanCode;
+//  ASQLToDoItem.ModId := ApjhTodoItem.ModId;
+//
+//  ASQLToDoItem.AlarmType := ApjhTodoItem.AlarmType;
+//  ASQLToDoItem.AlarmTime1 := TimeLogFromDateTime(ApjhTodoItem.AlarmTime);
+//  ASQLToDoItem.AlarmTime2 := ApjhTodoItem.AlarmTime2;
+//  ASQLToDoItem.AlarmFlag := ApjhTodoItem.AlarmFlag;
+//  ASQLToDoItem.Alarm2Msg := ApjhTodoItem.Alarm2Msg;
+//  ASQLToDoItem.Alarm2Note := ApjhTodoItem.Alarm2Note;
+//  ASQLToDoItem.Alarm2Email := ApjhTodoItem.Alarm2Email;
+//
+//  ASQLToDoItem.ModDate := TimeLogFromDateTime(ApjhTodoItem.ModDate);
 end;
 
 procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItemRec);
@@ -399,6 +429,141 @@ begin
   ApjhTodoItem.Alarm2Email := ASQLToDoItem.Alarm2Email;
 
   ApjhTodoItem.ModDate := ASQLToDoItem.ModDate;
+end;
+
+function GetTodoListOrmFromSearchRec(ASearchRec: TToDoSearchRec): TSQLToDoItem;
+var
+  ConstArray: TConstArray;
+  LWhere, LTempWhere, LStr: string;
+  LIsNeedTaskId: Boolean;
+  LOrmHiconisASTask: TOrmHiconisASTask;
+begin
+  LOrmHiconisASTask := nil;
+  LWhere := '';
+  ConstArray := CreateConstArray([]);
+  try
+    if ASearchRec.HullNo <> '' then
+    begin
+//      AddConstArray(ConstArrayTemp, ['%'+ASearchRec.HullNo+'%']);
+      if LTempWhere <> '' then
+        LTempWhere := LTempWhere + ' and ';
+      LTempWhere := LTempWhere + 'HullNo LIKE ? ';
+
+      LIsNeedTaskId := True;
+    end;
+
+    if ASearchRec.OrderNo <> '' then
+    begin
+//      AddConstArray(ConstArrayTemp, ['%'+ASearchRec.OrderNo+'%']);
+      if LTempWhere <> '' then
+        LTempWhere := LTempWhere + ' and ';
+      LTempWhere := LTempWhere + 'Order_No LIKE ? ';
+
+      LIsNeedTaskId := True;
+    end;
+
+    if ASearchRec.ClaimNo <> '' then
+    begin
+//      AddConstArray(ConstArrayTemp, ['%'+ASearchRec.ClaimNo+'%']);
+      if LTempWhere <> '' then
+        LTempWhere := LTempWhere + ' and ';
+      LTempWhere := LTempWhere + 'ClaimNo LIKE ? ';
+
+      LIsNeedTaskId := True;
+    end;
+
+    if ASearchRec.ShipName <> '' then
+    begin
+//      AddConstArray(ConstArrayTemp, ['%'+ASearchRec.ShipName+'%']);
+      if LTempWhere <> '' then
+        LTempWhere := LTempWhere + ' and ';
+      LTempWhere := LTempWhere + 'ShipName LIKE ? ';
+
+      LIsNeedTaskId := True;
+    end;
+
+    if LIsNeedTaskId then
+    begin
+      LOrmHiconisASTask := GetTaskFromHullNoNOrderNoNClaimNoNShipName(
+        ASearchRec.HullNo, ASearchRec.OrderNo, ASearchRec.ClaimNo, ASearchRec.ShipName
+        );
+
+      ASearchRec.TaskID := LOrmHiconisASTask.ID;
+    end;
+
+    if ASearchRec.TaskID > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.TaskID]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'TaskID = ? ';
+    end;
+
+    if ASearchRec.CreationDate > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.CreationDate]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'CreationDate = ? ';
+    end;
+
+    if ASearchRec.DueDate > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.DueDate]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'DueDate = ? ';
+    end;
+
+    if ASearchRec.CompletionDate > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.CompletionDate]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'CompletionDate = ? ';
+    end;
+
+    if ASearchRec.ModDate > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.ModDate]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'ModDate = ? ';
+    end;
+
+    if ASearchRec.AlarmTime1 > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchRec.AlarmTime1]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + 'AlarmTime1 = ? ';
+    end;
+
+    if LWhere = '' then
+    begin
+      AddConstArray(ConstArray, [-1]);
+      LWhere := 'ID <> ? ';
+    end;
+
+//    if ASearchRec.fOrderBy <> '' then
+//      LWhere := LWhere + ' ' + ASearchRec.fOrderBy;
+
+    Result := TSQLToDoItem.CreateAndFillPrepare(g_HiASToDoDB.Orm, Lwhere, ConstArray);
+
+    if Result.FillOne then
+    begin
+      Result.IsUpdate := True;
+    end
+    else
+    begin
+      Result.IsUpdate := False;
+    end
+  finally
+    if Assigned(LOrmHiconisASTask) then
+      LOrmHiconisASTask.Free;
+
+    FinalizeConstArray(ConstArray);
+  end;
 end;
 
 initialization

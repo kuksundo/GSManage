@@ -11,8 +11,11 @@ type
   TSearchCondRec = record
     FFrom, FTo: TDateTime;
     FQueryDate: TQueryDateType;
-    FHullNo, FShipName, FCustomer, FProdType, FSubject: string;
-    FCurWork, FBefAft, FWorkKind: integer;
+    FHullNo, FShipName, FCustomer, FProdType, FSubject,
+    FPorNo, FMaterialCode: string;
+    FCurWork, FBefAft, FWorkKind,
+    FClaimServiceKind, FClaimStatus, FClaimCatetory, FClaimLocation, FClaimKind,
+    FClaimCauseHW, FClaimCauseSW: integer;
     FQtnNo, FOrderNo, FPoNo, FRemoteIPAddress, FClaimNo: string
   end;
 
@@ -193,6 +196,13 @@ type
   TDeliveryKind = (dkNull, dkDomesticDelivery, dkOverSeaDelivery, dkFinal);
   TFreeOrCharge = (focNull, focFree, focCharge, focFinal);//유환/무환
   TClaimStatus = (csNull, csOpen, csReady, csDock, csClosed, csFinal);
+
+  TClaimTypeKind = (ctkNull, ctkCatetory, ctkLocation, ctkCauseKind, ctkCauseHW, ctkCauseSW, ctkFinal);
+  TClaimCategory = (ccNull, ccME, ccGE, ccFGSS, ccLFSS, ccCHS, ccFinal);
+  TClaimLocation = (clNull, clECR, clBridge, clER, clShipOffice, clFinal);
+  TClaimCauseKind = (cckNull, ckHW, cckSW, cckLogic, cckDB, cckConfig, cckComm, cckFinal);
+  TClaimCauseHW = (cchNull, cchMPM, cchFBM, cchCPM, cchDI16, cchDO16, cchAI8, cchAO8, cchRT8, cchEAP, cchCOM, cchFinal);
+  TClaimCauseSW = (ccsNull, ccsFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
@@ -447,7 +457,73 @@ const
     'OPEN',
     'READY',
     'DOCK',
-    'CLOSEDC',
+    'CLOSED',
+    ''
+     );
+
+  R_ClaimTypeKind : array[Low(TClaimTypeKind)..High(TClaimTypeKind)] of string =
+    (
+    '',
+    'Catetory',
+    'Location',
+    'CauseKind',
+    'CauseHW',
+    'CauseSW',
+    ''
+     );
+
+  R_ClaimCategory : array[Low(TClaimCategory)..High(TClaimCategory)] of string =
+    (
+    '',
+    'M/E',
+    'G/E',
+    'FGSS',
+    'LFSS',
+    'CHS',
+    ''
+     );
+
+  R_ClaimLocation : array[Low(TClaimLocation)..High(TClaimLocation)] of string =
+    (
+    '',
+    'ECR',
+    'Bridge',
+    'ER',
+    'ShipOffice',
+    ''
+     );
+
+  R_ClaimCauseKind : array[Low(TClaimCauseKind)..High(TClaimCauseKind)] of string =
+    (
+    '',
+    'HW',
+    'SW',
+    'Logic',
+    'DB',
+    'Config',
+    'Comm',
+    ''
+     );
+
+  R_ClaimCauseHW : array[Low(TClaimCauseHW)..High(TClaimCauseHW)] of string =
+    (
+    '',
+    'MPM',
+    'FBM',
+    'CPM',
+    'DI16',
+    'DO16',
+    'AI8',
+    'AO8',
+    'RT8',
+    'EAP',
+    'COM',
+    ''
+     );
+
+  R_ClaimCauseSW : array[Low(TClaimCauseSW)..High(TClaimCauseSW)] of string =
+    (
+    '',
     ''
      );
 
@@ -471,6 +547,13 @@ var
   g_DeliveryKind: TLabelledEnum<TDeliveryKind>;
   g_FreeOrCharge: TLabelledEnum<TFreeOrCharge>;
   g_ClaimStatus: TLabelledEnum<TClaimStatus>;
+
+  g_ClaimTypeKind: TLabelledEnum<TClaimTypeKind>;
+  g_ClaimCategory: TLabelledEnum<TClaimCategory>;
+  g_ClaimLocation: TLabelledEnum<TClaimLocation>;
+  g_ClaimCauseKind: TLabelledEnum<TClaimCauseKind>;
+  g_ClaimCauseHW: TLabelledEnum<TClaimCauseHW>;
+  g_ClaimCauseSW: TLabelledEnum<TClaimCauseSW>;
 
 procedure SalesProcess2List(AList: TStringList; AFSMState: TFSMState);
 
@@ -509,6 +592,12 @@ initialization
 //  g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
 //  g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
 //  g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+//  g_ClaimCategory.InitArrayRecord(R_ClaimCategory);
+//  g_ClaimLocation.InitArrayRecord(R_ClaimLocation);
+//  g_ClaimCauseKind.InitArrayRecord(R_ClaimCauseKind);
+//  g_ClaimCauseHW.InitArrayRecord(R_ClaimCauseHW);
+//  g_ClaimCauseSW.InitArrayRecord(R_ClaimCauseSW);
+//  g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
 
 finalization
 

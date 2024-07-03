@@ -80,7 +80,7 @@ begin
   if LStr = '.exe' then
   begin
     LFileName := ChangeFileExt(ExtractFileName(AExeName),'.sqlite');
-    LFileName := LFileName.Replace('.sqlite', '_Material.sqlite');
+    LFileName := LFileName.Replace('.sqlite', '_MaterialDetail.sqlite');
     LFilePath := GetSubFolderPath(LFilePath, 'db');
   end;
 
@@ -133,7 +133,10 @@ end;
 
 function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
 begin
-  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PORNo = ? and MaterialCode = ?', [APorNo, AMatCode]);
+  if APorNo = '' then
+    Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'MaterialCode = ?', [AMatCode])
+  else
+    Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PORNo = ? and MaterialCode = ?', [APorNo, AMatCode]);
 
   if Result.FillOne then
     Result.IsUpdate := True

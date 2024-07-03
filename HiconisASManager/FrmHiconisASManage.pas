@@ -17,7 +17,7 @@ uses
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
   mormot.core.data, mormot.orm.base, mormot.core.collections,
 
-  VarRecUtils,
+  VarRecUtils, TimerPool,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, FrmInqManageConfig, UnitElecMasterData,
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
@@ -29,7 +29,7 @@ uses
   UnitHiconisASWSInterface, thundax.lib.actions_pjh,
   UnitMAPSMacro2, UnitWorker4OmniMsgQ,
 
-  UnitOLControlWorker;
+  UnitOLControlWorker, AdvToolBtn;
 
 type
   THiconisAsManageF = class(TForm)
@@ -39,7 +39,6 @@ type
     JvLabel6: TJvLabel;
     JvLabel1: TJvLabel;
     JvLabel3: TJvLabel;
-    JvLabel7: TJvLabel;
     JvLabel4: TJvLabel;
     JvLabel8: TJvLabel;
     JvLabel9: TJvLabel;
@@ -50,13 +49,11 @@ type
     dt_begin: TDateTimePicker;
     dt_end: TDateTimePicker;
     ComboBox1: TComboBox;
-    ProductTypeCombo: TComboBox;
+    ClaimStatusCombo: TComboBox;
     CustomerCombo: TComboBox;
-    SubjectEdit: TEdit;
     HullNoEdit: TEdit;
     ShipNameEdit: TEdit;
     BefAftCB: TComboBox;
-    CurWorkCB: TComboBox;
     Panel1: TPanel;
     btn_Search: TAeroButton;
     btn_Close: TAeroButton;
@@ -64,7 +61,7 @@ type
     WorkKindCB: TComboBox;
     ClaimNoEdit: TEdit;
     OrderNoEdit: TEdit;
-    PONoEdit: TEdit;
+    PORNoEdit: TEdit;
     DisplayFinalCheck: TCheckBox;
     Button1: TButton;
     PICCB: TComboBox;
@@ -122,7 +119,7 @@ type
     N8: TMenuItem;
     N7: TMenuItem;
     N23: TMenuItem;
-    oDOList1: TMenuItem;
+    ToDOList1: TMenuItem;
     N22: TMenuItem;
     GetHullNoToClipboard1: TMenuItem;
     N1: TMenuItem;
@@ -153,6 +150,27 @@ type
     DataFormatAdapter1: TDataFormatAdapter;
     Timer1: TTimer;
     OpenDialog1: TOpenDialog;
+    MakeCertButton: TAdvToolButton;
+    ClaimPopup: TPopupMenu;
+    Category1: TMenuItem;
+    Location1: TMenuItem;
+    CauseKind1: TMenuItem;
+    CauseHW1: TMenuItem;
+    CauseSW1: TMenuItem;
+    CurWorkCB: TComboBox;
+    JvLabel40: TJvLabel;
+    ClaimServiceKindCB: TComboBox;
+    File1: TMenuItem;
+    CreateNewTask1: TMenuItem;
+    N24: TMenuItem;
+    Close1: TMenuItem;
+    N25: TMenuItem;
+    N26: TMenuItem;
+    ariff1: TMenuItem;
+    ViewTariff1: TMenuItem;
+    EditTariff1: TMenuItem;
+    JvLabel7: TJvLabel;
+    MaterialCodeEdit: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -167,7 +185,7 @@ type
     procedure DeleteTask1Click(Sender: TObject);
     procedure ShowGSFileID1Click(Sender: TObject);
     procedure CurWorkCBDropDown(Sender: TObject);
-    procedure ProductTypeComboDropDown(Sender: TObject);
+    procedure ClaimStatusComboDropDown(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure TaskTabChange(Sender: TObject);
     procedure HullNoEditKeyPress(Sender: TObject; var Key: Char);
@@ -191,12 +209,24 @@ type
     procedure N21Click(Sender: TObject);
     procedure PICCBChange(Sender: TObject);
     procedure GetHullNoToClipboard1Click(Sender: TObject);
-    procedure oDOList1Click(Sender: TObject);
+    procedure ToDOList1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure DropEmptyTarget1Drop(Sender: TObject; ShiftState: TShiftState;
       APoint: TPoint; var Effect: Integer);
     procedure btn_CloseClick(Sender: TObject);
+    procedure Category1Click(Sender: TObject);
+    procedure Location1Click(Sender: TObject);
+    procedure CauseKind1Click(Sender: TObject);
+    procedure CauseHW1Click(Sender: TObject);
+    procedure CauseSW1Click(Sender: TObject);
+    procedure ClaimServiceKindCBDropDown(Sender: TObject);
+    procedure Close1Click(Sender: TObject);
+    procedure CreateNewTask1Click(Sender: TObject);
+    procedure N26Click(Sender: TObject);
+    procedure ViewTariff1Click(Sender: TObject);
+    procedure EditTariff1Click(Sender: TObject);
   private
+    FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
     FDBMsgQueue: TOmniMessageQueue;
 //    FIPCMQFromOLEmail: TOmniMessageQueue; FTaskEditConfig.IPCMQFromOLEmail로 대체함
@@ -225,10 +255,14 @@ type
     FOLAppointmentQueue: TOmniMessageQueue;
 
     FOLCmdSenderHandle: THandle;//OLControlWorker의 Respond값을 전달하기 위한 Handle
+    FOLMailListFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
 
+    procedure InitEnum;
     procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
       Index: integer; out AStream: IStream);
-    procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
+    procedure OnInitOutlookTimer(Sender : TObject; Handle : Integer;
+            Interval : Cardinal; ElapsedTime : LongInt);
+    procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
 
     procedure ProcessCommand(ARespond: string);
     //Macro에서 ExecFunction으로 FunctionName을 주면 아래의 public란 Procedure에서
@@ -267,6 +301,7 @@ type
     procedure InitTaskTab;
     procedure InputValueClear;
     procedure InitTaskEnum;
+    procedure InitOutlook;
 
     function GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
     function GetTaskIdFromGrid(ARow: integer): TID;
@@ -282,7 +317,6 @@ type
     procedure MakeInvoice(ARow: integer);
     procedure MakeServiceOrder(ARow: integer);
     procedure MakeCustReg(ARow: integer);
-    function CheckRegistration: Boolean;
     procedure DisplayOLMsg2Grid(const task: IOmniTaskControl;
       const msg: TOmniMessage);
   protected
@@ -331,8 +365,10 @@ type
     procedure FillInUserList;
 
     function GetTask: TOrmHiconisASTask;
-    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
+//    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
+    procedure DisplayTask2GridByPorNo(const APorNo: string);
+    procedure DisplayTask2GridByMaterialCode(const AMaterialCode: string);
     procedure LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
     procedure LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
@@ -383,9 +419,10 @@ uses UnitIPCModule2, ClipBrd, System.RegularExpressions,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
   UnitHttpModule4InqManageServer2, UnitStringUtil,
 
-  Vcl.ogutil, UnitDragUtil, FrmOLEmailList,
+  Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
   UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
-  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType;
+  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
+  UnitHiASMaterialDetailRecord;
 
 {$R *.dfm}
 
@@ -419,9 +456,9 @@ end;
 
 procedure THiconisAsManageF.LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
   ARow: integer);
-var
-  LStrList: TStringList;
-  LFSMState: THiconisASState;
+//var
+//  LStrList: TStringList;
+//  LFSMState: THiconisASState;
 begin
   if ARow = -1 then
   begin
@@ -445,16 +482,16 @@ begin
 //    CellByName['QtnNo', ARow].AsString := QTN_No;
     CellByName['OrderNo', ARow].AsString := Order_No;
     CellByName['ReqCustomer', ARow].AsString := ShipOwner;
-    CellByName['Status', ARow].AsString := g_SalesProcess.ToString(CurrentWorkStatus);
+    CellByName['Status', ARow].AsString := g_HiconisASState.ToString(CurrentWorkStatus);
     CellByName['Email', ARow].AsInteger := NumOfEMails;
 
     if NextWork > 0 then
     begin
-      CellByName['NextProcess', ARow].AsString := g_SalesProcess.ToString(NextWork);
+      CellByName['NextProcess', ARow].AsString := g_HiconisASTrigger.ToString(NextWork);
     end
     else
     begin
-      LFSMState := g_HiconisASState.ToType(Ord(SalesProcessType));
+//      LFSMState := g_HiconisASState.ToType(Ord(SalesProcessType));
 
 //      if Assigned(LFSMState) then
 //      begin
@@ -501,6 +538,11 @@ begin
   AVar.TaskID := AVar.ID;
 
   LoadGSTask2Grid(AVar, AGrid, ARow);
+end;
+
+procedure THiconisAsManageF.Location1Click(Sender: TObject);
+begin
+  Location1.Tag := ShowCheckGrp4Claim(Ord(ctkLocation), Location1.Tag);
 end;
 
 procedure THiconisAsManageF.MakeCustReg(ARow: integer);
@@ -675,6 +717,11 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.N26Click(Sender: TObject);
+begin
+  SetConfig;
+end;
+
 procedure THiconisAsManageF.N4Click(Sender: TObject);
 var
   LRec: Doc_SubCon_Invoice_List_Rec;
@@ -686,7 +733,7 @@ begin
 //  MakeDocSubConInvoiceList2(LWorkSheet, LRec, LRow);
 end;
 
-procedure THiconisAsManageF.oDOList1Click(Sender: TObject);
+procedure THiconisAsManageF.ToDOList1Click(Sender: TObject);
 begin
   if grid_Req.SelectedCount = 0 then
   begin
@@ -696,6 +743,14 @@ begin
 
 //  ShowTodoListFormFromData(grid_Req.SelectedRow);
   ShowTodoListFormFromDBByGridRow(grid_Req.SelectedRow);
+end;
+
+procedure THiconisAsManageF.ViewTariff1Click(Sender: TObject);
+var
+  LDoc: variant;
+begin
+  LDoc := LoadGSTariff2VariantFromCompanyCodeNYear('0001056374', YearOf(now));
+  DisplayTariff(LDoc);
 end;
 
 procedure THiconisAsManageF.OnGetStream(
@@ -715,15 +770,30 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.OnInitOutlookTimer(Sender: TObject; Handle: Integer;
+  Interval: Cardinal; ElapsedTime: Integer);
+begin
+  InitOutlook();
+end;
+
 procedure THiconisAsManageF.OnWorkerResult(var Msg: TMessage);
 var
   LMsg  : TOmniMessage;
+//  LOLRespondRec : TOLRespondRec;
 begin
   if FResponseQueue.TryDequeue(LMsg) then
   begin
-//    LOLRespondRec := LMsg.MsgData.ToRecord<TOLRespondRec>;
-    if FTaskEditConfig.IPCMQ2OLEmail.Enqueue(LMsg) then
-      SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
+//    if LMsg.MsgID = Ord(olrkMAPIFolderList) then
+//    begin
+//      LOLRespondRec := LMsg.MsgData.ToRecord<TOLRespondRec>;
+//      ShowMessage(LOLRespondRec.FMsg);
+//    end;
+
+    //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2OLEmail.Enqueue 실행
+    //아래 조건이 없으면 IPCMQ2OLEmail.Enqueue 때문에 Q에 데이터가 쌓임
+    if FOLMailListFormDisplayed then
+      if FTaskEditConfig.IPCMQ2OLEmail.Enqueue(LMsg) then
+        SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
   end;
 end;
 
@@ -778,9 +848,20 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ProductTypeComboDropDown(Sender: TObject);
+procedure THiconisAsManageF.ClaimServiceKindCBDropDown(Sender: TObject);
 begin
-  g_ElecProductType.SetType2Combo(ProductTypeCombo);
+  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
+end;
+
+procedure THiconisAsManageF.ClaimStatusComboDropDown(Sender: TObject);
+begin
+//  g_ElecProductType.SetType2Combo(ProductTypeCombo);
+  g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
+end;
+
+procedure THiconisAsManageF.Close1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure THiconisAsManageF.rg_periodClick(Sender: TObject);
@@ -894,15 +975,25 @@ begin
     FHullNo := HullNoEdit.Text;
     FShipName := ShipNameEdit.Text;
     FCustomer := CustomerCombo.Text;
-    FProdType := ProductTypeCombo.Text;
-    FSubject := SubjectEdit.Text;
+//    FProdType := ProductTypeCombo.Text;
+    FClaimStatus := ClaimStatusCombo.ItemIndex;
+//    FSubject := SubjectEdit.Text;
+    FClaimServiceKind := ClaimServiceKindCB.ItemIndex;
     FCurWork :=  CurWorkCB.ItemIndex;
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
     FClaimNo := ClaimNoEdit.Text;
 //    FQtnNo := QtnNoEdit.Text;
     FOrderNo := OrderNoEdit.Text;
-    FPoNo := PONoEdit.Text;
+//    FPoNo := PONoEdit.Text;
+    FPorNo := PorNoEdit.Text;
+    FMaterialCode := MaterialCodeEdit.Text;
+
+    FClaimCatetory := Category1.Tag;
+    FClaimLocation := Location1.Tag;
+    FClaimKind := CauseKind1.Tag;
+    FClaimCauseHW := CauseHW1.Tag;
+    FClaimCauseSW := CauseSW1.Tag;
 
 //    if PICCB.ItemIndex = -1 then
 //      PICCB.ItemIndex := 0;
@@ -1313,11 +1404,30 @@ begin
   ExecuteSearch(Key);
 end;
 
+procedure THiconisAsManageF.InitEnum;
+begin
+  g_HiconisASState.InitArrayRecord(R_HiconisASState);
+  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
+  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
+  g_ClaimCategory.InitArrayRecord(R_ClaimCategory);
+  g_ClaimLocation.InitArrayRecord(R_ClaimLocation);
+  g_ClaimCauseKind.InitArrayRecord(R_ClaimCauseKind);
+  g_ClaimCauseHW.InitArrayRecord(R_ClaimCauseHW);
+  g_ClaimCauseSW.InitArrayRecord(R_ClaimCauseSW);
+  g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
+  g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+end;
+
 procedure THiconisAsManageF.InitNetwork;
 begin
 //  CreateHttpServer4WS(FPortName, FTransmissionKey, TServiceIM4WS, [IHiconisASService]);
   FIsRunRestServer := True;
   StatusBarPro1.Panels[2].Text := 'Port = ' + FPortName;
+end;
+
+procedure THiconisAsManageF.InitOutlook;
+begin
+  FTaskEditConfig.IPCMQFromOLEmail.Enqueue(TOmniMessage.Create(Ord(olckInitVar), TOmniValue.CastFrom(Self.Handle)));
 end;
 
 procedure THiconisAsManageF.InitTaskEnum;
@@ -1345,15 +1455,28 @@ begin
   HullNoEdit.Text := '';
   ShipNameEdit.Text := '';
   CustomerCombo.Text := '';
-  PONoEdit.Text := '';
+//  PONoEdit.Text := '';
+  PorNoEdit.Text := '';
+  MaterialCodeEdit.Text := '';
   ClaimNoEdit.Text := '';
-  SubjectEdit.Text := '';
+//  SubjectEdit.Text := '';
+  ClaimServiceKindCB.ItemIndex := -1;
+  ClaimStatusCombo.ItemIndex := -1;
+
   OrderNoEdit.Text := '';
   ComboBox1.ItemIndex := -1;
-  ProductTypeCombo.ItemIndex := -1;
+//  ProductTypeCombo.ItemIndex := -1;
+  ClaimStatusCombo.ItemIndex := -1;
+
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
   PICCB.ItemIndex := -1;
+
+  Category1.Tag := 0;
+  Location1.Tag := 0;
+  CauseKind1.Tag := 0;
+  CauseHW1.Tag := 0;
+  CauseSW1.Tag := 0;
 end;
 
 procedure THiconisAsManageF.Invoice4Click(Sender: TObject);
@@ -1434,17 +1557,17 @@ begin
 
 end;
 
-procedure THiconisAsManageF.DisplayTaskInfo2EditForm(const ATaskID: integer);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask:= CreateOrGetLoadTask(ATaskID);
-  try
-    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
+//procedure THiconisAsManageF.DisplayTaskInfo2EditForm(const ATaskID: integer);
+//var
+//  LTask: TOrmHiconisASTask;
+//begin
+//  LTask:= CreateOrGetLoadTask(ATaskID);
+//  try
+//    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
+//  finally
+//    FreeAndNil(LTask);
+//  end;
+//end;
 
 procedure THiconisAsManageF.AddFolderListFromOL(AFolder: string);
 begin
@@ -1557,30 +1680,38 @@ end;
 
 procedure THiconisAsManageF.StartOLControlWorker;
 begin
-  FCommandQueue := TOmniMessageQueue.Create(1000);
-  FResponseQueue := TOmniMessageQueue.Create(1000, false);
-  FSendMsgQueue := TOmniMessageQueue.Create(1000);
+  if not FTaskEditConfig.IsUseOLControlWorkerFromEmailList then
+  begin
+    FCommandQueue := TOmniMessageQueue.Create(1000);
+    FResponseQueue := TOmniMessageQueue.Create(1000, false);
+    FSendMsgQueue := TOmniMessageQueue.Create(1000);
 
-  FOLControlWorker := TOLControlWorker.Create(FCommandQueue, FResponseQueue, FSendMsgQueue, Handle);
+    FOLControlWorker := TOLControlWorker.Create(FCommandQueue, FResponseQueue, FSendMsgQueue, Handle);
+
+    FPJHTimerPool.AddOneShot(OnInitOutlookTimer,1000);
+  end;
 end;
 
 procedure THiconisAsManageF.StopOLControlWorker;
 begin
-  if Assigned(FOLControlWorker) then
+  if not FTaskEditConfig.IsUseOLControlWorkerFromEmailList then
   begin
-    TWorker(FOLControlWorker).Stop;
-    FOLControlWorker.WaitFor;
-    FreeAndNil(FOLControlWorker);
-  end;
+    if Assigned(FOLControlWorker) then
+    begin
+      TWorker(FOLControlWorker).Stop;
+      FOLControlWorker.WaitFor;
+      FreeAndNil(FOLControlWorker);
+    end;
 
-  FCommandQueue.Free;
-  FResponseQueue.Free;
-  FSendMsgQueue.Free;
+    FCommandQueue.Free;
+    FResponseQueue.Free;
+    FSendMsgQueue.Free;
+  end;
 end;
 
 procedure THiconisAsManageF.ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
 begin
-  Create_ToDoList_Frm2(ATaskId, AToDoList, True);
+  Create_ToDoList_Frm2(ATaskId, AToDoList, FTaskEditConfig, True);
 end;
 
 procedure THiconisAsManageF.TaskTabChange(Sender: TObject);
@@ -1673,9 +1804,29 @@ begin
   InputValueClear;
 end;
 
-function THiconisAsManageF.CheckRegistration: Boolean;
+procedure THiconisAsManageF.Category1Click(Sender: TObject);
+//var
+//  LOrmHiconisASTask: TOrmHiconisASTask;
 begin
+  Category1.Tag := ShowCheckGrp4Claim(Ord(ctkCatetory), Category1.Tag);
 
+//  LOrmHiconisASTask := GetTaskFromClaimCategory(Category1.Tag);
+//  ShowMessage(IntToStr(LOrmHiconisASTask.ID));
+end;
+
+procedure THiconisAsManageF.CauseHW1Click(Sender: TObject);
+begin
+  CauseHW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseHW), CauseHW1.Tag);
+end;
+
+procedure THiconisAsManageF.CauseKind1Click(Sender: TObject);
+begin
+  CauseKind1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseKind), CauseKind1.Tag);
+end;
+
+procedure THiconisAsManageF.CauseSW1Click(Sender: TObject);
+begin
+  CauseSW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseSW), CauseSW1.Tag);
 end;
 
 procedure THiconisAsManageF.ComboBox1DropDown(Sender: TObject);
@@ -1758,16 +1909,28 @@ begin
   LTask := TOrmHiconisASTask.Create;
   try
     if AJson = '' then
-      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null, FTaskEditConfig)
+    begin
+      FOLMailListFormDisplayed := True;
+      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null, FTaskEditConfig);
+    end
     else
       LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
 
   if LResult = mrOK then
+  begin
+    FOLMailListFormDisplayed := False;
+
     if not LTask.IsUpdate then
       LoadTaskVar2Grid(LTask, grid_Req);
+  end;
   finally
     LTask.Free;
   end;
+end;
+
+procedure THiconisAsManageF.CreateNewTask1Click(Sender: TObject);
+begin
+  CreateNewTask;
 end;
 
 procedure THiconisAsManageF.DeleteTask1Click(Sender: TObject);
@@ -1823,6 +1986,73 @@ begin
 //    FreeAndNil(FModel);
 end;
 
+procedure THiconisAsManageF.DisplayTask2GridByMaterialCode(
+  const AMaterialCode: string);
+var
+  LMaterialDetail: TSQLMaterialDetail;
+  LSQLGSTask: TOrmHiconisASTask;
+begin
+  LMaterialDetail := GetMaterialDetailByPorNoNMatCode('', AMaterialCode);
+  try
+    if LMaterialDetail.IsUpdate then
+    begin
+      LMaterialDetail.FillRewind;
+
+      grid_Req.BeginUpdate;
+      try
+        grid_Req.ClearRows;
+
+        while LMaterialDetail.FillOne do
+        begin
+          LSQLGSTask := GetLoadTask(LMaterialDetail.TaskID);
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            LSQLGSTask.Free;
+          end;
+        end;//while
+      finally
+        grid_Req.EndUpdate;
+      end;
+    end;
+  finally
+    LMaterialDetail.Free;
+  end;
+end;
+
+procedure THiconisAsManageF.DisplayTask2GridByPorNo(const APorNo: string);
+var
+  LMaterial4Project: TSQLMaterial4Project;
+  LSQLGSTask: TOrmHiconisASTask;
+begin
+  LMaterial4Project := GetMaterial4ProjFromTaskIDNPORNo(0, APorNo);
+  try
+    if LMaterial4Project.IsUpdate then
+    begin
+      LMaterial4Project.FillRewind;
+
+      grid_Req.BeginUpdate;
+      try
+        grid_Req.ClearRows;
+
+        while LMaterial4Project.FillOne do
+        begin
+          LSQLGSTask := GetLoadTask(LMaterial4Project.TaskID);
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            LSQLGSTask.Free;
+          end;
+        end;//while
+      finally
+        grid_Req.EndUpdate;
+      end;
+    end;
+  finally
+    LMaterial4Project.Free;
+  end;
+end;
+
 procedure THiconisAsManageF.DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean);
 var
   ConstArray: TConstArray;
@@ -1832,10 +2062,66 @@ var
   LUtf8: RawUTF8;
   LV: variant;
   LFrom, LTo: TTimeLog;
+
+  procedure _DisplayTask2Grid;
+  begin
+    try
+      if AFromRemote then
+      begin
+        StatusBarPro1.Panels[0].Text := 'Remote';
+        FTempJsonList.Clear;
+        LUtf8 := MakeTaskList2JSONArray(LSQLGSTask);
+        FTempJsonList.Text := UTF8ToString(LUtf8);
+//        LStr := FTempJsonList.Text;
+//        System.Delete(LStr, Length(LStr)-1,2);
+//        LUtf8 := StringToUTF8(LStr);
+//        LUtf8 := MakeBase64ToUTF8(LUtf8);
+      end
+      else
+      begin
+        StatusBarPro1.Panels[0].Text := 'Local';
+        grid_Req.ClearRows;
+
+        while LSQLGSTask.FillOne do
+        begin
+          grid_Req.BeginUpdate;
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            grid_Req.EndUpdate;
+          end;
+        end;
+      end;
+    finally
+      LSQLGSTask.Free;
+    end;
+  end;
 begin
   LWhere := '';
   ConstArray := CreateConstArray([]);
   try
+    if ASearchCondRec.FPorNo <> '' then
+    begin
+      if MessageDlg('PorNo로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
+        '그래도 진행 하시겠습니까?' + #13#10 +
+        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+      begin
+        DisplayTask2GridByPorNo(ASearchCondRec.FPorNo);
+        exit;
+      end;
+    end;
+
+    if ASearchCondRec.FMaterialCode <> '' then
+    begin
+      if MessageDlg('자재번호로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
+        '그래도 진행 하시겠습니까?' + #13#10 +
+        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+      begin
+        DisplayTask2GridByMaterialCode(ASearchCondRec.FMaterialCode);
+        exit;
+      end;
+    end;
+
 //    GetWhereConstArr(ASearchCondRec, LWhere);//, ConstArray);
     if ASearchCondRec.FQueryDate <> qdtNull then
     begin
@@ -1965,38 +2251,64 @@ begin
       LWhere := LWhere + 'CurrentWorkStatus <= ?';
     end;
 
-    LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
-
-    try
-      if AFromRemote then
-      begin
-        StatusBarPro1.Panels[0].Text := 'Remote';
-        FTempJsonList.Clear;
-        LUtf8 := MakeTaskList2JSONArray(LSQLGSTask);
-        FTempJsonList.Text := UTF8ToString(LUtf8);
-//        LStr := FTempJsonList.Text;
-//        System.Delete(LStr, Length(LStr)-1,2);
-//        LUtf8 := StringToUTF8(LStr);
-//        LUtf8 := MakeBase64ToUTF8(LUtf8);
-      end
-      else
-      begin
-        StatusBarPro1.Panels[0].Text := 'Local';
-        grid_Req.ClearRows;
-
-        while LSQLGSTask.FillOne do
-        begin
-          grid_Req.BeginUpdate;
-          try
-            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
-          finally
-            grid_Req.EndUpdate;
-          end;
-        end;
-      end;
-    finally
-      LSQLGSTask.Free;
+    if ASearchCondRec.FClaimStatus > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimStatus]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' ClaimStatus = ?';
     end;
+
+    if ASearchCondRec.FClaimServiceKind > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimServiceKind]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' ClaimServiceKind = ?';
+    end;
+
+    if ASearchCondRec.FClaimCatetory > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimCatetory]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' (ClaimCategory & ?) <> 0 ';
+    end;
+
+    if ASearchCondRec.FClaimLocation > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimLocation]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' (ClaimLocation & ?) <> 0 ';
+    end;
+
+    if ASearchCondRec.FClaimKind > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimKind]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' (ClaimKind & ?) <> 0 ';
+    end;
+
+    if ASearchCondRec.FClaimCauseHW > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimCauseHW]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' (ClaimCauseHW & ?) <> 0 ';
+    end;
+
+    if ASearchCondRec.FClaimCauseSW > 0 then
+    begin
+      AddConstArray(ConstArray, [ASearchCondRec.FClaimCauseSW]);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' (ClaimCauseSW & ?) <> 0 ';
+    end;
+
+    LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
+    _DisplayTask2Grid;
   finally
     FinalizeConstArray(ConstArray);
   end;
@@ -2097,6 +2409,11 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.EditTariff1Click(Sender: TObject);
+begin
+  DisplayTariffEditF;
+end;
+
 procedure THiconisAsManageF.EmailButtonClick(Sender: TObject);
 begin
   ShowEmailListFormFromData(grid_Req.SelectedRow);
@@ -2172,13 +2489,16 @@ begin
   SetCurrentDir(ExtractFilePath(Application.ExeName));
   (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
 
+  FPJHTimerPool := TPJHTimerPool.Create(Self);
   FDBMsgQueue := TOmniMessageQueue.Create(1000);
   FTaskEditConfig.IPCMQFromOLEmail := TOmniMessageQueue.Create(1000);
   FTaskEditConfig.IPCMQ2OLEmail := TOmniMessageQueue.Create(1000);
-  FTaskEditConfig.IsUseOLControlWorker := False;
+  //FrameOLEmailList에서 OLControlWorker 생성하는 것 방지
+  FTaskEditConfig.IsUseOLControlWorkerFromEmailList := False;
 
   StartOLControlWorker();
 
+  InitEnum();
   Parallel.TaskConfig.OnMessage(WM_OLMSG_RESULT,DisplayOLMsg2Grid);
   FStopEvent := TEvent.Create;
   UnitHiconisMasterRecord.InitHiconisASClient(Application.ExeName);
@@ -2197,6 +2517,9 @@ procedure THiconisAsManageF.FormDestroy(Sender: TObject);
 begin
   StopOLControlWorker();
 
+  FPJHTimerPool.RemoveAll();
+  FPJHTimerPool.Free;
+
   if FIsRunRestServer then
     DestroyHttpServer;
 
@@ -2208,6 +2531,9 @@ begin
 
   if Assigned(FTaskEditConfig.IPCMQFromOLEmail) then
     FreeAndNil(FTaskEditConfig.IPCMQFromOLEmail);
+
+  if Assigned(FTaskEditConfig.IPCMQ2OLEmail) then
+    FreeAndNil(FTaskEditConfig.IPCMQ2OLEmail);
 
   if Assigned(FStopEvent) then
     FreeAndNil(FStopEvent);
@@ -2221,13 +2547,19 @@ begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   LTask.TaskID := LTask.ID;
   try
+    FOLMailListFormDisplayed := True;
     LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
     //Task Edit Form에서 "저장" 버튼을 누른 경우
     if LResult = mrOK then
+    begin
+      FOLMailListFormDisplayed := False;
       LoadTaskVar2Grid(LTask, grid_Req, ARow);
+    end;
   finally
+
     if Assigned(LTask) then
       FreeAndNil(LTask);
+
   end;
 end;
 
@@ -2364,7 +2696,7 @@ var
   end;
 begin
   if not Assigned(FpjhToDoList) then
-    FpjhToDoList := Collections.NewList<TpjhTodoItemRec>
+    FpjhToDoList := Collections.NewKeyValue<string,TpjhTodoItemRec>
   else
     FpjhToDoList.Clear;
 

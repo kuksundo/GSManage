@@ -13,13 +13,14 @@ uses
   DragDrop, DropTarget, DropSource, DragDropFile,
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
-  mormot.core.datetime, mormot.core.rtti,
+  mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
   CommonData2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState, UnitTodoCollect2,
   UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLEmailList,//FrmEmailListView2
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
-  UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit
+  UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit,
+  AdvToolBtn
   ;
 
 type
@@ -240,7 +241,7 @@ type
     ImportanceCB: TComboBox;
     Panel6: TPanel;
     AeroButton5: TAeroButton;
-    AeroButton6: TAeroButton;
+    DeleteMaterialBtn: TAeroButton;
     SalesProcTypeCB: TComboBox;
     ClaimServiceKindCB: TComboBox;
     CompanyName2: TNxTextColumn;
@@ -258,6 +259,15 @@ type
     MaterialCode: TNxTextColumn;
     JvLabel18: TJvLabel;
     PORNoEdit: TEdit;
+    ClaimPopup: TPopupMenu;
+    Category1: TMenuItem;
+    Location1: TMenuItem;
+    CauseKind1: TMenuItem;
+    CauseHW1: TMenuItem;
+    CauseSW1: TMenuItem;
+    MakeCertButton: TAdvToolButton;
+    MaterialPopup: TPopupMenu;
+    DeleteMaterial1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -306,14 +316,21 @@ type
     procedure ServiceChargeCBDropDown(Sender: TObject);
     procedure NextWorkCBDropDown(Sender: TObject);
     procedure AeroButton5Click(Sender: TObject);
-    procedure AeroButton6Click(Sender: TObject);
+    procedure DeleteMaterialBtnClick(Sender: TObject);
     procedure ClaimServiceKindCBChange(Sender: TObject);
     procedure NextGrid1CellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure AeroButton7Click(Sender: TObject);
+    procedure Category1Click(Sender: TObject);
+    procedure Location1Click(Sender: TObject);
+    procedure CauseKind1Click(Sender: TObject);
+    procedure CauseHW1Click(Sender: TObject);
+    procedure CauseSW1Click(Sender: TObject);
+    procedure DeleteMaterial1Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
     : String;
+    FpjhToDoList: TpjhToDoList;
 
     procedure InitEnum;
     procedure InitCB;
@@ -450,10 +467,11 @@ var
 implementation
 
 uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
-  UnitHiconisASVarJsonUtil, UnitNextGridUtil2,
+  UnitHiconisASVarJsonUtil, UnitNextGridUtil2, UnitEnumHelper2,
   UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
   DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,
-  UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil;
+  UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
+  FrmToDoList2;
 
 {$R *.dfm}
 
@@ -532,7 +550,7 @@ var
 //  LSubCon: TSQLSubCon;
   LMat4Proj: TSQLMaterial4Project;
   LMatDetail: TSQLMaterialDetail;
-  LTask, LTask2: TOrmHiconisASTask;
+  LTask: TOrmHiconisASTask;
   LFiles: TSQLGSFile;
 //  LTaskIds: TIDDynArray;
   LSubConList: TObjectList<TSQLSubCon>;
@@ -547,68 +565,80 @@ begin
     begin
       RecordCopy(FTaskEditConfig, ATaskEditConfig, TypeInfo(THiconisASTaskEditConfig));
 
-      LTask := ATask;
+      FTask := ATask;
 
-      if LTask.IsUpdate then
-        Caption := Caption + ' (Update)'
+      if FTask.IsUpdate then
+      begin
+        Caption := Caption + ' (Update)';
+
+        LoadTaskOrm2Form(FTask, LTaskEditF);
+        LCustomer := GetCustomerFromTask(FTask);
+
+        if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
+          LoadCustomerFromVariant(LCustomer, ADoc.Customer);
+
+        LoadCustomer2Form(LCustomer, LTaskEditF);
+
+        LSubConList := TObjectList<TSQLSubCon>.Create;
+        try
+          GetSubConFromTaskIDWithInvoiceItems(FTask.ID, LSubConList);
+          LoadSubConList2Form(LSubConList, LTaskEditF);
+
+          if ADoc <> null then
+          begin
+            //ADocIsFromInvoiceManage = True인 경우 ADoc.InvoiceItem가 존재함
+            //InqManager에서 생성한 *.hgs 인 경우임 : ADoc.SubCon이 복수개([] 배열 형식임)
+            LoadSubConFromVariant2Form(ADoc, ATaskEditConfig.IsDocFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
+          end;
+        finally
+  //        LSubConList.Clear;
+          LSubConList.Free;
+        end;
+
+        //배송정보
+        LMat4Proj := GetMaterial4ProjFromTaskID(FTask.ID);
+
+        try
+          if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
+            LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
+
+          if LMat4Proj.IsUpdate then
+          begin
+            FMatDeliveryInfoJson := Utf8ToString(LMat4Proj.GetJsonValues(true, true, soSelect));
+            PORNoEdit.Text := GetPorNoFromJson(FMatDeliveryInfoJson);
+
+            //자재리스트
+            LMatDetail := GetMaterialDetailFromTask(FTask);
+            try
+              LoadMaterialDetailOrm2Form(LMatDetail);
+            finally
+              LMatDetail.Free;
+            end;
+          end;
+        finally
+          LMat4Proj.Free;
+        end;
+
+        LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
+        LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
+      end
       else
+      begin
+        ClaimRecvPicker.Date := Date;
+        ClaimInputPicker.Date := Date;
+        AttendSchedulePicker.Date := 0;
+        ClaimReadyPicker.Date := 0;
+        ClaimClosedPicker.Date := 0;
+        CurWorkFinishPicker.Date := Date;
+        WorkBeginPicker.Date := Date;
+        WorkEndPicker.Date := Date;
+
         Caption := Caption + ' (New)';
+      end;
 
       //InvoiceManage로부터 오는 Json은 Task와 Customer에 대한 변경 내용이 없음
       if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-        LoadTaskFromVariant(LTask, ADoc.Task);
-
-      LoadTaskOrm2Form(LTask, LTaskEditF);
-      LCustomer := GetCustomerFromTask(LTask);
-
-      if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-        LoadCustomerFromVariant(LCustomer, ADoc.Customer);
-
-      LoadCustomer2Form(LCustomer, LTaskEditF);
-
-      LSubConList := TObjectList<TSQLSubCon>.Create;
-      try
-        GetSubConFromTaskIDWithInvoiceItems(LTask.ID, LSubConList);
-        LoadSubConList2Form(LSubConList, LTaskEditF);
-
-        if ADoc <> null then
-        begin
-          //ADocIsFromInvoiceManage = True인 경우 ADoc.InvoiceItem가 존재함
-          //InqManager에서 생성한 *.hgs 인 경우임 : ADoc.SubCon이 복수개([] 배열 형식임)
-          LoadSubConFromVariant2Form(ADoc, ATaskEditConfig.IsDocFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
-        end;
-      finally
-//        LSubConList.Clear;
-        LSubConList.Free;
-      end;
-
-      //배송정보
-      LMat4Proj := GetMaterial4ProjFromTaskID(LTask.ID);
-
-      try
-        if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-          LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
-
-        if LMat4Proj.IsUpdate then
-        begin
-          FMatDeliveryInfoJson := Utf8ToString(LMat4Proj.GetJsonValues(true, true, soSelect));
-          PORNoEdit.Text := GetPorNoFromJson(FMatDeliveryInfoJson);
-
-          //자재리스트
-          LMatDetail := GetMaterialDetailFromTask(LTask);
-          try
-            LoadMaterialDetailOrm2Form(LMatDetail);
-          finally
-            LMatDetail.Free;
-          end;
-        end;
-      finally
-        LMat4Proj.Free;
-      end;
-
-
-      LTaskEditF.SelectMailBtn.Enabled := Assigned(ASQLEmailMsg);
-      LTaskEditF.CancelMailSelectBtn.Enabled := Assigned(ASQLEmailMsg);
+        LoadTaskFromVariant(FTask, ADoc.Task);
 
       Result := LTaskEditF.ShowModal;
 
@@ -621,7 +651,7 @@ begin
           exit;
         end;
 
-        LoadTaskForm2TaskOrm(LTaskEditF, LTask);
+        LoadTaskForm2TaskOrm(LTaskEditF, FTask);
 
         //IPC를 통해서  Email을 수신한 경우
         if Assigned(ASQLEmailMsg) then
@@ -644,26 +674,26 @@ begin
         end
         else
         begin
-          AddOrUpdateTask(LTask);
+          AddOrUpdateTask(FTask);
         end;
 
         if High(LTaskEditF.FSQLGSFiles.Files) >= 0 then
         begin
           g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
-          LTaskEditF.FSQLGSFiles.TaskID := LTask.ID;
+          LTaskEditF.FSQLGSFiles.TaskID := FTask.ID;
           g_FileDB.Add(LTaskEditF.FSQLGSFiles, true);
         end
         else
           g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
 
         //고객정보 탭 정보 Load -> LCustomer
-        LoadTaskForm2Customer(LTaskEditF, LCustomer, LTask.ID);
+        LoadTaskForm2Customer(LTaskEditF, LCustomer, FTask.ID);
         AddOrUpdateCustomer(LCustomer);
         //협력사 탭 정보 Load and Save To DB
-        SaveSubConFromForm(LTaskEditF, LTask.ID);
+        SaveSubConFromForm(LTaskEditF, FTask.ID);
         //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, LTask.ID);
-        LoadTaskForm2Material4ProjectNSave2DB(LTask.ID);
+        LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, FTask.ID);
+        LoadTaskForm2Material4ProjectNSave2DB(FTask.ID);
       end;//mrOK
     end;//with
   finally
@@ -998,7 +1028,12 @@ begin
   MaterialDetailEdit();
 end;
 
-procedure TTaskEditF.AeroButton6Click(Sender: TObject);
+procedure TTaskEditF.DeleteMaterial1Click(Sender: TObject);
+begin
+  DeleteMaterialBtnClick(nil);
+end;
+
+procedure TTaskEditF.DeleteMaterialBtnClick(Sender: TObject);
 var
   LRow: integer;
 begin
@@ -1141,6 +1176,26 @@ procedure TTaskEditF.CancelMailSelectBtnClick(Sender: TObject);
 begin
   if Assigned(FTask) then
     FreeAndNil(FTask);
+end;
+
+procedure TTaskEditF.Category1Click(Sender: TObject);
+begin
+  Category1.Tag := ShowCheckGrp4Claim(Ord(ctkCatetory), Category1.Tag);
+end;
+
+procedure TTaskEditF.CauseHW1Click(Sender: TObject);
+begin
+  CauseHW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseHW), CauseHW1.Tag);
+end;
+
+procedure TTaskEditF.CauseKind1Click(Sender: TObject);
+begin
+  CauseKind1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseKind), CauseKind1.Tag);
+end;
+
+procedure TTaskEditF.CauseSW1Click(Sender: TObject);
+begin
+  CauseSW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseSW), CauseSW1.Tag);
 end;
 
 function TTaskEditF.CheckDocCompanySelection(ASOR: Doc_ServiceOrder_Rec):Boolean;
@@ -1313,6 +1368,14 @@ end;
 
 procedure TTaskEditF.Button3Click(Sender: TObject);
 begin
+  if not Assigned(FpjhToDoList) then
+    FpjhToDoList := Collections.NewKeyValue<string,TpjhTodoItemRec>
+  else
+    FpjhToDoList.Clear;
+
+  GetToDoListFromDBByTask(FTask, FpjhToDoList);
+  Create_ToDoList_Frm2(FTask.ID, FpjhToDoList, FTaskEditConfig, True);
+
 //  FToDoCollect.Clear;
 //  //TaskID 별로 ToDoList를 Select하여 FToDoCollect에 저장함
 //  LoadToDoCollectFromTask(FEmailDisplayTask, FToDoCollect);
@@ -1395,8 +1458,8 @@ begin
   FOLMessagesFromDrop.Free;
   FSalesProcessList.Free;
 
-  if Assigned(FTask) then
-    FreeAndNil(FTask);
+//  if Assigned(FTask) then
+//    FreeAndNil(FTask);
 
 //  if Assigned(FToDoCollect) then
 //  begin
@@ -1592,9 +1655,6 @@ begin
   g_SalesProcessType.InitArrayRecord(R_SalesProcessType);
   g_GSDocType.InitArrayRecord(R_GSDocType);
   g_ASServiceChargeType.InitArrayRecord(R_ASServiceChargeType);
-  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
-  g_HiconisASState.InitArrayRecord(R_HiconisASState);
-  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
   g_ClaimImportanceKind.InitArrayRecord(R_ClaimImportanceKind);
   g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
   g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
@@ -2464,6 +2524,11 @@ begin
     Avar.Importance := ImportanceCB.ItemIndex;
     Avar.ClaimServiceKind := ClaimServiceKindCB.ItemIndex;
     Avar.ClaimStatus := ClaimStatusCombo.ItemIndex;
+    AVar.ClaimCategory := Category1.Tag;
+    AVar.ClaimLocation := Location1.Tag;
+    AVar.ClaimCauseKind := CauseKind1.Tag;
+    AVar.ClaimCauseHW := CauseHW1.Tag;
+    AVar.ClaimCauseSW := CauseSW1.Tag;
     Avar.ClaimRecvDate := TimeLogFromDateTime(ClaimRecvPicker.Date);
     Avar.ClaimInputDate := TimeLogFromDateTime(ClaimInputPicker.Date);
     Avar.ClaimReadyDate := TimeLogFromDateTime(ClaimReadyPicker.Date);
@@ -2579,7 +2644,11 @@ begin
     //때문에 CurWorkCB 변경 이후에 NextWorkCB 선택해야 함
     NextWorkCB.ItemIndex := NextWorkCB.Items.IndexOf(g_HiconisASTrigger.ToString(AVar.NextWork));
 
-
+    Category1.Tag := AVar.ClaimCategory;
+    Location1.Tag := AVar.ClaimLocation;
+    CauseKind1.Tag := AVar.ClaimCauseKind;
+    CauseHW1.Tag := AVar.ClaimCauseHW;
+    CauseSW1.Tag := AVar.ClaimCauseSW;
     ClaimRecvPicker.Date := TimeLogToDateTime(Avar.ClaimRecvDate);
     ClaimInputPicker.Date := TimeLogToDateTime(Avar.ClaimInputDate);
     ClaimReadyPicker.Date := TimeLogToDateTime(Avar.ClaimReadyDate);
@@ -2588,6 +2657,11 @@ begin
     FSQLGSFiles := GetFilesFromTask(AVar);
     LoadGSFiles2Form(FSQLGSFiles, AForm);
   end;
+end;
+
+procedure TTaskEditF.Location1Click(Sender: TObject);
+begin
+  Location1.Tag := ShowCheckGrp4Claim(Ord(ctkLocation), Location1.Tag);
 end;
 
 function TTaskEditF.MakeCompanyInfoFromGrid2JSON: string;

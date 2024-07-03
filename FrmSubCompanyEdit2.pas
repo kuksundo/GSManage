@@ -13,11 +13,7 @@ uses
   Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits, AdvGroupBox, AdvOfficeButtons,
 
   UnitElecMasterData, FrmSearchCustomer2, CommonData2,
-  {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord, UnitHiASSubConRecord,
-  {$ELSE}
-  UElecDataRecord,
-  {$ENDIF}
   UnitJHPFileRecord;
 
 type
@@ -140,11 +136,7 @@ var
 implementation
 
 uses FrmFileList, FrmSelectProductType2,
-  {$IFDEF GAMANAGER}
   UnitElecServiceData2, UnitHiconisASVarJsonUtil,
-  {$ELSE}
-  UnitElecServiceData, UnitVariantJsonUtil,
-  {$ENDIF}
   UnitAdvComponentUtil2, UnitGSTriffData;
 
 {$R *.dfm}
@@ -432,11 +424,7 @@ end;
 procedure TSubCompanyEditF.FormCreate(Sender: TObject);
 begin
   if not Assigned(g_CustomerCompanyDB) then
-  {$IFDEF GAMANAGER}
     InitCompanyMasterClient(Application.ExeName);
-  {$ELSE}
-    InitMasterClient(Application.ExeName);
-  {$ENDIF}
 
   SetCompanyTypes2Grp;
 end;

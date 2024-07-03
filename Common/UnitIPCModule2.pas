@@ -12,11 +12,7 @@ uses System.Classes, Dialogs, System.Rtti,
   mormot.core.datetime, mormot.core.json, mormot.orm.core,
   UnitIniConfigSetting2, OLMailWSCallbackInterface2,
   UnitOutlookIPCUtil2, CommonData2,
-  {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord,
-  {$ELSE}
-  UElecDataRecord2,
-  {$ENDIF}
   UnitInqManageWSInterface2, UnitOLDataType;
 
 //AMailType = 1: invoice 价何, 2: 概免贸府夸没, 3: 流捧涝夸没
@@ -73,11 +69,7 @@ procedure ShowEmailListFromJson(AGrid: TNextGrid; AJson: RawUTF8);
 implementation
 
 uses mormot.core.mustache,
-  {$IFDEF GAMANAGER}
   UnitHiconisASVarJsonUtil, UnitElecServiceData2, UnitMakeReport2,//FrmGATaskEdit,
-  {$ELSE}
-  TaskForm, UnitVariantJsonUtil2, UnitElecServiceData, UnitMakeReport2,
-  {$ENDIF}
   UnitStringUtil;
 
 procedure SendCmd2IPC4ReplyMail(AEntryId, AStoreId: string; AMailType: integer; ATask: TOrmHiconisASTask;

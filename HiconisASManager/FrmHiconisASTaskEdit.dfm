@@ -29,6 +29,8 @@ object TaskEditF: TTaskEditF
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
+      ExplicitLeft = 2
+      ExplicitTop = 28
       DesignSize = (
         599
         355)
@@ -287,6 +289,22 @@ object TaskEditF: TTaskEditF
         HotTrackFont.Height = -13
         HotTrackFont.Name = #47569#51008' '#44256#46357
         HotTrackFont.Style = []
+      end
+      object MakeCertButton: TAdvToolButton
+        Left = 471
+        Top = 64
+        Width = 80
+        Height = 29
+        Hint = #44033' MenuItem Tag'#50640' Claim'#50896#51064' '#49440#53469#44050' '#51200#51109#46120
+        AutoThemeAdapt = False
+        ColorDown = 14210002
+        ColorHot = 13289415
+        DropDownButton = True
+        DropDownMenu = ClaimPopup
+        Caption = 'Claim '#50896#51064
+        ImageIndex = 4
+        Rounded = True
+        Version = '1.6.1.1'
       end
       object WorkBeginPicker: TDateTimePicker
         Left = 120
@@ -1700,7 +1718,7 @@ object TaskEditF: TTaskEditF
           TabOrder = 0
           OnClick = AeroButton5Click
         end
-        object AeroButton6: TAeroButton
+        object DeleteMaterialBtn: TAeroButton
           Left = 509
           Top = 1
           Width = 89
@@ -1711,7 +1729,7 @@ object TaskEditF: TTaskEditF
           Align = alRight
           Caption = 'Delete'
           TabOrder = 1
-          OnClick = AeroButton6Click
+          OnClick = DeleteMaterialBtnClick
         end
         object AeroButton7: TAeroButton
           Left = 1
@@ -1747,6 +1765,8 @@ object TaskEditF: TTaskEditF
         Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
         Align = alClient
         Caption = ''
+        Options = [goHeader, goSelectFullRow]
+        PopupMenu = MaterialPopup
         TabOrder = 1
         TabStop = True
         OnCellDblClick = NextGrid1CellDblClick
@@ -2394,6 +2414,7 @@ object TaskEditF: TTaskEditF
       Version = '1.0.0.1'
       Align = alRight
       Caption = #45824#54364#47700#51068#49440#53469
+      Enabled = False
       TabOrder = 2
       OnClick = SelectMailBtnClick
     end
@@ -3115,7 +3136,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800300510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800380510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5001,6 +5022,7 @@ object TaskEditF: TTaskEditF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop2
     Target = fileGrid
+    WinTarget = 0
     Left = 12
     Top = 612
   end
@@ -5021,7 +5043,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400040210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101100014000C0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5723,6 +5745,38 @@ object TaskEditF: TTaskEditF
     object Saveas1: TMenuItem
       Caption = 'Save as ...'
       OnClick = Saveas1Click
+    end
+  end
+  object ClaimPopup: TPopupMenu
+    Left = 336
+    Top = 512
+    object Category1: TMenuItem
+      Caption = 'Category'
+      OnClick = Category1Click
+    end
+    object Location1: TMenuItem
+      Caption = 'Location'
+      OnClick = Location1Click
+    end
+    object CauseKind1: TMenuItem
+      Caption = 'CauseKind'
+      OnClick = CauseKind1Click
+    end
+    object CauseHW1: TMenuItem
+      Caption = 'CauseHW'
+      OnClick = CauseHW1Click
+    end
+    object CauseSW1: TMenuItem
+      Caption = 'CauseSW'
+      OnClick = CauseSW1Click
+    end
+  end
+  object MaterialPopup: TPopupMenu
+    Left = 372
+    Top = 512
+    object DeleteMaterial1: TMenuItem
+      Caption = 'Delete Material'
+      OnClick = DeleteMaterial1Click
     end
   end
 end

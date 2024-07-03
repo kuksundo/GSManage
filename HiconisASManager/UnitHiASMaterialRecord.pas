@@ -166,7 +166,10 @@ end;
 
 function GetMaterial4ProjFromTaskIDNPORNo(const ATaskID: TID; const APorNo: string): TSQLMaterial4Project;
 begin
-  Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'TaskID = ? AND PorNo = ?', [ATaskID, APorNo]);
+  if ATaskID = 0 then
+    Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'PorNo = ?', [APorNo])
+  else
+    Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'TaskID = ? AND PorNo = ?', [ATaskID, APorNo]);
 
   if Result.FillOne then
     Result.IsUpdate := True

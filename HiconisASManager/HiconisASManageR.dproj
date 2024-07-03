@@ -183,6 +183,7 @@
             <Form>HiconisAsManageF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\Common\UnitCommonFormUtil.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
