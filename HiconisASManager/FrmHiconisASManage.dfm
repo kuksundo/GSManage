@@ -2,7 +2,7 @@ object HiconisAsManageF: THiconisAsManageF
   Left = 0
   Top = 0
   Caption = 'HiconisAsManageF'
-  ClientHeight = 629
+  ClientHeight = 649
   ClientWidth = 1160
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,14 +22,12 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 0
     Top = 3
     Width = 1160
-    Height = 134
+    Height = 158
     Margins.Left = 0
     Margins.Right = 0
     Align = alTop
     Rounding = 4
     TabOrder = 0
-    ExplicitLeft = 5
-    ExplicitTop = 0
     object JvLabel2: TJvLabel
       AlignWithMargins = True
       Left = 8
@@ -343,6 +341,33 @@ object HiconisAsManageF: THiconisAsManageF
       HotTrackFont.Name = #47569#51008' '#44256#46357
       HotTrackFont.Style = []
     end
+    object JvLabel11: TJvLabel
+      AlignWithMargins = True
+      Left = 14
+      Top = 130
+      Width = 141
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Set Find Condition'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
     object PeriodPanel: TCurvyPanel
       AlignWithMargins = True
       Left = 91
@@ -498,7 +523,7 @@ object HiconisAsManageF: THiconisAsManageF
       Left = 955
       Top = 0
       Width = 205
-      Height = 134
+      Height = 158
       Align = alRight
       TabOrder = 6
       object btn_Search: TAeroButton
@@ -506,7 +531,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 3
         Top = 4
         Width = 62
-        Height = 126
+        Height = 150
         ImageIndex = 2
         Images = ImageList32x32
         ImagePos = ipTop
@@ -521,7 +546,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 139
         Top = 4
         Width = 62
-        Height = 126
+        Height = 150
         ImageIndex = 0
         Images = ImageList32x32
         ImagePos = ipTop
@@ -536,7 +561,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 71
         Top = 4
         Width = 62
-        Height = 126
+        Height = 150
         ImageIndex = 1
         Images = ImageList32x32
         ImagePos = ipTop
@@ -664,10 +689,25 @@ object HiconisAsManageF: THiconisAsManageF
       TabOrder = 16
       OnKeyPress = HullNoEditKeyPress
     end
+    object SetFildCondCB: TComboBox
+      Left = 159
+      Top = 131
+      Width = 193
+      Height = 24
+      Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ImeName = 'Microsoft IME 2010'
+      ParentFont = False
+      TabOrder = 17
+    end
   end
   object TaskTab: TAdvOfficeTabSet
     Left = 0
-    Top = 140
+    Top = 164
     Width = 1160
     Height = 27
     AdvOfficeTabs = <
@@ -1383,9 +1423,9 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object grid_Req: TNextGrid
     Left = 0
-    Top = 167
+    Top = 191
     Width = 1160
-    Height = 443
+    Height = 439
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Align = alClient
@@ -1400,7 +1440,6 @@ object HiconisAsManageF: THiconisAsManageF
     TabStop = True
     OnCellDblClick = grid_ReqCellDblClick
     OnKeyDown = grid_ReqKeyDown
-    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1902,7 +1941,7 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object StatusBarPro1: TStatusBarPro
     Left = 0
-    Top = 610
+    Top = 630
     Width = 1160
     Height = 19
     Panels = <
@@ -1931,7 +1970,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000CC0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000D40318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2241,7 +2280,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402DC0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402E40310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2527,6 +2566,24 @@ object HiconisAsManageF: THiconisAsManageF
       object N24: TMenuItem
         Caption = '-'
       end
+      object ExportToExcel2: TMenuItem
+        Caption = 'Export To Excel'
+        OnClick = ExportToExcel2Click
+      end
+      object SaveDBAs1: TMenuItem
+        Caption = 'Save DB As...'
+        OnClick = SaveDBAs1Click
+      end
+      object N27: TMenuItem
+        Caption = '-'
+      end
+      object ImportMaterialCodeFromExcel1: TMenuItem
+        Caption = 'Import MaterialCode From Excel'
+        OnClick = ImportMaterialCodeFromExcel1Click
+      end
+      object N28: TMenuItem
+        Caption = '-'
+      end
       object Close1: TMenuItem
         Caption = 'Close'
         OnClick = Close1Click
@@ -2582,7 +2639,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800040520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C8000C0520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3120,6 +3177,7 @@ object HiconisAsManageF: THiconisAsManageF
   object DropEmptyTarget1: TDropEmptyTarget
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop
+    Target = grid_Req
     WinTarget = 0
     Left = 212
     Top = 212

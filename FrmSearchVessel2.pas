@@ -50,6 +50,7 @@ type
     procedure HullNoEditKeyPress(Sender: TObject; var Key: Char);
     procedure ShipNameEditKeyPress(Sender: TObject; var Key: Char);
     procedure ImoNoEditKeyPress(Sender: TObject; var Key: Char);
+    procedure FormDestroy(Sender: TObject);
   private
     procedure DestroyList4VesselMaster;
     procedure ExecuteSearch(Key: Char);
@@ -86,6 +87,11 @@ begin
     SearchButtonClick(nil);
 end;
 
+procedure TSearchVesselF.FormDestroy(Sender: TObject);
+begin
+  DestroyList4VesselMaster;
+end;
+
 procedure TSearchVesselF.GetVesselList2Grid;
 var
   LSQLVesselMaster: TSQLVesselMaster;
@@ -104,19 +110,23 @@ begin
     VesselListGrid.ClearRows;
     GetVesselSearchParam2Rec(LVesselSearchParamRec);
     LSQLVesselMaster := GetVesselMasterFromSearchRec(LVesselSearchParamRec);
-
-    if LSQLVesselMaster.IsUpdate then
-    begin
-      DestroyList4VesselMaster;
-
-      LDoc := GetVariantFromVesselMaster(LSQLVesselMaster);
-      GetVesselListFromVariant2Grid(LDoc);
-
-      while LSQLVesselMaster.FillOne do
+    try
+      if LSQLVesselMaster.IsUpdate then
       begin
-        LDoc := GetVariantFromVesselMaster(LSQLVesselMaster);
-        GetVesselListFromVariant2Grid(LDoc);
-      end;//while
+        DestroyList4VesselMaster;
+
+//        LDoc := GetVariantFromVesselMaster(LSQLVesselMaster);
+//        GetVesselListFromVariant2Grid(LDoc);
+        LSQLVesselMaster.FillRewind;
+
+        while LSQLVesselMaster.FillOne do
+        begin
+          LDoc := GetVariantFromVesselMaster(LSQLVesselMaster);
+          GetVesselListFromVariant2Grid(LDoc);
+        end;//while
+      end;
+    finally
+      LSQLVesselMaster.Free;
     end;
   finally
     VesselListGrid.EndUpdate;

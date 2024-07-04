@@ -68,7 +68,7 @@ function LoadRecordList2VariantFromSQlRecord(ASQLRecord: TSQLRecord): variant;
 implementation
 
 uses UnitMakeReport2, UnitStringUtil, StrUtils, mormot.core.mustache, UnitElecServiceData2,
-  UnitGSTriffData, UnitGSFileData2;
+  UnitGSTriffData, UnitGSFileData2, UnitOLEmailRecord2;
 
 function MakeDirectShippingEmailBody(ATask: TOrmHiconisASTask): string;
 var
@@ -518,7 +518,7 @@ var
   LDynUtf8: TRawUTF8DynArray;
   LDynArr: TDynArray;
   LUtf8: RawUTF8;
-  LSQLEmailMsg: TSQLEmailMsg;
+  LSQLEmailMsg: TSQLOLEmailMsg;
   LIds: TIDDynArray;
   LMailCount: integer;
   LSubject: RawUTF8;
@@ -533,18 +533,14 @@ begin
     LUtf8 := ATask.GetJSONValues(true, true, soSelect);
 
 //    ATask.EmailMsg.DestGet(g_ProjectDB.Orm, ATask.ID, LIds);
-    LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIDDynArray(LIds));
+    LSQLEmailMsg:= TSQLOLEmailMsg.CreateAndFillPrepare(g_OLEmailMsgDB.Orm, 'TaskID = ?', [ATask.ID]);
     try
       LMailCount := 0;
       LSubject := '';
 
       while LSQLEmailMsg.FillOne do
       begin
-        if (LSubject = '') and (LSQLEmailMsg.ParentID = '') then
-        begin
-          LSubject := LSQLEmailMsg.Subject;
-        end;
-
+        LSubject := LSQLEmailMsg.Subject;
         Inc(LMailCount);
       end;
     finally
@@ -654,7 +650,7 @@ end;
 function MakeTaskEmailList2JSON(ATaskID: TID): RawUTF8;
 var
   LSQLGSTask: TOrmHiconisASTask;
-  LSQLEmailMsg: TSQLEmailMsg;
+  LSQLEmailMsg: TSQLOLEmailMsg;
   LIds: TIDDynArray;
   LUtf8: RawUTF8;
   LDynUtf8: TRawUTF8DynArray;
@@ -666,7 +662,7 @@ begin
     begin
       LDynArr.Init(TypeInfo(TRawUTF8DynArray), LDynUtf8);
 //      LSQLGSTask.EmailMsg.DestGet(g_ProjectDB.Orm, LSQLGSTask.ID, LIds);
-      LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, TIdDynArray(LIds));
+      LSQLEmailMsg:= TSQLOLEmailMsg.CreateAndFillPrepare(g_OLEmailMsgDB.Orm, 'TaskID = ?', [ATaskID]);
 
       while LSQLEmailMsg.FillOne do
       begin

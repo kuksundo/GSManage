@@ -6,13 +6,12 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   JvExControls, JvLabel, AeroButtons, CurvyControls,
-  mormot.core.variants, mormot.core.unicode
+  mormot.core.variants, mormot.core.unicode, AdvEdit, AdvEdBtn
   ;
 
 type
   TMaterialDetailF = class(TForm)
     JvLabel25: TJvLabel;
-    MaterialCode: TEdit;
     JvLabel17: TJvLabel;
     MaterialName: TEdit;
     JvLabel18: TJvLabel;
@@ -26,6 +25,10 @@ type
     AeroButton1: TAeroButton;
     JvLabel2: TJvLabel;
     PORNo: TEdit;
+    JvLabel3: TJvLabel;
+    CreateDate: TDateTimePicker;
+    MaterialCode: TAdvEditBtn;
+    procedure MaterialCodeClickBtn(Sender: TObject);
   private
     { Private declarations }
   public
@@ -40,7 +43,7 @@ var
 
 implementation
 
-uses UnitRttiUtil2;
+uses UnitRttiUtil2, FrmSearchMaterialCode;
 
 {$R *.dfm}
 
@@ -68,7 +71,16 @@ begin
       
       //"저장" 버튼을 누른 경우
       if Result = mrOK then
+      begin
+        ADoc.MaterialCode := MaterialCode.Text;
+        ADoc.MaterialName := MaterialName.Text;
+        ADoc.NeedCount := NeedCount.Text;
+        ADoc.UnitPrice := UnitPrice.Text;
+        ADoc.NeedDate := DateTimeToStr(NeedDate.Date);
+        ADoc.CreateDate := DateTimeToStr(CreateDate.Date);
+
         LoadMaterialDetailVarFromForm(ADoc);
+      end;
     end;
   finally
     LASMaterialF.Free;
@@ -91,6 +103,17 @@ var
 begin
   LJson := GetCompNameValue2JsonFromForm(Self);
   AVar := _JSON(StringToUtf8(LJson));
+end;
+
+procedure TMaterialDetailF.MaterialCodeClickBtn(Sender: TObject);
+var
+  LMatCode, LMatName: string;
+begin
+  if DisplayMaterialCode2EditForm(LMatCode, LMatName) = mrOK then
+  begin
+    MaterialCode.Text := LMatCode;
+    MaterialName.Text := LMatName;
+  end;
 end;
 
 end.

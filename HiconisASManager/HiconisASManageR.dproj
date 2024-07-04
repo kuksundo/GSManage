@@ -184,6 +184,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Common\UnitCommonFormUtil.pas"/>
+        <DCCReference Include="..\Common\UnitImportFromXls.pas"/>
+        <DCCReference Include="UnitHiASMaterialCodeRecord.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

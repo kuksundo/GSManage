@@ -48,7 +48,9 @@ uses
   UnitStateMachineUtil in '..\..\..\Common\UnitStateMachineUtil.pas',
   FrmASMaterialDetailEdit in 'FrmASMaterialDetailEdit.pas' {MaterialDetailF},
   FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisAsManageF},
-  UnitCommonFormUtil in '..\Common\UnitCommonFormUtil.pas';
+  UnitCommonFormUtil in '..\Common\UnitCommonFormUtil.pas',
+  UnitImportFromXls in '..\Common\UnitImportFromXls.pas',
+  UnitHiASMaterialCodeRecord in 'UnitHiASMaterialCodeRecord.pas';
 
 {$R *.res}
 

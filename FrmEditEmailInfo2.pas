@@ -14,6 +14,8 @@ type
     ContainDataCB: TComboBox;
     Label2: TLabel;
     EmailDirectionCB: TComboBox;
+    Description: TEdit;
+    Label3: TLabel;
     procedure ContainDataCBDropDown(Sender: TObject);
     procedure EmailDirectionCBDropDown(Sender: TObject);
     procedure FormCreate(Sender: TObject);

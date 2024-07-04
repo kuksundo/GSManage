@@ -15,7 +15,7 @@ uses
   mormot.rest.server, mormot.soa.server, mormot.core.datetime, mormot.rest.memserver,
   mormot.soa.core, mormot.core.interfaces, mormot.core.os, mormot.core.text,
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
-  mormot.core.data, mormot.orm.base, mormot.core.collections,
+  mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
 
   VarRecUtils, TimerPool,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
@@ -171,6 +171,13 @@ type
     EditTariff1: TMenuItem;
     JvLabel7: TJvLabel;
     MaterialCodeEdit: TEdit;
+    JvLabel11: TJvLabel;
+    SetFildCondCB: TComboBox;
+    N27: TMenuItem;
+    ExportToExcel2: TMenuItem;
+    SaveDBAs1: TMenuItem;
+    ImportMaterialCodeFromExcel1: TMenuItem;
+    N28: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -225,6 +232,9 @@ type
     procedure N26Click(Sender: TObject);
     procedure ViewTariff1Click(Sender: TObject);
     procedure EditTariff1Click(Sender: TObject);
+    procedure ExportToExcel2Click(Sender: TObject);
+    procedure SaveDBAs1Click(Sender: TObject);
+    procedure ImportMaterialCodeFromExcel1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -326,6 +336,8 @@ type
     procedure ProcessPasteEvent(ATxt: string);
     function GetUserList: TStrings;
     function GetUserListFromFile(AFileName: string): TStrings;
+
+    procedure SaveDB2File();
   public
     //메일을 이동시킬 폴더 리스트,
     //HGS Task/Send Folder Name 2 IPC 메뉴에 의해 OL으로 부터 수신함
@@ -417,12 +429,12 @@ implementation
 uses UnitIPCModule2, ClipBrd, System.RegularExpressions,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
-  UnitHttpModule4InqManageServer2, UnitStringUtil,
+  UnitHttpModule4InqManageServer2, UnitStringUtil, UnitExcelUtil,
 
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
   UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
-  UnitHiASMaterialDetailRecord;
+  UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord;
 
 {$R *.dfm}
 
@@ -1008,10 +1020,7 @@ end;
 function THiconisAsManageF.GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
 begin
   case AQueryDate of
-    qdtInqRecv: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
-    qdtInvoiceIssue: Result := 'InvoiceIssueDate >= ? and InvoiceIssueDate <= ? ';
-    qdtQTNInput: Result := 'QTNInputDate >= ? and QTNInputDate <= ? ';
-    qdtOrderInput: Result := 'OrderInputDate >= ? and OrderInputDate <= ? ';
+    qdtMaterialOrder: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
   end;
 end;
 
@@ -1402,6 +1411,18 @@ end;
 procedure THiconisAsManageF.HullNoEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
+end;
+
+procedure THiconisAsManageF.ImportMaterialCodeFromExcel1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    if FileExists(OpenDialog1.FileName) then
+    begin
+      ImportMaterialCodeFromXlsFile(OpenDialog1.FileName);
+      ShowMessage('MaterialCode is imported completely.' + #13#10 + 'Please check the HiconisAS_MaterialCode.sqlite');
+    end;
+  end;
 end;
 
 procedure THiconisAsManageF.InitEnum;
@@ -2072,10 +2093,6 @@ var
         FTempJsonList.Clear;
         LUtf8 := MakeTaskList2JSONArray(LSQLGSTask);
         FTempJsonList.Text := UTF8ToString(LUtf8);
-//        LStr := FTempJsonList.Text;
-//        System.Delete(LStr, Length(LStr)-1,2);
-//        LUtf8 := StringToUTF8(LStr);
-//        LUtf8 := MakeBase64ToUTF8(LUtf8);
       end
       else
       begin
@@ -2450,6 +2467,11 @@ begin
     btn_SearchClick(nil);
 end;
 
+procedure THiconisAsManageF.ExportToExcel2Click(Sender: TObject);
+begin
+  NextGridToExcel(grid_Req);
+end;
+
 procedure THiconisAsManageF.FillInUserList;
 var
   LStrList: TStrings;
@@ -2504,6 +2526,7 @@ begin
   UnitHiconisMasterRecord.InitHiconisASClient(Application.ExeName);
   InitUserClient(Application.ExeName);
   InitClient4GSTariff(Application.ExeName);
+  InitHiASMaterialCodeClient(Application.ExeName);
   AsyncProcessCommandProc();
   rg_periodClick(nil);
   g_ExecuteFunction := ExecFunc;
@@ -2742,6 +2765,46 @@ begin
   finally
     LTask.Free;
   end;
+end;
+
+procedure THiconisAsManageF.SaveDB2File;
+var
+  LProjectModel: TOrmModel;
+  LProjectDB: TSQLRestClientURI;
+  LOrmTask: TOrmHiconisASTask;
+  LUtf8: RawUtf8;
+  LDBName: string;
+begin
+  if OpenDialog1.Execute then
+  begin
+    LDBName := OpenDialog1.FileName;
+    LProjectModel:= CreateProjectModel;
+    LProjectDB:= TSQLRestClientDB.Create(LProjectModel, CreateProjectModel,
+      LDBName, TSQLRestServerDB);
+    TSQLRestClientDB(LProjectDB).Server.CreateMissingTables;
+
+    LOrmTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, 'ID <> -1', []);
+    try
+//      LUtf8 := LOrmTask.GetJsonValues(true, true, soSelect);
+      while LOrmTask.FillOne do
+      begin
+        LProjectDB.Add(LOrmTask, true);
+      end;
+    finally
+      LOrmTask.Free;
+
+      if Assigned(LProjectDB) then
+        FreeAndNil(LProjectDB);
+
+      if Assigned(LProjectModel) then
+        FreeAndNil(LProjectModel);
+    end;
+  end;
+end;
+
+procedure THiconisAsManageF.SaveDBAs1Click(Sender: TObject);
+begin
+  SaveDB2File();
 end;
 
 procedure THiconisAsManageF.Select_DeliveryCondition;

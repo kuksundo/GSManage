@@ -1,7 +1,7 @@
-object SearchVesselF: TSearchVesselF
+object SearchMatCodeF: TSearchMatCodeF
   Left = 0
   Top = 0
-  Caption = 'Search Vessel'
+  Caption = #51088#51116#53076#46300' '#44160#49353
   ClientHeight = 605
   ClientWidth = 792
   Color = clBtnFace
@@ -12,7 +12,6 @@ object SearchVesselF: TSearchVesselF
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -30,7 +29,7 @@ object SearchVesselF: TSearchVesselF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Hull No'
+      Caption = #51088#51116#48264#54840
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -57,34 +56,7 @@ object SearchVesselF: TSearchVesselF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ship Name'
-      Color = 14671839
-      FrameColor = clGrayText
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = [fsBold]
-      Layout = tlCenter
-      ParentColor = False
-      ParentFont = False
-      RoundedFrame = 3
-      Transparent = True
-      HotTrackFont.Charset = ANSI_CHARSET
-      HotTrackFont.Color = clWindowText
-      HotTrackFont.Height = -13
-      HotTrackFont.Name = #47569#51008' '#44256#46357
-      HotTrackFont.Style = []
-    end
-    object JvLabel9: TJvLabel
-      AlignWithMargins = True
-      Left = 427
-      Top = 12
-      Width = 80
-      Height = 25
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'IMO No.'
+      Caption = #51088#51116#47749
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -113,35 +85,25 @@ object SearchVesselF: TSearchVesselF
       TabOrder = 0
       OnClick = SearchButtonClick
     end
-    object HullNoEdit: TEdit
-      Left = 97
-      Top = 12
+    object MatCodeEdit: TEdit
+      Left = 98
+      Top = 11
       Width = 112
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
       TabOrder = 1
-      OnKeyPress = HullNoEditKeyPress
+      OnKeyPress = MatCodeEditKeyPress
     end
-    object ShipNameEdit: TEdit
+    object MatNameEdit: TEdit
       Left = 302
       Top = 12
-      Width = 112
+      Width = 199
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
       TabOrder = 2
-      OnKeyPress = ShipNameEditKeyPress
-    end
-    object ImoNoEdit: TEdit
-      Left = 510
-      Top = 14
-      Width = 112
-      Height = 21
-      CharCase = ecUpperCase
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 3
-      OnKeyPress = ImoNoEditKeyPress
+      OnKeyPress = MatNameEditKeyPress
     end
   end
   object Panel2: TPanel
@@ -207,7 +169,7 @@ object SearchVesselF: TSearchVesselF
       TabOrder = 1
     end
   end
-  object VesselListGrid: TNextGrid
+  object MatCodeGrid: TNextGrid
     Left = 0
     Top = 41
     Width = 792
@@ -223,7 +185,7 @@ object SearchVesselF: TSearchVesselF
     RowSize = 18
     TabOrder = 2
     TabStop = True
-    OnCellDblClick = VesselListGridCellDblClick
+    OnCellDblClick = MatCodeGridCellDblClick
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -244,14 +206,14 @@ object SearchVesselF: TSearchVesselF
       SortType = stAlphabetic
       Width = 30
     end
-    object HullNo: TNxTextColumn
+    object TaskID: TNxTextColumn
       Alignment = taCenter
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
       Font.Name = #47569#51008' '#44256#46357
       Font.Style = []
-      Header.Caption = 'Hull No'
+      Header.Caption = 'TaskID'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -262,7 +224,7 @@ object SearchVesselF: TSearchVesselF
       Position = 1
       SortType = stAlphabetic
     end
-    object ShipName: TNxTextColumn
+    object PORNo: TNxTextColumn
       Alignment = taCenter
       DefaultWidth = 150
       Font.Charset = ANSI_CHARSET
@@ -270,7 +232,7 @@ object SearchVesselF: TSearchVesselF
       Font.Height = -13
       Font.Name = #47569#51008' '#44256#46357
       Font.Style = []
-      Header.Caption = 'Ship Name'
+      Header.Caption = 'PORNo'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -282,14 +244,14 @@ object SearchVesselF: TSearchVesselF
       SortType = stAlphabetic
       Width = 150
     end
-    object ImoNo: TNxTextColumn
+    object MaterialCode: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'IMO No.'
+      Header.Caption = #51088#51116#53076#46300
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -300,7 +262,7 @@ object SearchVesselF: TSearchVesselF
       Position = 3
       SortType = stAlphabetic
     end
-    object SClass1: TNxTextColumn
+    object MaterialName: TNxTextColumn
       Alignment = taCenter
       DefaultWidth = 110
       Font.Charset = DEFAULT_CHARSET
@@ -308,7 +270,7 @@ object SearchVesselF: TSearchVesselF
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'Class 1'
+      Header.Caption = #51088#51116#47749
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -320,7 +282,7 @@ object SearchVesselF: TSearchVesselF
       SortType = stAlphabetic
       Width = 110
     end
-    object ShipType: TNxTextColumn
+    object UnitPrice: TNxTextColumn
       Alignment = taCenter
       DefaultWidth = 100
       Font.Charset = ANSI_CHARSET
@@ -328,7 +290,7 @@ object SearchVesselF: TSearchVesselF
       Font.Height = -13
       Font.Name = #47569#51008' '#44256#46357
       Font.Style = []
-      Header.Caption = 'Ship Type'
+      Header.Caption = 'Unit Price'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -340,15 +302,14 @@ object SearchVesselF: TSearchVesselF
       SortType = stAlphabetic
       Width = 100
     end
-    object OwnerName: TNxTextColumn
+    object CreateDate: TNxDateColumn
       Alignment = taCenter
-      DefaultWidth = 200
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'Ship Owner'
+      Header.Caption = #51088#51116#49373#49457#51068
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -357,17 +318,19 @@ object SearchVesselF: TSearchVesselF
       Header.Font.Style = []
       ParentFont = False
       Position = 6
-      SortType = stAlphabetic
+      SortType = stDate
       Width = 200
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
     end
-    object DeliveryDate: TNxTextColumn
+    object NeedDate: TNxDateColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'Delivery'
+      Header.Caption = #49548#50836#51068#51088
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -376,9 +339,11 @@ object SearchVesselF: TSearchVesselF
       Header.Font.Style = []
       ParentFont = False
       Position = 7
-      SortType = stAlphabetic
+      SortType = stDate
+      NoneCaption = 'None'
+      TodayCaption = 'Today'
     end
-    object ShipBuilderName: TNxTextColumn
+    object NeedCount: TNxTextColumn
       Alignment = taCenter
       DefaultWidth = 200
       Font.Charset = ANSI_CHARSET
@@ -386,7 +351,7 @@ object SearchVesselF: TSearchVesselF
       Font.Height = -13
       Font.Name = #47569#51008' '#44256#46357
       Font.Style = []
-      Header.Caption = 'Ship Builder'
+      Header.Caption = #54596#50836#49688#47049
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -398,13 +363,13 @@ object SearchVesselF: TSearchVesselF
       SortType = stAlphabetic
       Width = 200
     end
-    object ShipTypeDesc: TNxTextColumn
+    object LeadTime: TNxTextColumn
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'Type Desc'
+      Header.Caption = #49548#50836#51068#49688
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
@@ -413,196 +378,6 @@ object SearchVesselF: TSearchVesselF
       ParentFont = False
       Position = 9
       SortType = stAlphabetic
-    end
-    object VesselStatus: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Ship Status'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 10
-      SortType = stAlphabetic
-    end
-    object DockingSurveyDueDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Docking Survey Due'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 11
-      SortType = stDate
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object SpecialSurveyDueDate: TNxDateColumn
-      Alignment = taCenter
-      DefaultValue = '2018-03-23'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Special Survey Due'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 12
-      SortType = stDate
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object LastDryDockDate: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Last Dry Dock'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 13
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object SClass2: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Class 2'
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 14
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object OwnerID: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 15
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object TechManagerCountry: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 16
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object TechManagerID: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 17
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object OperatorID: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 18
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object BuyingCompanyCountry: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 19
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object BuyingCompanyID: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 20
-      SortType = stAlphabetic
-      Visible = False
     end
   end
 end

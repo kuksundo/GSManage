@@ -13,7 +13,7 @@ uses System.Classes, Dialogs, System.Rtti,
   UnitIniConfigSetting2, OLMailWSCallbackInterface2,
   UnitOutlookIPCUtil2, CommonData2,
   UnitHiconisMasterRecord,
-  UnitInqManageWSInterface2, UnitOLDataType;
+  UnitInqManageWSInterface2, UnitOLDataType, UnitOLEmailRecord2;
 
 //AMailType = 1: invoice 송부, 2: 매출처리요청, 3: 직투입요청
 //            4: 해외 매출 고객사 등록 요청, 5: 전전 비표준공사 생성 요청
@@ -943,11 +943,11 @@ end;
 
 procedure ShowEmailListFromIDs(AGrid: TNextGrid; AIDs: TIDDynArray);
 var
-  LSQLEmailMsg: TSQLEmailMsg;
+  LSQLEmailMsg: TSQLOLEmailMsg;
   LRow: integer;
   LStr: string;
 begin
-  LSQLEmailMsg:= TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, AIDs);
+  LSQLEmailMsg:= TSQLOLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm, AIDs);
   AGrid.BeginUpdate;
   try
     with AGrid do
@@ -959,25 +959,19 @@ begin
         LRow := AddRow;
         CellByName['Subject', LRow].AsString := LSQLEmailMsg.Subject;
         CellByName['RecvDate', LRow].AsDateTime := TimeLogToDateTime(LSQLEmailMsg.RecvDate);
-        CellByName['Sender', LRow].AsString := LSQLEmailMsg.Sender;
-        CellByName['Receiver', LRow].AsString := LSQLEmailMsg.Receiver;
-        CellByName['CC', LRow].AsString := LSQLEmailMsg.CarbonCopy;
-        CellByName['BCC', LRow].AsString := LSQLEmailMsg.BlindCC;
+        CellByName['SenderEmail', LRow].AsString := LSQLEmailMsg.SenderEmail;
+        CellByName['Recipients', LRow].AsString := LSQLEmailMsg.Recipients;
+        CellByName['CC', LRow].AsString := LSQLEmailMsg.CC;
+        CellByName['BCC', LRow].AsString := LSQLEmailMsg.BCC;
         CellByName['EMailId', LRow].AsString := IntToStr(LSQLEmailMsg.ID);
-        CellByName['EntryId', LRow].AsString := LSQLEmailMsg.EntryID;
-        CellByName['StoreId', LRow].AsString := LSQLEmailMsg.StoreID;
-        CellByName['FolderPath', LRow].AsString := LSQLEmailMsg.SavedOLFolderPath;
+        CellByName['LocalEntryId', LRow].AsString := LSQLEmailMsg.LocalEntryId;
+        CellByName['LocalStoreId', LRow].AsString := LSQLEmailMsg.LocalStoreId;
+        CellByName['SavedOLFolderPath', LRow].AsString := LSQLEmailMsg.SavedOLFolderPath;
 
-        if LSQLEmailMsg.ContainData <> cdmNone then
+        if LSQLEmailMsg.ContainData <> 0 then
         begin
-          LStr := TRttiEnumerationType.GetName<TContainData4Mail>(LSQLEmailMsg.ContainData);
-          CellByName['ContainData', LRow].AsString := LStr;
-        end;
-
-        if LSQLEmailMsg.ParentID = '' then
-        begin
-          MoveRow(LRow, 0);
-          LRow := 0;
+//          LStr := TRttiEnumerationType.GetName<TContainData4Mail>(LSQLEmailMsg.ContainData);
+          CellByName['ContainData', LRow].AsString := g_ContainData4Mail.ToString(LSQLEmailMsg.ContainData);
         end;
       end;
     end;

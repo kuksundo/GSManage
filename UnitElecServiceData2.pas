@@ -5,8 +5,7 @@ interface
 uses System.Classes, UnitEnumHelper, FSMClass_Dic, FSMState, Vcl.StdCtrls;
 
 type
-  TQueryDateType = (qdtNull, qdtInqRecv, qdtInvoiceIssue, qdtQTNInput,
-    qdtOrderInput, qdtFinal);
+  TQueryDateType = (qdtNull, qdtMaterialOrder, qdtFinal);
 
   TSearchCondRec = record
     FFrom, FTo: TDateTime;
@@ -201,12 +200,13 @@ type
   TClaimCategory = (ccNull, ccME, ccGE, ccFGSS, ccLFSS, ccCHS, ccFinal);
   TClaimLocation = (clNull, clECR, clBridge, clER, clShipOffice, clFinal);
   TClaimCauseKind = (cckNull, ckHW, cckSW, cckLogic, cckDB, cckConfig, cckComm, cckFinal);
-  TClaimCauseHW = (cchNull, cchMPM, cchFBM, cchCPM, cchDI16, cchDO16, cchAI8, cchAO8, cchRT8, cchEAP, cchCOM, cchFinal);
+  TClaimCauseHW = (cchNull, cchMPM, cchFBM, cchCPM, cchDI16, cchDI16S, cchDO16,
+    cchDO16_i, cchDO8S, cchAI16, cchAI16_i, cchRT8, cchEAP, cchCOM, cchPrinter,
+    cchMonitor, cchOWS, cchEAS, cchKBD, cchMouse, cchBaseBoard, cchFinal);
   TClaimCauseSW = (ccsNull, ccsFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
-    ('', 'Inq 접수일 기준', 'Invoice 발행일 기준', 'QTN 입력일 기준',
-      '수주통보서 입력일 기준', '');
+    ('', '자재발주일', '');
 
   R_EngineerKind : array[Low(TEngineerKind)..High(TEngineerKind)] of string =
     ('', 'SuperIntendent', 'Service Engineer', 'Service Engineer(Elec.)',
@@ -512,12 +512,22 @@ const
     'FBM',
     'CPM',
     'DI16',
+    'DI16S',
     'DO16',
-    'AI8',
+    'DO16-i',
+    'DO8S',
+    'AI16',
+    'AI16-i',
     'AO8',
     'RT8',
     'EAP',
     'COM',
+    'Printer',
+    'Monitor',
+    'EAS',
+    'Keyboard',
+    'Mouse',
+    'BaseBoard',
     ''
      );
 

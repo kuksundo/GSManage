@@ -20,7 +20,9 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     fMaterialName, //자재명
     fUnitPrice//자재 단가
     : RawUTF8;
-    fNeedDate: TTimeLog;//소요일자
+    fNeedDate, //소요일자
+    FCreateDate//자재생성일
+    : TTimeLog;
     fNeedCount: integer;//수량
     fLeadTime: integer;
 
@@ -35,6 +37,7 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
     property UnitPrice: RawUTF8 read fUnitPrice write fUnitPrice;
 
+    property CreateDate: TTimeLog read FCreateDate write FCreateDate;
     property NeedDate: TTimeLog read fNeedDate write fNeedDate;
     property NeedCount: integer read fNeedCount write fNeedCount;
     property LeadTime: integer read fLeadTime write fLeadTime;
@@ -149,12 +152,10 @@ end;
   if AOrm.IsUpdate then
   begin
     g_HiASMaterialDetailDB.Update(AOrm);
-//    ShowMessage('자재 Update 완료');
   end
   else
   begin
     g_HiASMaterialDetailDB.Add(AOrm, true);
-//    ShowMessage('자재 Add 완료');
   end;
 end;
 

@@ -22,15 +22,13 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
-      ExplicitLeft = 2
-      ExplicitTop = 28
       DesignSize = (
         599
         355)
@@ -1907,6 +1905,27 @@ object TaskEditF: TTaskEditF
           NoneCaption = 'None'
           TodayCaption = 'Today'
         end
+        object CreateDate: TNxDateColumn
+          Alignment = taCenter
+          DefaultValue = '2024-06-13'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = #51088#51116#49373#49457#51068#51088
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 7
+          SortType = stDate
+          NoneCaption = 'None'
+          TodayCaption = 'Today'
+        end
         object NxTextColumn5: TNxTextColumn
           Alignment = taCenter
           Font.Charset = DEFAULT_CHARSET
@@ -1922,7 +1941,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 7
+          Position = 8
           SortType = stAlphabetic
           Visible = False
         end
@@ -3136,7 +3155,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800380510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800440510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5043,7 +5062,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C0101100014000C0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400180210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

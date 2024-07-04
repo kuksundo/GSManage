@@ -2,7 +2,7 @@ object EmailInfoF: TEmailInfoF
   Left = 0
   Top = 0
   Caption = 'Email Info Edit'
-  ClientHeight = 266
+  ClientHeight = 247
   ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,11 +23,18 @@ object EmailInfoF: TEmailInfoF
     Caption = 'Email'#51060' '#54252#54632#54616#44256' '#51080#45716' '#51221#48372#51032' '#51333#47448' :'
   end
   object Label2: TLabel
-    Left = 92
-    Top = 78
+    Left = 8
+    Top = 75
     Width = 130
     Height = 16
     Caption = 'Email'#51012' '#48372#45236#45716' '#44275' '#51648#51221' :'
+  end
+  object Label3: TLabel
+    Left = 8
+    Top = 115
+    Width = 71
+    Height = 16
+    Caption = 'Email '#49444#47749' : '
   end
   object BitBtn1: TBitBtn
     Left = 120
@@ -66,5 +73,12 @@ object EmailInfoF: TEmailInfoF
     ImeName = 'Microsoft IME 2010'
     TabOrder = 3
     OnDropDown = EmailDirectionCBDropDown
+  end
+  object Description: TEdit
+    Left = 85
+    Top = 112
+    Width = 384
+    Height = 24
+    TabOrder = 4
   end
 end

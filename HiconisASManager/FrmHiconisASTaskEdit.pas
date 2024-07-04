@@ -268,6 +268,7 @@ type
     MakeCertButton: TAdvToolButton;
     MaterialPopup: TPopupMenu;
     DeleteMaterial1: TMenuItem;
+    CreateDate: TNxDateColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -453,7 +454,7 @@ type
 
   function ProcessTaskJson(AJson: String): Boolean;
   function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-      ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+      ASQLEmailMsg: TSQLOLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
 
@@ -543,7 +544,7 @@ begin
 end;
 
 function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-  ASQLEmailMsg: TSQLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+  ASQLEmailMsg: TSQLOLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
@@ -1660,6 +1661,8 @@ begin
   g_DeliveryKind.InitArrayRecord(R_DeliveryKind);
   g_FreeOrCharge.InitArrayRecord(R_FreeOrCharge);
   g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+  g_ProcessDirection.InitArrayRecord(R_ProcessDirection);
+  g_ContainData4Mail.InitArrayRecord(R_ContainData4Mail);
 end;
 
 procedure TTaskEditF.InitNextWorkCB;
@@ -1667,6 +1670,9 @@ var
   LState: THiconisASState;
 begin
   LState := g_HiconisASState.ToType(CurWorkCB.Text);
+
+  if LState = hassNull then
+    exit;
 
   case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
     cskPartSupply: begin
@@ -3144,6 +3150,9 @@ var
 begin
   LSearchVesselF := TSearchVesselF.Create(nil);
   try
+    LSearchVesselF.HullNoEdit.Text := HullNoEdit.Text;
+    LSearchVesselF.ShipNameEdit.Text := ShipNameEdit.Text;
+
     if LSearchVesselF.ShowModal = mrOK then
     begin
       if LSearchVesselF.VesselListGrid.SelectedRow <> -1 then
