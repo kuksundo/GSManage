@@ -148,9 +148,7 @@ var
 implementation
 
 uses UnitStringUtil, UnitStreamUtil,
-  {$IFDEF GAMANAGER} UnitHiconisASVarJsonUtil,
-  {$ELSE} UnitVariantJsonUtil2,
-  {$ENDIF}
+  UnitHiconisASVarJsonUtil,
   UnitElecServiceData2, UnitDateUtil,
   UnitGSTariffRecord2, UnitGSTriffData;
 

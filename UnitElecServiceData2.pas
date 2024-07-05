@@ -55,9 +55,14 @@ type
   TProcessDirection = (pdNone, pdToCustomer, pdFromCustomer, pdToSubCon, pdFromSubCon,
     pdToHElec, pdFromHElec, pdToHGS, pdFromHGS, pdFinal);
 
-  TContainData4Mail = (cdmNone, cdmServiceReport,cdmQtn2Cust, cdmQtnFromSubCon,
-    cdmPoFromCust, cdmPo2SubCon,cdmInvoice2Cust, cdmInvoiceFromSubCon, cdmInvoiceConfirmFromCust,
-    cdmTaxBillFromSubCon, cdmTaxBill2Cust, cdmFinal
+//  TContainData4Mail = (cdmNone, cdmServiceReport,cdmQtn2Cust, cdmQtnFromSubCon,
+//    cdmPoFromCust, cdmPo2SubCon,cdmInvoice2Cust, cdmInvoiceFromSubCon, cdmInvoiceConfirmFromCust,
+//    cdmTaxBillFromSubCon, cdmTaxBill2Cust, cdmFinal
+//  );
+
+  TContainData4Mail = (cdmNone,
+    cdmClaimReport, cdmServiceReport, cdmInvoiceFromSubCon,
+    cdmFinal
   );
 
   TContainData4Mails = set of TContainData4Mail;
@@ -251,10 +256,9 @@ const
       'From 현대일렉트릭', 'To HGS', 'From HGS', '');
 
   R_ContainData4Mail : array[Low(TContainData4Mail)..High(TContainData4Mail)] of string =
-    ('', 'Service Report', 'Quotation -> Customer', 'Quotation <- SubCon',
-      'PO <- Customer', 'PO <- SubCon', 'Invoice -> Customer', 'Invoice <- SubCon',
-      'InvoiceConfirm <- Customer', 'Tax Bill <- SubCon', 'Tax Bill -> Customer',
-      'Tax Bill -> Customer');
+    ('',
+      'Claim Report', 'Service Report', 'Invoice <- SubCon',
+    '');
 
   R_EngineerAgency : array[Low(TEngineerAgency)..High(TEngineerAgency)] of string =
     ('', '협력사', 'HGS', 'HEE', '');

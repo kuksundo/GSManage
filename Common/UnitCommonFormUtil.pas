@@ -4,10 +4,12 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
+  JvExMask, JvToolEdit, JvCombobox
   ;
 
 function ShowCheckGrp4Claim(AClaimTypeKind, ACheckValueList: integer): integer;
+function ShowCheckGrp4EmailContainData(ACheckValueList: integer): integer;
 
 implementation
 
@@ -28,6 +30,19 @@ begin
     end;
 
     Result := GetSetFromCheckBoxGrp(LStrList, ACheckValueList, g_ClaimTypeKind.ToString(AClaimTypeKind));
+  finally
+    LStrList.Free;
+  end;
+end;
+
+function ShowCheckGrp4EmailContainData(ACheckValueList: integer): integer;
+var
+  LStrList: TStringList;
+begin
+  LStrList := TStringList.Create;
+  try
+    g_ContainData4Mail.SetType2List(LStrList);
+    Result := GetSetFromCheckBoxGrp(LStrList, ACheckValueList, 'Email Contained File');
   finally
     LStrList.Free;
   end;

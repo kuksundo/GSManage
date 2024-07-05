@@ -625,6 +625,8 @@ begin
       end
       else
       begin
+        LCustomer := TSQLCustomer.Create;
+
         ClaimRecvPicker.Date := Date;
         ClaimInputPicker.Date := Date;
         AttendSchedulePicker.Date := 0;
@@ -641,61 +643,69 @@ begin
       if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
         LoadTaskFromVariant(FTask, ADoc.Task);
 
-      Result := LTaskEditF.ShowModal;
-
-      //"저장" 버튼을 누른 경우
-      if Result = mrOK then
+      while True do
       begin
-        if not CheckTaskDBKeyFromForm then
-        begin
-          ShowMessage('HullNo/ProjectNo/ClaimNo 정보가 없습니다.');
-          exit;
-        end;
+        Result := LTaskEditF.ShowModal;
 
-        LoadTaskForm2TaskOrm(LTaskEditF, FTask);
-
-        //IPC를 통해서  Email을 수신한 경우
-        if Assigned(ASQLEmailMsg) then
+        //"저장" 버튼을 누른 경우
+        if Result = mrOK then
         begin
-          //대표 메일을 선택한 경우
-          if Assigned(LTaskEditF.FTask) then
+          if not CheckTaskDBKeyFromForm then
           begin
-            LTask := LTaskEditF.FTask;
+            ShowMessage('HullNo/ProjectNo/ClaimNo 정보가 없습니다.');
+            Continue
           end;
 
-          g_ProjectDB.Add(ASQLEmailMsg, true);
+          LoadTaskForm2TaskOrm(LTaskEditF, FTask);
 
-          if not LTask.IsUpdate then
+          //IPC를 통해서  Email을 수신한 경우
+          if Assigned(ASQLEmailMsg) then
           begin
-            LID := g_ProjectDB.Add(LTask, true);
-            ShowMessage('Task 및 Email Add 완료');
+            //대표 메일을 선택한 경우
+            if Assigned(LTaskEditF.FTask) then
+            begin
+              LTask := LTaskEditF.FTask;
+            end;
+
+            g_ProjectDB.Add(ASQLEmailMsg, true);
+
+            if not LTask.IsUpdate then
+            begin
+              LID := g_ProjectDB.Add(LTask, true);
+              ShowMessage('Task 및 Email Add 완료');
+            end;
+
+  //          LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, ASQLEmailMsg.ID, True)
+          end
+          else
+          begin
+            AddOrUpdateTask(FTask);
           end;
 
-//          LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, ASQLEmailMsg.ID, True)
-        end
-        else
-        begin
-          AddOrUpdateTask(FTask);
-        end;
+          if not Assigned(FSQLGSFiles) then
+            FSQLGSFiles := TSQLGSFile.Create;
 
-        if High(LTaskEditF.FSQLGSFiles.Files) >= 0 then
-        begin
-          g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
-          LTaskEditF.FSQLGSFiles.TaskID := FTask.ID;
-          g_FileDB.Add(LTaskEditF.FSQLGSFiles, true);
-        end
-        else
-          g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
+          if High(LTaskEditF.FSQLGSFiles.Files) >= 0 then
+          begin
+            g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
+            LTaskEditF.FSQLGSFiles.TaskID := FTask.ID;
+            g_FileDB.Add(LTaskEditF.FSQLGSFiles, true);
+          end
+          else
+            g_FileDB.Delete(TSQLGSFile, LTaskEditF.FSQLGSFiles.ID);
 
-        //고객정보 탭 정보 Load -> LCustomer
-        LoadTaskForm2Customer(LTaskEditF, LCustomer, FTask.ID);
-        AddOrUpdateCustomer(LCustomer);
-        //협력사 탭 정보 Load and Save To DB
-        SaveSubConFromForm(LTaskEditF, FTask.ID);
-        //자재정보 탭 Load -> LMat4Proj
-        LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, FTask.ID);
-        LoadTaskForm2Material4ProjectNSave2DB(FTask.ID);
-      end;//mrOK
+          //고객정보 탭 정보 Load -> LCustomer
+          LoadTaskForm2Customer(LTaskEditF, LCustomer, FTask.ID);
+          AddOrUpdateCustomer(LCustomer);
+          //협력사 탭 정보 Load and Save To DB
+          SaveSubConFromForm(LTaskEditF, FTask.ID);
+          //자재정보 탭 Load -> LMat4Proj
+          LoadTaskForm2MaterialDetailNSave2DB(LTaskEditF, FTask.ID);
+          LoadTaskForm2Material4ProjectNSave2DB(FTask.ID);
+        end;//mrOK
+
+        Break;
+      end;//while
     end;//with
   finally
     //대표 메일을 선택한 경우

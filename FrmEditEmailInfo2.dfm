@@ -54,16 +54,6 @@ object EmailInfoF: TEmailInfoF
     NumGlyphs = 2
     TabOrder = 1
   end
-  object ContainDataCB: TComboBox
-    Left = 263
-    Top = 37
-    Width = 204
-    Height = 24
-    Style = csDropDownList
-    ImeName = 'Microsoft IME 2010'
-    TabOrder = 2
-    OnDropDown = ContainDataCBDropDown
-  end
   object EmailDirectionCB: TComboBox
     Left = 263
     Top = 72
@@ -71,7 +61,7 @@ object EmailInfoF: TEmailInfoF
     Height = 24
     Style = csDropDownList
     ImeName = 'Microsoft IME 2010'
-    TabOrder = 3
+    TabOrder = 2
     OnDropDown = EmailDirectionCBDropDown
   end
   object Description: TEdit
@@ -79,6 +69,16 @@ object EmailInfoF: TEmailInfoF
     Top = 112
     Width = 384
     Height = 24
+    TabOrder = 3
+  end
+  object ContainDataCB: TJvCheckedComboBox
+    Left = 216
+    Top = 40
+    Width = 241
+    Height = 24
+    CapSelectAll = '&Select all'
+    CapDeSelectAll = '&Deselect all'
+    CapInvertAll = '&Invert all'
     TabOrder = 4
   end
 end
