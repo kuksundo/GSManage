@@ -627,6 +627,10 @@ begin
       begin
         LCustomer := TSQLCustomer.Create;
 
+        ServiceChargeCB.ItemIndex := g_ASServiceChargeType.ToOrdinal(assctFree);
+        ImportanceCB.ItemIndex := g_ClaimImportanceKind.ToOrdinal(cikC);
+        ClaimStatusCombo.ItemIndex := g_ClaimStatus.ToOrdinal(csOpen);
+
         ClaimRecvPicker.Date := Date;
         ClaimInputPicker.Date := Date;
         AttendSchedulePicker.Date := 0;

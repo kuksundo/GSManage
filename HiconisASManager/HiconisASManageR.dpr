@@ -50,7 +50,9 @@ uses
   FrmHiconisASManage in 'FrmHiconisASManage.pas' {HiconisAsManageF},
   UnitCommonFormUtil in '..\Common\UnitCommonFormUtil.pas',
   UnitImportFromXls in '..\Common\UnitImportFromXls.pas',
-  UnitHiASMaterialCodeRecord in 'UnitHiASMaterialCodeRecord.pas';
+  UnitHiASMaterialCodeRecord in 'UnitHiASMaterialCodeRecord.pas',
+  UnitIniAttriPersist in '..\..\..\Common\UnitIniAttriPersist.pas',
+  UnitHiASIniConfig in 'UnitHiASIniConfig.pas';
 
 {$R *.res}
 

@@ -1,9 +1,12 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{4F3D71B3-E5F4-4687-873D-BF64461AD3F1}</ProjectGuid>
+        <ProjectGuid>{B1D71A74-2716-4D3D-B600-975B85AD2FC1}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="HiconisASManageR.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\RPA\MacroManage\MacroManagement2.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -23,14 +26,23 @@
     <Target Name="HiconisASManageR:Make">
         <MSBuild Projects="HiconisASManageR.dproj" Targets="Make"/>
     </Target>
+    <Target Name="MacroManagement2">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj"/>
+    </Target>
+    <Target Name="MacroManagement2:Clean">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MacroManagement2:Make">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="HiconisASManageR"/>
+        <CallTarget Targets="HiconisASManageR;MacroManagement2"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="HiconisASManageR:Clean"/>
+        <CallTarget Targets="HiconisASManageR:Clean;MacroManagement2:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="HiconisASManageR:Make"/>
+        <CallTarget Targets="HiconisASManageR:Make;MacroManagement2:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

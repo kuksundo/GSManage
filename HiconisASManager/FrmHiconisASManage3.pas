@@ -4,41 +4,35 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ImgList, Winapi.ActiveX,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ImgList,
   NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
   NxCustomGrid, NxGrid, AdvOfficeTabSet, Vcl.StdCtrls, Vcl.ComCtrls,
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
-  CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvToolBtn,
+  CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
-
-  mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
-  mormot.rest.server, mormot.soa.server, mormot.core.datetime, mormot.rest.memserver,
-  mormot.soa.core, mormot.core.interfaces, mormot.core.os, mormot.core.text,
-  mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
-  mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
-
-  VarRecUtils, TimerPool,
+  mormot.core.base, mormot.core.datetime, mormot.core.data, mormot.core.variants,
+  mormot.orm.base, mormot.core.text, mormot.core.unicode, mormot.core.json, mormot.core.collections,
+  VarRecUtils,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
-  Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig
+  Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, FrmInqManageConfig, UnitElecMasterData,
+  {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitToDoList,
-  UnitUserDataRecord2, SBPro, UnitOLEmailRecord2,//UnitIniConfigSetting2
-
-  System.Rtti,
-  DragDropInternet,DropSource,DragDropFile,DragDropFormats, DragDrop, DropTarget,
-  UnitHiconisASWSInterface, thundax.lib.actions_pjh,
-  UnitMAPSMacro2, UnitWorker4OmniMsgQ,
-
-  UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig;
+  {$ELSE}
+  UElecDataRecord, TaskForm, UnitElecServiceData, UnitMakeReport, UnitElecServiceData2,
+  {$ENDIF}
+  UnitIniConfigSetting2, UnitUserDataRecord2, SBPro, UnitOLEmailRecord2,
+  DropSource, DragDrop, DropTarget;
 
 type
-  THiconisAsManageF = class(TForm)
+  THiconisAsManageF1 = class(TForm)
     CurvyPanel1: TCurvyPanel;
     JvLabel2: TJvLabel;
     JvLabel5: TJvLabel;
     JvLabel6: TJvLabel;
     JvLabel1: TJvLabel;
     JvLabel3: TJvLabel;
+    JvLabel7: TJvLabel;
     JvLabel4: TJvLabel;
     JvLabel8: TJvLabel;
     JvLabel9: TJvLabel;
@@ -49,11 +43,13 @@ type
     dt_begin: TDateTimePicker;
     dt_end: TDateTimePicker;
     ComboBox1: TComboBox;
-    ClaimStatusCombo: TComboBox;
+    ProductTypeCombo: TComboBox;
     CustomerCombo: TComboBox;
+    SubjectEdit: TEdit;
     HullNoEdit: TEdit;
     ShipNameEdit: TEdit;
     BefAftCB: TComboBox;
+    CurWorkCB: TComboBox;
     Panel1: TPanel;
     btn_Search: TAeroButton;
     btn_Close: TAeroButton;
@@ -61,7 +57,7 @@ type
     WorkKindCB: TComboBox;
     ClaimNoEdit: TEdit;
     OrderNoEdit: TEdit;
-    PORNoEdit: TEdit;
+    PONoEdit: TEdit;
     DisplayFinalCheck: TCheckBox;
     Button1: TButton;
     PICCB: TComboBox;
@@ -119,7 +115,7 @@ type
     N8: TMenuItem;
     N7: TMenuItem;
     N23: TMenuItem;
-    ToDOList1: TMenuItem;
+    oDOList1: TMenuItem;
     N22: TMenuItem;
     GetHullNoToClipboard1: TMenuItem;
     N1: TMenuItem;
@@ -150,38 +146,7 @@ type
     DataFormatAdapter1: TDataFormatAdapter;
     Timer1: TTimer;
     OpenDialog1: TOpenDialog;
-    MakeCertButton: TAdvToolButton;
-    ClaimPopup: TPopupMenu;
-    Category1: TMenuItem;
-    Location1: TMenuItem;
-    CauseKind1: TMenuItem;
-    CauseHW1: TMenuItem;
-    CauseSW1: TMenuItem;
-    CurWorkCB: TComboBox;
-    JvLabel40: TJvLabel;
-    ClaimServiceKindCB: TComboBox;
-    File1: TMenuItem;
-    CreateNewTask1: TMenuItem;
-    N24: TMenuItem;
-    Close1: TMenuItem;
-    N25: TMenuItem;
-    N26: TMenuItem;
-    ariff1: TMenuItem;
-    ViewTariff1: TMenuItem;
-    EditTariff1: TMenuItem;
-    JvLabel7: TJvLabel;
-    MaterialCodeEdit: TEdit;
-    JvLabel11: TJvLabel;
-    SetFildCondCB: TComboBox;
-    N27: TMenuItem;
-    ExportToExcel2: TMenuItem;
-    SaveDBAs1: TMenuItem;
-    ImportMaterialCodeFromExcel1: TMenuItem;
-    N28: TMenuItem;
 
-    procedure FormCreate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure btn_SearchClick(Sender: TObject);
     procedure ComboBox1DropDown(Sender: TObject);
     procedure rg_periodClick(Sender: TObject);
@@ -192,7 +157,7 @@ type
     procedure DeleteTask1Click(Sender: TObject);
     procedure ShowGSFileID1Click(Sender: TObject);
     procedure CurWorkCBDropDown(Sender: TObject);
-    procedure ClaimStatusComboDropDown(Sender: TObject);
+    procedure ProductTypeComboDropDown(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure TaskTabChange(Sender: TObject);
     procedure HullNoEditKeyPress(Sender: TObject; var Key: Char);
@@ -216,37 +181,28 @@ type
     procedure N21Click(Sender: TObject);
     procedure PICCBChange(Sender: TObject);
     procedure GetHullNoToClipboard1Click(Sender: TObject);
-    procedure ToDOList1Click(Sender: TObject);
+    procedure oDOList1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure DropEmptyTarget1Drop(Sender: TObject; ShiftState: TShiftState;
       APoint: TPoint; var Effect: Integer);
-    procedure btn_CloseClick(Sender: TObject);
-    procedure Category1Click(Sender: TObject);
-    procedure Location1Click(Sender: TObject);
-    procedure CauseKind1Click(Sender: TObject);
-    procedure CauseHW1Click(Sender: TObject);
-    procedure CauseSW1Click(Sender: TObject);
-    procedure ClaimServiceKindCBDropDown(Sender: TObject);
-    procedure Close1Click(Sender: TObject);
-    procedure CreateNewTask1Click(Sender: TObject);
-    procedure N26Click(Sender: TObject);
-    procedure ViewTariff1Click(Sender: TObject);
-    procedure EditTariff1Click(Sender: TObject);
-    procedure ExportToExcel2Click(Sender: TObject);
-    procedure SaveDBAs1Click(Sender: TObject);
-    procedure ImportMaterialCodeFromExcel1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormDestroy(Sender: TObject);
   private
-    FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
     FDBMsgQueue: TOmniMessageQueue;
-//    FIPCMQFromOLEmail: TOmniMessageQueue; FTaskEditConfig.IPCMQFromOLEmail로 대체함
-    FHiASIniConfig: THiASIniConfig;
-    FHiASIniFileName: string;
-    FTaskEditConfig: THiconisASTaskEditConfig;
-    FTaskJson: String;
+    FIPCMQFromOL: TOmniMessageQueue;
+    FWorker4OLMsg: TWorker4OLMsg;
+    FTaskEditConfig: THiconisASTaskEditConfig;
+    FTaskJson: String;
     FFileContent: RawByteString;
 
     //Websocket-b
+    FModel: TSQLModel;
+    FHTTPServer: TRestHttpServer;
+    FRestServer: TRestServer;
+    FServiceFactoryServer: TServiceFactoryServer;
+
     FIpAddr: string;
     FURL: string; //Server에서 Client에 Config Change Notify 하기 위한 Call Back URL
     FIsServerActive,
@@ -263,19 +219,13 @@ type
     FResponseQueue   : TOmniMessageQueue;
     FSendMsgQueue    : TOmniMessageQueue;
 
+    FOLEmailQueue,
     FOLCalendarQueue,
     FOLAppointmentQueue: TOmniMessageQueue;
 
-    FOLCmdSenderHandle: THandle;//OLControlWorker의 Respond값을 전달하기 위한 Handle
-    FOLMailListFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
-
-    procedure InitEnum;
     procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
       Index: integer; out AStream: IStream);
-    procedure OnInitOutlookTimer(Sender : TObject; Handle : Integer;
-            Interval : Cardinal; ElapsedTime : LongInt);
-    procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
-
+
     procedure ProcessCommand(ARespond: string);
     //Macro에서 ExecFunction으로 FunctionName을 주면 아래의 public란 Procedure에서
     //함수명을 찾아서 실행해 줌
@@ -313,7 +263,6 @@ type
     procedure InitTaskTab;
     procedure InputValueClear;
     procedure InitTaskEnum;
-    procedure InitOutlook;
 
     function GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
     function GetTaskIdFromGrid(ARow: integer): TID;
@@ -329,6 +278,7 @@ type
     procedure MakeInvoice(ARow: integer);
     procedure MakeServiceOrder(ARow: integer);
     procedure MakeCustReg(ARow: integer);
+    function CheckRegistration: Boolean;
     procedure DisplayOLMsg2Grid(const task: IOmniTaskControl;
       const msg: TOmniMessage);
   protected
@@ -338,8 +288,6 @@ type
     procedure ProcessPasteEvent(ATxt: string);
     function GetUserList: TStrings;
     function GetUserListFromFile(AFileName: string): TStrings;
-
-    procedure SaveDB2File();
   public
     //메일을 이동시킬 폴더 리스트,
     //HGS Task/Send Folder Name 2 IPC 메뉴에 의해 OL으로 부터 수신함
@@ -348,6 +296,8 @@ type
     FUserList: TStringList;//Remote에서 Task요청시 Result Json저장함
     FToDoCollect: TpjhToDoItemCollection;
     FpjhToDoList: TpjhToDoList;
+    FSettings : TConfigSettings;
+    FIniFileName,
     FMyIPAddress,
     FRemoteIPAddress: string;
     //CreateConstArray함수가 반드시 생성자에서 실행되어야 클래스 안에서 사용 가능함
@@ -366,8 +316,8 @@ type
     procedure SetNetworkInfo(ARootName, APortName, AKeyName: string);
     function GetMyName(AEmail: string): string;
     procedure LoadConfigFromFile(AFileName: string = '');
-    procedure LoadConfig2Form(AForm: THiASConfigF);
-    procedure LoadConfigForm2Object(AForm: THiASConfigF);
+    procedure LoadConfig2Form(AForm: TConfigF);
+    procedure LoadConfigForm2Object(AForm: TConfigF);
     procedure SetConfig;
     procedure ApplyConfigChanged;
     function GetRecvEmailAddress(AMailType: integer): string;
@@ -377,10 +327,8 @@ type
     procedure FillInUserList;
 
     function GetTask: TOrmHiconisASTask;
-//    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
+    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
-    procedure DisplayTask2GridByPorNo(const APorNo: string);
-    procedure DisplayTask2GridByMaterialCode(const AMaterialCode: string);
     procedure LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
     procedure LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
@@ -404,7 +352,7 @@ type
     procedure DisplayTaskInfo2GridFromJson(AJson: RawUTF8);
     procedure ShowTaskFormFromJson(AJson: RawUTF8);
 
-    procedure AsyncProcessCommandProc;
+    procedure AsynDisplayOLMsg2Grid;//(AStopEvent: TEvent; AIPCMQFromOL: TOmniMessageQueue);
     procedure SendReqOLEmailInfo;
     procedure SendReqOLEmailInfo_CromisIPC;
     procedure SendReqOLEmailInfo_WS;
@@ -418,59 +366,75 @@ type
     procedure Select_TermsOfPayment;
   end;
 
-const
-  WM_OLMSG_RESULT = WM_USER + 1;
-
-var
-  HiconisASManageF: THiconisASManageF;
-
 implementation
 
-uses UnitIPCModule2, ClipBrd, System.RegularExpressions,
+uses System.Rtti, UnitIPCModule2, ClipBrd, System.RegularExpressions,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
+  {$IFDEF GAMANAGER}
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
-  UnitHttpModule4InqManageServer2, UnitStringUtil, UnitExcelUtil,
+  {$ELSE}
+  UnitVariantJsonUtil,
+  {$ENDIF}
+  UnitHttpModule4InqManageServer2, UnitStringUtil,
 
-  Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
-  UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
-  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
-  UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord;
+  System.DateUtils, OtlParallel, Clipbrd, UnitIPCModule2,
+  Vcl.ogutil, UnitDragUtil, UnitHiconisASVarJsonUtil, FrmOLEmailList,//FrmEmailListView2,
+  UnitBase64Util2, UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
+  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitMakeReport2,
+
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Winapi.ActiveX, Vcl.ExtCtrls, Vcl.Menus,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, NxColumnClasses, NxColumns,
+  NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, AdvOfficeTabSet,
+  Vcl.StdCtrls, Vcl.ComCtrls, AdvGroupBox, AdvOfficeButtons, AeroButtons,
+  JvExControls, JvLabel, CurvyControls, Vcl.ImgList, System.SyncObjs,
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask,
+  mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
+  mormot.rest.server, mormot.soa.server, mormot.core.datetime, mormot.rest.memserver,
+  mormot.soa.core, mormot.core.interfaces, mormot.core.os, mormot.core.text,
+  mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
+  CommonData2, FrmHiconisASTaskEdit, UnitHiconisMasterRecord, System.Rtti,
+  DragDropInternet,DropSource,DragDropFile,DragDropFormats, DragDrop, DropTarget,
+  VarRecUtils,
+  UnitHiconisASWSInterface, UnitOLDataType, thundax.lib.actions_pjh,
+  UnitMAPSMacro2, UnitUserDataRecord2, UnitElecServiceData2,
+  FrameDisplayTaskInfo2, UnitOLControlWorker, UnitWorker4OmniMsgQ;
 
 {$R *.dfm}
 
-procedure THiconisAsManageF.SubjectEditKeyPress(Sender: TObject; var Key: Char);
+procedure THiconisAsManageF1.SubjectEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
 end;
 
-procedure THiconisAsManageF.CurWorkCBDropDown(Sender: TObject);
+procedure THiconisAsManageF1.CurWorkCBDropDown(Sender: TObject);
 begin
   g_SalesProcess.SetType2Combo(CurWorkCB);
 end;
 
-procedure THiconisAsManageF.LoadConfig2Form(AForm: THiASConfigF);
+procedure THiconisAsManageF1.LoadConfig2Form(AForm: TConfigF);
 begin
-  FHiASIniConfig.LoadConfig2Form(AForm, FHiASIniConfig);
+  FSettings.LoadConfig2Form(AForm, FSettings);
 end;
 
-procedure THiconisAsManageF.LoadConfigForm2Object(AForm: THiASConfigF);
+procedure THiconisAsManageF1.LoadConfigForm2Object(AForm: TConfigF);
 begin
-  FHiASIniConfig.LoadConfigForm2Object(AForm, FHiASIniConfig);
+  FSettings.LoadConfigForm2Object(AForm, FSettings);
 end;
 
-procedure THiconisAsManageF.LoadConfigFromFile(AFileName: string);
+procedure THiconisAsManageF1.LoadConfigFromFile(AFileName: string);
 begin
-  if AFileName = '' then
-    AFileName := FHiASIniFileName;
+  FSettings.Load(AFileName);
 
-  FHiASIniConfig.Load(AFileName);
+  if FSettings.MQServerIP = '' then
+    FSettings.MQServerIP := '127.0.0.1';
 end;
 
-procedure THiconisAsManageF.LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
+procedure THiconisAsManageF1.LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
   ARow: integer);
-//var
-//  LStrList: TStringList;
-//  LFSMState: THiconisASState;
+var
+  LStrList: TStringList;
+  LFSMState: THiconisASState;
 begin
   if ARow = -1 then
   begin
@@ -494,16 +458,16 @@ begin
 //    CellByName['QtnNo', ARow].AsString := QTN_No;
     CellByName['OrderNo', ARow].AsString := Order_No;
     CellByName['ReqCustomer', ARow].AsString := ShipOwner;
-    CellByName['Status', ARow].AsString := g_HiconisASState.ToString(CurrentWorkStatus);
+    CellByName['Status', ARow].AsString := g_SalesProcess.ToString(CurrentWorkStatus);
     CellByName['Email', ARow].AsInteger := NumOfEMails;
 
     if NextWork > 0 then
     begin
-      CellByName['NextProcess', ARow].AsString := g_HiconisASTrigger.ToString(NextWork);
+      CellByName['NextProcess', ARow].AsString := g_SalesProcess.ToString(NextWork);
     end
     else
     begin
-//      LFSMState := g_HiconisASState.ToType(Ord(SalesProcessType));
+      LFSMState := g_HiconisASState.ToType(Ord(SalesProcessType));
 
 //      if Assigned(LFSMState) then
 //      begin
@@ -535,7 +499,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
+procedure THiconisAsManageF1.LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
   ARow: integer);
 var
   LIds: TIDDynArray;
@@ -552,12 +516,7 @@ begin
   LoadGSTask2Grid(AVar, AGrid, ARow);
 end;
 
-procedure THiconisAsManageF.Location1Click(Sender: TObject);
-begin
-  Location1.Tag := ShowCheckGrp4Claim(Ord(ctkLocation), Location1.Tag);
-end;
-
-procedure THiconisAsManageF.MakeCustReg(ARow: integer);
+procedure THiconisAsManageF1.MakeCustReg(ARow: integer);
 var
   LRec: Doc_Cust_Reg_Rec;
 begin
@@ -565,7 +524,7 @@ begin
   MakeDocCustomerRegistration(LRec);
 end;
 
-procedure THiconisAsManageF.MakeInvoice(ARow: integer);
+procedure THiconisAsManageF1.MakeInvoice(ARow: integer);
 var
   LRec: Doc_Invoice_Rec;
 begin
@@ -573,7 +532,7 @@ begin
   MakeDocInvoice(LRec);
 end;
 
-procedure THiconisAsManageF.MakeQtn(ARow: integer);
+procedure THiconisAsManageF1.MakeQtn(ARow: integer);
 var
   LRec: Doc_Qtn_Rec;
 begin
@@ -581,7 +540,7 @@ begin
   MakeDocQtn(LRec);
 end;
 
-procedure THiconisAsManageF.MakeServiceOrder(ARow: integer);
+procedure THiconisAsManageF1.MakeServiceOrder(ARow: integer);
 var
   LRec: Doc_ServiceOrder_Rec;
 begin
@@ -589,152 +548,147 @@ begin
   MakeDocServiceOrder(LRec);
 end;
 
-procedure THiconisAsManageF.N11Click(Sender: TObject);
+procedure THiconisAsManageF1.N11Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N12Click(Sender: TObject);
+procedure THiconisAsManageF1.N12Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N13Click(Sender: TObject);
+procedure THiconisAsManageF1.N13Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N14Click(Sender: TObject);
+procedure THiconisAsManageF1.N14Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N15Click(Sender: TObject);
+procedure THiconisAsManageF1.N15Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N16Click(Sender: TObject);
+procedure THiconisAsManageF1.N16Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N18Click(Sender: TObject);
+procedure THiconisAsManageF1.N18Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N19Click(Sender: TObject);
+procedure THiconisAsManageF1.N19Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N20Click(Sender: TObject);
+procedure THiconisAsManageF1.N20Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N21Click(Sender: TObject);
+procedure THiconisAsManageF1.N21Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
   LTask := GetTask;
   try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
+    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
+      FSettings,
+      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-procedure THiconisAsManageF.N26Click(Sender: TObject);
-begin
-  SetConfig;
-end;
-
-procedure THiconisAsManageF.N4Click(Sender: TObject);
+procedure THiconisAsManageF1.N4Click(Sender: TObject);
 var
   LRec: Doc_SubCon_Invoice_List_Rec;
   LWorksheet: OleVariant;
@@ -745,7 +699,7 @@ begin
 //  MakeDocSubConInvoiceList2(LWorkSheet, LRec, LRow);
 end;
 
-procedure THiconisAsManageF.ToDOList1Click(Sender: TObject);
+procedure THiconisAsManageF1.oDOList1Click(Sender: TObject);
 begin
   if grid_Req.SelectedCount = 0 then
   begin
@@ -757,15 +711,7 @@ begin
   ShowTodoListFormFromDBByGridRow(grid_Req.SelectedRow);
 end;
 
-procedure THiconisAsManageF.ViewTariff1Click(Sender: TObject);
-var
-  LDoc: variant;
-begin
-  LDoc := LoadGSTariff2VariantFromCompanyCodeNYear('0001056374', YearOf(now));
-  DisplayTariff(LDoc);
-end;
-
-procedure THiconisAsManageF.OnGetStream(
+procedure THiconisAsManageF1.OnGetStream(
   Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
   out AStream: IStream);
 var
@@ -782,44 +728,17 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.OnInitOutlookTimer(Sender: TObject; Handle: Integer;
-  Interval: Cardinal; ElapsedTime: Integer);
-begin
-  InitOutlook();
-end;
-
-procedure THiconisAsManageF.OnWorkerResult(var Msg: TMessage);
-var
-  LMsg  : TOmniMessage;
-//  LOLRespondRec : TOLRespondRec;
-begin
-  if FResponseQueue.TryDequeue(LMsg) then
-  begin
-//    if LMsg.MsgID = Ord(olrkMAPIFolderList) then
-//    begin
-//      LOLRespondRec := LMsg.MsgData.ToRecord<TOLRespondRec>;
-//      ShowMessage(LOLRespondRec.FMsg);
-//    end;
-
-    //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2OLEmail.Enqueue 실행
-    //아래 조건이 없으면 IPCMQ2OLEmail.Enqueue 때문에 Q에 데이터가 쌓임
-    if FOLMailListFormDisplayed then
-      if FTaskEditConfig.IPCMQ2OLEmail.Enqueue(LMsg) then
-        SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
-  end;
-end;
-
-procedure THiconisAsManageF.PICCBChange(Sender: TObject);
+procedure THiconisAsManageF1.PICCBChange(Sender: TObject);
 begin
   GetIsRemote(FRemoteIPAddress);
 end;
 
-procedure THiconisAsManageF.ProcessCommand(ARespond: string);
+procedure THiconisAsManageF1.ProcessCommand(ARespond: string);
 begin
 
 end;
 
-procedure THiconisAsManageF.ProcessPasteEvent(ATxt: string);
+procedure THiconisAsManageF1.ProcessPasteEvent(ATxt: string);
 var
   LStr: string;
   LRegexpr: TRegEx;
@@ -860,23 +779,12 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ClaimServiceKindCBDropDown(Sender: TObject);
+procedure THiconisAsManageF1.ProductTypeComboDropDown(Sender: TObject);
 begin
-  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
+  g_ElecProductType.SetType2Combo(ProductTypeCombo);
 end;
 
-procedure THiconisAsManageF.ClaimStatusComboDropDown(Sender: TObject);
-begin
-//  g_ElecProductType.SetType2Combo(ProductTypeCombo);
-  g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
-end;
-
-procedure THiconisAsManageF.Close1Click(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure THiconisAsManageF.rg_periodClick(Sender: TObject);
+procedure THiconisAsManageF1.rg_periodClick(Sender: TObject);
 begin
   dt_begin.Enabled := False;
   dt_end.Enabled := False;
@@ -904,7 +812,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.GetJsonValues1Click(Sender: TObject);
+procedure THiconisAsManageF1.GetJsonValues1Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
   LUtf8: RawUTF8;
@@ -951,26 +859,26 @@ begin
   end;
 end;
 
-function THiconisAsManageF.GetMyName(AEmail: string): string;
+function THiconisAsManageF1.GetMyName(AEmail: string): string;
 begin
   Result := GetMyNameNIPAddressFromEmailAddress(AEmail);
 end;
 
-function THiconisAsManageF.GetRecvEmailAddress(AMailType: integer): string;
+function THiconisAsManageF1.GetRecvEmailAddress(AMailType: integer): string;
 begin
   case AMailType of
     1: Result := '';//Invoice 송부
-//    2: Result := FSettings.SalesDirectorEmailAddr;// SALES_DIRECTOR_EMAIL_ADDR;//매출처리요청
-//    3: Result := FSettings.MaterialInputEmailAddr;// MATERIAL_INPUT_EMAIL_ADDR;//자재직투입요청
-//    4: Result := FSettings.ForeignInputEmailAddr;// FOREIGN_INPUT_EMAIL_ADDR;//해외고객업체등록
-//    5: Result := FSettings.ElecHullRegEmailAddr;// ELEC_HULL_REG_EMAIL_ADDR;//전전비표준공사 생성 요청
-//    6: Result := PO_REQ_EMAIL_ADDR; //PO 요청
-//    7: Result := FSettings.ShippingReqEmailAddr;// SHIPPING_REQ_EMAIL_ADDR; //출하 요청
-//    8: Result := FSettings.FieldServiceReqEmailAddr;// FIELDSERVICE_REQ_EMAIL_ADDR; //필드서비스팀 요청
+    2: Result := FSettings.SalesDirectorEmailAddr;// SALES_DIRECTOR_EMAIL_ADDR;//매출처리요청
+    3: Result := FSettings.MaterialInputEmailAddr;// MATERIAL_INPUT_EMAIL_ADDR;//자재직투입요청
+    4: Result := FSettings.ForeignInputEmailAddr;// FOREIGN_INPUT_EMAIL_ADDR;//해외고객업체등록
+    5: Result := FSettings.ElecHullRegEmailAddr;// ELEC_HULL_REG_EMAIL_ADDR;//전전비표준공사 생성 요청
+    6: Result := PO_REQ_EMAIL_ADDR; //PO 요청
+    7: Result := FSettings.ShippingReqEmailAddr;// SHIPPING_REQ_EMAIL_ADDR; //출하 요청
+    8: Result := FSettings.FieldServiceReqEmailAddr;// FIELDSERVICE_REQ_EMAIL_ADDR; //필드서비스팀 요청
   end;
 end;
 
-procedure THiconisAsManageF.GetSearchCondRec(var ARec: TSearchCondRec);
+procedure THiconisAsManageF1.GetSearchCondRec(var ARec: TSearchCondRec);
 var
   LQueryDateType: TQueryDateType;
 begin
@@ -987,25 +895,15 @@ begin
     FHullNo := HullNoEdit.Text;
     FShipName := ShipNameEdit.Text;
     FCustomer := CustomerCombo.Text;
-//    FProdType := ProductTypeCombo.Text;
-    FClaimStatus := ClaimStatusCombo.ItemIndex;
-//    FSubject := SubjectEdit.Text;
-    FClaimServiceKind := ClaimServiceKindCB.ItemIndex;
+    FProdType := ProductTypeCombo.Text;
+    FSubject := SubjectEdit.Text;
     FCurWork :=  CurWorkCB.ItemIndex;
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
     FClaimNo := ClaimNoEdit.Text;
 //    FQtnNo := QtnNoEdit.Text;
     FOrderNo := OrderNoEdit.Text;
-//    FPoNo := PONoEdit.Text;
-    FPorNo := PorNoEdit.Text;
-    FMaterialCode := MaterialCodeEdit.Text;
-
-    FClaimCatetory := Category1.Tag;
-    FClaimLocation := Location1.Tag;
-    FClaimKind := CauseKind1.Tag;
-    FClaimCauseHW := CauseHW1.Tag;
-    FClaimCauseSW := CauseSW1.Tag;
+    FPoNo := PONoEdit.Text;
 
 //    if PICCB.ItemIndex = -1 then
 //      PICCB.ItemIndex := 0;
@@ -1017,14 +915,17 @@ begin
   end;
 end;
 
-function THiconisAsManageF.GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
+function THiconisAsManageF1.GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
 begin
   case AQueryDate of
-    qdtMaterialOrder: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
+    qdtInqRecv: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
+    qdtInvoiceIssue: Result := 'InvoiceIssueDate >= ? and InvoiceIssueDate <= ? ';
+    qdtQTNInput: Result := 'QTNInputDate >= ? and QTNInputDate <= ? ';
+    qdtOrderInput: Result := 'OrderInputDate >= ? and OrderInputDate <= ? ';
   end;
 end;
 
-function THiconisAsManageF.GetTask: TOrmHiconisASTask;
+function THiconisAsManageF1.GetTask: TOrmHiconisASTask;
 var
   LTaskID: TID;
 begin
@@ -1032,7 +933,7 @@ begin
   Result := GetLoadTask(LTaskID);
 end;
 
-function THiconisAsManageF.GetTaskIdFromGrid(ARow: integer): TID;
+function THiconisAsManageF1.GetTaskIdFromGrid(ARow: integer): TID;
 begin
   if Assigned(grid_Req.Row[ARow].Data) then
     Result := TIDList(grid_Req.Row[ARow].Data).fTaskId
@@ -1040,7 +941,7 @@ begin
     Result := -1;
 end;
 
-function THiconisAsManageF.GetUserList: TStrings;
+function THiconisAsManageF1.GetUserList: TStrings;
 var
   LSQLUserDetail: TSQLUserDetail;
 begin
@@ -1057,7 +958,7 @@ begin
   end;
 end;
 
-function THiconisAsManageF.GetUserListFromFile(AFileName: string): TStrings;
+function THiconisAsManageF1.GetUserListFromFile(AFileName: string): TStrings;
 var
   LStr: string;
   LUtf8: RawUTF8;
@@ -1226,7 +1127,7 @@ end;
 //  end;
 //end;
 
-function THiconisAsManageF.Get_Doc_Cust_Reg_Rec(ARow: integer): Doc_Cust_Reg_Rec;
+function THiconisAsManageF1.Get_Doc_Cust_Reg_Rec(ARow: integer): Doc_Cust_Reg_Rec;
 var
   LTask: TOrmHiconisASTask;
   LIdList: TIDList;
@@ -1255,7 +1156,7 @@ begin
   end;
 end;
 
-function THiconisAsManageF.Get_Doc_Inv_Rec(ARow: integer): Doc_Invoice_Rec;
+function THiconisAsManageF1.Get_Doc_Inv_Rec(ARow: integer): Doc_Invoice_Rec;
 var
   LTask: TOrmHiconisASTask;
   LIdList: TIDList;
@@ -1285,7 +1186,7 @@ begin
   end;
 end;
 
-function THiconisAsManageF.Get_Doc_Qtn_Rec(ARow: integer): Doc_Qtn_Rec;
+function THiconisAsManageF1.Get_Doc_Qtn_Rec(ARow: integer): Doc_Qtn_Rec;
 var
   LQTN: string;
   LTask: TOrmHiconisASTask;
@@ -1323,7 +1224,7 @@ begin
   end;
 end;
 
-function THiconisAsManageF.Get_Doc_ServiceOrder_Rec(ARow: integer): Doc_ServiceOrder_Rec;
+function THiconisAsManageF1.Get_Doc_ServiceOrder_Rec(ARow: integer): Doc_ServiceOrder_Rec;
 var
   LPeriod:string;
   LTask: TOrmHiconisASTask;
@@ -1377,7 +1278,7 @@ begin
   end;
 end;
 
-function THiconisAsManageF.Get_Doc_SubCon_Invoice_List_Rec: Doc_SubCon_Invoice_List_Rec;
+function THiconisAsManageF1.Get_Doc_SubCon_Invoice_List_Rec: Doc_SubCon_Invoice_List_Rec;
 begin
 //  Result.FProjectCode := OrderNoEdit.Text;
 //  Result.FHullNo := HullNoEdit.Text;
@@ -1389,7 +1290,7 @@ begin
 //  Result.FInvoiceIssueDate := FormatDateTime('YYYY.MM.DD',InvoiceIssuePicker.Date);
 end;
 
-procedure THiconisAsManageF.grid_ReqCellDblClick(Sender: TObject; ACol,
+procedure THiconisAsManageF1.grid_ReqCellDblClick(Sender: TObject; ACol,
   ARow: Integer);
 var
   LTask: TOrmHiconisASTask;
@@ -1400,7 +1301,7 @@ begin
   ShowTaskFormFromDB(ARow);
 end;
 
-procedure THiconisAsManageF.grid_ReqKeyDown(Sender: TObject; var Key: Word;
+procedure THiconisAsManageF1.grid_ReqKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (Shift = [ssCtrl]) and ((Key = Ord('V')) or (Key = Ord('v'))  ) then
@@ -1408,56 +1309,25 @@ begin
 //    ShowMessage(ClipBoard.AsText);
 end;
 
-procedure THiconisAsManageF.HullNoEditKeyPress(Sender: TObject; var Key: Char);
+procedure THiconisAsManageF1.HullNoEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
 end;
 
-procedure THiconisAsManageF.ImportMaterialCodeFromExcel1Click(Sender: TObject);
+procedure THiconisAsManageF1.InitNetwork;
 begin
-  if OpenDialog1.Execute then
-  begin
-    if FileExists(OpenDialog1.FileName) then
-    begin
-      ImportMaterialCodeFromXlsFile(OpenDialog1.FileName);
-      ShowMessage('MaterialCode is imported completely.' + #13#10 + 'Please check the HiconisAS_MaterialCode.sqlite');
-    end;
-  end;
-end;
-
-procedure THiconisAsManageF.InitEnum;
-begin
-  g_HiconisASState.InitArrayRecord(R_HiconisASState);
-  g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
-  g_ClaimServiceKind.InitArrayRecord(R_ClaimServiceKind);
-  g_ClaimCategory.InitArrayRecord(R_ClaimCategory);
-  g_ClaimLocation.InitArrayRecord(R_ClaimLocation);
-  g_ClaimCauseKind.InitArrayRecord(R_ClaimCauseKind);
-  g_ClaimCauseHW.InitArrayRecord(R_ClaimCauseHW);
-  g_ClaimCauseSW.InitArrayRecord(R_ClaimCauseSW);
-  g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
-  g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
-end;
-
-procedure THiconisAsManageF.InitNetwork;
-begin
-//  CreateHttpServer4WS(FPortName, FTransmissionKey, TServiceIM4WS, [IHiconisASService]);
+  CreateHttpServer4WS(FPortName, FTransmissionKey, TServiceIM4WS, [IHiconisASService]);
   FIsRunRestServer := True;
   StatusBarPro1.Panels[2].Text := 'Port = ' + FPortName;
 end;
 
-procedure THiconisAsManageF.InitOutlook;
-begin
-  FTaskEditConfig.IPCMQFromOLEmail.Enqueue(TOmniMessage.Create(Ord(olckInitVar), TOmniValue.CastFrom(Self.Handle)));
-end;
-
-procedure THiconisAsManageF.InitTaskEnum;
+procedure THiconisAsManageF1.InitTaskEnum;
 begin
   g_QueryDateType.InitArrayRecord(R_QueryDateType);
   g_ElecProductType.InitArrayRecord(R_ElecProductType);
 end;
 
-procedure THiconisAsManageF.InitTaskTab;
+procedure THiconisAsManageF1.InitTaskTab;
 var
   i: integer;
   LStr: string;
@@ -1471,41 +1341,28 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.InputValueClear;
+procedure THiconisAsManageF1.InputValueClear;
 begin
   HullNoEdit.Text := '';
   ShipNameEdit.Text := '';
   CustomerCombo.Text := '';
-//  PONoEdit.Text := '';
-  PorNoEdit.Text := '';
-  MaterialCodeEdit.Text := '';
+  PONoEdit.Text := '';
   ClaimNoEdit.Text := '';
-//  SubjectEdit.Text := '';
-  ClaimServiceKindCB.ItemIndex := -1;
-  ClaimStatusCombo.ItemIndex := -1;
-
+  SubjectEdit.Text := '';
   OrderNoEdit.Text := '';
   ComboBox1.ItemIndex := -1;
-//  ProductTypeCombo.ItemIndex := -1;
-  ClaimStatusCombo.ItemIndex := -1;
-
+  ProductTypeCombo.ItemIndex := -1;
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
   PICCB.ItemIndex := -1;
-
-  Category1.Tag := 0;
-  Location1.Tag := 0;
-  CauseKind1.Tag := 0;
-  CauseHW1.Tag := 0;
-  CauseSW1.Tag := 0;
 end;
 
-procedure THiconisAsManageF.Invoice4Click(Sender: TObject);
+procedure THiconisAsManageF1.Invoice4Click(Sender: TObject);
 begin
   MakeInvoice(grid_Req.SelectedRow);
 end;
 
-procedure THiconisAsManageF.KeyIn_CompanyCode;
+procedure THiconisAsManageF1.KeyIn_CompanyCode;
 var
   LCode: string;
   LTask: TOrmHiconisASTask;
@@ -1519,7 +1376,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.KeyIn_Content;
+procedure THiconisAsManageF1.KeyIn_Content;
 var
   LContent: string;
   LTask: TOrmHiconisASTask;
@@ -1533,7 +1390,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.KeyIn_RFQ;
+procedure THiconisAsManageF1.KeyIn_RFQ;
 var
   LPONo: string;
   LTask: TOrmHiconisASTask;
@@ -1547,7 +1404,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.GetHullNoToClipboard1Click(Sender: TObject);
+procedure THiconisAsManageF1.GetHullNoToClipboard1Click(Sender: TObject);
 begin
   if grid_Req.SelectedRow = -1 then
     exit;
@@ -1556,7 +1413,7 @@ begin
     grid_Req.CellsByName['HullNo',grid_Req.SelectedRow] + ') - ' + grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
 end;
 
-function THiconisAsManageF.GetIsRemote(var ARemoteAddr: string): Boolean;
+function THiconisAsManageF1.GetIsRemote(var ARemoteAddr: string): Boolean;
 begin
   Result := False;
 
@@ -1572,25 +1429,30 @@ begin
     StatusBarPro1.Panels[0].Text := 'Local'
 end;
 
-procedure THiconisAsManageF.DisplayOLMsg2Grid(const task: IOmniTaskControl;
+procedure THiconisAsManageF1.DisplayOLMsg2Grid(const task: IOmniTaskControl;
   const msg: TOmniMessage);
 begin
 
 end;
 
-//procedure THiconisAsManageF.DisplayTaskInfo2EditForm(const ATaskID: integer);
-//var
-//  LTask: TOrmHiconisASTask;
-//begin
-//  LTask:= CreateOrGetLoadTask(ATaskID);
-//  try
-//    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
-//  finally
-//    FreeAndNil(LTask);
-//  end;
-//end;
+procedure THiconisAsManageF1.DisplayTaskInfo2EditForm(const ATaskID: integer);
+var
+  LTask: TOrmHiconisASTask;
+  LTaskEditConfig: THiconisASTaskEditConfig;
+begin
+  LTask:= CreateOrGetLoadTask(ATaskID);
+  try
+  {$IFDEF GAMANAGER}
+    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, LTaskEditConfig);
+  {$ELSE}
+    TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
+  {$ENDIF}
+  finally
+    FreeAndNil(LTask);
+  end;
+end;
 
-procedure THiconisAsManageF.AddFolderListFromOL(AFolder: string);
+procedure THiconisAsManageF1.AddFolderListFromOL(AFolder: string);
 begin
   if FFolderListFromOL.IndexOf(AFolder) = -1  then
   begin
@@ -1606,7 +1468,7 @@ begin
     ShowMessage('동일한 Folder 이름이 존재함 : ' + AFolder);
 end;
 
-procedure THiconisAsManageF.AeroButton1Click(Sender: TObject);
+procedure THiconisAsManageF1.AeroButton1Click(Sender: TObject);
 var
   LRow: integer;
 begin
@@ -1625,12 +1487,17 @@ begin
   ShowTodoListFormFromDBByGridRow(LRow);
 end;
 
-procedure THiconisAsManageF.ApplyConfigChanged;
+procedure THiconisAsManageF1.ApplyConfigChanged;
 begin
   LoadConfigFromFile;
 end;
 
-procedure THiconisAsManageF.AsyncProcessCommandProc;
+procedure THiconisAsManageF1.AsynDisplayOLMsg2Grid;
+var
+  LEmailMsg,
+  LEmailMsg2: TSQLEmailMsg;
+  LTask,
+  LTask2: TOrmHiconisASTask;
 begin
   Parallel.Async(
     procedure (const task: IOmniTask)
@@ -1639,48 +1506,128 @@ begin
       handles: array [0..1] of THandle;
       msg    : TOmniMessage;
       rec    : TOLMsgFileRecord;
-      LOLRespondRec: TOLRespondRec;
-      LEntryIdRecord: TEntryIdRecord;
-      LOmniValue: TOmniValue;
+      LID: TID;
+      LTaskIds: TIDDynArray;
+      LIsAddTask,  //True=신규 Task 등록
+      LIsProcessJson: Boolean; //Task정보를 Json파일로 받음
+      LStr: string;
     begin
+      try
+//        g_MyEmailInfo := SendReqOLEmailAccountInfo_WS;
+      except
+      end;
+
       handles[0] := FStopEvent.Handle;
-      handles[1] := FTaskEditConfig.IPCMQFromOLEmail.GetNewMessageEvent;
+      handles[1] := FIPCMQFromOL.GetNewMessageEvent;
+      LEmailMsg := TSQLEmailMsg.Create;
 
-      while WaitForMultipleObjects(2, @handles, false, INFINITE) = (WAIT_OBJECT_0 + 1) do
+      while WaitForMultipleObjects(2, @handles, false, INFINITE) = (WAIT_OBJECT_0 + 1) do
       begin
-        //FrameOLEmailList4Ole.TOutlookEmailListFr 에서 OL Control 요청이 들어옴
-        while FTaskEditConfig.IPCMQFromOLEmail.TryDequeue(msg) do
+        while FIPCMQFromOL.TryDequeue(msg) do
         begin
-          case TOLCommandKind(msg.MsgID) of
-            olckInitVar,
-            olckGetFolderList: begin
-              FOLCmdSenderHandle := msg.MsgData.AsInteger;
-              msg.MsgData.AsInteger := Self.Handle;
-            end;
-            olckAddAppointment:;
-            olckMoveMail2Folder: begin
-              LEntryIdRecord := Msg.MsgData.ToRecord<TEntryIdRecord>;
-              FOLCmdSenderHandle := LEntryIdRecord.FSenderHandle;
-              LEntryIdRecord.FSenderHandle := Self.Handle;
-              msg.MsgData := TOmniValue.FromRecord(LEntryIdRecord);
-            end;
-            olckGetSelectedMailItemFromExplorer: begin
-              LOLRespondRec := msg.MsgData.ToRecord<TOLRespondRec>;
-              FOLCmdSenderHandle := LOLRespondRec.FSenderHandle;
-              LOLRespondRec.FSenderHandle := Self.Handle;
-              msg.MsgData := TOmniValue.FromRecord(LOLRespondRec);
-            end;
-            olckShowMailContents:;
-          end;
+          LTask := TOrmHiconisASTask.Create;
+          try
+            rec := msg.MsgData.ToRecord<TOLMsgFileRecord>;
 
-          if not FCommandQueue.Enqueue(TOmniMessage.Create(msg.MsgID, msg.MsgData)) then
-            raise System.SysUtils.Exception.Create('TOutlookEmailListFr.SendCmd2WorkerThrd->Command queue is full!');
-
-          task.Invoke(//Thread Synchronize와 동일함
-            procedure
+            if msg.MsgID = Ord(dkmqMailFromOL) then
             begin
+              LIsProcessJson := False;
+
+              if (rec.FEntryID <> '') and (rec.FStoreID <> '') then
+              begin
+                LEmailMsg := TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm,
+                  'EntryID = ? AND StoreID = ?', [rec.FEntryID,rec.FStoreID]);
+
+                //데이터가 없으면
+  //              if LEmailMsg.ID = 0 then
+                if not LEmailMsg.FillOne then
+                begin
+                  LEmailMsg.Sender := rec.FSender;
+                  LEmailMsg.Receiver := rec.FReceiver;
+                  LEmailMsg.CarbonCopy := rec.FCarbonCopy;
+                  LEmailMsg.BlindCC := rec.FBlindCC;
+                  LEmailMsg.EntryID := rec.FEntryId;
+                  LEmailMsg.StoreID := rec.FStoreId;
+                  LEmailMsg.Subject := rec.FSubject;
+                  LEmailMsg.SavedOLFolderPath := rec.FSavedOLFolderPath;
+                  LEmailMsg.RecvDate := TimeLogFromDateTime(rec.FReceiveDate);
+
+                  LEmailMsg2 := TSQLEmailMsg.Create(g_ProjectDB.Orm,
+                    'Subject = ?', [rec.FSubject]);
+
+                  if LEmailMsg2.FillOne then //동일한 제목의 메일이 존재하면
+                  begin
+                    LIsAddTask := False;
+//                    LTask.EmailMsg.SourceGet(g_ProjectDB.Orm, LEmailMsg2.ID, LTaskIds);
+
+                    try
+                      for i:= low(LTaskIds) to high(LTaskIds) do
+                      begin
+                        LTask2 := CreateOrGetLoadTask(LTaskIds[i]);
+                        break;
+                      end;
+                    finally
+                      if LTask2.ID <> 0 then
+                      begin
+//                        LTask2.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask2.ID, LEMailMsg.ID, True);
+                        FreeAndNil(LTask2);
+                      end;
+                    end;
+
+                    LEmailMsg.ParentID := LEmailMsg2.EntryID+';'+LEmailMsg2.StoreID;
+                    LID := g_ProjectDB.Add(LEmailMsg, true);
+                  end
+                  else
+                  begin //제목이 존재하지 않으면 Task도 새로 등록 해야 함
+  //                  LIsAddTask := True;
+                    LTask.InqRecvDate := TimeLogFromDateTime(rec.FReceiveDate);
+                    LTask.ChargeInPersonId := rec.FUserEmail;
+                    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,LEmailMsg,null, FTaskEditConfig);
+    //                g_ProjectDB.Add(LTask, true);
+    //                LTask.EmailMsg.ManyAdd(g_ProjectDB.Orm, LTask.ID, LEmailMsg.ID, true);
+                  end;
+                end;
+              end;
             end
-          );
+            else
+            if msg.MsgID = Ord(dkmqFolderFromOL) then
+            begin
+              //task.Invoke함수에서 Grid에 Task 추가하는 것을 방지함
+              LIsAddTask := False;
+              LIsProcessJson := False;
+              TDTF.AddFolderListFromOL(rec.FEntryId + '=' + rec.FStoreId);
+            end
+            else
+            if msg.MsgID = Ord(dkmqFileFromDrag) then
+            begin
+              LStr := rec.FSubject;
+              LIsProcessJson := True;
+              LIsAddTask := False;
+            end;
+
+            task.Invoke(//Thread Synchronize와 동일함
+              procedure
+              begin
+                //동일한 제목의 메일이 존재하지 않으면 Grid에 추가
+                if LIsAddTask then
+                begin
+                  if Assigned(LTask) then
+                  begin
+                    TDTF.LoadTaskVar2Grid(LTask, TDTF.grid_Req);
+                    FreeAndNil(LTask);
+                  end;
+                end;
+
+                if LIsProcessJson then
+                begin
+                  ProcessTaskJson(LStr);
+                end;
+              end
+            );
+          finally
+            if (not LIsAddTask) and Assigned(LTask) then
+              FreeAndNil(LTask);
+          end;
         end;//while
       end;//while
     end,
@@ -1688,54 +1635,47 @@ begin
     Parallel.TaskConfig.OnMessage(Self).OnTerminated(
       procedure
       begin
+        FreeAndNil(LEmailMsg);
       end
     )
   );
 end;
 
-procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
+procedure THiconisAsManageF1.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 begin
   Create_ToDoList_Frm('', AToDoCollect, True,
     nil, nil);//InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
 end;
 
-procedure THiconisAsManageF.StartOLControlWorker;
+procedure THiconisAsManageF1.StartOLControlWorker;
 begin
-  if not FTaskEditConfig.IsUseOLControlWorkerFromEmailList then
+  FCommandQueue := TOmniMessageQueue.Create(1000);
+  FResponseQueue := TOmniMessageQueue.Create(1000, false);
+  FSendMsgQueue := TOmniMessageQueue.Create(1000);
+
+  FOLControlWorker := TOLControlWorker.Create(FCommandQueue, FResponseQueue, FSendMsgQueue, Handle);
+end;
+
+procedure THiconisAsManageF1.StopOLControlWorker;
+begin
+  if Assigned(FOLControlWorker) then
   begin
-    FCommandQueue := TOmniMessageQueue.Create(1000);
-    FResponseQueue := TOmniMessageQueue.Create(1000, false);
-    FSendMsgQueue := TOmniMessageQueue.Create(1000);
-
-    FOLControlWorker := TOLControlWorker.Create(FCommandQueue, FResponseQueue, FSendMsgQueue, Handle);
-
-    FPJHTimerPool.AddOneShot(OnInitOutlookTimer,1000);
+    TWorker(FOLControlWorker).Stop;
+    FOLControlWorker.WaitFor;
+    FreeAndNil(FOLControlWorker);
   end;
+
+  FCommandQueue.Free;
+  FResponseQueue.Free;
+  FSendMsgQueue.Free;
 end;
 
-procedure THiconisAsManageF.StopOLControlWorker;
+procedure THiconisAsManageF1.ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
 begin
-  if not FTaskEditConfig.IsUseOLControlWorkerFromEmailList then
-  begin
-    if Assigned(FOLControlWorker) then
-    begin
-      TWorker(FOLControlWorker).Stop;
-      FOLControlWorker.WaitFor;
-      FreeAndNil(FOLControlWorker);
-    end;
-
-    FCommandQueue.Free;
-    FResponseQueue.Free;
-    FSendMsgQueue.Free;
-  end;
+  Create_ToDoList_Frm2(ATaskId, AToDoList, True);
 end;
 
-procedure THiconisAsManageF.ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
-begin
-  Create_ToDoList_Frm2(ATaskId, AToDoList, FTaskEditConfig, True);
-end;
-
-procedure THiconisAsManageF.TaskTabChange(Sender: TObject);
+procedure THiconisAsManageF1.TaskTabChange(Sender: TObject);
 var
   i : Integer;
   LTaskStatus, LStr: String;
@@ -1772,21 +1712,21 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.TestRemoteTaskDetail;
+procedure THiconisAsManageF1.TestRemoteTaskDetail;
 begin
 
 end;
 
-procedure THiconisAsManageF.TestRemoteTaskList;
+procedure THiconisAsManageF1.TestRemoteTaskList;
 begin
 
 end;
 
-procedure THiconisAsManageF.Timer1Timer(Sender: TObject);
+procedure THiconisAsManageF1.Timer1Timer(Sender: TObject);
 begin
   Timer1.Enabled := False;
 
-//  if FSettings.WSEnabled then
+//  if TDTF.FSettings.WSEnabled then
 //    InitNetwork;
 
   FUserList.Add(GetMyName(g_MyEmailInfo.SmtpAddress)+'='+g_MyEmailInfo.SmtpAddress);
@@ -1795,12 +1735,7 @@ begin
   PICCB.ItemIndex := -1;
 end;
 
-procedure THiconisAsManageF.btn_CloseClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure THiconisAsManageF.btn_SearchClick(Sender: TObject);
+procedure THiconisAsManageF1.btn_SearchClick(Sender: TObject);
 var
   LSearchCondRec: TSearchCondRec;
   LIsRemote: Boolean;
@@ -1820,43 +1755,23 @@ begin
     DisplayTaskInfo2Grid(LSearchCondRec, LIsRemote);
 end;
 
-procedure THiconisAsManageF.Button1Click(Sender: TObject);
+procedure THiconisAsManageF1.Button1Click(Sender: TObject);
 begin
   InputValueClear;
 end;
 
-procedure THiconisAsManageF.Category1Click(Sender: TObject);
-//var
-//  LOrmHiconisASTask: TOrmHiconisASTask;
+function THiconisAsManageF1.CheckRegistration: Boolean;
 begin
-  Category1.Tag := ShowCheckGrp4Claim(Ord(ctkCatetory), Category1.Tag);
 
-//  LOrmHiconisASTask := GetTaskFromClaimCategory(Category1.Tag);
-//  ShowMessage(IntToStr(LOrmHiconisASTask.ID));
 end;
 
-procedure THiconisAsManageF.CauseHW1Click(Sender: TObject);
-begin
-  CauseHW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseHW), CauseHW1.Tag);
-end;
-
-procedure THiconisAsManageF.CauseKind1Click(Sender: TObject);
-begin
-  CauseKind1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseKind), CauseKind1.Tag);
-end;
-
-procedure THiconisAsManageF.CauseSW1Click(Sender: TObject);
-begin
-  CauseSW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseSW), CauseSW1.Tag);
-end;
-
-procedure THiconisAsManageF.ComboBox1DropDown(Sender: TObject);
+procedure THiconisAsManageF1.ComboBox1DropDown(Sender: TObject);
 begin
   ComboBox1.Clear;
   g_QueryDateType.SetType2Combo(ComboBox1);
 end;
 
-constructor THiconisAsManageF.Create(AOwner: TComponent);
+constructor THiconisAsManageF1.Create(AOwner: TComponent);
 var
   i: integer;
   LStr: string;
@@ -1875,10 +1790,10 @@ begin
   InitTaskEnum;
   ComboBox1DropDown(nil);
 //  ComboBox1.ItemIndex := 1;
-//  if FIniFileName = '' then
-//    FIniFileName := ChangeFileExt(Application.ExeName, '.ini');
+  if FIniFileName = '' then
+    FIniFileName := ChangeFileExt(Application.ExeName, '.ini');
 
-//  FSettings := TConfigSettings.create(FIniFileName);
+  FSettings := TConfigSettings.create(FIniFileName);
   GetLocalIP(-1, FUserList);
   for i := 0 to FUserList.Count - 1 do
   begin
@@ -1897,32 +1812,32 @@ begin
   StatusBarPro1.Panels[1].Text := 'IP = ' + FMyIPAddress;
 end;
 
-procedure THiconisAsManageF.CreateHttpServer4WS(APort,
+procedure THiconisAsManageF1.CreateHttpServer4WS(APort,
   ATransmissionKey: string; aClient: TInterfacedClass;
   const aInterfaces: array of TGUID);
 begin
-//  if not Assigned(FRestServer) then
-//  begin
-//    // initialize a TObjectList-based database engine
-//    FRestServer := TRestServerFullMemory.CreateWithOwnModel([]);
-//    // register our Interface service on the server side
-//    FRestServer.CreateMissingTables;
-//    FServiceFactoryServer := FRestServer.ServiceDefine(aClient, aInterfaces , sicShared) as TServiceFactoryServer;  //sicClientDriven
-//    FServiceFactoryServer.SetOptions([], [optExecLockedPerInterface]). // thread-safe fConnected[]
-//      ByPassAuthentication := true;
-//  end;
-//
-//  if not Assigned(FHTTPServer) then
-//  begin
-//    // launch the HTTP server
-////    FPortName := APort;
-//    FHTTPServer := TRestHttpServer.Create(APort, [FRestServer], '+' , useBidirSocket);
-//    FHTTPServer.WebSocketsEnable(FRestServer, ATransmissionKey);
-//    FIsServerActive := True;
-//  end;
+  if not Assigned(FRestServer) then
+  begin
+    // initialize a TObjectList-based database engine
+    FRestServer := TRestServerFullMemory.CreateWithOwnModel([]);
+    // register our Interface service on the server side
+    FRestServer.CreateMissingTables;
+    FServiceFactoryServer := FRestServer.ServiceDefine(aClient, aInterfaces , sicShared) as TServiceFactoryServer;  //sicClientDriven
+    FServiceFactoryServer.SetOptions([], [optExecLockedPerInterface]). // thread-safe fConnected[]
+      ByPassAuthentication := true;
+  end;
+
+  if not Assigned(FHTTPServer) then
+  begin
+    // launch the HTTP server
+//    FPortName := APort;
+    FHTTPServer := TRestHttpServer.Create(APort, [FRestServer], '+' , useBidirSocket);
+    FHTTPServer.WebSocketsEnable(FRestServer, ATransmissionKey);
+    FIsServerActive := True;
+  end;
 end;
 
-procedure THiconisAsManageF.CreateNewTask(AJson: RawUtf8);
+procedure THiconisAsManageF1.CreateNewTask(AJson: RawUtf8);
 var
   LTask: TOrmHiconisASTask;
   LResult: integer;
@@ -1930,31 +1845,19 @@ begin
   LTask := TOrmHiconisASTask.Create;
   try
     if AJson = '' then
-    begin
-      FOLMailListFormDisplayed := True;
-      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null, FTaskEditConfig);
-    end
+      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null, FTaskEditConfig)
     else
       LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
 
   if LResult = mrOK then
-  begin
-    FOLMailListFormDisplayed := False;
-
     if not LTask.IsUpdate then
       LoadTaskVar2Grid(LTask, grid_Req);
-  end;
   finally
     LTask.Free;
   end;
 end;
 
-procedure THiconisAsManageF.CreateNewTask1Click(Sender: TObject);
-begin
-  CreateNewTask;
-end;
-
-procedure THiconisAsManageF.DeleteTask1Click(Sender: TObject);
+procedure THiconisAsManageF1.DeleteTask1Click(Sender: TObject);
 var
   LIdList: TIDList;
 begin
@@ -1977,14 +1880,14 @@ begin
   end;
 end;
 
-destructor THiconisAsManageF.Destroy;
+destructor THiconisAsManageF1.Destroy;
 var
   i: integer;
 begin
   for i := 0 to grid_Req.RowCount - 1 do
     TIDList(grid_Req.Row[i].Data).Free;
 
-//  FSettings.Free;
+  FSettings.Free;
   FreeAndNil(FToDoCollect);
   FFolderListFromOL.Free;
   FTempJsonList.Free;
@@ -1993,88 +1896,21 @@ begin
   inherited;
 end;
 
-procedure THiconisAsManageF.DestroyHttpServer;
+procedure THiconisAsManageF1.DestroyHttpServer;
 begin
-//  if Assigned(FHTTPServer) then
-//    FHTTPServer.Free;
-//
-//  if Assigned(FRestServer) then
-//  begin
-//    FRestServer.Free;
-//  end;
-//
-//  if Assigned(FModel) then
-//    FreeAndNil(FModel);
-end;
+  if Assigned(FHTTPServer) then
+    FHTTPServer.Free;
 
-procedure THiconisAsManageF.DisplayTask2GridByMaterialCode(
-  const AMaterialCode: string);
-var
-  LMaterialDetail: TSQLMaterialDetail;
-  LSQLGSTask: TOrmHiconisASTask;
-begin
-  LMaterialDetail := GetMaterialDetailByPorNoNMatCode('', AMaterialCode);
-  try
-    if LMaterialDetail.IsUpdate then
-    begin
-      LMaterialDetail.FillRewind;
-
-      grid_Req.BeginUpdate;
-      try
-        grid_Req.ClearRows;
-
-        while LMaterialDetail.FillOne do
-        begin
-          LSQLGSTask := GetLoadTask(LMaterialDetail.TaskID);
-          try
-            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
-          finally
-            LSQLGSTask.Free;
-          end;
-        end;//while
-      finally
-        grid_Req.EndUpdate;
-      end;
-    end;
-  finally
-    LMaterialDetail.Free;
+  if Assigned(FRestServer) then
+  begin
+    FRestServer.Free;
   end;
+
+  if Assigned(FModel) then
+    FreeAndNil(FModel);
 end;
 
-procedure THiconisAsManageF.DisplayTask2GridByPorNo(const APorNo: string);
-var
-  LMaterial4Project: TSQLMaterial4Project;
-  LSQLGSTask: TOrmHiconisASTask;
-begin
-  LMaterial4Project := GetMaterial4ProjFromTaskIDNPORNo(0, APorNo);
-  try
-    if LMaterial4Project.IsUpdate then
-    begin
-      LMaterial4Project.FillRewind;
-
-      grid_Req.BeginUpdate;
-      try
-        grid_Req.ClearRows;
-
-        while LMaterial4Project.FillOne do
-        begin
-          LSQLGSTask := GetLoadTask(LMaterial4Project.TaskID);
-          try
-            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
-          finally
-            LSQLGSTask.Free;
-          end;
-        end;//while
-      finally
-        grid_Req.EndUpdate;
-      end;
-    end;
-  finally
-    LMaterial4Project.Free;
-  end;
-end;
-
-procedure THiconisAsManageF.DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean);
+procedure THiconisAsManageF1.DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean);
 var
   ConstArray: TConstArray;
   LWhere, LStr: string;
@@ -2083,62 +1919,10 @@ var
   LUtf8: RawUTF8;
   LV: variant;
   LFrom, LTo: TTimeLog;
-
-  procedure _DisplayTask2Grid;
-  begin
-    try
-      if AFromRemote then
-      begin
-        StatusBarPro1.Panels[0].Text := 'Remote';
-        FTempJsonList.Clear;
-        LUtf8 := MakeTaskList2JSONArray(LSQLGSTask);
-        FTempJsonList.Text := UTF8ToString(LUtf8);
-      end
-      else
-      begin
-        StatusBarPro1.Panels[0].Text := 'Local';
-        grid_Req.ClearRows;
-
-        while LSQLGSTask.FillOne do
-        begin
-          grid_Req.BeginUpdate;
-          try
-            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
-          finally
-            grid_Req.EndUpdate;
-          end;
-        end;
-      end;
-    finally
-      LSQLGSTask.Free;
-    end;
-  end;
 begin
   LWhere := '';
   ConstArray := CreateConstArray([]);
   try
-    if ASearchCondRec.FPorNo <> '' then
-    begin
-      if MessageDlg('PorNo로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
-        '그래도 진행 하시겠습니까?' + #13#10 +
-        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
-      begin
-        DisplayTask2GridByPorNo(ASearchCondRec.FPorNo);
-        exit;
-      end;
-    end;
-
-    if ASearchCondRec.FMaterialCode <> '' then
-    begin
-      if MessageDlg('자재번호로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
-        '그래도 진행 하시겠습니까?' + #13#10 +
-        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
-      begin
-        DisplayTask2GridByMaterialCode(ASearchCondRec.FMaterialCode);
-        exit;
-      end;
-    end;
-
 //    GetWhereConstArr(ASearchCondRec, LWhere);//, ConstArray);
     if ASearchCondRec.FQueryDate <> qdtNull then
     begin
@@ -2268,70 +2052,44 @@ begin
       LWhere := LWhere + 'CurrentWorkStatus <= ?';
     end;
 
-    if ASearchCondRec.FClaimStatus > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimStatus]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' ClaimStatus = ?';
-    end;
-
-    if ASearchCondRec.FClaimServiceKind > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimServiceKind]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' ClaimServiceKind = ?';
-    end;
-
-    if ASearchCondRec.FClaimCatetory > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimCatetory]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' (ClaimCategory & ?) <> 0 ';
-    end;
-
-    if ASearchCondRec.FClaimLocation > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimLocation]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' (ClaimLocation & ?) <> 0 ';
-    end;
-
-    if ASearchCondRec.FClaimKind > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimKind]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' (ClaimKind & ?) <> 0 ';
-    end;
-
-    if ASearchCondRec.FClaimCauseHW > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimCauseHW]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' (ClaimCauseHW & ?) <> 0 ';
-    end;
-
-    if ASearchCondRec.FClaimCauseSW > 0 then
-    begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimCauseSW]);
-      if LWhere <> '' then
-        LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' (ClaimCauseSW & ?) <> 0 ';
-    end;
-
     LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
-    _DisplayTask2Grid;
+
+    try
+      if AFromRemote then
+      begin
+        StatusBarPro1.Panels[0].Text := 'Remote';
+        FTempJsonList.Clear;
+        LUtf8 := MakeTaskList2JSONArray(LSQLGSTask);
+        FTempJsonList.Text := UTF8ToString(LUtf8);
+//        LStr := FTempJsonList.Text;
+//        System.Delete(LStr, Length(LStr)-1,2);
+//        LUtf8 := StringToUTF8(LStr);
+//        LUtf8 := MakeBase64ToUTF8(LUtf8);
+      end
+      else
+      begin
+        StatusBarPro1.Panels[0].Text := 'Local';
+        grid_Req.ClearRows;
+
+        while LSQLGSTask.FillOne do
+        begin
+          grid_Req.BeginUpdate;
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            grid_Req.EndUpdate;
+          end;
+        end;
+      end;
+    finally
+      LSQLGSTask.Free;
+    end;
   finally
     FinalizeConstArray(ConstArray);
   end;
 end;
 
-procedure THiconisAsManageF.DisplayTaskInfo2GridFromJson(AJson: RawUTF8);
+procedure THiconisAsManageF1.DisplayTaskInfo2GridFromJson(AJson: RawUTF8);
 var
   LDocData: TDocVariantData;
   LVar: variant;
@@ -2356,7 +2114,7 @@ begin//AJson : [] Task 배열 형식임
   end;
 end;
 
-procedure THiconisAsManageF.DropEmptyTarget1Drop(Sender: TObject;
+procedure THiconisAsManageF1.DropEmptyTarget1Drop(Sender: TObject;
   ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
 var
   LTargetStream: TStream;
@@ -2426,23 +2184,18 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.EditTariff1Click(Sender: TObject);
-begin
-  DisplayTariffEditF;
-end;
-
-procedure THiconisAsManageF.EmailButtonClick(Sender: TObject);
+procedure THiconisAsManageF1.EmailButtonClick(Sender: TObject);
 begin
   ShowEmailListFormFromData(grid_Req.SelectedRow);
 end;
 
-procedure THiconisAsManageF.ExecFunc(AFuncName: string);
+procedure THiconisAsManageF1.ExecFunc(AFuncName: string);
 begin
   if AFuncName <> '' then
     ExecMethod(AFuncName,[]);
 end;
 
-procedure THiconisAsManageF.ExecMethod(MethodName: string;
+procedure THiconisAsManageF1.ExecMethod(MethodName: string;
   const Args: array of TValue);
 var
   R : TRttiContext;
@@ -2461,39 +2214,34 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ExecuteSearch(Key: Char);
+procedure THiconisAsManageF1.ExecuteSearch(Key: Char);
 begin
   if Key = Chr(VK_RETURN) then
     btn_SearchClick(nil);
 end;
 
-procedure THiconisAsManageF.ExportToExcel2Click(Sender: TObject);
-begin
-  NextGridToExcel(grid_Req);
-end;
-
-procedure THiconisAsManageF.FillInUserList;
+procedure THiconisAsManageF1.FillInUserList;
 var
   LStrList: TStrings;
 begin
-//  if FSettings.RemoteAuthEnabled then
-//  begin
-//    LStrList := GetUserListFromFile(ChangeFileExt(Application.ExeName, '.ips'));
-//
-//    if Assigned(LStrList) then
-//    begin
-//      try
-//        FUserList.Assign(LStrList);
-//      finally
-//        LStrList.Free;
-//      end;
-//    end;
-//  end
-//  else
-//    FUserList.Add(GetMyName(g_MyEmailInfo.SmtpAddress));
+  if FSettings.RemoteAuthEnabled then
+  begin
+    LStrList := GetUserListFromFile(ChangeFileExt(Application.ExeName, '.ips'));
+
+    if Assigned(LStrList) then
+    begin
+      try
+        FUserList.Assign(LStrList);
+      finally
+        LStrList.Free;
+      end;
+    end;
+  end
+  else
+    FUserList.Add(GetMyName(g_MyEmailInfo.SmtpAddress));
 end;
 
-procedure THiconisAsManageF.FormClose(Sender: TObject;
+procedure THiconisAsManageF1.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   if Assigned(FStopEvent) then
@@ -2503,34 +2251,25 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.FormCreate(Sender: TObject);
+procedure THiconisAsManageF1.FormCreate(Sender: TObject);
 var
   LPort: integer;
 begin
   FProgMode := 0;
   SetCurrentDir(ExtractFilePath(Application.ExeName));
   (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
-
-  FHiASIniFileName := ChangeFileExt(ExtractFileName(Application.ExeName), '.ini');
-  FHiASIniConfig := THiASIniConfig.Create(FHiASIniFileName);
-  FPJHTimerPool := TPJHTimerPool.Create(Self);
   FDBMsgQueue := TOmniMessageQueue.Create(1000);
-  FTaskEditConfig.IPCMQFromOLEmail := TOmniMessageQueue.Create(1000);
-  FTaskEditConfig.IPCMQ2OLEmail := TOmniMessageQueue.Create(1000);
-  //FrameOLEmailList에서 OLControlWorker 생성하는 것 방지
-  FTaskEditConfig.IsUseOLControlWorkerFromEmailList := False;
-
+  FIPCMQFromOL := TOmniMessageQueue.Create(1000);
+  FTaskEditConfig.IsUseOLControlWorker := False;
   StartOLControlWorker();
 
-  InitEnum();
   Parallel.TaskConfig.OnMessage(WM_OLMSG_RESULT,DisplayOLMsg2Grid);
   FStopEvent := TEvent.Create;
   UnitHiconisMasterRecord.InitHiconisASClient(Application.ExeName);
   InitUserClient(Application.ExeName);
   InitClient4GSTariff(Application.ExeName);
-  InitHiASMaterialCodeClient(Application.ExeName);
-  AsyncProcessCommandProc();
-  rg_periodClick(nil);
+  AsynDisplayOLMsg2Grid();
+  TDTF.rg_periodClick(nil);
   g_ExecuteFunction := ExecFunc;
   g_GSDocType.InitArrayRecord(R_GSDocType);
 
@@ -2538,14 +2277,9 @@ begin
 
 end;
 
-procedure THiconisAsManageF.FormDestroy(Sender: TObject);
+procedure THiconisAsManageF1.FormDestroy(Sender: TObject);
 begin
-  FHiASIniConfig.Free;
-
   StopOLControlWorker();
-
-  FPJHTimerPool.RemoveAll();
-  FPJHTimerPool.Free;
 
   if FIsRunRestServer then
     DestroyHttpServer;
@@ -2556,41 +2290,37 @@ begin
   if Assigned(FDBMsgQueue) then
     FreeAndNil(FDBMsgQueue);
 
-  if Assigned(FTaskEditConfig.IPCMQFromOLEmail) then
-    FreeAndNil(FTaskEditConfig.IPCMQFromOLEmail);
-
-  if Assigned(FTaskEditConfig.IPCMQ2OLEmail) then
-    FreeAndNil(FTaskEditConfig.IPCMQ2OLEmail);
-
+  if Assigned(FIPCMQFromOL) then
+    FreeAndNil(FIPCMQFromOL);
+//  FreeAndNil(FIPCServer);
   if Assigned(FStopEvent) then
     FreeAndNil(FStopEvent);
 end;
 
-procedure THiconisAsManageF.ShowTaskFormFromDB(AIDList: TIDList; ARow: integer);
+procedure THiconisAsManageF1.ShowTaskFormFromDB(AIDList: TIDList; ARow: integer);
 var
   LTask: TOrmHiconisASTask;
+  LTaskEditConfig: THiconisASTaskEditConfig;
   LResult: integer;
 begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   LTask.TaskID := LTask.ID;
   try
-    FOLMailListFormDisplayed := True;
-    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
+  {$IFDEF GAMANAGER}
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, LTaskEditConfig);
+  {$ELSE}
+    TaskForm.DisplayTaskInfo2EditForm(LTask,nil,null);
+  {$ENDIF}
     //Task Edit Form에서 "저장" 버튼을 누른 경우
     if LResult = mrOK then
-    begin
-      FOLMailListFormDisplayed := False;
       LoadTaskVar2Grid(LTask, grid_Req, ARow);
-    end;
   finally
-
     if Assigned(LTask) then
       FreeAndNil(LTask);
-
   end;
 end;
 
-procedure THiconisAsManageF.ShowTaskFormFromDB(ARow: integer);
+procedure THiconisAsManageF1.ShowTaskFormFromDB(ARow: integer);
 var
   LIdList: TIDList;
   LIsRemote: Boolean;
@@ -2614,7 +2344,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ShowTaskFormFromGrid(ARow: integer);
+procedure THiconisAsManageF1.ShowTaskFormFromGrid(ARow: integer);
 var
   LTaskEditF: TTaskEditF;
 begin
@@ -2634,7 +2364,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ShowTaskFormFromJson(AJson: RawUTF8);
+procedure THiconisAsManageF1.ShowTaskFormFromJson(AJson: RawUTF8);
 var
   LV: variant;
 begin
@@ -2643,12 +2373,12 @@ begin
   DisplayTaskInfo2EditFormFromVariant(LV, FRemoteIPAddress, FPortName, FRootName);
 end;
 
-procedure THiconisAsManageF.ShowTaskID1Click(Sender: TObject);
+procedure THiconisAsManageF1.ShowTaskID1Click(Sender: TObject);
 begin
   ShowTaskIDFromGrid;
 end;
 
-procedure THiconisAsManageF.ShowTaskIDFromGrid;
+procedure THiconisAsManageF1.ShowTaskIDFromGrid;
 var
   LIdList: TIDList;
 begin
@@ -2662,7 +2392,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ShowTodoListFormFromData(ARow: integer);
+procedure THiconisAsManageF1.ShowTodoListFormFromData(ARow: integer);
 var
   LTask: TOrmHiconisASTask;
   LID : TID;
@@ -2706,7 +2436,7 @@ begin
   ShowToDoListFromCollect(FToDoCollect);
 end;
 
-procedure THiconisAsManageF.ShowTodoListFormFromDBByGridRow(ARow: integer);
+procedure THiconisAsManageF1.ShowTodoListFormFromDBByGridRow(ARow: integer);
 var
   LTask: TOrmHiconisASTask;
   LID : TID;
@@ -2723,7 +2453,7 @@ var
   end;
 begin
   if not Assigned(FpjhToDoList) then
-    FpjhToDoList := Collections.NewKeyValue<string,TpjhTodoItemRec>
+    FpjhToDoList := Collections.NewList<TpjhTodoItemRec>
   else
     FpjhToDoList.Clear;
 
@@ -2748,7 +2478,7 @@ begin
   ShowToDoListFormFromList(LID, FpjhToDoList);
 end;
 
-function THiconisAsManageF.SaveCurrentTask2File(AFileName: string): string;
+function THiconisAsManageF1.SaveCurrentTask2File(AFileName: string): string;
 var
   LTask: TOrmHiconisASTask;
   LFileName, LStr: string;
@@ -2771,47 +2501,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.SaveDB2File;
-var
-  LProjectModel: TOrmModel;
-  LProjectDB: TSQLRestClientURI;
-  LOrmTask: TOrmHiconisASTask;
-  LUtf8: RawUtf8;
-  LDBName: string;
-begin
-  if OpenDialog1.Execute then
-  begin
-    LDBName := OpenDialog1.FileName;
-    LProjectModel:= CreateProjectModel;
-    LProjectDB:= TSQLRestClientDB.Create(LProjectModel, CreateProjectModel,
-      LDBName, TSQLRestServerDB);
-    TSQLRestClientDB(LProjectDB).Server.CreateMissingTables;
-
-    LOrmTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, 'ID <> -1', []);
-    try
-//      LUtf8 := LOrmTask.GetJsonValues(true, true, soSelect);
-      while LOrmTask.FillOne do
-      begin
-        LProjectDB.Add(LOrmTask, true);
-      end;
-    finally
-      LOrmTask.Free;
-
-      if Assigned(LProjectDB) then
-        FreeAndNil(LProjectDB);
-
-      if Assigned(LProjectModel) then
-        FreeAndNil(LProjectModel);
-    end;
-  end;
-end;
-
-procedure THiconisAsManageF.SaveDBAs1Click(Sender: TObject);
-begin
-  SaveDB2File();
-end;
-
-procedure THiconisAsManageF.Select_DeliveryCondition;
+procedure THiconisAsManageF1.Select_DeliveryCondition;
 var
   LDeliveryCondition: integer;
   LTask: TOrmHiconisASTask;
@@ -2825,7 +2515,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.Select_EstimateType;
+procedure THiconisAsManageF1.Select_EstimateType;
 var
   LEstimateType: integer;
   LTask: TOrmHiconisASTask;
@@ -2839,7 +2529,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.Select_Money;
+procedure THiconisAsManageF1.Select_Money;
 var
   LCurrencyKind: integer;
   LTask: TOrmHiconisASTask;
@@ -2853,7 +2543,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.Select_TermsOfPayment;
+procedure THiconisAsManageF1.Select_TermsOfPayment;
 var
   LTermsOfPayment: integer;
   LTask: TOrmHiconisASTask;
@@ -2867,17 +2557,17 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.SendReqOLEmailInfo;
+procedure THiconisAsManageF1.SendReqOLEmailInfo;
 begin
   SendReqOLEmailInfo_WS;
 end;
 
-procedure THiconisAsManageF.SendReqOLEmailInfo_CromisIPC;
+procedure THiconisAsManageF1.SendReqOLEmailInfo_CromisIPC;
 begin
 
 end;
 
-procedure THiconisAsManageF.SendReqOLEmailInfo_WS;
+procedure THiconisAsManageF1.SendReqOLEmailInfo_WS;
 var
   Client: TRestHttpClientWebsockets;
   LCommand, LRespond: string;
@@ -2914,36 +2604,42 @@ begin
 {$ENDIF}
 end;
 
-function THiconisAsManageF.ServerExecuteFromClient(ACommand: RawUTF8): RawUTF8;
+function THiconisAsManageF1.ServerExecuteFromClient(ACommand: RawUTF8): RawUTF8;
 begin
 
 end;
 
-function THiconisAsManageF.SessionClosed(Sender: TRestServer;
+function THiconisAsManageF1.SessionClosed(Sender: TRestServer;
   Session: TAuthSession; Ctxt: TRestServerURIContext): boolean;
 begin
 
 end;
 
-function THiconisAsManageF.SessionCreate(Sender: TRestServer;
+function THiconisAsManageF1.SessionCreate(Sender: TRestServer;
   Session: TAuthSession; Ctxt: TRestServerURIContext): boolean;
 begin
 
 end;
 
-procedure THiconisAsManageF.SetConfig;
+procedure THiconisAsManageF1.SetConfig;
 var
-  LConfigF: THiASConfigF;
+  LConfigF: TConfigF;
+  LParamFileName: string;
 begin
-  LConfigF := THiASConfigF.Create(Self);
+  LConfigF := TConfigF.Create(Self);
 
   try
+    LParamFileName := FSettings.ParamFileName;
     LoadConfig2Form(LConfigF);
 
     if LConfigF.ShowModal = mrOK then
     begin
       LoadConfigForm2Object(LConfigF);
-      FHiASIniConfig.Save();
+      FSettings.Save();
+
+//      FParamFileNameChanged := (LParamFileName <> FSettings.ParamFileName) and
+//        (FileExists(FSettings.ParamFileName));
+//      ApplyUI;
       ApplyConfigChanged;
     end;
   finally
@@ -2951,31 +2647,31 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.SetNetworkInfo(ARootName, APortName, AKeyName: string);
+procedure THiconisAsManageF1.SetNetworkInfo(ARootName, APortName, AKeyName: string);
 begin
   FRootName := ARootName;
   FPortName := APortName;
   FTransmissionKey := AkeyName;
 end;
 
-procedure THiconisAsManageF.SetUserNameNIPAddressFromRegServer;
+procedure THiconisAsManageF1.SetUserNameNIPAddressFromRegServer;
 var
   LList: string;
 begin
 //  LList := GetUserNameNIPListFromProductCode('','');
 end;
 
-procedure THiconisAsManageF.ShipNameEditKeyPress(Sender: TObject; var Key: Char);
+procedure THiconisAsManageF1.ShipNameEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
 end;
 
-procedure THiconisAsManageF.ShowEmailID1Click(Sender: TObject);
+procedure THiconisAsManageF1.ShowEmailID1Click(Sender: TObject);
 begin
   ShowEmailIDFromGrid;
 end;
 
-procedure THiconisAsManageF.ShowEmailIDFromGrid;
+procedure THiconisAsManageF1.ShowEmailIDFromGrid;
 var
   LIdList: TIDList;
 begin
@@ -2989,7 +2685,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ShowEmailListFormFromData(ARow: integer);
+procedure THiconisAsManageF1.ShowEmailListFormFromData(ARow: integer);
 var
   LTask: TOrmHiconisASTask;
   LID : TID;
@@ -3006,15 +2702,15 @@ begin
     LOLEmailSrchRec.FProjectNo := LTask.Order_No;
     LOLEmailSrchRec.FHullNo := LTask.HullNo;
     LOLEmailSrchRec.FClaimNo := LTask.ClaimNo;
-    LOLEmailSrchRec.FTaskEditConfig := FTaskEditConfig;
+    LOLEmailSrchRec.IsUseOLControlWorker := LTask.IsUseOLControlWorker;
 
-    TTaskEditF.ShowEMailListFromTask(LTask, LOLEmailSrchRec, '', '', '');
+    TTaskEditF.ShowEMailListFromTask(LTask, '', '', '');
   finally
     FreeAndNil(LTask);
   end;
 end;
 
-function THiconisAsManageF.ShowFileSelectForm: integer;
+function THiconisAsManageF1.ShowFileSelectForm: integer;
 var
   LFileSelectF: TFileSelectF;
 begin
@@ -3037,7 +2733,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.ShowGSFileID1Click(Sender: TObject);
+procedure THiconisAsManageF1.ShowGSFileID1Click(Sender: TObject);
 var
   LSQLGSFile: TSQLGSFile;
   LIdList: TIDList;
