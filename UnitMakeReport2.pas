@@ -4,7 +4,7 @@ interface
 
 uses Windows, Sysutils, Dialogs, Classes, System.Variants, DateUtils,
   mormot.core.variants, mormot.core.base, mormot.core.unicode, mormot.core.json,
-  mormot.core.text,
+  mormot.core.text, mormot.core.os,
   UnitExcelUtil, CommonData2, Word2010, Excel2010, UnitJHPFileData,
   UnitJHPFileRecord;
 
@@ -47,6 +47,8 @@ const
   SUBCON_QUOTATION_REQ_MUSTACHE_FILE_NAME = 'Mustache_업체견적요청메일.htm';
   SUBCON_PAYMENT_REQ_MUSTACHE_FILE_NAME = 'Mustache_기성처리요청메일.htm';
   SUBCON_SERVICE_ORDER_REQ_MUSTACHE_FILE_NAME = 'Mustache_서비스오더날인요청메일.htm';
+  CIPL_FILE_NAME = 'CIPL_Template.ods';
+  SHIPMARK_FILE_NAME = 'SHIPPINGMARK_Template.ods';
 
   //HGS Invoice 작성시 Mustache에서 사용함
   INVOICE_ITEM_SE_CHARGE_WN = 'Service Engineering Charge' + #13#10 + '({{InvoiceItemDesc}} S/E, {{Qty}} WorkDay(s), USD1,310/day)';
@@ -134,6 +136,10 @@ type
   procedure MakeSubConInvoice(ACompanyName: string; ADoc_Invoice_Rec:Doc_Invoice_Rec);
   procedure MakeSubConInvoice_SANISN(ADoc_Invoice_Rec:Doc_Invoice_Rec);
   procedure MakeSubConInvoice_LUXCO(ADoc_Invoice_Rec:Doc_Invoice_Rec);
+
+  //CIPL 생성
+  procedure MakeCIPL(ACIPLRec: DOC_CIPL_Rec);
+  procedure MakeShippingMark(AShipMarkRec: DOC_SHIPMARK_Rec);
 
   //Claim Info를 Json으로 반환 함
   function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
@@ -1069,6 +1075,161 @@ begin
   end;
 end;
 
+procedure MakeCIPL(ACIPLRec: DOC_CIPL_Rec);
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LRange: OleVariant;
+  LWorksheet: OleVariant;
+  LFileName, LTempFileName, LStr: string;
+  LDoc: Variant;
+  LFileCopySuccess: Boolean;
+  i, LTotalPrice, LTotalPrice2, LQty, LNumOfWorker: integer;
+begin
+  LFileName := DOC_DIR + CIPL_FILE_NAME;
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LTempFileName := 'c:\temp\' + ACIPLRec.FHullNo + '_' + ACIPLRec.FDescription + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
+
+  if LFileCopySuccess then
+  begin
+    LExcel := GetActiveExcelOleObject(True);
+    LWorkBook := LExcel.Workbooks.Open(LTempFileName);
+    LExcel.Visible := true;
+//    LWorksheet := LExcel.ActiveSheet;
+    LWorksheet := LWorkBook.Sheets.Item['Sheet1'];
+
+    LRange := LWorksheet.range['A9'];
+    LRange.FormulaR1C1 := ACIPLRec.FAccount;
+
+    LRange := LWorksheet.range['A11'];
+    LRange.FormulaR1C1 := ACIPLRec.FAccountAddr;
+
+    LRange := LWorksheet.range['A16'];
+    LRange.FormulaR1C1 := ACIPLRec.FPortOfLoading;
+
+    LRange := LWorksheet.range['D3'];
+    LRange.FormulaR1C1 := ACIPLRec.FInvoieNo;
+
+    LRange := LWorksheet.range['G9'];
+    LRange.FormulaR1C1 := ACIPLRec.FTermOfDelivery;
+
+    LRange := LWorksheet.range['D11'];
+    LRange.FormulaR1C1 := ACIPLRec.FRemark;
+
+    LRange := LWorksheet.range['A21'];
+    LRange.FormulaR1C1 := ACIPLRec.FClaimNo;
+
+    LRange := LWorksheet.range['B21'];
+    LRange.FormulaR1C1 := ACIPLRec.FDescription;
+
+    LRange := LWorksheet.range['E21'];
+    LRange.FormulaR1C1 := ACIPLRec.FQty;
+
+    LRange := LWorksheet.range['H21'];
+    LRange.FormulaR1C1 := ACIPLRec.FUnitPrice;
+
+    LRange := LWorksheet.range['J21'];
+    LRange.FormulaR1C1 := ACIPLRec.FAmount;
+
+    //Packing List Sheet
+    LWorksheet := LWorkBook.Sheets.Item['Sheet2'];
+
+    LRange := LWorksheet.range['A9'];
+    LRange.FormulaR1C1 := ACIPLRec.FAccount;
+
+    LRange := LWorksheet.range['A11'];
+    LRange.FormulaR1C1 := ACIPLRec.FAccountAddr;
+
+    LRange := LWorksheet.range['A16'];
+    LRange.FormulaR1C1 := ACIPLRec.FPortOfLoading;
+
+    LRange := LWorksheet.range['E3'];
+    LRange.FormulaR1C1 := ACIPLRec.FInvoieNo;
+
+    LRange := LWorksheet.range['H9'];
+    LRange.FormulaR1C1 := ACIPLRec.FTermOfDelivery;
+
+    LRange := LWorksheet.range['E11'];
+    LRange.FormulaR1C1 := ACIPLRec.FRemark;
+
+    LRange := LWorksheet.range['A21'];
+    LRange.FormulaR1C1 := ACIPLRec.FNumOfPkgs;
+
+    LRange := LWorksheet.range['B21'];
+    LRange.FormulaR1C1 := ACIPLRec.FDescription;
+
+    LRange := LWorksheet.range['F21'];
+    LRange.FormulaR1C1 := ACIPLRec.FQty;
+
+    LRange := LWorksheet.range['I21'];
+    LRange.FormulaR1C1 := ACIPLRec.FNewWeight;
+
+    LRange := LWorksheet.range['J21'];
+    LRange.FormulaR1C1 := ACIPLRec.FGrossWeight;
+
+    LRange := LWorksheet.range['L21'];
+    LRange.FormulaR1C1 := ACIPLRec.FMeasurement;
+
+    LRange := LWorksheet.range['L22'];
+    LRange.FormulaR1C1 := ACIPLRec.FCMB;
+
+//    LWorkBook.Close;
+//    LExcel.Quit;
+  end;
+end;
+
+procedure MakeShippingMark(AShipMarkRec: DOC_SHIPMARK_Rec);
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LRange: OleVariant;
+  LWorksheet: OleVariant;
+  LFileName, LTempFileName, LStr: string;
+  LFileCopySuccess: Boolean;
+begin
+  LFileName := DOC_DIR + SHIPMARK_FILE_NAME;
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LTempFileName := 'c:\temp\' + AShipMarkRec.FHullNo + '_' + AShipMarkRec.FDescription + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
+
+  if LFileCopySuccess then
+  begin
+    LExcel := GetActiveExcelOleObject(True);
+    LWorkBook := LExcel.Workbooks.Open(LTempFileName);
+    LExcel.Visible := true;
+    LWorksheet := LExcel.ActiveSheet;
+//    LWorksheet := LWorkBook.Sheets.Item['Sheet1'];
+
+    LRange := LWorksheet.range['G4'];
+    LRange.FormulaR1C1 := AShipMarkRec.FHullNo + ' / ' + AShipMarkRec.FShipName;
+
+    LRange := LWorksheet.range['G5'];
+    LRange.FormulaR1C1 := AShipMarkRec.FClaimNo;
+
+    LRange := LWorksheet.range['G6'];
+    LRange.FormulaR1C1 := AShipMarkRec.FDescription + ' / ' + AShipMarkRec.FQty + 'EA';
+
+    LRange := LWorksheet.range['G7'];
+    LRange.FormulaR1C1 := AShipMarkRec.FNumOfPkgs;
+
+//    LWorkBook.Close;
+//    LExcel.Quit;
+  end;
+end;
+
 function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
 var
   LExcel: OleVariant;
@@ -1148,7 +1309,10 @@ begin
   LRange := LWorksheet.range['F18'];
   LDoc.S['AgentDetail'] := LRange.FormulaR1C1;
 
-  Result := LDoc.ToJson(jsonUnquotedPropNameCompact)
+  Result := LDoc.ToJson(jsonUnquotedPropNameCompact);
+
+  LWorkBook.Close;
+  LExcel.Quit;
 end;
 
 function GetClaimInfoJsonFromXlsString(AXlsFile: RawByteString): RawUtf8;

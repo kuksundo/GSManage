@@ -5,6 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
+  Vcl.Buttons, PngSpeedButton,
   JvExControls, JvLabel, CurvyControls,
   NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
   NxCustomGrid, NxGrid,
@@ -12,7 +13,8 @@ uses
   mormot.core.datetime, mormot.core.base, mormot.orm.base, mormot.core.variants,
   mormot.core.unicode,
 
-  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord
+  UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord,
+  CommonData2, AdvToolBtn
   ;
 
 type
@@ -68,12 +70,23 @@ type
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
+    PngSpeedButton1: TPngSpeedButton;
+    AdvToolButton1: TAdvToolButton;
+    Button1: TButton;
+    TaskID: TEdit;
+    PngSpeedButton2: TPngSpeedButton;
 
     procedure FormCreate(Sender: TObject);
+    procedure PngSpeedButton1Click(Sender: TObject);
+    procedure AdvToolButton1Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure PngSpeedButton2Click(Sender: TObject);
   private
     procedure InitEnum;
     procedure InitCombo;
   public
+    FTaskID: TID;
+
     procedure LoadMaterialOrm2Form(AOrm: TSQLMaterial4Project);
     procedure LoadMaterialOrmFromForm(AOrm: TSQLMaterial4Project);
     procedure LoadMaterialVar2Form(AVar: variant);
@@ -87,7 +100,8 @@ var
 
 implementation
 
-uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit;
+uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit, UnitMakeReport2,
+  UnitMiscUtil, UnitStringUtil;
 
 {$R *.dfm}
 
@@ -109,6 +123,8 @@ begin
         LoadMaterialVar2Form(ADoc);
       end;
 
+      FTaskID := ADoc.TaskID;
+
       //"저장" 버튼을 누른 경우
       if ShowModal = mrOK then
       begin
@@ -124,6 +140,48 @@ begin
 end;
 
 { TASMaterialF }
+
+procedure TASMaterialF.AdvToolButton1Click(Sender: TObject);
+var
+  LW, LH, LL: double;
+  LStr, LStr2: string;
+begin
+  LStr := Measurement.Text;
+  LStr := UpperCase(LStr);
+
+  LStr2 := StrToken(LStr, 'X');
+  LW := StrToFloatDef(LStr2, 0.0);
+
+  if LW = 0 then
+    exit;
+
+  LStr2 := StrToken(LStr, 'X');
+  LH := StrToFloatDef(LStr2, 0.0);
+
+  if LH = 0 then
+    exit;
+
+  LStr2 := StrToken(LStr, 'X');
+  LL := StrToFloatDef(LStr2, 0.0);
+
+  if LL = 0 then
+    exit;
+
+  CBM.Text := FormatFloat('#0.000', CalculateCBM(LW, LH, LL));
+end;
+
+procedure TASMaterialF.Button1Click(Sender: TObject);
+begin
+  SupplyCount.Text := '1';
+  UnitPrice.Text := '100';
+  PriceAmount.Text := '100';
+  NetWeight.Text := '1';
+  GrossWeight.Text := '1';
+  NumOfPkg.Text := '1Box';
+  SupplyCount.Text := '1';
+  TermOfDelivery.Text := 'FOB';
+  PortName.Text := 'INCHEON';
+end;
 
 procedure TASMaterialF.FormCreate(Sender: TObject);
 begin
@@ -276,6 +334,77 @@ begin
 //  AVar.AirWayBill := AWBEdit.Text;
 //  AVar.NumOfPkg := NumOfPkgEdit.Text;
 //  AVar.DeliveryAddress := DeliveryAddressMemo.Text;
+end;
+
+procedure TASMaterialF.PngSpeedButton1Click(Sender: TObject);
+var
+  LCIPLRec: DOC_CIPL_Rec;
+  LOrm: TOrmHiconisASTask;
+begin
+  with LCIPLRec do
+  begin
+    LOrm := GetLoadTask(FTaskID);
+    try
+      if LOrm.IsUpdate then
+      begin
+        FHullNo := LOrm.HullNo;
+        FShipName := LOrm.ShipName;
+        FClaimNo := LOrm.ClaimNo;
+      end;
+    finally
+      LOrm.Free;
+    end;
+    //Commercial Invoice Info
+    FAccount := 'TO: MASTER OF "' + FShipName + '"(' + FHullNo + ')';
+    FAccountAddr := FAccount + #13#10 + '(SHIP''''S SPARE IN TRANSIT)' + #13#10 + DeliveryAddress.Text;
+    FPortOfLoading := PortName.Text;
+    FInvoieNo := FHullNo + '-' + FormatDateTime('yymmdd & mmm. dd, yyyy', now);
+    FTermOfDelivery := TermOfDelivery.Text;
+    FRemark := 'No Commercial Value' + #13#10 + 'VALUE ONLY FOR CUSTOMS CLEARANCE' + #13#10 +
+      'Claim NO: ' + FClaimNo + #13#10#13#10 + 'MADE IN KOREA' + #13#10#13#10 +
+      '(Ship''''s Spare In Transit)' + #13#10 + 'Ship Name: ' + FShipName + '(' + FHullNo + ')';;
+    FDescription := MaterialName.Text;
+    FQty := SupplyCount.Text;
+    FUnitPrice := UnitPrice.Text;
+    FAmount := PriceAmount.Text;
+
+    //Packing List Info
+    FNumOfPkgs := NumOfPkg.Text;
+    FNewWeight := NetWeight.Text;
+    FGrossWeight := GrossWeight.Text;
+    FMeasurement := Measurement.Text;
+    FCMB := CBM.Text;
+
+  end;
+
+  MakeCIPL(LCIPLRec);
+end;
+
+procedure TASMaterialF.PngSpeedButton2Click(Sender: TObject);
+var
+  LSHIPMARK_Rec: DOC_SHIPMARK_Rec;
+  LOrm: TOrmHiconisASTask;
+begin
+  with LSHIPMARK_Rec do
+  begin
+    LOrm := GetLoadTask(FTaskID);
+    try
+      if LOrm.IsUpdate then
+      begin
+        FHullNo := LOrm.HullNo;
+        FShipName := LOrm.ShipName;
+        FClaimNo := LOrm.ClaimNo;
+      end;
+    finally
+      LOrm.Free;
+    end;
+
+    FDescription := MaterialName.Text;
+    FQty := SupplyCount.Text;
+    FNumOfPkgs := NumOfPkg.Text;
+  end;
+
+  MakeShippingMark(LSHIPMARK_Rec);
 end;
 
 end.

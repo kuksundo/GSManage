@@ -32,11 +32,14 @@ type
     LeadTime: TNxTextColumn;
     CreateDate: TNxDateColumn;
     NeedDate: TNxDateColumn;
+    ClaimCauseHWCombo: TComboBox;
+    JvLabel1: TJvLabel;
     procedure MatCodeGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure SearchButtonClick(Sender: TObject);
     procedure MatCodeEditKeyPress(Sender: TObject; var Key: Char);
     procedure MatNameEditKeyPress(Sender: TObject; var Key: Char);
     procedure ImoNoEditKeyPress(Sender: TObject; var Key: Char);
+    procedure ClaimCauseHWComboDropDown(Sender: TObject);
   private
     procedure ExecuteSearch(Key: Char);
   public
@@ -50,7 +53,7 @@ var
 
 implementation
 
-uses CommonData2, UnitFolderUtil2, UnitNextGridUtil2;
+uses CommonData2, UnitFolderUtil2, UnitNextGridUtil2, UnitElecServiceData2;
 
 {$R *.dfm}
 
@@ -80,6 +83,11 @@ begin
   end;
 end;
 
+procedure TSearchMatCodeF.ClaimCauseHWComboDropDown(Sender: TObject);
+begin
+  g_ClaimCauseHW.SetType2Combo(ClaimCauseHWCombo);
+end;
+
 procedure TSearchMatCodeF.ExecuteSearch(Key: Char);
 begin
   if Key = Chr(VK_RETURN) then
@@ -91,12 +99,18 @@ var
   LOrmMaterialCode: TOrmMaterialCode;
   LVar: Variant;
   LUtf8: RawUtf8;
+  LClaimCauseHW: integer; //TClaimCauseHW;
 begin
   TDocVariant.New(LVar);
   MatCodeGrid.BeginUpdate;
   try
     MatCodeGrid.ClearRows;
-    LOrmMaterialCode := GetMaterialCodeByCode(MatCodeEdit.Text, MatNameEdit.Text);
+    LClaimCauseHW := ClaimCauseHWCombo.ItemIndex;
+
+    if LClaimCauseHW = -1 then
+      LOrmMaterialCode := GetMaterialCodeByCode(MatCodeEdit.Text, MatNameEdit.Text)
+    else
+      LOrmMaterialCode := GetMaterialCodeByCauseHW(LClaimCauseHW);
     try
       if LOrmMaterialCode.IsUpdate then
       begin

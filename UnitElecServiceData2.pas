@@ -5,7 +5,10 @@ interface
 uses System.Classes, UnitEnumHelper, FSMClass_Dic, FSMState, Vcl.StdCtrls;
 
 type
-  TQueryDateType = (qdtNull, qdtMaterialOrder, qdtFinal);
+  TQueryDateType = (qdtNull,
+    qdtMaterialOrder, qdtClaimRecvDate, qdtClaimInputDate, qdtClaimReadyDate,
+    qdtClaimClosedDate, qdtAttendScheduled, qdtWorkBeginDate, qdtWorkEndDate,
+    qdtFinal);
 
   TSearchCondRec = record
     FFrom, FTo: TDateTime;
@@ -205,13 +208,15 @@ type
   TClaimCategory = (ccNull, ccME, ccGE, ccFGSS, ccLFSS, ccCHS, ccFinal);
   TClaimLocation = (clNull, clECR, clBridge, clER, clShipOffice, clFinal);
   TClaimCauseKind = (cckNull, ckHW, cckSW, cckLogic, cckDB, cckConfig, cckComm, cckFinal);
-  TClaimCauseHW = (cchNull, cchMPM, cchFBM, cchCPM, cchDI16, cchDI16S, cchDO16,
-    cchDO16_i, cchDO8S, cchAI16, cchAI16_i, cchRT8, cchEAP, cchCOM, cchPrinter,
-    cchMonitor, cchOWS, cchEAS, cchKBD, cchMouse, cchBaseBoard, cchFinal);
+  TClaimCauseHW = (cchNull, cchMPM, cchFBM, cchCPM, cchDI16, cchDI16S, cchDO16, //6
+    cchDO16_i, cchDO8S, cchAI16, cchAI16_i, cchRT8, cchEAP, cchCOM, cchPrinter, //14
+    cchMonitor, cchOWS, cchEAS, cchKBD, cchMouse, cchBaseBoard, cchAO8, cchFinal); //22
   TClaimCauseSW = (ccsNull, ccsFinal);
 const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
-    ('', '자재발주일', '');
+    ('',
+      '자재발주일', '클레임접수일', '클레임등록일', '클레임조치일',
+      '클레임완료일', '방선예정일', '작업시작일', '작업완료일', '');
 
   R_EngineerKind : array[Low(TEngineerKind)..High(TEngineerKind)] of string =
     ('', 'SuperIntendent', 'Service Engineer', 'Service Engineer(Elec.)',
@@ -532,6 +537,7 @@ const
     'Keyboard',
     'Mouse',
     'BaseBoard',
+    'AO8',
     ''
      );
 

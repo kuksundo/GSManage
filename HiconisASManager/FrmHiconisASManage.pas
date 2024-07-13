@@ -9,6 +9,7 @@ uses
   NxCustomGrid, NxGrid, AdvOfficeTabSet, Vcl.StdCtrls, Vcl.ComCtrls,
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
   CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvToolBtn,
+  Vcl.Mask, JvExMask, JvToolEdit, JvCombobox,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
 
   mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
@@ -17,7 +18,7 @@ uses
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
   mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
 
-  VarRecUtils, TimerPool,
+  VarRecUtils, TimerPool, JHP.Util.Bit32Helper,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
   Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
@@ -159,7 +160,6 @@ type
     CauseSW1: TMenuItem;
     CurWorkCB: TComboBox;
     JvLabel40: TJvLabel;
-    ClaimServiceKindCB: TComboBox;
     File1: TMenuItem;
     CreateNewTask1: TMenuItem;
     N24: TMenuItem;
@@ -178,6 +178,7 @@ type
     SaveDBAs1: TMenuItem;
     ImportMaterialCodeFromExcel1: TMenuItem;
     N28: TMenuItem;
+    ClaimServiceKindCB: TJvCheckedComboBox;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -385,6 +386,7 @@ type
       ARow: integer = -1);
     procedure LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
+    procedure grid_Req_ClearRows();
 
     procedure AddFolderListFromOL(AFolder: string);
 
@@ -432,7 +434,7 @@ uses UnitIPCModule2, ClipBrd, System.RegularExpressions,
   UnitHttpModule4InqManageServer2, UnitStringUtil, UnitExcelUtil,
 
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
-  UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2,
+  UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord;
 
@@ -862,7 +864,7 @@ end;
 
 procedure THiconisAsManageF.ClaimServiceKindCBDropDown(Sender: TObject);
 begin
-  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
+//  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
 end;
 
 procedure THiconisAsManageF.ClaimStatusComboDropDown(Sender: TObject);
@@ -990,7 +992,7 @@ begin
 //    FProdType := ProductTypeCombo.Text;
     FClaimStatus := ClaimStatusCombo.ItemIndex;
 //    FSubject := SubjectEdit.Text;
-    FClaimServiceKind := ClaimServiceKindCB.ItemIndex;
+    FClaimServiceKind := GetSetFromCheckCombo(ClaimServiceKindCB);;//ClaimServiceKindCB.ItemIndex;
     FCurWork :=  CurWorkCB.ItemIndex;
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
@@ -1020,7 +1022,14 @@ end;
 function THiconisAsManageF.GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
 begin
   case AQueryDate of
-    qdtMaterialOrder: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
+//    qdtMaterialOrder: Result := 'InqRecvDate >= ? and InqRecvDate <= ? ';
+    qdtClaimRecvDate: Result := 'ClaimRecvDate >= ? and ClaimRecvDate <= ? ';
+    qdtClaimInputDate: Result := 'ClaimInputDate >= ? and ClaimInputDate <= ? ';
+    qdtClaimReadyDate: Result := 'ClaimReadyDate >= ? and ClaimReadyDate <= ? ';
+    qdtClaimClosedDate: Result := 'ClaimClosedDate >= ? and ClaimClosedDate <= ? ';
+    qdtAttendScheduled: Result := 'AttendScheduled >= ? and AttendScheduled <= ? ';
+    qdtWorkBeginDate: Result := 'WorkBeginDate >= ? and WorkBeginDate <= ? ';
+    qdtWorkEndDate: Result := 'WorkEndDate >= ? and WorkEndDate <= ? ';
   end;
 end;
 
@@ -1408,6 +1417,16 @@ begin
 //    ShowMessage(ClipBoard.AsText);
 end;
 
+procedure THiconisAsManageF.grid_Req_ClearRows;
+var
+  i: integer;
+begin
+  for i := 0 to grid_req.RowCount - 1 do
+    TIDList(grid_req.Row[i].Data).Free;
+
+  grid_Req.ClearRows();
+end;
+
 procedure THiconisAsManageF.HullNoEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
@@ -1426,6 +1445,8 @@ begin
 end;
 
 procedure THiconisAsManageF.InitEnum;
+var
+  LStrList: TStringList;
 begin
   g_HiconisASState.InitArrayRecord(R_HiconisASState);
   g_HiconisASTrigger.InitArrayRecord(R_HiconisASTrigger);
@@ -1437,6 +1458,13 @@ begin
   g_ClaimCauseSW.InitArrayRecord(R_ClaimCauseSW);
   g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
   g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+
+  LStrList := g_ClaimServiceKind.GetTypeLabels();
+  try
+    ClaimServiceKindCB.Items.Assign(LStrList);
+  finally
+    LStrList.Free;
+  end;
 end;
 
 procedure THiconisAsManageF.InitNetwork;
@@ -1481,7 +1509,8 @@ begin
   MaterialCodeEdit.Text := '';
   ClaimNoEdit.Text := '';
 //  SubjectEdit.Text := '';
-  ClaimServiceKindCB.ItemIndex := -1;
+//  ClaimServiceKindCB.ItemIndex := -1;
+  ClaimServiceKindCB.SetUnCheckedAll();// := -1;
   ClaimStatusCombo.ItemIndex := -1;
 
   OrderNoEdit.Text := '';
@@ -1864,7 +1893,7 @@ begin
   inherited;
 
   SetCurrentDir(ExtractFilePath(Application.ExeName));
-  DOC_DIR := ExtractFilePath(Application.ExeName) + '양식\';
+  DOC_DIR := ExtractFilePath(Application.ExeName) + '\db\files\';
   FFolderListFromOL := TStringList.Create;
   if FileExists('.\'+FOLDER_LIST_FILE_NAME) then
     FFolderListFromOL.LoadFromFile('.\'+FOLDER_LIST_FILE_NAME);
@@ -1926,16 +1955,20 @@ procedure THiconisAsManageF.CreateNewTask(AJson: RawUtf8);
 var
   LTask: TOrmHiconisASTask;
   LResult: integer;
+//  LVar: variant;
 begin
   LTask := TOrmHiconisASTask.Create;
   try
-    if AJson = '' then
-    begin
-      FOLMailListFormDisplayed := True;
-      LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, null, FTaskEditConfig);
-    end
-    else
-      LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
+//    if AJson <> '' then
+//      LVar := _JSON(AJson)
+//    else
+//      LVar := null;
+
+    FOLMailListFormDisplayed := True;
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, AJson, FTaskEditConfig);
+//    end
+//    else
+//      LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
 
   if LResult = mrOK then
   begin
@@ -2021,7 +2054,7 @@ begin
 
       grid_Req.BeginUpdate;
       try
-        grid_Req.ClearRows;
+        grid_Req_ClearRows;
 
         while LMaterialDetail.FillOne do
         begin
@@ -2054,7 +2087,7 @@ begin
 
       grid_Req.BeginUpdate;
       try
-        grid_Req.ClearRows;
+        grid_Req_ClearRows;
 
         while LMaterial4Project.FillOne do
         begin
@@ -2077,12 +2110,16 @@ end;
 procedure THiconisAsManageF.DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean);
 var
   ConstArray: TConstArray;
-  LWhere, LStr: string;
+  LWhere, LWhere2, LStr: string;
   LSQLGSTask: TOrmHiconisASTask;
-  LSQLCustomer: TSQLCustomer;
+//  LSQLCustomer: TSQLCustomer;
   LUtf8: RawUTF8;
   LV: variant;
   LFrom, LTo: TTimeLog;
+  LpjhBit32: TpjhBit32;
+  i: integer;
+  LIsCSKind: Boolean;
+//  Lary: IntegerArray;
 
   procedure _DisplayTask2Grid;
   begin
@@ -2097,7 +2134,7 @@ var
       else
       begin
         StatusBarPro1.Panels[0].Text := 'Local';
-        grid_Req.ClearRows;
+        grid_Req_ClearRows;
 
         while LSQLGSTask.FillOne do
         begin
@@ -2278,10 +2315,28 @@ begin
 
     if ASearchCondRec.FClaimServiceKind > 0 then
     begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimServiceKind]);
+      LpjhBit32 := ASearchCondRec.FClaimServiceKind;
+
+      for i := 0 to 31 do
+      begin
+        if LpjhBit32.Bit[i] then
+        begin
+          LIsCSKind := True;
+
+          AddConstArray(ConstArray, [i]);//g_ClaimServiceKind
+
+          if LWhere2 <> '' then
+            LWhere2 := LWhere2 + ' or ';
+          LWhere2 := LWhere2 + ' ClaimServiceKind = ?';
+        end;
+      end;//for
+
+      if LWhere2 <> '' then
+        LWhere2 := '(' + LWhere2 + ')';
+
       if LWhere <> '' then
         LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' ClaimServiceKind = ?';
+      LWhere := LWhere + LWhere2;
     end;
 
     if ASearchCondRec.FClaimCatetory > 0 then
@@ -2340,7 +2395,7 @@ var
 begin//AJson : [] Task 배열 형식임
   LSQLGSTask := TOrmHiconisASTask.Create;
   try
-    grid_Req.ClearRows;
+    grid_Req_ClearRows;
     LDocData.InitJSON(AJson);
 
     for i := 0 to LDocData.Count - 1 do
@@ -2575,7 +2630,7 @@ begin
   LTask.TaskID := LTask.ID;
   try
     FOLMailListFormDisplayed := True;
-    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,'', FTaskEditConfig);
     //Task Edit Form에서 "저장" 버튼을 누른 경우
     if LResult = mrOK then
     begin

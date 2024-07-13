@@ -48,10 +48,10 @@ begin
 
     for i := 0 to g_MacroManageF.FMacroManageList.Count - 1 do
     begin
-      g_MacroManageF.AssignActionData2Form(
-        TMacroManagement(g_MacroManageF.FMacroManageList.Items[i]).ActionCollect,
-        nil,
-        TMacroManagement(g_MacroManageF.FMacroManageList.Items[i]).FActionList);
+//      g_MacroManageF.AssignActionData2Form(
+//        TMacroManagement(g_MacroManageF.FMacroManageList.Items[i]).ActionCollect,
+//        nil,
+//        TMacroManagement(g_MacroManageF.FMacroManageList.Items[i]).FActionList);
     end;
 
     g_MacroManageF.PlayMacro;

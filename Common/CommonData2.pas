@@ -37,6 +37,40 @@ type
     FInvoiceItemList: TStringList;
   end;
 
+  DOC_CIPL_Rec = record
+    FHullNo,
+    FShipName,
+    //Commercial Invoice Info
+    FAccount,
+    FAccountAddr,
+    FPortOfLoading,
+    FInvoieNo,
+    FTermOfDelivery,
+    FRemark,
+    FClaimNo,
+    FDescription,
+    FQty,
+    FUnitPrice,
+    FAmount,
+
+    //Packing List Info
+    FNumOfPkgs,
+    FNewWeight,
+    FGrossWeight,
+    FMeasurement,
+    FCMB: string;
+  end;
+
+  DOC_SHIPMARK_Rec = record
+    FHullNo,
+    FShipName,
+    FClaimNo,
+    FQty,
+    FDescription,
+    FNumOfPkgs
+    : string;
+  end;
+
   TDBCRUDResult = (crudNull, crudOK, crudFail, crudUpdateOK, crudAddOK, crudDeleteOK, crudCreateOK,
     crudUpdateFail, crudAddFail, crudDeleteFail, crudCreateFail, crudFinal);
   TTierStep = (tsNull, tsTierI, tsTierII, tsTierIII, tsFinal);

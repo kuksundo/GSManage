@@ -269,6 +269,8 @@ type
     MaterialPopup: TPopupMenu;
     DeleteMaterial1: TMenuItem;
     CreateDate: TNxDateColumn;
+    AeroButton6: TAeroButton;
+    AeroButton8: TAeroButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -454,7 +456,7 @@ type
 
   function ProcessTaskJson(AJson: String): Boolean;
   function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-      ASQLEmailMsg: TSQLOLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+      ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig): integer;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
 
@@ -544,7 +546,7 @@ begin
 end;
 
 function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-  ASQLEmailMsg: TSQLOLEmailMsg; ADoc: variant; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+  ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig): integer;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
@@ -557,8 +559,11 @@ var
   LSubConList: TObjectList<TSQLSubCon>;
   i: integer;
   LID: TID;
+  LVar: variant;
+  LDoc: IDocDict;
 begin
   Result := -1;
+  LVar := null;
 
   LTaskEditF := TTaskEditF.Create(nil);
   try
@@ -572,11 +577,16 @@ begin
       begin
         Caption := Caption + ' (Update)';
 
+        if AJson = '' then
+          LVar := null
+        else
+          LVar := _JSON(AJson);
+
         LoadTaskOrm2Form(FTask, LTaskEditF);
         LCustomer := GetCustomerFromTask(FTask);
 
-        if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-          LoadCustomerFromVariant(LCustomer, ADoc.Customer);
+        if (not ATaskEditConfig.IsDocFromInvoiceManage) and (LVar <> null) then
+          LoadCustomerFromVariant(LCustomer, LVar.Customer);
 
         LoadCustomer2Form(LCustomer, LTaskEditF);
 
@@ -585,11 +595,11 @@ begin
           GetSubConFromTaskIDWithInvoiceItems(FTask.ID, LSubConList);
           LoadSubConList2Form(LSubConList, LTaskEditF);
 
-          if ADoc <> null then
+          if LVar <> null then
           begin
             //ADocIsFromInvoiceManage = True인 경우 ADoc.InvoiceItem가 존재함
             //InqManager에서 생성한 *.hgs 인 경우임 : ADoc.SubCon이 복수개([] 배열 형식임)
-            LoadSubConFromVariant2Form(ADoc, ATaskEditConfig.IsDocFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
+            LoadSubConFromVariant2Form(LVar, ATaskEditConfig.IsDocFromInvoiceManage)//LoadSubConFromVariant(LSubCon, ADoc, ADocIsFromInvoiceManage)
           end;
         finally
   //        LSubConList.Clear;
@@ -600,8 +610,8 @@ begin
         LMat4Proj := GetMaterial4ProjFromTaskID(FTask.ID);
 
         try
-          if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-            LoadMaterial4ProjectFromVariant(LMat4Proj, ADoc.Material4Project);
+          if (not ATaskEditConfig.IsDocFromInvoiceManage) and (LVar <> null) then
+            LoadMaterial4ProjectFromVariant(LMat4Proj, LVar.Material4Project);
 
           if LMat4Proj.IsUpdate then
           begin
@@ -631,6 +641,18 @@ begin
         ImportanceCB.ItemIndex := g_ClaimImportanceKind.ToOrdinal(cikC);
         ClaimStatusCombo.ItemIndex := g_ClaimStatus.ToOrdinal(csOpen);
 
+        if AJson <> '' then
+        begin
+          LDoc := DocDict(AJson);
+
+          ClaimNoEdit.Text := LDoc['ClaimNo'];
+          HullNoEdit.Text := LDoc['HullNo'];
+          ShipNameEdit.Text := LDoc['ShipName'];
+          WorkSummaryEdit.Text := LDoc['Subject'];
+          ClaimReasonMemo.Text := LDoc['Cause'];
+          CustAgentMemo.Text := LDoc['AgentDetail'];
+        end;
+
         ClaimRecvPicker.Date := Date;
         ClaimInputPicker.Date := Date;
         AttendSchedulePicker.Date := 0;
@@ -644,8 +666,8 @@ begin
       end;
 
       //InvoiceManage로부터 오는 Json은 Task와 Customer에 대한 변경 내용이 없음
-      if (not ATaskEditConfig.IsDocFromInvoiceManage) and (ADoc <> null) then
-        LoadTaskFromVariant(FTask, ADoc.Task);
+      if (not ATaskEditConfig.IsDocFromInvoiceManage) and (LVar <> null) then
+        LoadTaskFromVariant(FTask, LVar.Task);
 
       while True do
       begin
@@ -2747,6 +2769,7 @@ begin
   begin
     TDocVariant.New(LDoc);
     LDoc.PorNo := '';
+    LDoc.TaskID := FTask.ID;
   end
   else
   begin

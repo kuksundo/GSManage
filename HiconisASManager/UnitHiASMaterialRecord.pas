@@ -17,6 +17,7 @@ uses SysUtils, Classes, Generics.Collections,
     fMaterialName, //자재명
     fPORNo: RawUTF8;
     fSupplyCount,//공급수량
+    fUnitPrice, //단가
     fPriceAmount, //총금액 : 단가 x 공급수량
     fFreeOrCharge //해외운송의뢰서의 유/무환 구분
     : integer;
@@ -49,6 +50,7 @@ uses SysUtils, Classes, Generics.Collections,
     property PORNo: RawUTF8 read fPORNo write fPORNo;
     property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
     property SupplyCount: integer read fSupplyCount write fSupplyCount;
+    property UnitPrice: integer read fUnitPrice write fUnitPrice;
     property PriceAmount: integer read fPriceAmount write fPriceAmount;
     property FreeOrCharge: integer read fFreeOrCharge write fFreeOrCharge;
     property PORIssueDate: TTimeLog read FPORIssueDate write FPORIssueDate;

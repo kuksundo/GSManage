@@ -2463,6 +2463,26 @@ object TaskEditF: TTaskEditF
       TabOrder = 4
       OnClick = AeroButton4Click
     end
+    object AeroButton6: TAeroButton
+      Left = 65
+      Top = 0
+      Width = 65
+      Height = 36
+      Version = '1.0.0.1'
+      Align = alLeft
+      Caption = 'Claim '#44288#47532
+      TabOrder = 5
+    end
+    object AeroButton8: TAeroButton
+      Left = 0
+      Top = 0
+      Width = 65
+      Height = 36
+      Version = '1.0.0.1'
+      Align = alLeft
+      Caption = 'Claim '#46321#47197
+      TabOrder = 6
+    end
   end
   object CurvyPanel2: TCurvyPanel
     AlignWithMargins = True
@@ -3155,7 +3175,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C0101300098004C0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800640510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5041,6 +5061,7 @@ object TaskEditF: TTaskEditF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop2
     Target = fileGrid
+    WinTarget = 0
     Left = 12
     Top = 612
   end
@@ -5061,7 +5082,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400200210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400380210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

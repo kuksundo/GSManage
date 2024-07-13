@@ -39,6 +39,7 @@ type
   procedure DestroyHiASMaterialCodeClient();
 
   function GetMaterialCodeByCode(const AMatCode, AMatName: string): TOrmMaterialCode;
+  function GetMaterialCodeByCauseHW(const AClaimCauseHW: integer): TOrmMaterialCode;
 
   procedure AddMaterialCodeFromVariant(AVar: variant);
   procedure AddOrUpdateMaterialCode(AOrm: TOrmMaterialCode);
@@ -106,6 +107,19 @@ begin
     Result := TOrmMaterialCode.CreateAndFillPrepare(g_HiASMaterialCodeDB.orm, 'MaterialName LIKE ?', ['%'+AMatName+'%'])
   else
     Result := TOrmMaterialCode.CreateAndFillPrepare(g_HiASMaterialCodeDB.orm, 'MaterialCode = ? and MaterialName LIKE ?', [AMatCode, '%'+AMatName+'%']);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetMaterialCodeByCauseHW(const AClaimCauseHW: integer): TOrmMaterialCode;
+begin
+  if AClaimCauseHW = -1 then
+    exit;
+
+    Result := TOrmMaterialCode.CreateAndFillPrepare(g_HiASMaterialCodeDB.orm, 'MaterialKind = ?', [AClaimCauseHW]);
 
   if Result.FillOne then
     Result.IsUpdate := True

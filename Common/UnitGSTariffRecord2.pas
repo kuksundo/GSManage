@@ -71,9 +71,7 @@ var
 implementation
 
 uses SysUtils, Forms, VarRecUtils,
-  {$IFDEF GAMANAGER} UnitHiconisASVarJsonUtil,
-  {$ELSE} UnitVariantJsonUtil,
-  {$ENDIF}
+  UnitHiconisASVarJsonUtil,
   UnitFolderUtil2;
 
 procedure InitClient4GSTariff(AExeName: string);

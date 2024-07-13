@@ -75,6 +75,33 @@ object SearchMatCodeF: TSearchMatCodeF
       HotTrackFont.Name = #47569#51008' '#44256#46357
       HotTrackFont.Style = []
     end
+    object JvLabel1: TJvLabel
+      AlignWithMargins = True
+      Left = 507
+      Top = 10
+      Width = 80
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51088#51116#51333#47448
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
     object SearchButton: TButton
       Left = 738
       Top = 1
@@ -104,6 +131,15 @@ object SearchMatCodeF: TSearchMatCodeF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 2
       OnKeyPress = MatNameEditKeyPress
+    end
+    object ClaimCauseHWCombo: TComboBox
+      Left = 592
+      Top = 12
+      Width = 145
+      Height = 21
+      Style = csDropDownList
+      TabOrder = 3
+      OnDropDown = ClaimCauseHWComboDropDown
     end
   end
   object Panel2: TPanel
@@ -304,6 +340,8 @@ object SearchMatCodeF: TSearchMatCodeF
     end
     object CreateDate: TNxDateColumn
       Alignment = taCenter
+      DefaultValue = '2024-07-08'
+      DefaultWidth = 200
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -325,6 +363,7 @@ object SearchMatCodeF: TSearchMatCodeF
     end
     object NeedDate: TNxDateColumn
       Alignment = taCenter
+      DefaultValue = '2024-07-08'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11

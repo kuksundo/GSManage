@@ -7,11 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, NxScrollControl, NxCustomGridControl,
   NxCustomGrid, NxGrid, Vcl.ExtCtrls, Vcl.Buttons, Vcl.StdCtrls,
   NxColumns, NxColumnClasses, CommonData2, AdvGroupBox, AdvOfficeButtons,
-  {$IFDEF GAMANAGER}
   UnitHiconisMasterRecord,
-  {$ELSE}
-  UElecDataRecord2,
-  {$ENDIF}
   AdvEdit, AdvEdBtn;
 
 type
@@ -237,11 +233,7 @@ begin
   NextGrid1.DoubleBuffered := False;
 
   if not Assigned(g_CustomerCompanyDB) then
-  {$IFDEF GAMANAGER}
     InitCompanyMasterClient('CompanyMaster.sqlite');
-  {$ELSE}
-    InitMasterClient(Application.ExeName);
-  {$ENDIF}
 end;
 
 procedure TSearchCustomerF.NextGrid1CellDblClick(Sender: TObject; ACol,

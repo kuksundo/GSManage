@@ -670,23 +670,13 @@ object HiconisAsManageF: THiconisAsManageF
       TabOrder = 14
       OnDropDown = CurWorkCBDropDown
     end
-    object ClaimServiceKindCB: TComboBox
-      Left = 442
-      Top = 70
-      Width = 113
-      Height = 21
-      Style = csDropDownList
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 15
-      OnDropDown = ClaimServiceKindCBDropDown
-    end
     object MaterialCodeEdit: TEdit
       Left = 837
       Top = 70
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 16
+      TabOrder = 15
       OnKeyPress = HullNoEditKeyPress
     end
     object SetFildCondCB: TComboBox
@@ -702,6 +692,16 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
+      TabOrder = 16
+    end
+    object ClaimServiceKindCB: TJvCheckedComboBox
+      Left = 440
+      Top = 71
+      Width = 114
+      Height = 21
+      CapSelectAll = '&Select all'
+      CapDeSelectAll = '&Deselect all'
+      CapInvertAll = '&Invert all'
       TabOrder = 17
     end
   end
@@ -1970,7 +1970,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000D80318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000EC0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2280,7 +2280,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402E80310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402FC0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2639,7 +2639,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800100520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800240520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3178,6 +3178,7 @@ object HiconisAsManageF: THiconisAsManageF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop
     Target = grid_Req
+    WinTarget = 0
     Left = 212
     Top = 212
   end
