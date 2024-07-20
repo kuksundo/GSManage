@@ -50,7 +50,8 @@ uses
   UnitImportFromXls in '..\Common\UnitImportFromXls.pas',
   UnitHiASMaterialCodeRecord in 'UnitHiASMaterialCodeRecord.pas',
   UnitIniAttriPersist in '..\..\..\Common\UnitIniAttriPersist.pas',
-  UnitHiASIniConfig in 'UnitHiASIniConfig.pas';
+  UnitHiASIniConfig in 'UnitHiASIniConfig.pas',
+  UnitIPCMsgQUtil in '..\..\..\Common\UnitIPCMsgQUtil.pas';
 
 {$R *.res}
 

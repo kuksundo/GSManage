@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2, PngBitBtn, OtlCommon,
-  UnitOLEmailRecord2, UnitOutLookDataType;
+  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2, PngBitBtn, OtlCommon, OtlComm,
+  UnitOLEmailRecord2, UnitOutLookDataType, UnitWorker4OmniMsgQ;
 
 type
   ALARM_INTERVAL = (aiNone, ai0Min,ai5Min,ai10Min,ai15Min,ai30Min,
@@ -48,6 +48,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure PngBitBtn1Click(Sender: TObject);
   private
+    procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
+    procedure ProcessRespondFromWorker(AMsgId: integer; ARec: TOLRespondRec);
   public
     FTaskEditConfig: THiconisASTaskEditConfig;
 
@@ -66,7 +68,7 @@ var
 
 implementation
 
-uses UnitDateUtil, UnitRttiUtil2;
+uses UnitDateUtil, UnitRttiUtil2, UnitIPCMsgQUtil;
 
 {$R *.dfm}
 
@@ -140,14 +142,56 @@ begin
   end;
 end;
 
+procedure TToDoDetailF.OnWorkerResult(var Msg: TMessage);
+var
+  LMsg  : TOmniMessage;
+  LOLRespondRec: TOLRespondRec;
+begin
+  //HiconisASManage에서 전달 받음
+  while FTaskEditConfig.IPCMQ2RespondOLCalendar.TryDequeue(LMsg) do
+  begin
+    LOLRespondRec := LMsg.MsgData.ToRecord<TOLRespondRec>;
+    ProcessRespondFromWorker(LMsg.MsgID, LOLRespondRec);
+  end;//while
+end;
+
 procedure TToDoDetailF.PngBitBtn1Click(Sender: TObject);
 begin
   ReqRegisterTodoItem2OL();
 end;
 
-procedure TToDoDetailF.ReqRegisterTodoItem2OL;
+procedure TToDoDetailF.ProcessRespondFromWorker(AMsgId: integer;
+  ARec: TOLRespondRec);
 begin
-  FTaskEditConfig.IPCMQCommandOLCalendar
+  ShowMessage('');
+end;
+
+procedure TToDoDetailF.ReqRegisterTodoItem2OL;
+var
+  LOLAppointmentRec: TOLAppointmentRec;
+  LValue: TOmniValue;
+begin
+  LOLAppointmentRec.Subject := Subject.Text;
+  LOLAppointmentRec.Start := DateOf(BeginDate.Date) + TimeOf(BeginTime.Time);
+  LOLAppointmentRec.End_ := DateOf(EndDate.Date) + TimeOf(EndDate.Time);
+  LOLAppointmentRec.Body := Notes.Text;
+  LOLAppointmentRec.CreationTime := now;
+//  LOLAppointmentRec.Duration := now;
+
+  LOLAppointmentRec.FSenderHandle := Handle;
+  LValue := TOmniValue.FromRecord(LOLAppointmentRec);
+
+  SendCmd2WorkerThrd(olckAddAppointment, LValue);
+end;
+
+procedure TToDoDetailF.SendCmd2WorkerThrd(const ACmd: TOLCommandKind;
+  const AValue: TOmniValue);
+var
+  LMsgQ: TOmniMessageQueue;
+begin
+  LMsgQ := FTaskEditConfig.IPCMQCommandOLCalendar;
+
+  SendCmd2OmniMsgQ(Ord(ACmd), AValue, LMsgQ);
 end;
 
 procedure TToDoDetailF.SetTodoItemFromJson2Form(AJson: string);

@@ -184,6 +184,7 @@
         <DCCReference Include="UnitHiASMaterialCodeRecord.pas"/>
         <DCCReference Include="..\..\..\Common\UnitIniAttriPersist.pas"/>
         <DCCReference Include="UnitHiASIniConfig.pas"/>
+        <DCCReference Include="..\..\..\Common\UnitIPCMsgQUtil.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

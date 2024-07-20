@@ -795,7 +795,7 @@ var
 begin
   if FResponseQueue.TryDequeue(LMsg) then
   begin
-//    if LMsg.MsgID = Ord(olrkMAPIFolderList) then
+//    if LMsg.MsgID = Ord(olrkAddAppointment) then
 //    begin
 //      LOLRespondRec := LMsg.MsgData.ToRecord<TOLRespondRec>;
 //      ShowMessage(LOLRespondRec.FMsg);
@@ -803,7 +803,7 @@ begin
 
     //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2RespondOLEmail.Enqueue 실행
     //아래 조건이 없으면 IPCMQ2RespondOLEmail.Enqueue 때문에 Q에 데이터가 쌓임
-    if FOLMailListFormDisplayed then
+    if FOLMailListFormDisplayed or (LMsg.MsgID = Ord(olrkAddAppointment)) then
       if FTaskEditConfig.IPCMQ2RespondOLEmail.Enqueue(LMsg) then
         SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
   end;
@@ -1668,6 +1668,7 @@ begin
       rec    : TOLMsgFileRecord;
       LOLRespondRec: TOLRespondRec;
       LEntryIdRecord: TEntryIdRecord;
+      LOLAppointRec: TOLAppointmentRec;
       LOmniValue: TOmniValue;
     begin
       handles[0] := FStopEvent.Handle;
@@ -1684,7 +1685,14 @@ begin
               FOLCmdSenderHandle := msg.MsgData.AsInteger;
               msg.MsgData.AsInteger := Self.Handle;
             end;
-            olckAddAppointment:;
+            olckAddAppointment: begin
+              LOLAppointRec := Msg.MsgData.ToRecord<TOLAppointmentRec>;
+              //OLCommand 보낸 FormHandle 저장
+              FOLCmdSenderHandle := LOLAppointRec.FSenderHandle;
+              //OLWorker로부터 결과를 받기 위해 FSenderHandle 변경- MSG_RESULT
+              LOLAppointRec.FSenderHandle := Self.Handle;
+              msg.MsgData := TOmniValue.FromRecord(LOLAppointRec);
+            end;
             olckMoveMail2Folder: begin
               LEntryIdRecord := Msg.MsgData.ToRecord<TEntryIdRecord>;
               FOLCmdSenderHandle := LEntryIdRecord.FSenderHandle;
