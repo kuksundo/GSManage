@@ -9,7 +9,7 @@ uses
   NxCustomGridControl, NxCustomGrid, NxGrid, AeroButtons, CurvyControls,
   Vcl.ImgList, AdvGlowButton, Vcl.ExtCtrls, Vcl.Menus, Vcl.Mask, JvExMask,
   AdvEdit, AdvEdBtn, JvToolEdit, JvBaseEdits, Clipbrd, Generics.Collections,
-  pjhComboBox,
+  pjhComboBox, AdvToolBtn,
   DragDrop, DropTarget, DropSource, DragDropFile,
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
@@ -20,7 +20,7 @@ uses
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
   UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit,
-  AdvToolBtn
+  UnitMacroListClass2
   ;
 
 type
@@ -329,6 +329,12 @@ type
     procedure CauseHW1Click(Sender: TObject);
     procedure CauseSW1Click(Sender: TObject);
     procedure DeleteMaterial1Click(Sender: TObject);
+    procedure AeroButton8Click(Sender: TObject);
+    procedure AeroButton6Click(Sender: TObject);
+    procedure AeroButton8MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -471,8 +477,8 @@ implementation
 
 uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   UnitHiconisASVarJsonUtil, UnitNextGridUtil2, UnitEnumHelper2,
-  UnitIPCModule2, FrmTodoList, FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,
-  DateUtils, UnitCmdExecService, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,
+  FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
+  DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
   FrmToDoList2;
 
@@ -682,6 +688,15 @@ begin
             Continue
           end;
 
+          //ClaimNo가 이미 존재하면 건너뜀
+          if CheckExistHullNoClaimNo(LTaskEditF.HullNoEdit.Text,
+                                    LTaskEditF.OrderNoEdit.Text,
+                                    LTaskEditF.ClaimNoEdit.Text) then
+          begin
+            ShowMessage('동일한 ClaimNo가 이미 존재 합니다.');
+            continue;
+          end;
+
           LoadTaskForm2TaskOrm(LTaskEditF, FTask);
 
           //IPC를 통해서  Email을 수신한 경우
@@ -846,7 +861,7 @@ begin
           LUtf8 := LMat4Proj.GetJSONValues(true, true, soSelect);
           LDoc.Material := _JSON(LUtf8);
           LUtf8 := LDoc;
-          SendReq2Server_Http(ARemoteIPAddress, APort, ARoot, CMD_EXECUTE_SAVE_TASK_DETAIL, LUtf8);
+//          SendReq2Server_Http(ARemoteIPAddress, APort, ARoot, CMD_EXECUTE_SAVE_TASK_DETAIL, LUtf8);
         end;
       finally
         FreeAndNil(LMat4Proj);
@@ -1065,6 +1080,62 @@ begin
   MaterialDetailEdit();
 end;
 
+procedure TTaskEditF.AeroButton6Click(Sender: TObject);
+var
+  LRoot: TMacroManagements;
+  LMacroM: TMacroManagement;
+  LPath, LMacroName: string;
+  LIdx: integer;
+begin
+  SetCurrentDir(ExtractFilePath(Application.ExeName));
+//  LPath := 'E:\pjh\Dev\Lang\Delphi\Project\RPA\MacroManage\mcr\';
+  LPath := '.\mcr\';
+  LRoot := TMacroManagements.Create;
+  LRoot := TMacroManagements.Create;
+  try
+    case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
+      cskPartSupply: LMacroName := 'Select-Claim관리-Service-부품공급.mcr';
+      cskPartSupplyNSE: LMacroName := 'Select-Claim관리-Service-부품공급_SE.mcr';
+      cskSEOnboard: LMacroName := 'Select-Claim관리-Service-SE방선.mcr';
+      cskTechInfo: LMacroName := 'Select-Claim관리-Service-기술정보제공.mcr';
+    end;
+
+    if LMacroName = '' then
+    begin
+      ShowMessage('SERVICE를 선택하세요.');
+      exit;
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + LMacroName);
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+    LMacroM.AddWaitMacro2ActItemList(2000);
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Select-Claim관리-책임처.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+    LMacroM.AddWaitMacro2ActItemList(2000);
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim관리-조치결과.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if EtcContentMemo.Text <> '' then
+      LMacroM.AddTypeMsgMacro2ActItemList(EtcContentMemo.Text);
+
+    LMacroM.AddWaitMacro2ActItemList(2000);
+    LMacroM.ExecuteActItemList();
+  finally
+    ShowMessage('Claim 관리 입력 완료!');
+    LRoot.Free;
+  end;
+end;
+
+procedure TTaskEditF.AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  AeroButton6Click(nil);
+end;
+
 procedure TTaskEditF.DeleteMaterial1Click(Sender: TObject);
 begin
   DeleteMaterialBtnClick(nil);
@@ -1096,6 +1167,79 @@ end;
 procedure TTaskEditF.AeroButton7Click(Sender: TObject);
 begin
   MaterialEdit();
+end;
+
+procedure TTaskEditF.AeroButton8Click(Sender: TObject);
+var
+  LRoot: TMacroManagements;
+  LMacroM: TMacroManagement;
+  LPath: string;
+  LIdx: integer;
+begin
+  SetCurrentDir(ExtractFilePath(Application.ExeName));
+//  LPath := 'E:\pjh\Dev\Lang\Delphi\Project\RPA\MacroManage\mcr\';
+  LPath := '.\mcr\';
+  LRoot := TMacroManagements.Create;
+  try
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim등록-공사번호.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if OrderNoEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(OrderNoEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim등록-ClaimNo.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if ClaimNoEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(ClaimNoEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim등록-Subject.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if WorkSummaryEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(WorkSummaryEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim등록-사유.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if ClaimReasonMemo.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(ClaimReasonMemo.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Select-Claim등록-중요도.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+    LMacroM.AddWaitMacro2ActItemList(2000);
+
+    //아래 실행 전에 d:\temp\ttt에 이메일 파일이 한개만 존재 해야 함
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '파일첨부-Claim등록-첨부파일.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+  finally
+    ShowMessage('Claim 등록 입력 완료!');
+    LRoot.Free;
+  end;
+end;
+
+procedure TTaskEditF.AeroButton8MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  AeroButton8Click(nil);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -3021,10 +3165,10 @@ begin
       begin
         LViewMailListF.OLEmailListFr.FRemoteIPAddress := ARemoteIPAddress;
         LUtf8 := IntToStr(ATask.TaskID);
-        LUtf8 := SendReq2Server_Http(ARemoteIPAddress, APort, ARoot,
-          CMD_REQ_TASK_EAMIL_LIST, LUtf8);
+//        LUtf8 := SendReq2Server_Http(ARemoteIPAddress, APort, ARoot,
+//          CMD_REQ_TASK_EAMIL_LIST, LUtf8);
         LUtf8 := MakeBase64ToUTF8(LUtf8);
-        ShowEmailListFromJson(LViewMailListF.OLEmailListFr.grid_Mail, LUtf8);
+//        ShowEmailListFromJson(LViewMailListF.OLEmailListFr.grid_Mail, LUtf8);
       end;
 
       if LViewMailListF.ShowModal = mrOK then

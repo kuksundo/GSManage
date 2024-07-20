@@ -15,8 +15,8 @@ uses
   mormot.core.os, mormot.core.datetime, mormot.core.text,
   UnitHGSCertData2, UnitHGSVDRRecord2, UnitQRCodeFrame, UnitHGSCertRecord2,
   UnitJHPFileRecord, UnitFrameFileList2, UnitHGSSerialRecord2,
-  UnitJHPFileData, AdvToolBtn, W7Classes, W7Buttons, FrameOLEmailList2, UnitOLEmailRecord2,
-  UnitHGSLicenseRecord;
+  UnitJHPFileData, AdvToolBtn, W7Classes, W7Buttons, UnitOLEmailRecord2,
+  UnitHGSLicenseRecord, FrameOLEmailList4Ole;
 
 type
   TCertEditF = class(TForm)
@@ -124,7 +124,6 @@ type
     SubCompanyEdit2: TEdit;
     InvoiceCompanyCodeEdit: TEdit;
     InvoiceCompanyNationEdit: TEdit;
-    FrameOLEmailList: TFrame2;
     JvLabel36: TJvLabel;
     InvoiceEmailEdit: TEdit;
     AdvOfficePage2: TAdvOfficePage;
@@ -148,6 +147,7 @@ type
     Button3: TButton;
     RenewalCheck: TCheckBox;
     GSFileFrame: TJHPFileListFrame;
+    FrameOLEmailList: TOutlookEmailListFr;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -588,7 +588,7 @@ begin
   try
     with LEmailListViewF.FrameOLMailList do
     begin
-      FDBKey := ACertNo;
+      FDBKey := StrToIntDef(ACertNo,0);
       FHullNo := AHullNo;
       FOLFolderListFileName := LEmailListViewF.FOLFolderListFileName;
       FDBNameSuffix := LEmailListViewF.FDBNameSuffix;
@@ -598,7 +598,7 @@ begin
 //        FSettings.MQServerUserId, FSettings.MQServerPasswd,
 //        FSettings.MQServerTopic, FSettings.MQServerEnable);
 
-      FContext4OLEmail.SetStrategy(TOLEmail4VDRAPTCert.Create(ACertNo));
+//      FContext4OLEmail.SetStrategy(TOLEmail4VDRAPTCert.Create(ACertNo));
       LEMailDBName := GetEMailDBName(Application.ExeName, LProdCode);
       InitOLEmailMsgClient(LEMailDBName);
       MailCount := ShowEmailListFromDBKey(grid_Mail, FDBKey);
@@ -754,7 +754,7 @@ end;
 
 procedure TCertEditF.CertNoButtonEditChange(Sender: TObject);
 begin
-  FrameOLEmailList.SetDBKey4Email(CertNoButtonEdit.Text);
+//  FrameOLEmailList.SetDBKey4Email(CertNoButtonEdit.Text);
 end;
 
 procedure TCertEditF.CertTypeCBChange(Sender: TObject);
@@ -2598,7 +2598,7 @@ end;
 function TCertEditF.SaveEmail2DB: string;
 begin
   FrameOLEmailList.SaveEmailFromGrid2DB;
-  Result := FrameOLEmailList.GetSenderEmailListFromGrid([cdmPoFromCust]);
+//  Result := FrameOLEmailList.GetSenderEmailListFromGrid([cdmPoFromCust]);
 end;
 
 procedure TCertEditF.SaveGSFile2DB;

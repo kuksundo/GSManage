@@ -20,7 +20,7 @@ uses
 
   VarRecUtils, TimerPool, JHP.Util.Bit32Helper,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
-  Vcl.ExtCtrls, FrmTodoList, UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig
+  Vcl.ExtCtrls, UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig, FrmTodoList,
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitToDoList,
   UnitUserDataRecord2, SBPro, UnitOLEmailRecord2,//UnitIniConfigSetting2
@@ -43,7 +43,6 @@ type
     JvLabel4: TJvLabel;
     JvLabel8: TJvLabel;
     JvLabel9: TJvLabel;
-    JvLabel10: TJvLabel;
     PeriodPanel: TCurvyPanel;
     Label4: TLabel;
     rg_period: TAdvOfficeRadioGroup;
@@ -65,7 +64,6 @@ type
     PORNoEdit: TEdit;
     DisplayFinalCheck: TCheckBox;
     Button1: TButton;
-    PICCB: TComboBox;
     TaskTab: TAdvOfficeTabSet;
     grid_Req: TNextGrid;
     NxIncrementColumn1: TNxIncrementColumn;
@@ -240,7 +238,7 @@ type
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
     FDBMsgQueue: TOmniMessageQueue;
-//    FIPCMQFromOLEmail: TOmniMessageQueue; FTaskEditConfig.IPCMQFromOLEmail로 대체함
+//    FIPCMQCommandOLEmail: TOmniMessageQueue; FTaskEditConfig.IPCMQCommandOLEmail로 대체함
     FHiASIniConfig: THiASIniConfig;
     FHiASIniFileName: string;
     FTaskEditConfig: THiconisASTaskEditConfig;
@@ -428,13 +426,13 @@ var
 
 implementation
 
-uses UnitIPCModule2, ClipBrd, System.RegularExpressions,
+uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
-  UnitHttpModule4InqManageServer2, UnitStringUtil, UnitExcelUtil,
+  UnitStringUtil, UnitExcelUtil,//UnitHttpModule4InqManageServer2,
 
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
-  UnitCmdExecService, FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,
+  FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord;
 
@@ -803,10 +801,10 @@ begin
 //      ShowMessage(LOLRespondRec.FMsg);
 //    end;
 
-    //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2OLEmail.Enqueue 실행
-    //아래 조건이 없으면 IPCMQ2OLEmail.Enqueue 때문에 Q에 데이터가 쌓임
+    //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2RespondOLEmail.Enqueue 실행
+    //아래 조건이 없으면 IPCMQ2RespondOLEmail.Enqueue 때문에 Q에 데이터가 쌓임
     if FOLMailListFormDisplayed then
-      if FTaskEditConfig.IPCMQ2OLEmail.Enqueue(LMsg) then
+      if FTaskEditConfig.IPCMQ2RespondOLEmail.Enqueue(LMsg) then
         SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
   end;
 end;
@@ -1012,10 +1010,10 @@ begin
 //    if PICCB.ItemIndex = -1 then
 //      PICCB.ItemIndex := 0;
 
-    if PICCB.ItemIndex <> -1 then
-      FRemoteIPAddress := PICCB.Items.ValueFromIndex[PICCB.ItemIndex]
-    else
-      FRemoteIPAddress := '';
+//    if PICCB.ItemIndex <> -1 then
+//      FRemoteIPAddress := PICCB.Items.ValueFromIndex[PICCB.ItemIndex]
+//    else
+//      FRemoteIPAddress := '';
   end;
 end;
 
@@ -1476,7 +1474,7 @@ end;
 
 procedure THiconisAsManageF.InitOutlook;
 begin
-  FTaskEditConfig.IPCMQFromOLEmail.Enqueue(TOmniMessage.Create(Ord(olckInitVar), TOmniValue.CastFrom(Self.Handle)));
+  FTaskEditConfig.IPCMQCommandOLEmail.Enqueue(TOmniMessage.Create(Ord(olckInitVar), TOmniValue.CastFrom(Self.Handle)));
 end;
 
 procedure THiconisAsManageF.InitTaskEnum;
@@ -1520,7 +1518,7 @@ begin
 
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
-  PICCB.ItemIndex := -1;
+//  PICCB.ItemIndex := -1;
 
   Category1.Tag := 0;
   Location1.Tag := 0;
@@ -1589,8 +1587,8 @@ function THiconisAsManageF.GetIsRemote(var ARemoteAddr: string): Boolean;
 begin
   Result := False;
 
-  if ARemoteAddr = '' then
-    ARemoteAddr := PICCB.Items.ValueFromIndex[PICCB.ItemIndex];
+//  if ARemoteAddr = '' then
+//    ARemoteAddr := PICCB.Items.ValueFromIndex[PICCB.ItemIndex];
 
   if ARemoteAddr <> '' then
     Result := FMyIPAddress <> ARemoteAddr;
@@ -1673,12 +1671,12 @@ begin
       LOmniValue: TOmniValue;
     begin
       handles[0] := FStopEvent.Handle;
-      handles[1] := FTaskEditConfig.IPCMQFromOLEmail.GetNewMessageEvent;
+      handles[1] := FTaskEditConfig.IPCMQCommandOLEmail.GetNewMessageEvent;
 
       while WaitForMultipleObjects(2, @handles, false, INFINITE) = (WAIT_OBJECT_0 + 1) do
       begin
         //FrameOLEmailList4Ole.TOutlookEmailListFr 에서 OL Control 요청이 들어옴
-        while FTaskEditConfig.IPCMQFromOLEmail.TryDequeue(msg) do
+        while FTaskEditConfig.IPCMQCommandOLEmail.TryDequeue(msg) do
         begin
           case TOLCommandKind(msg.MsgID) of
             olckInitVar,
@@ -1693,6 +1691,7 @@ begin
               LEntryIdRecord.FSenderHandle := Self.Handle;
               msg.MsgData := TOmniValue.FromRecord(LEntryIdRecord);
             end;
+            //FrameOLEmailList4Ole.DropEmptyTarget1Drop()에서 전송 됨
             olckGetSelectedMailItemFromExplorer: begin
               LOLRespondRec := msg.MsgData.ToRecord<TOLRespondRec>;
               FOLCmdSenderHandle := LOLRespondRec.FSenderHandle;
@@ -1724,8 +1723,8 @@ end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 begin
-  Create_ToDoList_Frm('', AToDoCollect, True,
-    nil, nil);//InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+//  Create_ToDoList_Frm('', AToDoCollect, True,
+//    nil, nil);//InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
 end;
 
 procedure THiconisAsManageF.StartOLControlWorker;
@@ -1820,8 +1819,8 @@ begin
 
   FUserList.Add(GetMyName(g_MyEmailInfo.SmtpAddress)+'='+g_MyEmailInfo.SmtpAddress);
   FillInUserList;
-  PICCB.Items.Assign(FUserList);
-  PICCB.ItemIndex := -1;
+//  PICCB.Items.Assign(FUserList);
+//  PICCB.ItemIndex := -1;
 end;
 
 procedure THiconisAsManageF.btn_CloseClick(Sender: TObject);
@@ -1841,7 +1840,7 @@ begin
   if LIsRemote then
   begin
     LUtf8 := RecordSaveJson(LSearchCondRec, TypeInfo(TSearchCondRec));
-    LResult := SendReq2InqManagerServer_Http(LSearchCondRec.FRemoteIPAddress, FPortName, FRootName, CMD_REQ_TASK_LIST, LUtf8);
+//    LResult := SendReq2InqManagerServer_Http(LSearchCondRec.FRemoteIPAddress, FPortName, FRootName, CMD_REQ_TASK_LIST, LUtf8);
     LResult := MakeBase64ToUTF8(LResult);
     DisplayTaskInfo2GridFromJson(LResult);
   end
@@ -2570,8 +2569,13 @@ begin
   FHiASIniConfig := THiASIniConfig.Create(FHiASIniFileName);
   FPJHTimerPool := TPJHTimerPool.Create(Self);
   FDBMsgQueue := TOmniMessageQueue.Create(1000);
-  FTaskEditConfig.IPCMQFromOLEmail := TOmniMessageQueue.Create(1000);
-  FTaskEditConfig.IPCMQ2OLEmail := TOmniMessageQueue.Create(1000);
+  FTaskEditConfig.IPCMQCommandOLEmail := TOmniMessageQueue.Create(1000);
+  FTaskEditConfig.IPCMQ2RespondOLEmail := TOmniMessageQueue.Create(1000);
+  FTaskEditConfig.IPCMQCommandOLCalendar := FTaskEditConfig.IPCMQCommandOLEmail;
+  FTaskEditConfig.IPCMQ2RespondOLCalendar := FTaskEditConfig.IPCMQ2RespondOLEmail;
+//  FTaskEditConfig.IPCMQCommandOLCalendar := TOmniMessageQueue.Create(1000);
+//  FTaskEditConfig.IPCMQ2RespondOLCalendar := TOmniMessageQueue.Create(1000);
+
   //FrameOLEmailList에서 OLControlWorker 생성하는 것 방지
   FTaskEditConfig.IsUseOLControlWorkerFromEmailList := False;
 
@@ -2611,11 +2615,17 @@ begin
   if Assigned(FDBMsgQueue) then
     FreeAndNil(FDBMsgQueue);
 
-  if Assigned(FTaskEditConfig.IPCMQFromOLEmail) then
-    FreeAndNil(FTaskEditConfig.IPCMQFromOLEmail);
+  if Assigned(FTaskEditConfig.IPCMQCommandOLEmail) then
+    FreeAndNil(FTaskEditConfig.IPCMQCommandOLEmail);
 
-  if Assigned(FTaskEditConfig.IPCMQ2OLEmail) then
-    FreeAndNil(FTaskEditConfig.IPCMQ2OLEmail);
+  if Assigned(FTaskEditConfig.IPCMQ2RespondOLEmail) then
+    FreeAndNil(FTaskEditConfig.IPCMQ2RespondOLEmail);
+
+  if Assigned(FTaskEditConfig.IPCMQCommandOLCalendar) then
+    FreeAndNil(FTaskEditConfig.IPCMQCommandOLCalendar);
+
+  if Assigned(FTaskEditConfig.IPCMQ2RespondOLCalendar) then
+    FreeAndNil(FTaskEditConfig.IPCMQ2RespondOLCalendar);
 
   if Assigned(FStopEvent) then
     FreeAndNil(FStopEvent);
@@ -2660,7 +2670,7 @@ begin
     if LIsRemote then
     begin
       LUtf8 := ObjectToJson(LIdList);
-      LUtf8 := SendReq2InqManagerServer_Http(LIpAddr, FPortName, FRootName, CMD_REQ_TASK_DETAIL, LUtf8);
+//      LUtf8 := SendReq2InqManagerServer_Http(LIpAddr, FPortName, FRootName, CMD_REQ_TASK_DETAIL, LUtf8);
       LUtf8 := MakeBase64ToUTF8(LUtf8);
       ShowTaskFormFromJson(LUtf8);
     end

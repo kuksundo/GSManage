@@ -6,11 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Forms, Vcl.Controls,
   mormot.core.base,
-  FrameOLEmailList2;
+  FrameOLEmailList4Ole;
 
 type
   TEmailListViewF = class(TForm)
-    FrameOLMailList: TFrame2;
+    FrameOLMailList: TOutlookEmailListFr;
   public
     FOLFolderListFileName: string;
     FDBNameSuffix: string;

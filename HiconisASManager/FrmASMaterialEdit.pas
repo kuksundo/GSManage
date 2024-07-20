@@ -75,12 +75,14 @@ type
     Button1: TButton;
     TaskID: TEdit;
     PngSpeedButton2: TPngSpeedButton;
+    PngSpeedButton3: TPngSpeedButton;
 
     procedure FormCreate(Sender: TObject);
     procedure PngSpeedButton1Click(Sender: TObject);
     procedure AdvToolButton1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure PngSpeedButton2Click(Sender: TObject);
+    procedure PngSpeedButton3Click(Sender: TObject);
   private
     procedure InitEnum;
     procedure InitCombo;
@@ -405,6 +407,52 @@ begin
   end;
 
   MakeShippingMark(LSHIPMARK_Rec);
+end;
+
+procedure TASMaterialF.PngSpeedButton3Click(Sender: TObject);
+var
+  LRECEIPTACCPT_Rec: DOC_RECEIPTACCPT_Rec;
+  LOrm: TOrmHiconisASTask;
+  LMatOrm: TSQLMaterial4Project;
+begin
+  with LRECEIPTACCPT_Rec do
+  begin
+    LOrm := GetLoadTask(FTaskID);
+    try
+      if LOrm.IsUpdate then
+      begin
+        FHullNo := LOrm.HullNo;
+        FShipName := LOrm.ShipName;
+        FClaimNo := LOrm.ClaimNo;
+        FProjectNo := LOrm.Order_No;
+        FProjectName := LOrm.WorkSummary;
+        FPICName := LOrm.ChargeInPersonId;
+      end;
+    finally
+      LOrm.Free;
+    end;
+
+    LMatOrm := GetMaterial4ProjFromTaskID(FTaskID);
+    try
+      if LMatOrm.IsUpdate then
+      begin
+        FRecvCompany := LMatOrm.PORNo;
+        FPORNo := LMatOrm.PORNo;
+        FMatName := LMatOrm.MaterialName;
+        FMatDesc := LMatOrm.MaterialName;
+        FQty := LMatOrm.NumOfPkg;
+//        FReciptDate := LMatOrm.ReqArriveDate;
+      end;
+    finally
+      LMatOrm.Free;
+    end;
+
+    FDepartment := '디지털제어설계부';
+    FSpec := '';
+    FRemark := '';
+  end;
+
+  MakeReceiptAcceptance(LRECEIPTACCPT_Rec);
 end;
 
 end.

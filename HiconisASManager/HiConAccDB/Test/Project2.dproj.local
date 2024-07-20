@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.967,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-07-19 14:58:04.781,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-07-19 15:03:09.314,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConAccDB\Test\Unit2.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2024-07-19 15:03:09.314,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConAccDB\Test\Unit2.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-07-19 15:03:13.630,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConAccDB\Test\Project2.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

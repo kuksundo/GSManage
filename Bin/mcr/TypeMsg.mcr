@@ -1,0 +1,1 @@
+[{"CommIniFileName":"","MacroName":"TypeMsg","MacroDesc":"","RepeatCount":1,"IsExecute":true,"ActionDesc":"","MacroArray":[],"ActItemListJson":"[{\"ActionCode\":\"Type message\",\"ActionDesc\":\"Message: aaa\",\"CustomDesc\":\"\",\"ActionType\":7,\"ExecMode\":0,\"XPos\":0,\"YPos\":0,\"WaitSec\":0,\"GridIndex\":0,\"VKExtendKey\":0,\"InputText\":\"aaa\"}]"}]

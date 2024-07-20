@@ -56,7 +56,7 @@ function SendCmd2OL4MoveFolderEmail_NamedPipe_Sync(AOriginalEntryId, AOriginalSt
 
 implementation
 
-uses UnitWebSocketClient2, UnitCommonWSInterface2;
+uses UnitWebSocketClient2;
 
 procedure SetWSInfoRec(AIPAddr,APortNo,ATransKey: string;
   AIsWSEnable: Boolean; var ARec: TWSInfoRec);

@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2,
-  UnitOLEmailRecord2;
+  Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2, PngBitBtn, OtlCommon,
+  UnitOLEmailRecord2, UnitOutLookDataType;
 
 type
   ALARM_INTERVAL = (aiNone, ai0Min,ai5Min,ai10Min,ai15Min,ai30Min,
@@ -41,10 +41,12 @@ type
     Alarm2Email: TCheckBox;
     Alarm2Popup: TCheckBox;
     UniqueID: TEdit;
+    PngBitBtn1: TPngBitBtn;
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure PngBitBtn1Click(Sender: TObject);
   private
   public
     FTaskEditConfig: THiconisASTaskEditConfig;
@@ -53,6 +55,8 @@ type
 
     function GetTodoItem2JsonFromForm: string;
     procedure SetTodoItemFromJson2Form(AJson: string);
+    procedure ReqRegisterTodoItem2OL();
+    procedure SendCmd2WorkerThrd(const ACmd: TOLCommandKind; const AValue: TOmniValue);
   end;
 
   function GetAlarmInterval(AInterval: integer): longint;
@@ -134,6 +138,16 @@ begin
     Alarm2Note := Self.Alarm2Note.Checked;
     Alarm2Popup := Self.Alarm2Popup.Checked;
   end;
+end;
+
+procedure TToDoDetailF.PngBitBtn1Click(Sender: TObject);
+begin
+  ReqRegisterTodoItem2OL();
+end;
+
+procedure TToDoDetailF.ReqRegisterTodoItem2OL;
+begin
+  FTaskEditConfig.IPCMQCommandOLCalendar
 end;
 
 procedure TToDoDetailF.SetTodoItemFromJson2Form(AJson: string);

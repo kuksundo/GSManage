@@ -71,6 +71,25 @@ type
     : string;
   end;
 
+  DOC_RECEIPTACCPT_Rec = record
+    FHullNo,
+    FShipName,
+    FClaimNo,
+    FProjectNo,
+    FProjectName,
+    FPICName,
+    FPORNo,
+    FMatName,
+    FMatDesc,
+    FQty,
+    FReciptDate,
+    FRecvCompany,
+    FSpec,
+    FRemark,
+    FDepartment
+    : string;
+  end;
+
   TDBCRUDResult = (crudNull, crudOK, crudFail, crudUpdateOK, crudAddOK, crudDeleteOK, crudCreateOK,
     crudUpdateFail, crudAddFail, crudDeleteFail, crudCreateFail, crudFinal);
   TTierStep = (tsNull, tsTierI, tsTierII, tsTierIII, tsFinal);

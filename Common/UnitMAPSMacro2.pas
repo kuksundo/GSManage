@@ -46,7 +46,7 @@ begin
   try
     g_MacroManageF.LoadMacroFromFile(QTN_INPUT_MACRO_FILE_NAME);
 
-    for i := 0 to g_MacroManageF.FMacroManageList.Count - 1 do
+    for i := 0 to g_MacroManageF.FMacroRootList.FMacroManageList.Count - 1 do
     begin
 //      g_MacroManageF.AssignActionData2Form(
 //        TMacroManagement(g_MacroManageF.FMacroManageList.Items[i]).ActionCollect,

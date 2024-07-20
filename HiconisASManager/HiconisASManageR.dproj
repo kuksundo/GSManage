@@ -101,9 +101,6 @@
         <DCCReference Include="..\Common\FrmTodo_Detail.pas">
             <Form>ToDoDetailF</Form>
         </DCCReference>
-        <DCCReference Include="..\FrmTodoList.pas">
-            <Form>ToDoListF</Form>
-        </DCCReference>
         <DCCReference Include="..\..\..\..\..\..\project\common\UnitDateUtil.pas"/>
         <DCCReference Include="..\..\..\common\UnitTodoCollect2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\common\UnitRegistryUtil.pas"/>
@@ -121,7 +118,6 @@
         <DCCReference Include="UnitHiconisASVarJsonUtil.pas"/>
         <DCCReference Include="..\Common\UnitHiconisASWSInterface.pas"/>
         <DCCReference Include="..\UnitUserDataRecord2.pas"/>
-        <DCCReference Include="..\Common\UnitCmdExecService.pas"/>
         <DCCReference Include="..\Common\UnitMAPSMacro2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\common\JvgXMLSerializer_pjh.pas"/>
         <DCCReference Include="..\..\..\NoGitHub\RecordUnit2\HiconisASManager\UnitHiconisMasterRecord.pas"/>

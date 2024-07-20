@@ -251,7 +251,7 @@ end;
 //  LStrList: TStringList;
 //  LEntryId, LStoreId: string;
 //  Command: AnsiString;
-//  LEmailMsg: TSQLEmailMsg;
+//  LEmailMsg: TSQLOLEmailMsg;
 //  LIds: TIDDynArray;
 //begin
 //  LStrList := TStringList.Create;
@@ -287,7 +287,7 @@ end;
 //
 //      if Command = CMD_RESPONDE_MOVE_FOLDER_MAIL then
 //      begin
-//        LEmailMsg := TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB,
+//        LEmailMsg := TSQLOLEmailMsg.CreateAndFillPrepare(g_ProjectDB,
 //            'EntryID = ? AND StoreID = ?', [LEntryId,LStoreId]);
 //
 //        try
@@ -321,7 +321,7 @@ end;
 //  IPCResult: IIPCData;
 //  Command: AnsiString;
 //  LEmailMsg,
-//  LEmailMsg2: TSQLEmailMsg;
+//  LEmailMsg2: TSQLOLEmailMsg;
 //  LTask: TOrmHiconisASTask;
 //  LJson: string;
 //  LVarArr: TVariantDynArray;
@@ -329,7 +329,7 @@ end;
 //begin
 //  IPCClient := TIPCClient.Create;
 //  LStrList := TStringList.Create;
-//  LEmailMsg := TSQLEmailMsg.Create;
+//  LEmailMsg := TSQLOLEmailMsg.Create;
 //  try
 //    IPCClient.ServerName := IPC_SERVER_NAME_4_OUTLOOK2;
 //    LStrList.Add('ServerName='+IPC_SERVER_NAME_4_OUTLOOK2);
@@ -361,7 +361,7 @@ end;
 //
 //          if (LEmailMsg.EntryID <> '') and (LEmailMsg.StoreID <> '') then
 //          begin
-//            LEmailMsg2 := TSQLEmailMsg.Create(g_ProjectDB,
+//            LEmailMsg2 := TSQLOLEmailMsg.Create(g_ProjectDB,
 //              'EntryID = ? AND StoreID = ?', [LEmailMsg.EntryID,LEmailMsg.StoreID]);
 //
 //            try
@@ -413,14 +413,14 @@ begin
     LStrList.Add('Command='+CMD_REQ_REPLY_MAIL);
     LStrList.Add('EntryId='+AEntryId);
     LStrList.Add('StoreId='+AStoreId);
-    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask, AMailType, ASettings.SalesPICSig,
-      ASettings.ShippingPICSig, ASettings.FieldServicePICSig,
-      ASettings.ElecHullRegPICSig, ASettings.MyNameSig));
+//    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask, AMailType, ASettings.SalesPICSig,
+//      ASettings.ShippingPICSig, ASettings.FieldServicePICSig,
+//      ASettings.ElecHullRegPICSig, ASettings.MyNameSig));
 
 
     if AMailType = 8 then
     begin
-      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
+//      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
       LStrList.Add('AttachedFileName='+'.\'+LFileName);
     end;
 
@@ -462,15 +462,15 @@ begin
       LStrList.Add('StoreId='+LStoreId);
     end;
 
-    LStrList.Add('Subject='+MakeMailSubject(ATask, AMailType));
+//    LStrList.Add('Subject='+MakeMailSubject(ATask, AMailType));
     LStrList.Add('To='+AToMailAddr);//GetRecvEmailAddress(AMailType));
-    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask,AMailType, ASettings.SalesPICSig,
-      ASettings.ShippingPICSig, ASettings.FieldServicePICSig, ASettings.ElecHullRegPICSig,
-      ASettings.MyNameSig));
+//    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask,AMailType, ASettings.SalesPICSig,
+//      ASettings.ShippingPICSig, ASettings.FieldServicePICSig, ASettings.ElecHullRegPICSig,
+//      ASettings.MyNameSig));
 
     if AMailType = 8 then
     begin
-      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
+//      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
       LStrList.Add('AttachedFileName='+'.\'+LFileName);
     end;
 
@@ -505,14 +505,14 @@ begin
     LStrList.Add('Command='+CMD_REQ_FORWARD_MAIL);
     LStrList.Add('EntryId='+AEntryId);
     LStrList.Add('StoreId='+AStoreId);
-    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask, AMailType, ASettings.SalesPICSig,
-      ASettings.ShippingPICSig, ASettings.FieldServicePICSig,
-      ASettings.ElecHullRegPICSig, ASettings.MyNameSig));
+//    LStrList.Add('HTMLBody='+MakeEmailHTMLBody(ATask, AMailType, ASettings.SalesPICSig,
+//      ASettings.ShippingPICSig, ASettings.FieldServicePICSig,
+//      ASettings.ElecHullRegPICSig, ASettings.MyNameSig));
 
 
     if AMailType = 8 then
     begin
-      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
+//      LStrList.Add('TaskInfoAttached='+MakeTaskInfoEmailAttached(ATask, LFileName));
       LStrList.Add('AttachedFileName='+'.\'+LFileName);
     end;
 
@@ -539,7 +539,7 @@ var
   Service: IOLMailService;
   LStrList: TStringList;
   LEntryId, LStoreId: string;
-  LEmailMsg: TSQLEmailMsg;
+  LEmailMsg: TSQLOLEmailMsg;
   LCommand, LRespond: string;
   LIds: TIDDynArray;
 begin
@@ -580,14 +580,14 @@ begin
 
       if LCommand = CMD_RESPONDE_MOVE_FOLDER_MAIL then
       begin
-        LEmailMsg := TSQLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm,
+        LEmailMsg := TSQLOLEmailMsg.CreateAndFillPrepare(g_ProjectDB.Orm,
             'EntryID = ? AND StoreID = ?', [LEntryId,LStoreId]);
 
         try
           if LEmailMsg.FillOne then
           begin
-            LEmailMsg.EntryID := LStrList.Values['NewEntryId'];
-            LEmailMsg.StoreID := LStrList.Values['MovedStoreId'];
+            LEmailMsg.LocalEntryId := LStrList.Values['NewEntryId'];
+            LEmailMsg.LocalStoreID := LStrList.Values['MovedStoreId'];
             LEmailMsg.SavedOLFolderPath := LStrList.Values['MovedFolderPath'];
             g_ProjectDB.Update(LEmailMsg);
             Result := True;
@@ -639,14 +639,14 @@ var
   LStrList: TStringList;
   LCommand, LRespond: String;
   LEmailMsg,
-  LEmailMsg2: TSQLEmailMsg;
+  LEmailMsg2: TSQLOLEmailMsg;
   LTask: TOrmHiconisASTask;
   LJson: string;
   LVarArr: TVariantDynArray;
   i: integer;
 begin
   LStrList := TStringList.Create;
-  LEmailMsg := TSQLEmailMsg.Create;
+  LEmailMsg := TSQLOLEmailMsg.Create;
   try
     LStrList.Add('ServerName='+IPC_SERVER_NAME_4_OUTLOOK2);
     LStrList.Add('Command='+CMD_REQ_MAILINFO_SEND2);
@@ -677,32 +677,32 @@ begin
 
         for i := 0 to High(LVarArr) do
         begin
-          LEmailMsg.EntryID := LVarArr[i].EntryId;
-          LEmailMsg.StoreID := LVarArr[i].StoreId;
+          LEmailMsg.LocalEntryID := LVarArr[i].EntryId;
+          LEmailMsg.LocalStoreID := LVarArr[i].StoreId;
 
-          if (LEmailMsg.EntryID <> '') and (LEmailMsg.StoreID <> '') then
+          if (LEmailMsg.LocalEntryID <> '') and (LEmailMsg.LocalStoreID <> '') then
           begin
-            LEmailMsg2 := TSQLEmailMsg.Create(g_ProjectDB.Orm,
-              'EntryID = ? AND StoreID = ?', [LEmailMsg.EntryID,LEmailMsg.StoreID]);
+            LEmailMsg2 := TSQLOLEmailMsg.Create(g_ProjectDB.Orm,
+              'EntryID = ? AND StoreID = ?', [LEmailMsg.LocalEntryID,LEmailMsg.LocalStoreID]);
 
             try
               //데이터가 없으면
   //            if LEmailMsg.ID = 0 then
               if not LEmailMsg2.FillOne then
               begin
-                LEmailMsg2.EntryID := LVarArr[i].EntryId;
-                LEmailMsg2.StoreID := LVarArr[i].StoreId;
-                LEmailMsg2.Sender := LVarArr[i].Sender;
-                LEmailMsg2.Receiver := LVarArr[i].Receiver;
-                LEmailMsg2.CarbonCopy := LVarArr[i].CC;
-                LEmailMsg2.BlindCC := LVarArr[i].BCC;
+                LEmailMsg2.LocalEntryID := LVarArr[i].EntryId;
+                LEmailMsg2.LocalStoreID := LVarArr[i].StoreId;
+                LEmailMsg2.SenderEmail := LVarArr[i].Sender;
+                LEmailMsg2.Recipients := LVarArr[i].Receiver;
+                LEmailMsg2.CC := LVarArr[i].CC;
+                LEmailMsg2.BCC := LVarArr[i].BCC;
                 LEmailMsg2.Subject := LVarArr[i].Subject;
                 LEmailMsg2.SavedOLFolderPath := LVarArr[i].FolderPath;
                 LEmailMsg2.RecvDate := TimeLogFromDateTime(StrToDateTime(LVarArr[i].RecvDate));
 
                 g_ProjectDB.Add(LEmailMsg2, true);
-                ATask.EmailMsg.ManyAdd(g_ProjectDB.Orm, ATask.ID, LEMailMsg2.ID, True);
-                AResultList.Add(LEmailMsg2.EntryID + '=' + LEmailMsg2.StoreID);
+//                ATask.EmailMsg.ManyAdd(g_ProjectDB.Orm, ATask.ID, LEMailMsg2.ID, True);
+//                AResultList.Add(LEmailMsg2.EntryID + '=' + LEmailMsg2.StoreID);
                 Result := True;
               end;
             finally

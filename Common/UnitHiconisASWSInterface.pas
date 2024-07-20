@@ -8,12 +8,12 @@ uses
 
 type
   IHiconisASCallback = interface(IInvokable)
-    ['{3353F04E-3AFA-4E23-A8C7-64FA51374270}']
+    ['{7948C89E-6F46-47EC-845E-B99DA68E093E}']
     procedure ClientExecute(const command, msg: string);
   end;
 
   IHiconisASService = interface(IServiceWithCallbackReleased)
-    ['{FF0AEF1B-4389-4911-A9D7-233EEB9E0FA6}']
+    ['{6F31F4EE-B8A4-4308-A62B-F29A0A5842B1}']
     procedure Join(const pseudo: string; const callback: IHiconisASCallback);
     function ServerExecute(const Acommand: RawUTF8): RawUTF8;
   end;

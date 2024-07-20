@@ -22,7 +22,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 0
     Top = 3
     Width = 1160
-    Height = 158
+    Height = 134
     Margins.Left = 0
     Margins.Right = 0
     Align = alTop
@@ -244,33 +244,6 @@ object HiconisAsManageF: THiconisAsManageF
       HotTrackFont.Name = #47569#51008' '#44256#46357
       HotTrackFont.Style = []
     end
-    object JvLabel10: TJvLabel
-      AlignWithMargins = True
-      Left = 8
-      Top = 100
-      Width = 80
-      Height = 25
-      Alignment = taCenter
-      AutoSize = False
-      Caption = #45812#45817#51088
-      Color = 14671839
-      FrameColor = clGrayText
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = [fsBold]
-      Layout = tlCenter
-      ParentColor = False
-      ParentFont = False
-      RoundedFrame = 3
-      Transparent = True
-      HotTrackFont.Charset = ANSI_CHARSET
-      HotTrackFont.Color = clWindowText
-      HotTrackFont.Height = -13
-      HotTrackFont.Name = #47569#51008' '#44256#46357
-      HotTrackFont.Style = []
-    end
     object MakeCertButton: TAdvToolButton
       Left = 754
       Top = 101
@@ -343,13 +316,13 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel11: TJvLabel
       AlignWithMargins = True
-      Left = 14
-      Top = 130
-      Width = 141
+      Left = 0
+      Top = 100
+      Width = 102
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Set Find Condition'
+      Caption = 'Find Condition'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -523,7 +496,7 @@ object HiconisAsManageF: THiconisAsManageF
       Left = 955
       Top = 0
       Width = 205
-      Height = 158
+      Height = 134
       Align = alRight
       TabOrder = 6
       object btn_Search: TAeroButton
@@ -531,7 +504,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 3
         Top = 4
         Width = 62
-        Height = 150
+        Height = 126
         ImageIndex = 2
         Images = ImageList32x32
         ImagePos = ipTop
@@ -546,7 +519,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 139
         Top = 4
         Width = 62
-        Height = 150
+        Height = 126
         ImageIndex = 0
         Images = ImageList32x32
         ImagePos = ipTop
@@ -561,7 +534,7 @@ object HiconisAsManageF: THiconisAsManageF
         Left = 71
         Top = 4
         Width = 62
-        Height = 150
+        Height = 126
         ImageIndex = 1
         Images = ImageList32x32
         ImagePos = ipTop
@@ -630,29 +603,13 @@ object HiconisAsManageF: THiconisAsManageF
       TabOrder = 11
     end
     object Button1: TButton
-      Left = 277
+      Left = 312
       Top = 100
-      Width = 75
+      Width = 40
       Height = 25
       Caption = 'Clear'
       TabOrder = 12
       OnClick = Button1Click
-    end
-    object PICCB: TComboBox
-      Left = 91
-      Top = 100
-      Width = 180
-      Height = 25
-      Style = csDropDownList
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      ImeName = 'Microsoft IME 2010'
-      ParentFont = False
-      TabOrder = 13
-      OnChange = PICCBChange
     end
     object CurWorkCB: TComboBox
       Left = 441
@@ -667,7 +624,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 14
+      TabOrder = 13
       OnDropDown = CurWorkCBDropDown
     end
     object MaterialCodeEdit: TEdit
@@ -676,13 +633,13 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 15
+      TabOrder = 14
       OnKeyPress = HullNoEditKeyPress
     end
     object SetFildCondCB: TComboBox
-      Left = 159
-      Top = 131
-      Width = 193
+      Left = 103
+      Top = 100
+      Width = 203
       Height = 24
       Style = csDropDownList
       Font.Charset = DEFAULT_CHARSET
@@ -692,7 +649,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 16
+      TabOrder = 15
     end
     object ClaimServiceKindCB: TJvCheckedComboBox
       Left = 440
@@ -702,12 +659,12 @@ object HiconisAsManageF: THiconisAsManageF
       CapSelectAll = '&Select all'
       CapDeSelectAll = '&Deselect all'
       CapInvertAll = '&Invert all'
-      TabOrder = 17
+      TabOrder = 16
     end
   end
   object TaskTab: TAdvOfficeTabSet
     Left = 0
-    Top = 164
+    Top = 140
     Width = 1160
     Height = 27
     AdvOfficeTabs = <
@@ -1423,9 +1380,9 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object grid_Req: TNextGrid
     Left = 0
-    Top = 191
+    Top = 167
     Width = 1160
-    Height = 439
+    Height = 463
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Align = alClient
@@ -1970,7 +1927,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000EC0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000FC0318001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2280,7 +2237,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402FC0310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101020054020C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2639,7 +2596,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800240520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800340520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3196,7 +3153,7 @@ object HiconisAsManageF: THiconisAsManageF
   object DataFormatAdapter2: TDataFormatAdapter
     DragDropComponent = DropEmptySource1
     DataFormatName = 'TVirtualFileStreamDataFormat'
-    Left = 252
+    Left = 244
     Top = 263
   end
   object DataFormatAdapterTarget: TDataFormatAdapter

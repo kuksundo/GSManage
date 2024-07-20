@@ -45,26 +45,18 @@ uses
   FrmInvoiceNoEdit in '..\..\..\..\..\..\project\util\GSManage\InvoiceManage\FrmInvoiceNoEdit.pas' {InvoiceNoEditF},
   UnitWebSocketServer2 in '..\..\..\Common\UnitWebSocketServer2.pas',
   UnitWebSocketClient2 in '..\..\..\Common\UnitWebSocketClient2.pas',
-  OLMailWSCallbackInterface2 in '..\..\OutlookAddIn2\OLMailWSCallbackInterface2.pas',
   UnitGAConfigClass2 in '..\Common\UnitGAConfigClass2.pas',
-  UnitHttpModule4InqManageServer2 in '..\Common\UnitHttpModule4InqManageServer2.pas',
   FrmEmailListView2 in '..\FrmEmailListView2.pas' {EmailListViewF},
-  UnitOLEmailRecord2 in '..\..\..\Common\UnitOLEmailRecord2.pas',
-  UnitGAServiceData in '..\..\..\..\..\..\project\util\GSManage\GAManageR\UnitGAServiceData.pas',
-  UnitStrategy4OLEmailInterface2 in '..\Common\UnitStrategy4OLEmailInterface2.pas',
   UnitStrategy4VDRAPTCert2 in '..\UnitStrategy4VDRAPTCert2.pas',
   FrmInvoiceIssueDateEdit in '..\..\..\..\..\..\project\util\GSManage\InvoiceManage\FrmInvoiceIssueDateEdit.pas' {InvoiceIssueDateEditF},
   FrmNoteEdit in '..\..\..\..\..\..\project\util\GSManage\CertManage\FrmNoteEdit.pas' {NoteEditF},
   UnitMQData in '..\..\..\..\..\..\project\common\UnitMQData.pas',
   FrmAboutF in '..\..\..\..\..\..\project\util\GSManage\FrmAboutF.pas' {AboutF},
-  UnitIPCModule2 in '..\Common\UnitIPCModule2.pas',
   UnitDateUtil in '..\..\..\..\..\..\project\common\UnitDateUtil.pas',
   UnitElecMasterData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitElecMasterData.pas',
-  UnitGAMasterRecord2 in '..\Common\UnitGAMasterRecord2.pas',
   UnitOutlookIPCUtil2 in '..\Common\UnitOutlookIPCUtil2.pas',
   FrmCertManageConfig in '..\..\..\..\..\..\project\util\GSManage\CertManage\FrmCertManageConfig.pas',
   UnitCertManageConfigClass2 in 'UnitCertManageConfigClass2.pas',
-  FrameOLEmailList2 in '..\..\..\Common\Frame\FrameOLEmailList2.pas',
   UnitServerConfigBase2 in '..\Common\UnitServerConfigBase2.pas',
   UnitMSPPTUtil in '..\..\..\..\..\..\project\common\UnitMSPPTUtil.pas',
   UnitCertManager2 in '..\..\..\NoGitHub\RecordUnit2\CertManager2\UnitCertManager2.pas',
@@ -77,7 +69,8 @@ uses
   UnitCertManagerCLO in 'UnitCertManagerCLO.pas',
   UnitHGSLicenseRecord in 'UnitHGSLicenseRecord.pas',
   UnitHGSBaseRecord in 'UnitHGSBaseRecord.pas',
-  ArrayHelper in '..\..\..\OpenSrc\lib\ArrayHelper-master\ArrayHelper.pas';
+  ArrayHelper in '..\..\..\OpenSrc\lib\ArrayHelper-master\ArrayHelper.pas',
+  FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame};
 
 {$R *.res}
 

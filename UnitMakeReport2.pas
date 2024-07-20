@@ -49,6 +49,7 @@ const
   SUBCON_SERVICE_ORDER_REQ_MUSTACHE_FILE_NAME = 'Mustache_서비스오더날인요청메일.htm';
   CIPL_FILE_NAME = 'CIPL_Template.ods';
   SHIPMARK_FILE_NAME = 'SHIPPINGMARK_Template.ods';
+  RECEIPTACCEPT_FILE_NAME = 'ReceiptAccept_Template.ods';
 
   //HGS Invoice 작성시 Mustache에서 사용함
   INVOICE_ITEM_SE_CHARGE_WN = 'Service Engineering Charge' + #13#10 + '({{InvoiceItemDesc}} S/E, {{Qty}} WorkDay(s), USD1,310/day)';
@@ -140,6 +141,8 @@ type
   //CIPL 생성
   procedure MakeCIPL(ACIPLRec: DOC_CIPL_Rec);
   procedure MakeShippingMark(AShipMarkRec: DOC_SHIPMARK_Rec);
+  //인수증 출력
+  procedure MakeReceiptAcceptance(ARectAcceptRec: DOC_RECEIPTACCPT_Rec);
 
   //Claim Info를 Json으로 반환 함
   function GetClaimInfoJsonFromReport_Xls(AXlsFileName: string): RawUtf8;
@@ -1311,8 +1314,86 @@ begin
 
   Result := LDoc.ToJson(jsonUnquotedPropNameCompact);
 
-  LWorkBook.Close;
-  LExcel.Quit;
+//  LWorkBook.Close;
+//  LExcel.Quit;
+end;
+
+procedure MakeReceiptAcceptance(ARectAcceptRec: DOC_RECEIPTACCPT_Rec);
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LRange: OleVariant;
+  LWorksheet: OleVariant;
+  LFileName, LTempFileName, LStr: string;
+  LFileCopySuccess: Boolean;
+begin
+  LFileName := DOC_DIR + RECEIPTACCEPT_FILE_NAME;
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LTempFileName := 'c:\temp\' + ARectAcceptRec.FHullNo + '_ReceiptAccept_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
+
+  if LFileCopySuccess then
+  begin
+    LExcel := GetActiveExcelOleObject(True);
+    LWorkBook := LExcel.Workbooks.Open(LTempFileName);
+    LExcel.Visible := true;
+    LWorksheet := LExcel.ActiveSheet;
+//    LWorksheet := LWorkBook.Sheets.Item['Sheet1'];
+
+    LRange := LWorksheet.range['B8'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FProjectName;
+
+    LRange := LWorksheet.range['D8'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FProjectNo;
+
+    LRange := LWorksheet.range['F8'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FDepartment;
+
+    LRange := LWorksheet.range['H8'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FPICName;
+
+    LRange := LWorksheet.range['B11'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FPORNo;
+
+    LRange := LWorksheet.range['D11'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FMatName;
+
+    LRange := LWorksheet.range['H11'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FQty;
+
+    LRange := LWorksheet.range['D15'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FShipName;
+
+    LRange := LWorksheet.range['D16'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FHullNo;
+
+    LRange := LWorksheet.range['H15'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FClaimNo;
+
+    LRange := LWorksheet.range['H16'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FQty;
+
+    LRange := LWorksheet.range['D17'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FMatDesc;
+
+    LRange := LWorksheet.range['C19'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FReciptDate;
+
+    LRange := LWorksheet.range['C21'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FRecvCompany;
+
+    LRange := LWorksheet.range['C23'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FSpec;
+
+    LRange := LWorksheet.range['C24'];
+    LRange.FormulaR1C1 := ARectAcceptRec.FRemark;
+  end;
 end;
 
 function GetClaimInfoJsonFromXlsString(AXlsFile: RawByteString): RawUtf8;

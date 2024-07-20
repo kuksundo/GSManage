@@ -475,7 +475,7 @@ begin
       begin
         LCertNo := CertListGrid.CellsByName['CertNo', i];
         LOrigMailCount := StrToIntDef(CertListGrid.CellsByName['Email', i],0);
-        LMailCount := GetEmailCountFromDBKey(LCertNo);
+//        LMailCount := GetEmailCountFromDBKey(LCertNo);
 
         if LMailCount <> LOrigMailCount then
         begin
@@ -851,14 +851,17 @@ begin
   begin
     LCertType := GetEduCertTypeFromForm;
 
-    if LCertType = hctNull then
-    begin
-      DeleteHGSCert(LCertNo);
-    end
-    else
+//    if (LCertType = hctEducation_Entrust) or (LCertType = hctEducation) then
+//    begin
+//    end
+//    else
+    if (LCertType = hctLicBasic) or (LCertType = hctLicInter) or (LCertType = hctLicAdv) then
     begin
       DeleteHGSLicense(LCertNo);
-    end;
+    end
+    else
+      DeleteHGSCert(LCertNo);
+
 
     DeleteHGSFileDB(CertListGrid.SelectedRow);
 
@@ -868,7 +871,7 @@ begin
 //    LEMailDBName := LEMailDBName.Replace('.exe', '_' + LProdCode + '.exe');
     InitOLEmailMsgClient(LEMailDBName);
     try
-      DeleteOLMail2DBFromDBKey(LCertNo);
+//      DeleteOLMail2DBFromDBKey(LCertNo);
     finally
       DestroyOLEmailMsg;
     end;

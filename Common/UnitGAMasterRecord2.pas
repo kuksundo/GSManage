@@ -1894,7 +1894,7 @@ var
   LSQLToDoItem: TSQLToDoItem;
   LTaskID: TID;
 begin
-  LTaskID := StrToIntDef(ApjhTodoItem.TaskCode, -1);
+//  LTaskID := ApjhTodoItem.TaskID;
   LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(g_ProjectDB.Orm, 'TaskID = ?', [LTaskID]);
 
   try
@@ -1920,7 +1920,7 @@ var
   LSQLToDoItem: TSQLToDoItem;
   LTaskID: TID;
 begin
-  LTaskID := StrToInt(ApjhTodoItem.TaskCode);
+//  LTaskID := ApjhTodoItem.TaskID;
   LSQLToDoItem := TSQLToDoItem.CreateAndFillPrepare(g_ProjectDB.Orm, 'TaskID = ? and ToDo_Code = ?', [LTaskID, ApjhTodoItem.TodoCode]);
 
   try
@@ -1955,7 +1955,7 @@ end;
 
 procedure AssignpjhTodoItemToSQLToDoItem(ApjhTodoItem: TpjhTodoItem; ASQLToDoItem: TSQLToDoItem);
 begin
-  ASQLToDoItem.fTaskID := StrToIntDef(ApjhTodoItem.TaskCode, 0);
+//  ASQLToDoItem.fTaskID := ApjhTodoItem.TaskID;
 
   ASQLToDoItem.Category := ApjhTodoItem.Category;
   ASQLToDoItem.Complete := ApjhTodoItem.Complete;
@@ -1974,7 +1974,7 @@ begin
   ASQLToDoItem.TotalTime := ApjhTodoItem.TotalTime;
 
   ASQLToDoItem.Todo_Code := ApjhTodoItem.TodoCode;
-  ASQLToDoItem.Task_Code := ApjhTodoItem.TaskCode;
+//  ASQLToDoItem.Task_Code := ApjhTodoItem.TaskID;
   ASQLToDoItem.Plan_Code := ApjhTodoItem.PlanCode;
   ASQLToDoItem.ModId := ApjhTodoItem.ModId;
 
@@ -1982,35 +1982,35 @@ begin
   ASQLToDoItem.AlarmTime1 := TimeLogFromDateTime(ApjhTodoItem.AlarmTime);
   ASQLToDoItem.AlarmTime2 := ApjhTodoItem.AlarmTime2;
   ASQLToDoItem.AlarmFlag := ApjhTodoItem.AlarmFlag;
-  ASQLToDoItem.Alarm2Msg := ApjhTodoItem.Alarm2Msg;
-  ASQLToDoItem.Alarm2Note := ApjhTodoItem.Alarm2Note;
-  ASQLToDoItem.Alarm2Email := ApjhTodoItem.Alarm2Email;
+//  ASQLToDoItem.Alarm2Msg := ApjhTodoItem.Alarm2Msg;
+//  ASQLToDoItem.Alarm2Note := ApjhTodoItem.Alarm2Note;
+//  ASQLToDoItem.Alarm2Email := ApjhTodoItem.Alarm2Email;
 
   ASQLToDoItem.ModDate := TimeLogFromDateTime(ApjhTodoItem.ModDate);
 end;
 
 procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoItem: TpjhTodoItem);
 begin
-  ApjhTodoItem.TaskCode := IntToStr(ASQLToDoItem.fTaskID);
+//  ApjhTodoItem.TaskCode := IntToStr(ASQLToDoItem.fTaskID);
 
   ApjhTodoItem.Category := ASQLToDoItem.Category;
   ApjhTodoItem.Complete := ASQLToDoItem.Complete;
   ApjhTodoItem.Completion := ASQLToDoItem.Completion;
-  ApjhTodoItem.CompletionDate := TimeLogToDateTime(ASQLToDoItem.CompletionDate);
-  ApjhTodoItem.CreationDate := TimeLogToDateTime(ASQLToDoItem.CreationDate);
-  ApjhTodoItem.DueDate := TimeLogToDateTime(ASQLToDoItem.DueDate);
+//  ApjhTodoItem.CompletionDate := TimeLogToDateTime(ASQLToDoItem.CompletionDate);
+//  ApjhTodoItem.CreationDate := TimeLogToDateTime(ASQLToDoItem.CreationDate);
+//  ApjhTodoItem.DueDate := TimeLogToDateTime(ASQLToDoItem.DueDate);
   ApjhTodoItem.ImageIndex := ASQLToDoItem.ImageIndex;
   ApjhTodoItem.Notes.Text := ASQLToDoItem.Notes;
-  ApjhTodoItem.Priority := TTodoPriority(ASQLToDoItem.Priority);
+//  ApjhTodoItem.Priority := TTodoPriority(ASQLToDoItem.Priority);
   ApjhTodoItem.Project := ASQLToDoItem.Project;
   ApjhTodoItem.Resource := ASQLToDoItem.Resource;
-  ApjhTodoItem.Status := TTodoStatus(ASQLToDoItem.Status);
+//  ApjhTodoItem.Status := TTodoStatus(ASQLToDoItem.Status);
   ApjhTodoItem.Subject := ASQLToDoItem.Subject;
   ApjhTodoItem.Tag := ASQLToDoItem.Tag;
   ApjhTodoItem.TotalTime := ASQLToDoItem.TotalTime;
 
   ApjhTodoItem.TodoCode := ASQLToDoItem.Todo_Code;
-  ApjhTodoItem.TaskCode := ASQLToDoItem.Task_Code;
+//  ApjhTodoItem.TaskCode := ASQLToDoItem.Task_Code;
   ApjhTodoItem.PlanCode := ASQLToDoItem.Plan_Code;
   ApjhTodoItem.ModId := ASQLToDoItem.ModId;
 
@@ -2018,11 +2018,11 @@ begin
   ApjhTodoItem.AlarmTime1 := ASQLToDoItem.AlarmTime1;
   ApjhTodoItem.AlarmTime2 := ASQLToDoItem.AlarmTime2;
   ApjhTodoItem.AlarmFlag := ASQLToDoItem.AlarmFlag;
-  ApjhTodoItem.Alarm2Msg := ASQLToDoItem.Alarm2Msg;
-  ApjhTodoItem.Alarm2Note := ASQLToDoItem.Alarm2Note;
-  ApjhTodoItem.Alarm2Email := ASQLToDoItem.Alarm2Email;
+//  ApjhTodoItem.Alarm2Msg := ASQLToDoItem.Alarm2Msg;
+//  ApjhTodoItem.Alarm2Note := ASQLToDoItem.Alarm2Note;
+//  ApjhTodoItem.Alarm2Email := ASQLToDoItem.Alarm2Email;
 
-  ApjhTodoItem.ModDate := TimeLogToDateTime(ASQLToDoItem.ModDate);
+//  ApjhTodoItem.ModDate := TimeLogToDateTime(ASQLToDoItem.ModDate);
 end;
 
 procedure LoadTaskFromVariant(ATask:TSQLGSTask; ADoc: variant);
