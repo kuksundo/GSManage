@@ -1,1 +1,1 @@
-{"MPM-1":{"IPName":"MPM-1","IPAddress":"10.8.1.41","Port":""}}
+{"1":{"RES_NAME":"1","PMPM_PIP":"10.8.1.41","PMPM_SIP":"","Port":""},"2":{"RES_NAME":"2","PMPM_PIP":"10.8.1.42","PMPM_SIP":"","Port":""}}

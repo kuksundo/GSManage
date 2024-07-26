@@ -51,7 +51,9 @@ uses
   UnitHiASMaterialCodeRecord in 'UnitHiASMaterialCodeRecord.pas',
   UnitIniAttriPersist in '..\..\..\Common\UnitIniAttriPersist.pas',
   UnitHiASIniConfig in 'UnitHiASIniConfig.pas',
-  UnitIPCMsgQUtil in '..\..\..\Common\UnitIPCMsgQUtil.pas';
+  UnitIPCMsgQUtil in '..\..\..\Common\UnitIPCMsgQUtil.pas',
+  UnitJsonUtil in '..\..\..\Common\UnitJsonUtil.pas',
+  UnitHiASOLUtil in 'UnitHiASOLUtil.pas';
 
 {$R *.res}
 

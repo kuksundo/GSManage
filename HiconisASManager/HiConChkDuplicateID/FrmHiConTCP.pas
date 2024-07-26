@@ -1,4 +1,4 @@
-unit FrmHiConChkDuplicateID;
+unit FrmHiConTCP;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   AdvOfficeTabSet,
 
   PngBitBtn, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdIOHandler,
-  IdGlobal,
+  IdGlobal, IdHTTP,
 
   mormot.net.client, mormot.core.unicode, mormot.core.os,
 
@@ -26,7 +26,6 @@ type
 
   THiconisTCPF = class(TForm)
     Panel1: TPanel;
-    BitBtn1: TBitBtn;
     Panel2: TPanel;
     BitBtn2: TBitBtn;
     ConsoleMemo: TMemo;
@@ -60,8 +59,10 @@ type
     CheckDuplicatedID1: TMenuItem;
     GetPortPrint1: TMenuItem;
     IdTCPClient1: TIdTCPClient;
+    CheckDuplicatedIDFromAll1: TMenuItem;
+    N2: TMenuItem;
+    MPMBackup1: TMenuItem;
     procedure FormCreate(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
     procedure SaveIPListToFile1Click(Sender: TObject);
     procedure LoadIPListFromFile1Click(Sender: TObject);
@@ -71,6 +72,8 @@ type
 //    procedure IPAddrGridSelectCell(Sender: TObject; ACol, ARow: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure GetPortPrint1Click(Sender: TObject);
+    procedure CheckDuplicatedID1Click(Sender: TObject);
+    procedure MPMBackup1Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -95,6 +98,8 @@ type
     procedure SetIdList2GridFromIpNDupIdList(AIpAddr: string);
 
     function GetSelectedIpAddr(AIsMaster: Boolean=true): string;
+    function BackupMPM(AIpAddr: string): string;
+    function DownloadBackupMPM(AIpAddr: string): string;
   public
     procedure GetIdFromMPM(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
@@ -119,14 +124,22 @@ uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2;
 
 {$R *.dfm}
 
-procedure THiconisTCPF.BitBtn1Click(Sender: TObject);
+function THiconisTCPF.BackupMPM(AIpAddr: string): string;
+var
+  LHttp: TIdHttp;
+  Lurl, LQuery, LFullUrl: string;
 begin
-  TagAddrGrid.ClearRows;
-  FIpNIdList.Clear;
-  FIpNDupIdList.Clear;
+  LHttp := TIdHttp.Create(nil);
+  try
+    LUrl := 'http://' + AIpAddr + '/Backup';
+    LQuery := '&=Make%20Backup';
+    LFullUrl := LUrl + '?' + LQuery;
 
-  GetIdsFromIpListDic();
-//  GetIdFromMPM('http://10.8.1.41/channelstr');
+    Result := LHttp.Get(LFullUrl);
+    ShowMessage(Result);
+  finally
+    LHttp.Free;
+  end;
 end;
 
 procedure THiconisTCPF.BitBtn4Click(Sender: TObject);
@@ -142,8 +155,14 @@ begin
     FIpAddrDic.Data.LoadFromJson(StringToUtf8(LJson));
 
     LJson := Utf8ToString(GetIPListJsonFromIpList(FIpAddrDic));
+    IPAddrGrid.ClearRows;
     SetIpListFromJson2Grid(LJson, IPAddrGrid);
   end;
+end;
+
+procedure THiconisTCPF.CheckDuplicatedID1Click(Sender: TObject);
+begin
+  GetIdsFromIpListDic();
 end;
 
 procedure THiconisTCPF.DisplayDuplicatedAddr;
@@ -163,6 +182,24 @@ begin
       if LRec.DupIdRec.MMAddress = TagAddrGrid.CellsByName['MMAddress', i] then
         TagAddrGrid.Row[i].Visible := True;
     end;
+  end;
+end;
+
+function THiconisTCPF.DownloadBackupMPM(AIpAddr: string): string;
+var
+  LHttp: TIdHttp;
+  Lurl, LQuery, LFullUrl: string;
+begin
+  LHttp := TIdHttp.Create(nil);
+  try
+    LUrl := ' http://' + AIpAddr + '/Backup?%26=Make+Backup';
+    LQuery := '&=Make%20Backup';
+    LFullUrl := LUrl + '?' + LQuery;
+
+    Result := LHttp.Get(LFullUrl);
+    ShowMessage(Result);
+  finally
+    LHttp.Free;
   end;
 end;
 
@@ -222,6 +259,10 @@ var
   LIpListRec: TIpListRec;
   i: integer;
 begin
+  TagAddrGrid.ClearRows;
+  FIpNIdList.Clear;
+  FIpNDupIdList.Clear;
+
   for i := 0 to FIpAddrDic.Count - 1 do
 //  for LIpListRec in FIpAddrDic do
   begin
@@ -244,6 +285,12 @@ var
   LIOHandler: TIdIOHandler;
 begin
   FTCPResponse.Clear;
+
+  if IdTCPClient1.Connected then
+    IdTCPClient1.Disconnect;
+
+  IdTCPClient1.Host := AIpAddr;
+  IdTCPClient1.Port := 23;
 
   IdTCPClient1.Connect;
   LIOHandler := IdTCPClient1.IOHandler;
@@ -337,6 +384,15 @@ begin
   begin
     LoadIPListFromFile(OpenDialog1.FileName);
   end;
+end;
+
+procedure THiconisTCPF.MPMBackup1Click(Sender: TObject);
+var
+  LIpAddr: string;
+begin
+  LIpAddr := GetSelectedIpAddr();
+
+  BackupMPM(LIpAddr);
 end;
 
 procedure THiconisTCPF.PngBitBtn1Click(Sender: TObject);

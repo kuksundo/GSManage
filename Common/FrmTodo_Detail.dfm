@@ -19,7 +19,7 @@ object ToDoDetailF: TToDoDetailF
     Left = 0
     Top = 0
     Width = 676
-    Height = 57
+    Height = 73
     Align = alTop
     TabOrder = 0
     object BitBtn1: TBitBtn
@@ -45,9 +45,9 @@ object ToDoDetailF: TToDoDetailF
       OnClick = BitBtn2Click
     end
     object UniqueID: TEdit
-      Left = 105
+      Left = 336
       Top = 30
-      Width = 330
+      Width = 99
       Height = 21
       Hint = 'Text'
       TabOrder = 2
@@ -57,7 +57,7 @@ object ToDoDetailF: TToDoDetailF
       Left = 1
       Top = 1
       Width = 75
-      Height = 55
+      Height = 71
       Align = alLeft
       Caption = 'Outlook '#46321#47197
       Layout = blGlyphTop
@@ -92,10 +92,65 @@ object ToDoDetailF: TToDoDetailF
         148570208A12E880B20DE2FCFBC716C9AB7008E2147803F7042A9979B59AE3C4
         F6EFE47FBFF36F94FB704F1C4DAC7C0000000049454E44AE426082}
     end
+    object EntryId: TEdit
+      Left = 336
+      Top = 3
+      Width = 99
+      Height = 21
+      Hint = 'Text'
+      TabOrder = 4
+      Visible = False
+    end
+    object Task: TRadioButton
+      Left = 82
+      Top = 5
+      Width = 55
+      Height = 17
+      Caption = #51089#50629
+      Checked = True
+      TabOrder = 5
+      TabStop = True
+    end
+    object Appointment: TRadioButton
+      Left = 82
+      Top = 21
+      Width = 55
+      Height = 17
+      Caption = #50557#49549
+      TabOrder = 6
+    end
+    object Event: TRadioButton
+      Left = 82
+      Top = 37
+      Width = 55
+      Height = 17
+      Caption = #47784#51076
+      TabOrder = 7
+    end
+    object Note: TRadioButton
+      Left = 82
+      Top = 54
+      Width = 55
+      Height = 17
+      Caption = #47700#47784
+      TabOrder = 8
+    end
+    object CategoryRG: TRadioGroup
+      Left = 161
+      Top = 0
+      Width = 104
+      Height = 67
+      Caption = 'Category'
+      Items.Strings = (
+        'SE'#48169#49440
+        #51088#51116'-POR'
+        #51088#51116'-ReClaim')
+      TabOrder = 9
+    end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 57
+    Top = 73
     Width = 676
     Height = 32
     Align = alTop
@@ -137,16 +192,16 @@ object ToDoDetailF: TToDoDetailF
   end
   object Panel3: TPanel
     Left = 0
-    Top = 89
+    Top = 105
     Width = 676
-    Height = 442
+    Height = 426
     Align = alClient
     TabOrder = 2
     object Notes: TMemo
       Left = 1
       Top = 89
       Width = 674
-      Height = 352
+      Height = 336
       Hint = 'Text'
       Align = alClient
       ImeName = 'Microsoft IME 2010'

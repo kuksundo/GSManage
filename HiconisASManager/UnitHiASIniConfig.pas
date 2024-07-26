@@ -13,7 +13,14 @@ type
     FMyTeamName,
     FMyDepartmentName,
     FMyCompanyName,
-    FOLFolderListFileName
+    FOLFolderListFileName,
+
+    FPurchasePIC,     //구매담당자 이메일 주소
+    FDirectDeliverPIC,//자재직투입담당자 이메일 주소
+    FInputPIC,        //입고담당자 이메일 주소
+    FShippingPIC,     //출하담당자 이메일 주소
+    FBudgetPIC,       //부품예산담당자 이메일 주소
+    FServicePIC       //방선엔지니어담당자 이메일 주소
     : string;
   published
     //Section Name, Key Name, Default Key Value  (Control.hint = SectionName;KeyName 으로 저장 함)
@@ -33,7 +40,20 @@ type
     property MyCompanyName : string read FMyCompanyName write FMyCompanyName;
     [JHPIni('EMail','OLFolderListFileName','OLFolderListFileName.txt','8', tkString)]
     property OLFolderListFileName : string read FOLFolderListFileName write FOLFolderListFileName;
-  end;
+
+    [JHPIni('Signature','PurchasePIC','PurchasePIC','11', tkString)]
+    property PurchasePIC : string read FPurchasePIC write FPurchasePIC;
+    [JHPIni('Signature','DirectDeliverPIC','DirectDeliverPIC','12', tkString)]
+    property DirectDeliverPIC : string read FDirectDeliverPIC write FDirectDeliverPIC;
+    [JHPIni('Signature','InputPIC','InputPIC','13', tkString)]
+    property InputPIC : string read FInputPIC write FInputPIC;
+    [JHPIni('Signature','ShippingPIC','ShippingPIC','14', tkString)]
+    property ShippingPIC : string read FShippingPIC write FShippingPIC;
+    [JHPIni('Signature','BudgetPIC','BudgetPIC','15', tkString)]
+    property BudgetPIC : string read FBudgetPIC write FBudgetPIC;
+    [JHPIni('Signature','ServicePIC','ServicePIC','16', tkString)]
+    property ServicePIC : string read FServicePIC write FServicePIC;
+  end;
 
 implementation
 

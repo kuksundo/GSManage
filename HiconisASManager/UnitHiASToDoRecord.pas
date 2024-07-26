@@ -34,9 +34,10 @@ type
   TSQLToDoItem = class(TSQLRecord)
   private
     fTaskID: TID;
+    fOLObjectKind: integer; //TOLObjectKind
     FUniqueID, //ToDo 생성 시에 RowID를 알기 어렵기 때문에 UniqueID를 대신 사용하여 CRUD를 수행함
-    FAppointmentEntryId,
-    FAppointmentStoreId,
+    FEntryId,
+    FStoreId,
     FEmailEntryId,
     FEmailStoreId,
     FPlan_Code,
@@ -78,8 +79,8 @@ type
     property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
     property TaskID: TID read fTaskID write fTaskID;
-    property AppointmentEntryId: string read FAppointmentEntryId write FAppointmentEntryId;
-    property AppointmentStoreId: string read FAppointmentStoreId write FAppointmentStoreId;
+    property EntryId: string read FEntryId write FEntryId;
+    property StoreId: string read FStoreId write FStoreId;
     property EmailEntryId: string read FEmailEntryId write FEmailEntryId;
     property EmailStoreId: string read FEmailStoreId write FEmailStoreId;
     property UniqueID: string read FUniqueID write FUniqueID;
@@ -88,7 +89,7 @@ type
     property Notes: string read FNotes write FNotes;
     property ToDoReourece: string read FToDoReourece write FToDoReourece;
     property ModId: string read FModId write FModId;
-    property Category: string read FCategory write FCategory;
+    property Categories: string read FCategory write FCategory;
     property Project: string read FProject write FProject;
     property Resource: string read FResource write FResource;
 
@@ -400,7 +401,7 @@ procedure AssignSQLToDoItemTopjhTodoItem(ASQLToDoItem: TSQLToDoItem; ApjhTodoIte
 begin
   ApjhTodoItem.TaskID := ASQLToDoItem.fTaskID;
 
-  ApjhTodoItem.Category := ASQLToDoItem.Category;
+  ApjhTodoItem.Categories := ASQLToDoItem.Categories;
   ApjhTodoItem.Complete := ASQLToDoItem.Complete;
   ApjhTodoItem.Completion := ASQLToDoItem.Completion;
   ApjhTodoItem.CompletionDate := ASQLToDoItem.CompletionDate;

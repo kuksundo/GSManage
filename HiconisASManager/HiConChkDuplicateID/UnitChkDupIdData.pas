@@ -6,8 +6,9 @@ uses System.Classes, UnitEnumHelper;
 
 type
   TIpListRec = record
-    IPName,
-    IPAddress,
+    RES_NAME,
+    PMPM_PIP,
+    PMPM_SIP,
     Port
     : string;
   end;

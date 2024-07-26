@@ -14,7 +14,7 @@ object HiASConfigF: THiASConfigF
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 13
-  object PageControl1: TPageControl
+  object PageControl: TPageControl
     Left = 0
     Top = 0
     Width = 448
@@ -175,6 +175,7 @@ object HiASConfigF: THiASConfigF
         Top = 39
         Width = 119
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
         Caption = 'My Email Signature:'
         ParentShowHint = False
@@ -183,9 +184,10 @@ object HiASConfigF: THiASConfigF
       end
       object Label12: TLabel
         Left = 74
-        Top = 79
+        Top = 168
         Width = 88
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
         Caption = #52636#54616' '#45812#45817#51088':'
         ParentShowHint = False
@@ -193,35 +195,48 @@ object HiASConfigF: THiASConfigF
       end
       object Label13: TLabel
         Left = 73
-        Top = 116
+        Top = 75
         Width = 89
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
-        Caption = #47588#52636' '#45812#45817#51088':'
+        Caption = #44396#47588' '#45812#45817#51088':'
       end
       object Label14: TLabel
         Left = 26
-        Top = 154
+        Top = 228
         Width = 136
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
         Caption = #54596#46300#49436#48708#49828' '#45812#45817#51088':'
       end
       object Label15: TLabel
         Left = 6
-        Top = 194
+        Top = 198
         Width = 156
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
-        Caption = #54364#51456#44277#49324' '#46321#47197' '#45812#45817#51088':'
+        Caption = #48512#54408#50696#49328' '#45812#45817#51088':'
       end
       object Label19: TLabel
-        Left = 43
-        Top = 234
+        Left = 40
+        Top = 138
         Width = 122
         Height = 16
+        Alignment = taRightJustify
         AutoSize = False
-        Caption = #44592#49457#52376#47532#45812#45817#51088':'
+        Caption = #51077#44256' '#45812#45817#51088':'
+      end
+      object Label17: TLabel
+        Left = 26
+        Top = 108
+        Width = 136
+        Height = 16
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = #51088#51116' '#51649#53804#51077' '#45812#45817#51088':'
       end
       object Edit7: TEdit
         Tag = 13
@@ -235,8 +250,9 @@ object HiASConfigF: THiASConfigF
         Visible = False
       end
       object Edit8: TEdit
+        Tag = 14
         Left = 168
-        Top = 76
+        Top = 165
         Width = 225
         Height = 24
         Hint = 'Text'
@@ -244,8 +260,9 @@ object HiASConfigF: THiASConfigF
         TabOrder = 1
       end
       object Edit9: TEdit
+        Tag = 11
         Left = 168
-        Top = 113
+        Top = 72
         Width = 225
         Height = 24
         Hint = 'Text'
@@ -253,8 +270,9 @@ object HiASConfigF: THiASConfigF
         TabOrder = 2
       end
       object Edit10: TEdit
+        Tag = 16
         Left = 168
-        Top = 151
+        Top = 225
         Width = 225
         Height = 24
         Hint = 'Text'
@@ -262,8 +280,9 @@ object HiASConfigF: THiASConfigF
         TabOrder = 3
       end
       object Edit11: TEdit
+        Tag = 15
         Left = 168
-        Top = 191
+        Top = 195
         Width = 225
         Height = 24
         Hint = 'Text'
@@ -271,13 +290,24 @@ object HiASConfigF: THiASConfigF
         TabOrder = 4
       end
       object Edit13: TEdit
-        Left = 171
-        Top = 221
+        Tag = 13
+        Left = 168
+        Top = 135
         Width = 225
         Height = 24
         Hint = 'Text'
         ImeName = 'Microsoft IME 2010'
         TabOrder = 5
+      end
+      object Edit15: TEdit
+        Tag = 12
+        Left = 168
+        Top = 105
+        Width = 225
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft IME 2010'
+        TabOrder = 6
       end
     end
     object MQServerTS: TTabSheet

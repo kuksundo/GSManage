@@ -6,6 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.Buttons, DateUtils, TodoList, DomTodoTypes2, PngBitBtn, OtlCommon, OtlComm,
+  mormot.core.variants, mormot.core.base,
   UnitOLEmailRecord2, UnitOutLookDataType, UnitWorker4OmniMsgQ;
 
 type
@@ -42,14 +43,23 @@ type
     Alarm2Popup: TCheckBox;
     UniqueID: TEdit;
     PngBitBtn1: TPngBitBtn;
+    EntryId: TEdit;
+    Task: TRadioButton;
+    Appointment: TRadioButton;
+    Event: TRadioButton;
+    Note: TRadioButton;
+    CategoryRG: TRadioGroup;
+    procedure FormCreate(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure PngBitBtn1Click(Sender: TObject);
   private
     procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
     procedure ProcessRespondFromWorker(AMsgId: integer; ARec: TOLRespondRec);
+
+    function GetOLObjKindFromForm(): integer;
+    function GetCategoryFromForm(): string;
   public
     FTaskEditConfig: THiconisASTaskEditConfig;
 
@@ -68,7 +78,7 @@ var
 
 implementation
 
-uses UnitDateUtil, UnitRttiUtil2, UnitIPCMsgQUtil;
+uses UnitDateUtil, UnitRttiUtil2, UnitIPCMsgQUtil, UnitToDoList;
 
 {$R *.dfm}
 
@@ -105,6 +115,28 @@ begin
   BeginTime.DateTime := now;
   EndDate.DateTime := now;
   EndTime.DateTime := now;
+end;
+
+function TToDoDetailF.GetCategoryFromForm: string;
+begin
+  Result := g_TodoCategory.ToString(CategoryRG.ItemIndex);
+end;
+
+function TToDoDetailF.GetOLObjKindFromForm: integer;
+begin
+  Result := -1;
+
+  if Task.Checked then
+    Result := Ord(olobjTask)
+  else
+  if Appointment.Checked then
+    Result := Ord(olobjAppointment)
+  else
+  if Event.Checked then
+    Result := Ord(olobjEvent)
+  else
+  if Note.Checked then
+    Result := Ord(olobjNote);
 end;
 
 function TToDoDetailF.GetTodoItem2JsonFromForm: string;
@@ -162,26 +194,35 @@ end;
 
 procedure TToDoDetailF.ProcessRespondFromWorker(AMsgId: integer;
   ARec: TOLRespondRec);
+var
+  LEntryId: RawUtf8;
+  LDic: IDocDict;
 begin
-  ShowMessage('');
+  LEntryId := ARec.FMsg;
+  LDic := DocDict(LEntryId);
+
+  EntryId.Text := Utf8ToString(LDic['EntryID']);
 end;
 
 procedure TToDoDetailF.ReqRegisterTodoItem2OL;
 var
-  LOLAppointmentRec: TOLAppointmentRec;
+  LOLObjRec: TOLObjectRec;
   LValue: TOmniValue;
 begin
-  LOLAppointmentRec.Subject := Subject.Text;
-  LOLAppointmentRec.Start := DateOf(BeginDate.Date) + TimeOf(BeginTime.Time);
-  LOLAppointmentRec.End_ := DateOf(EndDate.Date) + TimeOf(EndDate.Time);
-  LOLAppointmentRec.Body := Notes.Text;
-  LOLAppointmentRec.CreationTime := now;
-//  LOLAppointmentRec.Duration := now;
+  LOLObjRec.OLObjectKind := GetOLObjKindFromForm();
+  LOLObjRec.Categories := GetCategoryFromForm();
 
-  LOLAppointmentRec.FSenderHandle := Handle;
-  LValue := TOmniValue.FromRecord(LOLAppointmentRec);
+  LOLObjRec.Subject := Subject.Text;
+  LOLObjRec.Start := DateOf(BeginDate.Date) + TimeOf(BeginTime.Time);
+  LOLObjRec.End_ := DateOf(EndDate.Date) + TimeOf(EndDate.Time);
+  LOLObjRec.Body := Notes.Text;
+  LOLObjRec.CreationTime := now;
+//  LOLObjRec.Duration := now;
 
-  SendCmd2WorkerThrd(olckAddAppointment, LValue);
+  LOLObjRec.FSenderHandle := Handle;
+  LValue := TOmniValue.FromRecord(LOLObjRec);
+
+  SendCmd2WorkerThrd(olckAddObject, LValue);
 end;
 
 procedure TToDoDetailF.SendCmd2WorkerThrd(const ACmd: TOLCommandKind;

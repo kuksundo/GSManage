@@ -149,8 +149,8 @@ type
   //Outlook에서 Drag한 경우 File이 RawByteString으로 전달됨
   //Claim Info를 Json으로 반환 함
   function GetClaimInfoJsonFromXlsString(AXlsFile: RawByteString): RawUtf8;
-
-  //힘센엔진 견적서
+  //Maps->Claim모니터링에서 Export한 엑셀 Data를 Json으로 반환 함(공사번호,공사명,Hullno,ClaimNo)
+  function GetClaimListJsonFromXls(AXlsFileName: String): RawUtf8;
 var
   DOC_DIR: string;
 
@@ -1411,6 +1411,62 @@ begin
   finally
     LStream.Free
   end;
+end;
+
+function GetClaimListJsonFromXls(AXlsFileName: String): RawUtf8;
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LWorksheet: OleVariant;
+  LRange: OleVariant;
+  LDoc: IDocDict;
+  LList: IDocList;
+  LRow, LXlsRowCount: integer;
+  LRangeStr, LXlsCol: string;
+  LJson: RawUtf8;
+begin
+  if not FileExists(AXlsFileName) then
+  begin
+    ShowMessage('File(' + AXlsFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LDoc := DocDict('{}');
+  LList:= DocList('[]');
+
+  LExcel := GetActiveExcelOleObject(True);
+  LWorkBook := LExcel.Workbooks.Open(AXlsFileName);
+  LExcel.Visible := true;
+  LWorksheet := LExcel.ActiveSheet;
+  LRange := LWorkSheet.UsedRange;
+  LXlsRowCount := LRange.Rows.Count;
+
+  for LRow := 1 to LXlsRowCount do
+  begin
+    LRangeStr := 'B' + IntToStr(LRow);
+    LRange := LWorksheet.range[LRangeStr];
+    LDoc.S['공사번호'] := LRange.FormulaR1C1;
+
+    LRangeStr := 'C' + IntToStr(LRow);
+    LRange := LWorksheet.range[LRangeStr];
+    LDoc.S['공사명'] := LRange.FormulaR1C1;
+
+    LRangeStr := 'D' + IntToStr(LRow);
+    LRange := LWorksheet.range[LRangeStr];
+    LDoc.S['HullNo'] := LRange.FormulaR1C1;
+
+    LRangeStr := 'J' + IntToStr(LRow);
+    LRange := LWorksheet.range[LRangeStr];
+    LDoc.S['ClaimNo'] := LRange.FormulaR1C1;
+
+    LJson := LDoc.ToJson(jsonUnquotedPropNameCompact);
+
+    LList.Append(LJson);
+
+    LDoc.Clear;
+  end;
+
+  Result := LList.ToJson(jsonUnquotedPropNameCompact);
 end;
 
 end.

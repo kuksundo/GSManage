@@ -3,7 +3,7 @@
         <ProjectGuid>{CF32D4E2-93AD-4FA6-A58B-03D9BF93CA1C}</ProjectGuid>
         <ProjectVersion>15.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>HiConChkDuplicateID.dpr</MainSource>
+        <MainSource>HiConTCP.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -87,7 +87,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="FrmHiConChkDuplicateID.pas">
+        <DCCReference Include="FrmHiConTCP.pas">
             <Form>HiconisTCPF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -169,7 +169,7 @@
                     <VersionInfoKeys Name="theme"/>
                 </VersionInfoKeys>
                 <Source>
-                    <Source Name="MainSource">HiConChkDuplicateID.dpr</Source>
+                    <Source Name="MainSource">HiConTCP.dpr</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>

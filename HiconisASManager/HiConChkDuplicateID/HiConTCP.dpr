@@ -1,8 +1,8 @@
-program HiConChkDuplicateID;
+program HiConTCP;
 
 uses
   Vcl.Forms,
-  FrmHiConChkDuplicateID in 'FrmHiConChkDuplicateID.pas' {HiconisTCPF},
+  FrmHiConTCP in 'FrmHiConTCP.pas' {HiconisTCPF},
   FrmIpList in 'FrmIpList.pas' {IPListF},
   FrmInputIpAddress in '..\..\..\..\Common\Form\FrmInputIpAddress.pas',
   UnitChkDupIdData in 'UnitChkDupIdData.pas',

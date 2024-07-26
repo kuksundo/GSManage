@@ -96,6 +96,43 @@ object IPListF: TIPListF
       TabOrder = 1
       OnClick = BitBtn3Click
     end
+    object BitBtn5: TBitBtn
+      Left = 200
+      Top = 1
+      Width = 116
+      Height = 39
+      Align = alRight
+      Caption = 'Get IP From DB'
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        1800000000000003000000000000000000000000000000000000FFFFFFF6E3C1
+        E4B052E4AE5DE0AC63DDA865D89E5AD4984DD09147CC8B42C5843CC37B35BD73
+        2EB6661CBC7F50E3CBBBFFFFFFE7B458FAE8B3FDEDC3FFFBEFFFFFFFFFF4DEF8
+        E5ACF9E08DF9DB83F2CC69EBBC4EE4AB34E6A01CC57713B26C38FFFFFFE8B55D
+        F8E3ADF6DBA4F8E8CDFAEFE3F5DFBEEFD194EFCC79EEC772E7B95CE1AB46DB9D
+        31DB931CC47813B57442FFFFFFE7B75FFBE9BBF9E0ABFBEED9FCF5F0F8E5C8F2
+        D69AF3D17FF1CC76EBBE5EE5AF45DC9E2FDE9519C57914B57442FFFFFFE7B256
+        F4DBA7F5DEB1F5E5C8F7E9D8F2DDBAEED29DEDCC8AECCA81E6BF71E3B660DCAA
+        4DDEA739BD731DB36D3AFFFFFFF7E7CAE5B557E6B964E2B66BE0B776DAAA5DD6
+        9E4BD39844CE903FCA8738C37C32BD712BBA6E23B7784CE8D4C8FFFFFFEDC87F
+        FAE7B5F7E0ACFBEED9FDF6F1F8E4C7F1D69CF3D17FF1CD75EBBE5FE3AD46DD9D
+        2EDC9417C87D12C18349FFFFFFEDC677F8E1A8F7DEAAF9EAD2FBF1E9F6E1C2EF
+        D398F0CE7DEFCA76E8BB5FE2AF48DCA032D9921CC67A14BF7C40FFFFFFEDC678
+        F8E2ABF7DDA2F9EAD0FBF1E7F6E1BFEFD293F0CC75EFC86FE8B958E0AA40DA9A
+        2AD88E14C6770EBF7C3EFFFFFFEECA80FAEBCBF8E5BEFAEDDCFBF5EFF9E8CFF5
+        DCACF3D799F2D58FECCA7CE8BE67E1B150E1AC3ACD8D26C3874CFFFFFFF8E9CC
+        E7BB65E9BF7AE6C285E4C28FDEB371D9A65BD69F54D29B4DCD9045C8893EC37D
+        35C07D2DC18755EAD7C9FFFFFFEABF6CF7E1A4F7DEA4F8E9CFFAF1E7F6E1BDF1
+        D393F1CE78F0C96FE9BA5AE3AB43DD9A2DDA9017C27311B8753AFFFFFFEEC97A
+        F8E3ADF7E0ACFBEBD5FCF3EBF9E3C5F0D59AF0D07FF0CB78EABD60E4AF49DEA0
+        33DB951CC87D14C18041FFFFFFEDC778F8DFA6F7DCA1F8E7CCFAEFE2F7DFBCEF
+        D18FEDCB74EDC66DE6B756E0A83FDA9829D78C14C5760EBF7D40FFFFFFECC575
+        FCF1CFFCEBC6FFF8EEFFFFFFFEF1DFF7E5B7F7E09CF6DC94F1D07DEBC464E6B3
+        4CE6AC34CF8B21BE7939FFFFFFF7E6C5EBC376EAC685E8C387E6C38BE3B97EE0
+        B474DCAE6CD8A969D5A262D29C5CCD9552C89040C7925EE6CEBC}
+      TabOrder = 2
+      OnClick = BitBtn5Click
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -123,7 +160,6 @@ object IPListF: TIPListF
       Kind = bkCancel
       NumGlyphs = 2
       TabOrder = 1
-      ExplicitLeft = 227
     end
   end
   object IPAddrGrid: TNextGrid
@@ -137,7 +173,7 @@ object IPListF: TIPListF
     Caption = ''
     TabOrder = 2
     TabStop = True
-    object IPName: TNxTextColumn
+    object RES_NAME: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -155,7 +191,7 @@ object IPListF: TIPListF
       Position = 0
       SortType = stAlphabetic
     end
-    object IPAddress: TNxTextColumn
+    object PMPM_PIP: TNxTextColumn
       Alignment = taCenter
       DefaultWidth = 120
       Font.Charset = DEFAULT_CHARSET
@@ -163,7 +199,7 @@ object IPListF: TIPListF
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = 'IP Address'
+      Header.Caption = 'Primary IP'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
@@ -172,6 +208,26 @@ object IPListF: TIPListF
       Header.Font.Style = []
       ParentFont = False
       Position = 1
+      SortType = stAlphabetic
+      Width = 120
+    end
+    object PMPM_SIP: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 120
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Secondary IP'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 2
       SortType = stAlphabetic
       Width = 120
     end
@@ -190,7 +246,7 @@ object IPListF: TIPListF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       ParentFont = False
-      Position = 2
+      Position = 3
       SortType = stAlphabetic
     end
   end

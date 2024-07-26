@@ -11,7 +11,6 @@ uses
 
 type
   THiASConfigF = class(TForm)
-    PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     EmailTS: TTabSheet;
     Label1: TLabel;
@@ -87,6 +86,9 @@ type
     MQBindComboBox: TComboBox;
     Label27: TLabel;
     MQProtocolCombo: TComboBox;
+    Label17: TLabel;
+    Edit15: TEdit;
+    PageControl: TPageControl;
     procedure MQProtocolComboDropDown(Sender: TObject);
     procedure MQProtocolComboChange(Sender: TObject);
   private

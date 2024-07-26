@@ -271,6 +271,7 @@ type
     CreateDate: TNxDateColumn;
     AeroButton6: TAeroButton;
     AeroButton8: TAeroButton;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -335,6 +336,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure Button4Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -688,13 +690,17 @@ begin
             Continue
           end;
 
-          //ClaimNo가 이미 존재하면 건너뜀
-          if CheckExistHullNoClaimNo(LTaskEditF.HullNoEdit.Text,
-                                    LTaskEditF.OrderNoEdit.Text,
-                                    LTaskEditF.ClaimNoEdit.Text) then
+          //Task Create 인 경우
+          if not FTask.IsUpdate then
           begin
-            ShowMessage('동일한 ClaimNo가 이미 존재 합니다.');
-            continue;
+            //ClaimNo가 이미 존재하면 건너뜀
+            if CheckExistHullNoClaimNo(LTaskEditF.HullNoEdit.Text,
+                                      LTaskEditF.OrderNoEdit.Text,
+                                      LTaskEditF.ClaimNoEdit.Text) then
+            begin
+              ShowMessage('동일한 ClaimNo가 이미 존재 합니다.');
+              continue;
+            end;
           end;
 
           LoadTaskForm2TaskOrm(LTaskEditF, FTask);
@@ -1555,6 +1561,7 @@ begin
     FpjhToDoList.Clear;
 
   GetToDoListFromDBByTask(FTask, FpjhToDoList);
+
   Create_ToDoList_Frm2(FTask.ID, FpjhToDoList, FTaskEditConfig, True);
 
 //  FToDoCollect.Clear;
@@ -1563,6 +1570,14 @@ begin
 //
 //  Create_ToDoList_Frm(IntToStr(FEmailDisplayTask.ID), FToDoCollect, False,
 //    InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+end;
+
+procedure TTaskEditF.Button4Click(Sender: TObject);
+var
+  LStr: string;
+begin
+  LStr := FormatDateTime('- yyyy.mm.dd: ', CurWorkFinishPicker.Date) + g_HiconisASState.ToString(CurWorkCB.ItemIndex);
+  EtcContentMemo.Lines.Add(LStr);
 end;
 
 procedure TTaskEditF.fileGridCellDblClick(Sender: TObject; ACol, ARow: Integer);

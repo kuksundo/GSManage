@@ -99,24 +99,16 @@ type
     PopupMenu1: TPopupMenu;
     Mail1: TMenuItem;
     Create1: TMenuItem;
-    N11: TMenuItem;
     N12: TMenuItem;
-    N13: TMenuItem;
-    N14: TMenuItem;
     N15: TMenuItem;
-    N16: TMenuItem;
     N17: TMenuItem;
     N18: TMenuItem;
-    N19: TMenuItem;
     N20: TMenuItem;
     N21: TMenuItem;
     N6: TMenuItem;
     Invoice4: TMenuItem;
     Invoice3: TMenuItem;
     InvoiceConfirm2: TMenuItem;
-    N9: TMenuItem;
-    N8: TMenuItem;
-    N7: TMenuItem;
     N23: TMenuItem;
     ToDOList1: TMenuItem;
     N22: TMenuItem;
@@ -177,6 +169,9 @@ type
     ImportMaterialCodeFromExcel1: TMenuItem;
     N28: TMenuItem;
     ClaimServiceKindCB: TJvCheckedComboBox;
+    CheckIfexistclaiminDBbyxls1: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -201,15 +196,10 @@ type
     procedure AeroButton1Click(Sender: TObject);
     procedure GetJsonValues1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure N11Click(Sender: TObject);
     procedure N12Click(Sender: TObject);
-    procedure N13Click(Sender: TObject);
-    procedure N14Click(Sender: TObject);
     procedure N15Click(Sender: TObject);
-    procedure N16Click(Sender: TObject);
     procedure grid_ReqKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure N19Click(Sender: TObject);
     procedure N18Click(Sender: TObject);
     procedure N20Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
@@ -234,6 +224,8 @@ type
     procedure ExportToExcel2Click(Sender: TObject);
     procedure SaveDBAs1Click(Sender: TObject);
     procedure ImportMaterialCodeFromExcel1Click(Sender: TObject);
+    procedure CheckIfexistclaiminDBbyxls1Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -339,6 +331,8 @@ type
     function GetUserListFromFile(AFileName: string): TStrings;
 
     procedure SaveDB2File();
+    procedure CheckIfExistClaimInDBByXls(AXlsName: string);
+    procedure SendCmd4CreateMail(AMailType: integer);
   public
     //메일을 이동시킬 폴더 리스트,
     //HGS Task/Send Folder Name 2 IPC 메뉴에 의해 OL으로 부터 수신함
@@ -369,7 +363,6 @@ type
     procedure LoadConfigForm2Object(AForm: THiASConfigF);
     procedure SetConfig;
     procedure ApplyConfigChanged;
-    function GetRecvEmailAddress(AMailType: integer): string;
     procedure GetSearchCondRec(var ARec: TSearchCondRec);
 //    procedure GetWhereConstArr(ASearchCondRec: TSearchCondRec; var AWhere: string);// var AConstArr: TConstArray);
     function GetIsRemote(var ARemoteAddr: string): Boolean;
@@ -434,7 +427,8 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
-  UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord;
+  UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
+  UnitIPCMsgQUtil, UnitHiASOLUtil;
 
 {$R *.dfm}
 
@@ -589,20 +583,6 @@ begin
   MakeDocServiceOrder(LRec);
 end;
 
-procedure THiconisAsManageF.N11Click(Sender: TObject);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask := GetTask;
-  try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
-
 procedure THiconisAsManageF.N12Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
@@ -610,34 +590,6 @@ begin
   LTask := GetTask;
   try
 //    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
-
-procedure THiconisAsManageF.N13Click(Sender: TObject);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask := GetTask;
-  try
-//      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
-
-procedure THiconisAsManageF.N14Click(Sender: TObject);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask := GetTask;
-  try
-//      SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
 //      FSettings,
 //      GetRecvEmailAddress(TMenuItem(Sender).Tag));
   finally
@@ -659,35 +611,7 @@ begin
   end;
 end;
 
-procedure THiconisAsManageF.N16Click(Sender: TObject);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask := GetTask;
-  try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
-
 procedure THiconisAsManageF.N18Click(Sender: TObject);
-var
-  LTask: TOrmHiconisASTask;
-begin
-  LTask := GetTask;
-  try
-//    SendCmd2IPC4CreateMail(nil, 0, TMenuItem(Sender).Tag, LTask,
-//      FSettings,
-//      GetRecvEmailAddress(TMenuItem(Sender).Tag));
-  finally
-    FreeAndNil(LTask);
-  end;
-end;
-
-procedure THiconisAsManageF.N19Click(Sender: TObject);
 var
   LTask: TOrmHiconisASTask;
 begin
@@ -745,6 +669,11 @@ begin
 //  MakeDocSubConInvoiceList2(LWorkSheet, LRec, LRow);
 end;
 
+procedure THiconisAsManageF.N7Click(Sender: TObject);
+begin
+  SendCmd4CreateMail(TMenuItem(Sender).Tag);
+end;
+
 procedure THiconisAsManageF.ToDOList1Click(Sender: TObject);
 begin
   if grid_Req.SelectedCount = 0 then
@@ -793,7 +722,7 @@ var
   LMsg  : TOmniMessage;
 //  LOLRespondRec : TOLRespondRec;
 begin
-  if FResponseQueue.TryDequeue(LMsg) then
+  while FResponseQueue.TryDequeue(LMsg) do
   begin
 //    if LMsg.MsgID = Ord(olrkAddAppointment) then
 //    begin
@@ -803,7 +732,7 @@ begin
 
     //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2RespondOLEmail.Enqueue 실행
     //아래 조건이 없으면 IPCMQ2RespondOLEmail.Enqueue 때문에 Q에 데이터가 쌓임
-    if FOLMailListFormDisplayed or (LMsg.MsgID = Ord(olrkAddAppointment)) then
+    if FOLMailListFormDisplayed or (LMsg.MsgID = Ord(olrkAddObject)) then
       if FTaskEditConfig.IPCMQ2RespondOLEmail.Enqueue(LMsg) then
         SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
   end;
@@ -954,20 +883,6 @@ end;
 function THiconisAsManageF.GetMyName(AEmail: string): string;
 begin
   Result := GetMyNameNIPAddressFromEmailAddress(AEmail);
-end;
-
-function THiconisAsManageF.GetRecvEmailAddress(AMailType: integer): string;
-begin
-  case AMailType of
-    1: Result := '';//Invoice 송부
-//    2: Result := FSettings.SalesDirectorEmailAddr;// SALES_DIRECTOR_EMAIL_ADDR;//매출처리요청
-//    3: Result := FSettings.MaterialInputEmailAddr;// MATERIAL_INPUT_EMAIL_ADDR;//자재직투입요청
-//    4: Result := FSettings.ForeignInputEmailAddr;// FOREIGN_INPUT_EMAIL_ADDR;//해외고객업체등록
-//    5: Result := FSettings.ElecHullRegEmailAddr;// ELEC_HULL_REG_EMAIL_ADDR;//전전비표준공사 생성 요청
-//    6: Result := PO_REQ_EMAIL_ADDR; //PO 요청
-//    7: Result := FSettings.ShippingReqEmailAddr;// SHIPPING_REQ_EMAIL_ADDR; //출하 요청
-//    8: Result := FSettings.FieldServiceReqEmailAddr;// FIELDSERVICE_REQ_EMAIL_ADDR; //필드서비스팀 요청
-  end;
 end;
 
 procedure THiconisAsManageF.GetSearchCondRec(var ARec: TSearchCondRec);
@@ -1668,7 +1583,8 @@ begin
       rec    : TOLMsgFileRecord;
       LOLRespondRec: TOLRespondRec;
       LEntryIdRecord: TEntryIdRecord;
-      LOLAppointRec: TOLAppointmentRec;
+      LOLMailRec: TOLMailRec;
+      LOLObjRec: TOLObjectRec;
       LOmniValue: TOmniValue;
     begin
       handles[0] := FStopEvent.Handle;
@@ -1685,13 +1601,13 @@ begin
               FOLCmdSenderHandle := msg.MsgData.AsInteger;
               msg.MsgData.AsInteger := Self.Handle;
             end;
-            olckAddAppointment: begin
-              LOLAppointRec := Msg.MsgData.ToRecord<TOLAppointmentRec>;
+            olckAddObject: begin
+              LOLObjRec := Msg.MsgData.ToRecord<TOLObjectRec>;
               //OLCommand 보낸 FormHandle 저장
-              FOLCmdSenderHandle := LOLAppointRec.FSenderHandle;
+              FOLCmdSenderHandle := LOLObjRec.FSenderHandle;
               //OLWorker로부터 결과를 받기 위해 FSenderHandle 변경- MSG_RESULT
-              LOLAppointRec.FSenderHandle := Self.Handle;
-              msg.MsgData := TOmniValue.FromRecord(LOLAppointRec);
+              LOLObjRec.FSenderHandle := Self.Handle;
+              msg.MsgData := TOmniValue.FromRecord(LOLObjRec);
             end;
             olckMoveMail2Folder: begin
               LEntryIdRecord := Msg.MsgData.ToRecord<TEntryIdRecord>;
@@ -1706,11 +1622,20 @@ begin
               LOLRespondRec.FSenderHandle := Self.Handle;
               msg.MsgData := TOmniValue.FromRecord(LOLRespondRec);
             end;
-            olckShowMailContents:;
+            olckShowMailContents: ;
+            olckShowObject: ;
+            olckCreateMail: begin
+              LOLMailRec := Msg.MsgData.ToRecord<TOLMailRec>;
+              //OLCommand 보낸 FormHandle 저장
+              FOLCmdSenderHandle := LOLMailRec.FSenderHandle;
+              //OLWorker로부터 결과를 받기 위해 FSenderHandle 변경- MSG_RESULT
+              LOLMailRec.FSenderHandle := Self.Handle;
+              msg.MsgData := TOmniValue.FromRecord(LOLMailRec);
+            end;
           end;
 
           if not FCommandQueue.Enqueue(TOmniMessage.Create(msg.MsgID, msg.MsgData)) then
-            raise System.SysUtils.Exception.Create('TOutlookEmailListFr.SendCmd2WorkerThrd->Command queue is full!');
+            raise System.SysUtils.Exception.Create('THiconisAsManageF.AsyncProcessCommandProc->Command queue is full!');
 
           task.Invoke(//Thread Synchronize와 동일함
             procedure
@@ -1884,6 +1809,23 @@ end;
 procedure THiconisAsManageF.CauseSW1Click(Sender: TObject);
 begin
   CauseSW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseSW), CauseSW1.Tag);
+end;
+
+procedure THiconisAsManageF.CheckIfExistClaimInDBByXls(AXlsName: string);
+var
+  LUtf8: RawUtf8;
+begin
+  //IDocList.Json
+  LUtf8 := GetClaimListJsonFromXls(AXlsName);
+
+end;
+
+procedure THiconisAsManageF.CheckIfexistclaiminDBbyxls1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    CheckIfExistClaimInDBByXls(OpenDialog1.FileName);
+  end;
 end;
 
 procedure THiconisAsManageF.ComboBox1DropDown(Sender: TObject);
@@ -2629,11 +2571,11 @@ begin
   if Assigned(FTaskEditConfig.IPCMQ2RespondOLEmail) then
     FreeAndNil(FTaskEditConfig.IPCMQ2RespondOLEmail);
 
-  if Assigned(FTaskEditConfig.IPCMQCommandOLCalendar) then
-    FreeAndNil(FTaskEditConfig.IPCMQCommandOLCalendar);
-
-  if Assigned(FTaskEditConfig.IPCMQ2RespondOLCalendar) then
-    FreeAndNil(FTaskEditConfig.IPCMQ2RespondOLCalendar);
+//  if Assigned(FTaskEditConfig.IPCMQCommandOLCalendar) then
+//    FreeAndNil(FTaskEditConfig.IPCMQCommandOLCalendar);
+//
+//  if Assigned(FTaskEditConfig.IPCMQ2RespondOLCalendar) then
+//    FreeAndNil(FTaskEditConfig.IPCMQ2RespondOLCalendar);
 
   if Assigned(FStopEvent) then
     FreeAndNil(FStopEvent);
@@ -2938,6 +2880,19 @@ begin
   finally
     LTask.Free;
   end;
+end;
+
+procedure THiconisAsManageF.SendCmd4CreateMail(AMailType: integer);
+var
+  LOLMailRec: TOLMailRec;
+  LValue: TOmniValue;
+  LMsgQ: TOmniMessageQueue;
+begin
+  LOLMailRec.Recipients := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+
+  LValue := TOmniValue.FromRecord(LOLMailRec);
+  LMsgQ := FTaskEditConfig.IPCMQCommandOLEmail;
+  SendCmd2OmniMsgQ(Ord(olckCreateMail), LValue, LMsgQ);
 end;
 
 procedure THiconisAsManageF.SendReqOLEmailInfo;

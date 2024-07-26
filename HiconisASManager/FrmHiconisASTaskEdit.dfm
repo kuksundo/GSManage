@@ -414,10 +414,29 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         TabOrder = 9
       end
+      object Button4: TButton
+        Left = 322
+        Top = 3
+        Width = 65
+        Height = 25
+        Caption = 'Log'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = #47569#51008' '#44256#46357
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 10
+        OnClick = Button4Click
+      end
     end
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -665,6 +684,10 @@ object TaskEditF: TTaskEditF
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         599
         355)
@@ -1095,6 +1118,10 @@ object TaskEditF: TTaskEditF
     object SubConTS: TTabSheet
       Caption = #54801#47141#49324
       ImageIndex = 6
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 185
@@ -1668,6 +1695,10 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel6: TPanel
         Left = 0
         Top = 0
@@ -1950,6 +1981,10 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -3177,7 +3212,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800780510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800880510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5084,7 +5119,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C0101100014004C0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101100014005C0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

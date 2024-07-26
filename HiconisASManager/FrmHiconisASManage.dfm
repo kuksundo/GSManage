@@ -1927,7 +1927,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000000418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000180418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2237,7 +2237,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402100410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402280410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2383,48 +2383,32 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = 'EMail'
       object Create1: TMenuItem
         Caption = 'Create'
-        object N11: TMenuItem
+        object N7: TMenuItem
+          Tag = 1
+          Caption = #48512#54408#50696#49328#51613#50529' '#50836#52397
+          OnClick = N7Click
+        end
+        object N8: TMenuItem
           Tag = 2
-          Caption = #47588#52636#52376#47532' '#50836#52397
-          OnClick = N11Click
+          Caption = #51088#51116#51077#44256' '#50836#52397
         end
         object N12: TMenuItem
           Tag = 3
           Caption = #51088#51116#51649#53804#51077' '#50836#52397
           OnClick = N12Click
         end
-        object N13: TMenuItem
-          Tag = 4
-          Caption = #54644#50808' '#47588#52636' '#44256#44061#49324' '#46321#47197' '#50836#52397
-          OnClick = N13Click
-        end
-        object N14: TMenuItem
-          Tag = 5
-          Caption = #51204#51204' '#48708#54364#51456' '#44277#49324' '#49373#49457' '#50836#52397
-          OnClick = N14Click
-        end
         object N15: TMenuItem
-          Tag = 7
+          Tag = 4
           Caption = #52636#54616#51648#49884' '#50836#52397
           OnClick = N15Click
-        end
-        object N16: TMenuItem
-          Tag = 8
-          Caption = #54596#46300#49436#48708#49828#54016' '#51204#45804
-          OnClick = N16Click
         end
       end
       object N17: TMenuItem
         Caption = #54596#46300#49436#48708#49828
         object N18: TMenuItem
-          Tag = 9
-          Caption = #50629#52404#44204#51201#50836#52397
+          Tag = 5
+          Caption = #50629#52404#48169#49440#44032#45733#50836#52397
           OnClick = N18Click
-        end
-        object N19: TMenuItem
-          Tag = 10
-          Caption = #49436#48708#49828#50724#45908' '#45216#51064' '#50836#52397
-          OnClick = N19Click
         end
         object N20: TMenuItem
           Tag = 11
@@ -2449,15 +2433,6 @@ object HiconisAsManageF: THiconisAsManageF
       end
       object InvoiceConfirm2: TMenuItem
         Caption = 'Invoice Confirm <- '#44256#44061
-      end
-      object N9: TMenuItem
-        Caption = #49688#53685' '#44552#50529' '#49688#51221
-      end
-      object N8: TMenuItem
-        Caption = #49688#53685' '#51116#49849#51064
-      end
-      object N7: TMenuItem
-        Caption = #47588#52636' '#52376#47532' '#50836#52397
       end
     end
     object N23: TMenuItem
@@ -2538,6 +2513,10 @@ object HiconisAsManageF: THiconisAsManageF
         Caption = 'Import MaterialCode From Excel'
         OnClick = ImportMaterialCodeFromExcel1Click
       end
+      object CheckIfexistclaiminDBbyxls1: TMenuItem
+        Caption = 'Check If exist claim in DB by xls'
+        OnClick = CheckIfexistclaiminDBbyxls1Click
+      end
       object N28: TMenuItem
         Caption = '-'
       end
@@ -2596,7 +2575,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800380520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800500520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3135,6 +3114,7 @@ object HiconisAsManageF: THiconisAsManageF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop
     Target = grid_Req
+    WinTarget = 0
     Left = 212
     Top = 212
   end
