@@ -6,6 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RegularExpressions, Vcl.Menus,
 
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
   mormot.core.collections, mormot.core.variants,
 
   UnitChkDupIdData, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, NxScrollControl,
@@ -98,8 +99,9 @@ type
     procedure SetIdList2GridFromIpNDupIdList(AIpAddr: string);
 
     function GetSelectedIpAddr(AIsMaster: Boolean=true): string;
-    function BackupMPM(AIpAddr: string): string;
-    function DownloadBackupMPM(AIpAddr: string): string;
+    //AIpAddrList: ';'·Î ±¸ºÐµÊ
+    function BackupMPM(AIpAddrList: string): string;
+    function DownloadBackupMPM(AIpAddrList: string): string;
   public
     procedure GetIdFromMPM(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
@@ -124,22 +126,40 @@ uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2;
 
 {$R *.dfm}
 
-function THiconisTCPF.BackupMPM(AIpAddr: string): string;
+function THiconisTCPF.BackupMPM(AIpAddrList: string): string;
 var
-  LHttp: TIdHttp;
-  Lurl, LQuery, LFullUrl: string;
+  LIpAddr: string;
 begin
-  LHttp := TIdHttp.Create(nil);
-  try
-    LUrl := 'http://' + AIpAddr + '/Backup';
-    LQuery := '&=Make%20Backup';
-    LFullUrl := LUrl + '?' + LQuery;
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
 
-    Result := LHttp.Get(LFullUrl);
-    ShowMessage(Result);
-  finally
-    LHttp.Free;
-  end;
+    Parallel.Async(
+      procedure (const task: IOmniTask)
+      var
+        LHttp: TIdHttp;
+        Lurl, LQuery, LFullUrl: string;
+      begin
+        LHttp := TIdHttp.Create(nil);
+        try
+          LUrl := 'http://' + LIpAddr + '/Backup';
+          LQuery := '&=Make%20Backup';
+          LFullUrl := LUrl + '?' + LQuery;
+
+          Lurl := LHttp.Get(LFullUrl);
+          ShowMessage(Lurl);
+        finally
+          LHttp.Free;
+        end;
+      end,
+
+      Parallel.TaskConfig.OnMessage(Self).OnTerminated(
+        procedure
+        begin
+        end
+      )
+    );
+  end;//while
 end;
 
 procedure THiconisTCPF.BitBtn4Click(Sender: TObject);
@@ -185,22 +205,40 @@ begin
   end;
 end;
 
-function THiconisTCPF.DownloadBackupMPM(AIpAddr: string): string;
+function THiconisTCPF.DownloadBackupMPM(AIpAddrList: string): string;
 var
-  LHttp: TIdHttp;
-  Lurl, LQuery, LFullUrl: string;
+  LIpAddr: string;
 begin
-  LHttp := TIdHttp.Create(nil);
-  try
-    LUrl := ' http://' + AIpAddr + '/Backup?%26=Make+Backup';
-    LQuery := '&=Make%20Backup';
-    LFullUrl := LUrl + '?' + LQuery;
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
 
-    Result := LHttp.Get(LFullUrl);
-    ShowMessage(Result);
-  finally
-    LHttp.Free;
-  end;
+    Parallel.Async(
+      procedure (const task: IOmniTask)
+      var
+        LHttp: TIdHttp;
+        Lurl, LQuery, LFullUrl: string;
+      begin
+        LHttp := TIdHttp.Create(nil);
+        try
+          LUrl := ' http://' + LIpAddr + '/Backup?%26=Make+Backup';
+          LQuery := '&=Make%20Backup';
+          LFullUrl := LUrl + '?' + LQuery;
+
+          Lurl := LHttp.Get(LFullUrl);
+          ShowMessage(Lurl);
+        finally
+          LHttp.Free;
+        end;
+      end,
+
+      Parallel.TaskConfig.OnMessage(Self).OnTerminated(
+        procedure
+        begin
+        end
+      )
+    );
+  end;//while
 end;
 
 procedure THiconisTCPF.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -273,11 +311,12 @@ end;
 
 procedure THiconisTCPF.GetPortPrint1Click(Sender: TObject);
 var
-  LIpAddr: string;
+  LIpAddrList: string;
 begin
-  LIpAddr := GetSelectedIpAddr();
+  //';'·Î ±¸ºÐµÊ
+  LIpAddrList := GetSelectedIpAddr();
 
-  GetPortPrintDebug(LIpAddr, '0');
+  GetPortPrintDebug(LIpAddrList, '0');
 end;
 
 function THiconisTCPF.GetPortPrintDebug(AIpAddr, AMode: string): string;
@@ -326,11 +365,22 @@ begin
 end;
 
 function THiconisTCPF.GetSelectedIpAddr(AIsMaster: Boolean): string;
+var
+  i: integer;
+  LList: string;
 begin
-  if AIsMaster then
-    Result := IPAddrGrid.CellsByName['PMPM_PIP', IPAddrGrid.SelectedRow]
-  else
-    Result := IPAddrGrid.CellsByName['PMPM_SIP', IPAddrGrid.SelectedRow]
+  Result := '';
+  LList := '';
+
+  for i := 0 to IPAddrGrid.SelectedCount - 1 do
+  begin
+    if AIsMaster then
+      LList := LList + IPAddrGrid.CellsByName['PMPM_PIP', IPAddrGrid.SelectedRow] + ';'
+    else
+      LList := LList + IPAddrGrid.CellsByName['PMPM_SIP', IPAddrGrid.SelectedRow] + ';';
+  end;
+
+  Result := LList;
 end;
 
 function THiconisTCPF.GetUrlFromIpRec(AIpAddr: string): string;

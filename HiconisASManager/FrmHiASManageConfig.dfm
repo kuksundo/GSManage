@@ -19,7 +19,7 @@ object HiASConfigF: THiASConfigF
     Top = 0
     Width = 448
     Height = 408
-    ActivePage = EmailTS
+    ActivePage = FileTS
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -459,6 +459,8 @@ object HiASConfigF: THiASConfigF
     object FileTS: TTabSheet
       Caption = 'File'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = -21
       object Label6: TLabel
         Left = 36
         Top = 16
@@ -468,15 +470,86 @@ object HiASConfigF: THiASConfigF
         ParentShowHint = False
         ShowHint = False
       end
-      object OLFolderListFilenameEdit: TJvFilenameEdit
-        Tag = 6
+      object Label28: TLabel
         Left = 36
-        Top = 38
+        Top = 66
+        Width = 119
+        Height = 16
+        Caption = #48512#54408#50696#49328#51613#50529' '#50836#52397' Mail'
+        ParentShowHint = False
+        ShowHint = False
+      end
+      object OLFolderListFilenameEdit: TJvFilenameEdit
+        Tag = 21
+        Left = 36
+        Top = 36
         Width = 381
         Height = 24
         Hint = 'Text'
         ImeName = 'Microsoft Office IME 2007'
         TabOrder = 0
+        Text = ''
+      end
+      object JvFilenameEdit1: TJvFilenameEdit
+        Tag = 6
+        Left = 36
+        Top = 86
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 1
+        Text = ''
+      end
+      object JvFilenameEdit2: TJvFilenameEdit
+        Left = 36
+        Top = 134
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 2
+        Text = ''
+      end
+      object JvFilenameEdit3: TJvFilenameEdit
+        Tag = 22
+        Left = 36
+        Top = 86
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 3
+        Text = ''
+      end
+      object JvFilenameEdit4: TJvFilenameEdit
+        Left = 36
+        Top = 182
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 4
+        Text = ''
+      end
+      object JvFilenameEdit5: TJvFilenameEdit
+        Left = 36
+        Top = 230
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 5
+        Text = ''
+      end
+      object JvFilenameEdit6: TJvFilenameEdit
+        Left = 36
+        Top = 286
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft Office IME 2007'
+        TabOrder = 6
         Text = ''
       end
     end

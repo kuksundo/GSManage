@@ -7,7 +7,8 @@ uses
   FrmInputIpAddress in '..\..\..\..\Common\Form\FrmInputIpAddress.pas',
   UnitChkDupIdData in 'UnitChkDupIdData.pas',
   UnitTRegExUtil in '..\..\..\..\Common\UnitTRegExUtil.pas',
-  UnitHtmlUtil in '..\..\..\..\Common\UnitHtmlUtil.pas';
+  UnitHtmlUtil in '..\..\..\..\Common\UnitHtmlUtil.pas',
+  UnitHiConTCPWorker in 'UnitHiConTCPWorker.pas';
 
 {$R *.res}
 

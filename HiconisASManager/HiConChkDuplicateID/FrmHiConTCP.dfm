@@ -203,7 +203,7 @@ object HiconisTCPF: THiconisTCPF
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
       Caption = ''
-      Options = [goHeader, goSelectFullRow]
+      Options = [goHeader, goMultiSelect, goSelectFullRow]
       PopupMenu = IPGridPopup
       TabOrder = 1
       TabStop = True

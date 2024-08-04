@@ -333,6 +333,8 @@ type
     procedure SaveDB2File();
     procedure CheckIfExistClaimInDBByXls(AXlsName: string);
     procedure SendCmd4CreateMail(AMailType: integer);
+
+    procedure AssignHull2RecFromForm(AHiASIniConfig: THiASIniConfig);
   public
     //메일을 이동시킬 폴더 리스트,
     //HGS Task/Send Folder Name 2 IPC 메뉴에 의해 OL으로 부터 수신함
@@ -1570,6 +1572,13 @@ end;
 procedure THiconisAsManageF.ApplyConfigChanged;
 begin
   LoadConfigFromFile;
+end;
+
+procedure THiconisAsManageF.AssignHull2RecFromForm(AHiASIniConfig: THiASIniConfig);
+begin
+  AHiASIniConfig.FHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
+  AHiASIniConfig.FShipName := grid_Req.CellsByName['ShipName',grid_Req.SelectedRow];
+  AHiASIniConfig.FProjNo := grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
 end;
 
 procedure THiconisAsManageF.AsyncProcessCommandProc;
@@ -2887,8 +2896,18 @@ var
   LOLMailRec: TOLMailRec;
   LValue: TOmniValue;
   LMsgQ: TOmniMessageQueue;
+  LMsg: string;
 begin
+  AssignHull2RecFromForm(FHiASIniConfig);
+  LOLMailRec.Subject := GetEmailSubject(AMailType, FHiASIniConfig);
   LOLMailRec.Recipients := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LOLMailRec.To_ := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LOLMailRec.CC := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LMsg := GetEmailBody(AMailType, FHiASIniConfig);
+  LOLMailRec.HTMLBody := LMsg;
+//  LOLMailRec.Body := GetEmailBody(AMailType, FHiASIniConfig);
+
+  LOLMailRec.FSenderHandle := Handle;
 
   LValue := TOmniValue.FromRecord(LOLMailRec);
   LMsgQ := FTaskEditConfig.IPCMQCommandOLEmail;

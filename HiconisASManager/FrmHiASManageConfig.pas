@@ -89,6 +89,13 @@ type
     Label17: TLabel;
     Edit15: TEdit;
     PageControl: TPageControl;
+    JvFilenameEdit1: TJvFilenameEdit;
+    JvFilenameEdit2: TJvFilenameEdit;
+    JvFilenameEdit3: TJvFilenameEdit;
+    JvFilenameEdit4: TJvFilenameEdit;
+    JvFilenameEdit5: TJvFilenameEdit;
+    JvFilenameEdit6: TJvFilenameEdit;
+    Label28: TLabel;
     procedure MQProtocolComboDropDown(Sender: TObject);
     procedure MQProtocolComboChange(Sender: TObject);
   private
