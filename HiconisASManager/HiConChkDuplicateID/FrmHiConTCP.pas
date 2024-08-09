@@ -63,6 +63,8 @@ type
     CheckDuplicatedIDFromAll1: TMenuItem;
     N2: TMenuItem;
     MPMBackup1: TMenuItem;
+    BitBtn1: TBitBtn;
+    MPMName: TNxTextColumn;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
     procedure SaveIPListToFile1Click(Sender: TObject);
@@ -75,6 +77,7 @@ type
     procedure GetPortPrint1Click(Sender: TObject);
     procedure CheckDuplicatedID1Click(Sender: TObject);
     procedure MPMBackup1Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -98,12 +101,15 @@ type
     procedure SetIdList2GridFromIpNIdList(AIpAddr: string);
     procedure SetIdList2GridFromIpNDupIdList(AIpAddr: string);
 
-    function GetSelectedIpAddr(AIsMaster: Boolean=true): string;
+    function GetSelectedIpAddrList(AIsMaster: Boolean=true): string;
     //AIpAddrList: ';'로 구분됨
     function BackupMPM(AIpAddrList: string): string;
-    function DownloadBackupMPM(AIpAddrList: string): string;
+    //AIpAddr: IP 한개임
+    function DownloadBackupMPM(AIpAddr: string): string;
+    function GetMPMNameFromIpAddrDic(AIpAddr: string): string;
   public
     procedure GetIdFromMPM(ARec: TIpListRec);
+    procedure GetIdFromMPM_Async(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
     procedure HtmlParseFunc();
     procedure GetPreTagTextFromHtml();
@@ -114,6 +120,7 @@ type
     procedure SetVisibleAllGridRow(AIsShow: Boolean);
 
     function GetPortPrintDebug(AIpAddr, AMode: string): string;
+    procedure Log(const AMsg: string);
   end;
 
 var
@@ -121,7 +128,8 @@ var
 
 implementation
 
-uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2;
+uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2,
+  amProgress.API, amProgress.Stream;//, amProgress;
 //  DomCore, Formatter;
 
 {$R *.dfm}
@@ -129,37 +137,32 @@ uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2;
 function THiconisTCPF.BackupMPM(AIpAddrList: string): string;
 var
   LIpAddr: string;
+  LProgress: IProgress;
 begin
-  while AIpAddrList <> '' do
+  LProgress := ShowProgress('Downloading MPM...', False);
+  LProgress.EnableAbort := True;
+  LProgress.Marquee := True;
+
+  LProgress.UpdateMessage('Changing...');
+
+  while (not LProgress.Aborted) do
   begin
-    LIpAddr := StrToken(AIpAddrList, ';');
+    while AIpAddrList <> '' do
+    begin
+      LIpAddr := StrToken(AIpAddrList, ';');
+      DownloadBackupMPM(LIpAddr);
+    end;//while
+  end;
+end;
 
-    Parallel.Async(
-      procedure (const task: IOmniTask)
-      var
-        LHttp: TIdHttp;
-        Lurl, LQuery, LFullUrl: string;
-      begin
-        LHttp := TIdHttp.Create(nil);
-        try
-          LUrl := 'http://' + LIpAddr + '/Backup';
-          LQuery := '&=Make%20Backup';
-          LFullUrl := LUrl + '?' + LQuery;
-
-          Lurl := LHttp.Get(LFullUrl);
-          ShowMessage(Lurl);
-        finally
-          LHttp.Free;
-        end;
-      end,
-
-      Parallel.TaskConfig.OnMessage(Self).OnTerminated(
-        procedure
-        begin
-        end
-      )
-    );
-  end;//while
+procedure THiconisTCPF.BitBtn1Click(Sender: TObject);
+begin
+  TagAddrGrid.BeginUpdate;
+  try
+    TagAddrGrid.ClearRows;
+  finally
+    TagAddrGrid.EndUpdate();
+  end;
 end;
 
 procedure THiconisTCPF.BitBtn4Click(Sender: TObject);
@@ -205,40 +208,58 @@ begin
   end;
 end;
 
-function THiconisTCPF.DownloadBackupMPM(AIpAddrList: string): string;
+function THiconisTCPF.DownloadBackupMPM(AIpAddr: string): string;
 var
-  LIpAddr: string;
+  LResult: string;
 begin
-  while AIpAddrList <> '' do
-  begin
-    LIpAddr := StrToken(AIpAddrList, ';');
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    var
+      LHttp: TIdHttp;
+      Lurl, LQuery, LFullUrl, LBackupFileSufix, LFN: string;
+      LStream: TMemoryStream;
+    begin
+      LHttp := TIdHttp.Create(nil);
+      try
+        LUrl := 'http://' + AIpAddr + '/Backup';
+        LQuery := '&=Make%20Backup';
+        LFullUrl := LUrl + '?' + LQuery;
 
-    Parallel.Async(
-      procedure (const task: IOmniTask)
-      var
-        LHttp: TIdHttp;
-        Lurl, LQuery, LFullUrl: string;
-      begin
-        LHttp := TIdHttp.Create(nil);
-        try
-          LUrl := ' http://' + LIpAddr + '/Backup?%26=Make+Backup';
-          LQuery := '&=Make%20Backup';
-          LFullUrl := LUrl + '?' + LQuery;
+        LFullUrl := LHttp.Get(LFullUrl);
 
-          Lurl := LHttp.Get(LFullUrl);
-          ShowMessage(Lurl);
-        finally
-          LHttp.Free;
-        end;
-      end,
-
-      Parallel.TaskConfig.OnMessage(Self).OnTerminated(
-        procedure
+        if Pos('Download Backup', LFullUrl) > 0  then
         begin
-        end
-      )
-    );
-  end;//while
+          LStream := TMemoryStream.Create;
+          try
+            LUrl := 'http://' + AIpAddr + '/';
+            //IP 마지막 주소값을 가져옴
+            LBackupFileSufix := strTokenRev(AIpAddr, '.');
+            LFN := 'MPM' + LBackupFileSufix + '.tgz';
+            LQuery := '&=Download+Backup';
+            LFullUrl := LUrl + '/' + LFN;// + '?' + LQuery;
+
+            LHttp.Get(LFullUrl, LStream);
+            LFN := 'c:\temp\' + LFN;
+            LStream.SaveToFile(LFN);
+            LResult := LFN;
+          finally
+            LStream.Free;
+          end;
+        end;
+//          ShowMessage(Lurl);
+      finally
+        LHttp.Free;
+      end;
+    end,
+
+    //Main thread에서 실행됨
+    Parallel.TaskConfig.OnMessage(Self).OnTerminated(
+      procedure (const ATask: IOmniTaskControl)
+      begin
+        Log('Backup file is downloaded to ' + LResult);
+      end
+    )
+  );
 end;
 
 procedure THiconisTCPF.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -292,6 +313,47 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.GetIdFromMPM_Async(ARec: TIpListRec);
+var
+  LIpAddr: string;
+  LCon: RawByteString;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    var
+      LHttp: TIdHttp;
+      Lurl, LQuery, LFullUrl: string;
+    begin
+      LUrl := GetUrlFromIpRec(LIpAddr);
+      LCon := HttpGet(LUrl);
+
+      if LCon = '' then
+      begin
+        LIpAddr := ARec.PMPM_SIP;
+        LUrl := GetUrlFromIpRec(LIpAddr);
+        LCon := HttpGet(LUrl);
+      end;
+    end,
+
+    Parallel.TaskConfig.OnMessage(Self).OnTerminated(
+      procedure
+      begin
+        if LCon <> '' then
+        begin
+          ConsoleMemo.Lines.Clear;
+          ConsoleMemo.Lines.Text := LCon;
+          SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+        end;
+      end
+    )
+  );
+end;
+
 procedure THiconisTCPF.GetIdsFromIpListDic;
 var
   LIpListRec: TIpListRec;
@@ -305,7 +367,26 @@ begin
 //  for LIpListRec in FIpAddrDic do
   begin
     LIpListRec := FIpAddrDic.Value[i];
-    GetIdFromMPM(LIpListRec);
+//    GetIdFromMPM(LIpListRec);
+    GetIdFromMPM_Async(LIpListRec);
+  end;
+end;
+
+function THiconisTCPF.GetMPMNameFromIpAddrDic(AIpAddr: string): string;
+var
+  i: Integer;
+  LIpListRec: TIpListRec;
+begin
+  Result := '';
+
+  for i := 0 to FIpAddrDic.Count - 1 do
+  begin
+    LIpListRec := FIpAddrDic.Value[i];
+
+    if LIpListRec.PMPM_PIP = AIpAddr then
+    begin
+      Result := LIpListRec.RES_NAME;
+    end;
   end;
 end;
 
@@ -314,7 +395,7 @@ var
   LIpAddrList: string;
 begin
   //';'로 구분됨
-  LIpAddrList := GetSelectedIpAddr();
+  LIpAddrList := GetSelectedIpAddrList();
 
   GetPortPrintDebug(LIpAddrList, '0');
 end;
@@ -364,7 +445,7 @@ begin
 //  ConsoleMemo.Lines.Text := TRegEx.Match(LStr, '(?si)<pre>.*?</pre>').Value;
 end;
 
-function THiconisTCPF.GetSelectedIpAddr(AIsMaster: Boolean): string;
+function THiconisTCPF.GetSelectedIpAddrList(AIsMaster: Boolean): string;
 var
   i: integer;
   LList: string;
@@ -436,11 +517,16 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.Log(const AMsg: string);
+begin
+  ConsoleMemo.Lines.Add(AMsg);
+end;
+
 procedure THiconisTCPF.MPMBackup1Click(Sender: TObject);
 var
   LIpAddr: string;
 begin
-  LIpAddr := GetSelectedIpAddr();
+  LIpAddr := GetSelectedIpAddrList();
 
   BackupMPM(LIpAddr);
 end;
@@ -519,6 +605,7 @@ begin
 //      TagAddrGrid.CellsByName['PMPM_PIP', LRow] := AIpRec.PMPM_PIP;
       TagAddrGrid.CellsByName['MMAddress', LRow] := LRec.MMAddress;
       TagAddrGrid.CellsByName['TagId', LRow] := LRec.TagId;
+      TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(AIpAddr);
     end;//for
 
     FIpNIdList.Add(AIpAddr, LIdDic);
@@ -534,21 +621,28 @@ var
   LIDList: TIDList;
   LDupRec: TDupIDListRec;
   i, LRow: integer;
+  LIpAddr: string;
 begin
-  LIDList := FIpNDupIdList.Items[AIpAddr];
-
   TagAddrGrid.BeginUpdate;
   try
     TagAddrGrid.ClearRows;
 
-    for i := 0 to LIDList.Count - 1 do
-    begin
-      LDupRec := LIDList.Items[i];
 
-      LRow := TagAddrGrid.AddRow();
-      TagAddrGrid.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
-      TagAddrGrid.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
-    end;
+    while AIpAddr <> '' do
+    begin
+      LIpAddr := StrToken(AIpAddr, ';');
+      LIDList := FIpNDupIdList.Items[LIpAddr];
+
+      for i := 0 to LIDList.Count - 1 do
+      begin
+        LDupRec := LIDList.Items[i];
+
+        LRow := TagAddrGrid.AddRow();
+        TagAddrGrid.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
+        TagAddrGrid.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
+        TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+      end;
+    end;//while
   finally
     TagAddrGrid.EndUpdate();
   end;
@@ -559,21 +653,28 @@ var
   LIDDic: TIDDic;
   LRec: TIDListRec;
   i, LRow: integer;
+  LIpAddr: string;
 begin
-  LIDDic := FIpNIdList.Items[AIpAddr];
-
   TagAddrGrid.BeginUpdate;
   try
     TagAddrGrid.ClearRows;
 
-    for i := 0 to LIDDic.Count - 1 do
+    while AIpAddr <> '' do
     begin
-      LRec := LIDDic.Value[i];
+      LIpAddr := StrToken(AIpAddr, ';');
 
-      LRow := TagAddrGrid.AddRow();
-      TagAddrGrid.CellsByName['MMAddress', LRow] := LRec.MMAddress;
-      TagAddrGrid.CellsByName['TagId', LRow] := LRec.TagId;
-    end;
+      LIDDic := FIpNIdList.Items[LIpAddr];
+
+      for i := 0 to LIDDic.Count - 1 do
+      begin
+        LRec := LIDDic.Value[i];
+
+        LRow := TagAddrGrid.AddRow();
+        TagAddrGrid.CellsByName['MMAddress', LRow] := LRec.MMAddress;
+        TagAddrGrid.CellsByName['TagId', LRow] := LRec.TagId;
+        TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+      end;
+    end;//while
   finally
     TagAddrGrid.EndUpdate();
   end;
@@ -596,7 +697,7 @@ procedure THiconisTCPF.TaskTabChange(Sender: TObject);
 var
   LIpAddr: string;
 begin
-  LIpAddr := GetSelectedIPAddr();
+  LIpAddr := GetSelectedIpAddrList();
   SetIdList2Grid(LIpAddr);
 end;
 

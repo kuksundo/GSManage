@@ -53,7 +53,8 @@ uses
   UnitHiASIniConfig in 'UnitHiASIniConfig.pas',
   UnitIPCMsgQUtil in '..\..\..\Common\UnitIPCMsgQUtil.pas',
   UnitJsonUtil in '..\..\..\Common\UnitJsonUtil.pas',
-  UnitHiASOLUtil in 'UnitHiASOLUtil.pas';
+  UnitHiASOLUtil in 'UnitHiASOLUtil.pas',
+  UnitHiASProjectRecord in 'UnitHiASProjectRecord.pas';
 
 {$R *.res}
 

@@ -124,6 +124,8 @@ type
   //한개의 Item만 Get
   function GetOrmToDoItemFromDBByTodoItemRec(ApjhTodoItem: TpjhTodoItemRec): TSQLToDoItem;
   //TaskID 모든 TodoItem을 Get
+  //AIsAdd : True = TPjhToDoList에 Add함
+  //         False = TPjhToDoList를 Clear 후 Add 함
   procedure GetToDoListFromDBByTask(ATask: TOrmHiconisASTask; var AToDoList: TpjhToDoList);
   //TaskID 모든 TodoItem을 Delete
   procedure DeleteToDoListFromTask(ATask: TOrmHiconisASTask);
@@ -418,7 +420,7 @@ begin
   ApjhTodoItem.TotalTime := ASQLToDoItem.TotalTime;
 
   ApjhTodoItem.UniqueID := ASQLToDoItem.UniqueID;
-  ApjhTodoItem.PlanCode := ASQLToDoItem.Plan_Code;
+  ApjhTodoItem.Plan_Code := ASQLToDoItem.Plan_Code;
   ApjhTodoItem.ModId := ASQLToDoItem.ModId;
 
   ApjhTodoItem.AlarmType := ASQLToDoItem.AlarmType;

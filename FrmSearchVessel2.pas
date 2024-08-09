@@ -60,6 +60,8 @@ type
     procedure GetVesselList2Grid;
   end;
 
+  function ShowSearchVesselForm(var AVesselSearchParamRec: TVesselSearchParamRec): integer;
+
 var
   SearchVesselF: TSearchVesselF;
 
@@ -68,6 +70,32 @@ implementation
 uses CommonData2, UnitVesselData2, UnitFolderUtil2;
 
 {$R *.dfm}
+
+function ShowSearchVesselForm(var AVesselSearchParamRec: TVesselSearchParamRec): integer;
+var
+  LSearchVesselF: TSearchVesselF;
+begin
+  Result := mrNone;
+
+  LSearchVesselF := TSearchVesselF.Create(nil);
+  try
+    LSearchVesselF.HullNoEdit.Text := AVesselSearchParamRec.fHullNo;
+    LSearchVesselF.ShipNameEdit.Text := AVesselSearchParamRec.fShipName;
+
+    Result := LSearchVesselF.ShowModal;
+
+    if Result = mrOK then
+    begin
+      if LSearchVesselF.VesselListGrid.SelectedRow <> -1 then
+      begin
+        AVesselSearchParamRec.fHullNo := LSearchVesselF.VesselListGrid.CellsByName['HullNo',LSearchVesselF.VesselListGrid.SelectedRow];
+        AVesselSearchParamRec.fShipName := LSearchVesselF.VesselListGrid.CellsByName['ShipName',LSearchVesselF.VesselListGrid.SelectedRow];
+      end;
+    end;
+  finally
+    LSearchVesselF.Free;
+  end;
+end;
 
 { TSearchVesselF }
 

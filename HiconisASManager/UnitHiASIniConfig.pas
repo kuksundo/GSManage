@@ -21,10 +21,12 @@ type
     FInputPIC,        //입고담당자 이메일 주소
     FShippingPIC,     //출하담당자 이메일 주소
     FBudgetPIC,       //부품예산담당자 이메일 주소
-    FServicePIC       //방선엔지니어담당자 이메일 주소
+    FServicePIC,      //방선엔지니어담당자 이메일 주소
+    FLogisticPIC,     //물류담당자 이메일 주소
+    FTechnicalPIC     //기술담당자 이메일 주소(장주호CI)
     : string;
   public
-    FHullNo, FShipName, FProjNo: string;
+    FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject: string;
   published
     //Section Name, Key Name, Default Key Value  (Control.hint = SectionName;KeyName 으로 저장 함)
     [JHPIni('EMail','My Employee ID','A379042','1', tkString)]
@@ -54,6 +56,10 @@ type
     property BudgetPIC : string read FBudgetPIC write FBudgetPIC;
     [JHPIni('Signature','ServicePIC','ServicePIC','16', tkString)]
     property ServicePIC : string read FServicePIC write FServicePIC;
+    [JHPIni('Signature','LogisticPIC','LogisticPIC','17', tkString)]
+    property LogisticPIC : string read FLogisticPIC write FLogisticPIC;
+    [JHPIni('Signature','TechnicalPIC','TechnicalPIC','18', tkString)]
+    property TechnicalPIC : string read FTechnicalPIC write FTechnicalPIC;
 
     [JHPIni('File','OLFolderListFileName','OLFolderListFileName.txt','21', tkString)]
     property OLFolderListFileName : string read FOLFolderListFileName write FOLFolderListFileName;

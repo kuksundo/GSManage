@@ -187,6 +187,7 @@
         <DCCReference Include="..\..\..\Common\UnitIPCMsgQUtil.pas"/>
         <DCCReference Include="..\..\..\Common\UnitJsonUtil.pas"/>
         <DCCReference Include="UnitHiASOLUtil.pas"/>
+        <DCCReference Include="UnitHiASProjectRecord.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

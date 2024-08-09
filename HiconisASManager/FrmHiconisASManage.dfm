@@ -453,26 +453,6 @@ object HiconisAsManageF: THiconisAsManageF
       ParentFont = False
       TabOrder = 2
     end
-    object HullNoEdit: TEdit
-      Left = 441
-      Top = 12
-      Width = 112
-      Height = 21
-      CharCase = ecUpperCase
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 3
-      OnKeyPress = HullNoEditKeyPress
-    end
-    object ShipNameEdit: TEdit
-      Left = 441
-      Top = 39
-      Width = 112
-      Height = 21
-      CharCase = ecUpperCase
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 4
-      OnKeyPress = ShipNameEditKeyPress
-    end
     object BefAftCB: TComboBox
       Left = 679
       Top = 102
@@ -486,7 +466,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 3
       Items.Strings = (
         ''
         #51060#51204
@@ -498,7 +478,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 205
       Height = 134
       Align = alRight
-      TabOrder = 6
+      TabOrder = 4
       object btn_Search: TAeroButton
         AlignWithMargins = True
         Left = 3
@@ -559,7 +539,7 @@ object HiconisAsManageF: THiconisAsManageF
       ImeName = 'Microsoft IME 2010'
       ItemIndex = 0
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 5
       Text = #54788#51116#51089#50629
       Items.Strings = (
         #54788#51116#51089#50629
@@ -572,17 +552,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 8
-      OnKeyPress = HullNoEditKeyPress
-    end
-    object OrderNoEdit: TEdit
-      Left = 837
-      Top = 10
-      Width = 112
-      Height = 21
-      CharCase = ecUpperCase
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 9
+      TabOrder = 6
       OnKeyPress = HullNoEditKeyPress
     end
     object PORNoEdit: TEdit
@@ -591,7 +561,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 10
+      TabOrder = 7
       OnKeyPress = HullNoEditKeyPress
     end
     object DisplayFinalCheck: TCheckBox
@@ -600,7 +570,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 114
       Height = 17
       Caption = #50756#47308#51089#50629' '#54364#49884
-      TabOrder = 11
+      TabOrder = 8
     end
     object Button1: TButton
       Left = 312
@@ -608,7 +578,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 40
       Height = 25
       Caption = 'Clear'
-      TabOrder = 12
+      TabOrder = 9
       OnClick = Button1Click
     end
     object CurWorkCB: TComboBox
@@ -624,7 +594,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 13
+      TabOrder = 10
       OnDropDown = CurWorkCBDropDown
     end
     object MaterialCodeEdit: TEdit
@@ -633,7 +603,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 14
+      TabOrder = 11
       OnKeyPress = HullNoEditKeyPress
     end
     object SetFildCondCB: TComboBox
@@ -649,7 +619,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 15
+      TabOrder = 12
     end
     object ClaimServiceKindCB: TJvCheckedComboBox
       Left = 440
@@ -659,7 +629,183 @@ object HiconisAsManageF: THiconisAsManageF
       CapSelectAll = '&Select all'
       CapDeSelectAll = '&Deselect all'
       CapInvertAll = '&Invert all'
+      TabOrder = 13
+    end
+    object HullNoEdit: TAdvEditBtn
+      Left = 440
+      Top = 9
+      Width = 114
+      Height = 21
+      EditAlign = eaCenter
+      EmptyTextStyle = []
+      Flat = False
+      LabelFont.Charset = DEFAULT_CHARSET
+      LabelFont.Color = clWindowText
+      LabelFont.Height = -11
+      LabelFont.Name = 'Tahoma'
+      LabelFont.Style = []
+      Lookup.Font.Charset = DEFAULT_CHARSET
+      Lookup.Font.Color = clWindowText
+      Lookup.Font.Height = -11
+      Lookup.Font.Name = 'Arial'
+      Lookup.Font.Style = []
+      Lookup.Separator = ';'
+      Color = clWindow
+      ImeName = 'Microsoft IME 2010'
+      ReadOnly = False
+      TabOrder = 14
+      Text = ''
+      Visible = True
+      OnKeyPress = HullNoEditKeyPress
+      Version = '1.3.5.0'
+      ButtonStyle = bsButton
+      ButtonWidth = 20
+      Etched = False
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FF4D74AB234179C5ABA7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFF4173AF008EEC009AF41F4B80FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF2F6EB22BA7
+        F516C0FF00A0F3568BC3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFEFFFF2974BB68C4F86BD4FF279CE66696C8FFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF3D8FD5A4E3FEB5EEFF4CAA
+        E7669DD2FFFFFFFFFFFFFFFFFFFFFFFFFEFEFEA188898A6A6A93736E866567B0
+        9595BAA8B1359EE8BDF5FF77C4EF63A1DAFFFFFFFFFFFFFFFFFFFFFFFFD7CDCD
+        7E5857DFD3CBFFFFF7FFFFE7FFFEDBD6BB9E90584D817B8E1794E46BB5E9FFFF
+        FFFFFFFFFFFFFFFFFFFFEDE9E9886565FFFFFFFFFFFFFDF8E8FAF2DCF8EDCFFF
+        F1CFF6DEBA9F5945C0C7D5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA38889F6EFEA
+        FFFFFFFEFBF5FBF7E8F9F4DAF5EBCCE6CEACF3DAB8E2BD99AB8B8EFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF937674FFFFFFFDFBF1FCF8EEFAF3E1FCF5E3F7F0D7F0
+        DFC1E7C9A9F0D1ABA87E75F8F6F6FFFFFFFFFFFFFFFFFFFFFFFF997D7AFFFFFC
+        F9F2E1FAF3DEFAF7E5FAF1DCF1DFC0EDD9BAECD8B9EDCAA5AF8679EDE8E9FFFF
+        FFFFFFFFFFFFFFFFFFFF9C807BFFFFEBF9EED5FAF1D7F9F2DAF2E3C6FEFBF9FF
+        FFF0EFDFC0E9C69EB0857BF5F2F3FFFFFFFFFFFFFFFFFFFFFFFFAF9596F7EAC8
+        F9EBCCEFDCBEF4E4C7F0E1C5FDFCECFAF5DDEFDCBCDFB087B59A9AFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFDED4D7BA998CFDECC4EDD4B0E5CAA8EFDBBFF2E3C4F2
+        DEBCEABF93BB8E7DE7DFE2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCEBFC5
+        BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
+        B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      OnClickBtn = HullNoEditClickBtn
+    end
+    object ShipNameEdit: TAdvEditBtn
+      Left = 440
+      Top = 39
+      Width = 114
+      Height = 21
+      EditAlign = eaCenter
+      EmptyTextStyle = []
+      Flat = False
+      LabelFont.Charset = DEFAULT_CHARSET
+      LabelFont.Color = clWindowText
+      LabelFont.Height = -11
+      LabelFont.Name = 'Tahoma'
+      LabelFont.Style = []
+      Lookup.Font.Charset = DEFAULT_CHARSET
+      Lookup.Font.Color = clWindowText
+      Lookup.Font.Height = -11
+      Lookup.Font.Name = 'Arial'
+      Lookup.Font.Style = []
+      Lookup.Separator = ';'
+      Color = clWindow
+      ImeName = 'Microsoft IME 2010'
+      ReadOnly = False
+      TabOrder = 15
+      Text = ''
+      Visible = True
+      OnKeyPress = ShipNameEditKeyPress
+      Version = '1.3.5.0'
+      ButtonStyle = bsButton
+      ButtonWidth = 20
+      Etched = False
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FF4D74AB234179C5ABA7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFF4173AF008EEC009AF41F4B80FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF2F6EB22BA7
+        F516C0FF00A0F3568BC3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFEFFFF2974BB68C4F86BD4FF279CE66696C8FFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF3D8FD5A4E3FEB5EEFF4CAA
+        E7669DD2FFFFFFFFFFFFFFFFFFFFFFFFFEFEFEA188898A6A6A93736E866567B0
+        9595BAA8B1359EE8BDF5FF77C4EF63A1DAFFFFFFFFFFFFFFFFFFFFFFFFD7CDCD
+        7E5857DFD3CBFFFFF7FFFFE7FFFEDBD6BB9E90584D817B8E1794E46BB5E9FFFF
+        FFFFFFFFFFFFFFFFFFFFEDE9E9886565FFFFFFFFFFFFFDF8E8FAF2DCF8EDCFFF
+        F1CFF6DEBA9F5945C0C7D5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA38889F6EFEA
+        FFFFFFFEFBF5FBF7E8F9F4DAF5EBCCE6CEACF3DAB8E2BD99AB8B8EFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF937674FFFFFFFDFBF1FCF8EEFAF3E1FCF5E3F7F0D7F0
+        DFC1E7C9A9F0D1ABA87E75F8F6F6FFFFFFFFFFFFFFFFFFFFFFFF997D7AFFFFFC
+        F9F2E1FAF3DEFAF7E5FAF1DCF1DFC0EDD9BAECD8B9EDCAA5AF8679EDE8E9FFFF
+        FFFFFFFFFFFFFFFFFFFF9C807BFFFFEBF9EED5FAF1D7F9F2DAF2E3C6FEFBF9FF
+        FFF0EFDFC0E9C69EB0857BF5F2F3FFFFFFFFFFFFFFFFFFFFFFFFAF9596F7EAC8
+        F9EBCCEFDCBEF4E4C7F0E1C5FDFCECFAF5DDEFDCBCDFB087B59A9AFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFDED4D7BA998CFDECC4EDD4B0E5CAA8EFDBBFF2E3C4F2
+        DEBCEABF93BB8E7DE7DFE2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCEBFC5
+        BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
+        B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      OnClickBtn = HullNoEditClickBtn
+    end
+    object OrderNoEdit: TAdvEditBtn
+      Left = 835
+      Top = 9
+      Width = 114
+      Height = 21
+      EditAlign = eaCenter
+      EmptyTextStyle = []
+      Flat = False
+      LabelFont.Charset = DEFAULT_CHARSET
+      LabelFont.Color = clWindowText
+      LabelFont.Height = -11
+      LabelFont.Name = 'Tahoma'
+      LabelFont.Style = []
+      Lookup.Font.Charset = DEFAULT_CHARSET
+      Lookup.Font.Color = clWindowText
+      Lookup.Font.Height = -11
+      Lookup.Font.Name = 'Arial'
+      Lookup.Font.Style = []
+      Lookup.Separator = ';'
+      Color = clWindow
+      ImeName = 'Microsoft IME 2010'
+      ReadOnly = False
       TabOrder = 16
+      Text = ''
+      Visible = True
+      OnKeyPress = OrderNoEditKeyPress
+      Version = '1.3.5.0'
+      ButtonStyle = bsButton
+      ButtonWidth = 20
+      Etched = False
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FF4D74AB234179C5ABA7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFF4173AF008EEC009AF41F4B80FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF2F6EB22BA7
+        F516C0FF00A0F3568BC3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFEFFFF2974BB68C4F86BD4FF279CE66696C8FFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF3D8FD5A4E3FEB5EEFF4CAA
+        E7669DD2FFFFFFFFFFFFFFFFFFFFFFFFFEFEFEA188898A6A6A93736E866567B0
+        9595BAA8B1359EE8BDF5FF77C4EF63A1DAFFFFFFFFFFFFFFFFFFFFFFFFD7CDCD
+        7E5857DFD3CBFFFFF7FFFFE7FFFEDBD6BB9E90584D817B8E1794E46BB5E9FFFF
+        FFFFFFFFFFFFFFFFFFFFEDE9E9886565FFFFFFFFFFFFFDF8E8FAF2DCF8EDCFFF
+        F1CFF6DEBA9F5945C0C7D5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA38889F6EFEA
+        FFFFFFFEFBF5FBF7E8F9F4DAF5EBCCE6CEACF3DAB8E2BD99AB8B8EFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFF937674FFFFFFFDFBF1FCF8EEFAF3E1FCF5E3F7F0D7F0
+        DFC1E7C9A9F0D1ABA87E75F8F6F6FFFFFFFFFFFFFFFFFFFFFFFF997D7AFFFFFC
+        F9F2E1FAF3DEFAF7E5FAF1DCF1DFC0EDD9BAECD8B9EDCAA5AF8679EDE8E9FFFF
+        FFFFFFFFFFFFFFFFFFFF9C807BFFFFEBF9EED5FAF1D7F9F2DAF2E3C6FEFBF9FF
+        FFF0EFDFC0E9C69EB0857BF5F2F3FFFFFFFFFFFFFFFFFFFFFFFFAF9596F7EAC8
+        F9EBCCEFDCBEF4E4C7F0E1C5FDFCECFAF5DDEFDCBCDFB087B59A9AFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFDED4D7BA998CFDECC4EDD4B0E5CAA8EFDBBFF2E3C4F2
+        DEBCEABF93BB8E7DE7DFE2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCEBFC5
+        BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
+        B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     end
   end
   object TaskTab: TAdvOfficeTabSet
@@ -1927,7 +2073,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000180418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000340418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2237,7 +2383,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402280410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402440410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2449,6 +2595,10 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = 'Get Hull No To Clipboard'
       OnClick = GetHullNoToClipboard1Click
     end
+    object GetShipNameHullNoProjNotoClipbrd1: TMenuItem
+      Caption = 'Get ShipName(HullNo-ProjNo) to Clipbrd'
+      OnClick = GetShipNameHullNoProjNotoClipbrd1Click
+    end
     object N1: TMenuItem
       Caption = '-'
     end
@@ -2468,6 +2618,10 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object N10: TMenuItem
       Caption = '-'
+    end
+    object ShowWarrantyExpireDate1: TMenuItem
+      Caption = 'Show Warranty ExpireDate'
+      OnClick = ShowWarrantyExpireDate1Click
     end
     object ShowTaskID1: TMenuItem
       Caption = 'Show TaskID'
@@ -2512,6 +2666,10 @@ object HiconisAsManageF: THiconisAsManageF
       object ImportMaterialCodeFromExcel1: TMenuItem
         Caption = 'Import MaterialCode From Excel'
         OnClick = ImportMaterialCodeFromExcel1Click
+      end
+      object ImportHiconisProjectFromExcel1: TMenuItem
+        Caption = 'Import Hiconis Project From Excel'
+        OnClick = ImportHiconisProjectFromExcel1Click
       end
       object CheckIfexistclaiminDBbyxls1: TMenuItem
         Caption = 'Check If exist claim in DB by xls'
@@ -2575,7 +2733,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800500520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C8006C0520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

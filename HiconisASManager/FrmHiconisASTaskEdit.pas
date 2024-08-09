@@ -20,7 +20,7 @@ uses
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
   UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit,
-  UnitMacroListClass2
+  UnitMacroListClass2, Vcl.Buttons
   ;
 
 type
@@ -209,7 +209,6 @@ type
     JvLabel1: TJvLabel;
     ProductTypeCB: TComboBox;
     JvLabel7: TJvLabel;
-    OrderNoEdit: TEdit;
     JvLabel6: TJvLabel;
     ClaimNoEdit: TEdit;
     JvLabel5: TJvLabel;
@@ -272,6 +271,8 @@ type
     AeroButton6: TAeroButton;
     AeroButton8: TAeroButton;
     Button4: TButton;
+    OrderNoEdit: TAdvEditBtn;
+    BitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -337,6 +338,8 @@ type
     procedure AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Button4Click(Sender: TObject);
+    procedure OrderNoEditClickBtn(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -429,7 +432,6 @@ type
       AEditForm: TTaskEditF);
 
     procedure ShowSubConEditFormFromSubConGrid(ARow: integer);
-    procedure ShowSearchVesselForm;
 
     procedure LoadGSFiles2Form(AGSFile: TSQLGSFile; AForm: TTaskEditF);
     procedure LoadGSFile2Form(AGSFile: TSQLGSFile; AForm: TTaskEditF);
@@ -482,7 +484,7 @@ uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
   DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
-  FrmToDoList2;
+  FrmToDoList2, UnitVesselMasterRecord2;
 
 {$R *.dfm}
 
@@ -1094,9 +1096,7 @@ var
   LIdx: integer;
 begin
   SetCurrentDir(ExtractFilePath(Application.ExeName));
-//  LPath := 'E:\pjh\Dev\Lang\Delphi\Project\RPA\MacroManage\mcr\';
   LPath := '.\mcr\';
-  LRoot := TMacroManagements.Create;
   LRoot := TMacroManagements.Create;
   try
     case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
@@ -1246,6 +1246,11 @@ procedure TTaskEditF.AeroButton8MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   AeroButton8Click(nil);
+end;
+
+procedure TTaskEditF.BitBtn1Click(Sender: TObject);
+begin
+  Content2Clipboard(HullNoEdit.Text);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -1576,7 +1581,7 @@ procedure TTaskEditF.Button4Click(Sender: TObject);
 var
   LStr: string;
 begin
-  LStr := FormatDateTime('- yyyy.mm.dd: ', CurWorkFinishPicker.Date) + g_HiconisASState.ToString(CurWorkCB.ItemIndex);
+  LStr := FormatDateTime('- yyyy.mm.dd: ', CurWorkFinishPicker.Date) + CurWorkCB.Text;//g_HiconisASState.ToString(CurWorkCB.ItemIndex);
   EtcContentMemo.Lines.Add(LStr);
 end;
 
@@ -1817,8 +1822,17 @@ begin
 end;
 
 procedure TTaskEditF.HullNoEditClickBtn(Sender: TObject);
+var
+  LVesselSearchParamRec: TVesselSearchParamRec;
 begin
-  ShowSearchVesselForm;
+  LVesselSearchParamRec.fHullNo := HullNoEdit.Text;
+  LVesselSearchParamRec.fShipName := ShipNameEdit.Text;
+
+  if ShowSearchVesselForm(LVesselSearchParamRec) = mrOK then
+  begin
+    HullNoEdit.Text := LVesselSearchParamRec.fHullNo;
+    ShipNameEdit.Text := LVesselSearchParamRec.fShipName;
+  end;
 end;
 
 procedure TTaskEditF.InitCB;
@@ -2444,7 +2458,12 @@ begin
     LVar := _JSON(FMatDeliveryInfoJson);
     LoadRecordPropertyFromVariant(LMaterial, LVar);
 
-    if not LMaterial.IsUpdate then
+    if LMaterial.IsUpdate then
+    begin
+      if LMaterial.TaskID = 0 then
+        LMaterial.TaskID := ATaskID;
+    end
+    else
       LMaterial.TaskID := ATaskID;
 
     AddOrUpdateMaterial4Project(LMaterial);
@@ -3118,6 +3137,11 @@ begin
   end;
 end;
 
+procedure TTaskEditF.OrderNoEditClickBtn(Sender: TObject);
+begin
+  OrderNoEdit.Text := GetOrderNoFromHullNo(HullNoEdit.Text);
+end;
+
 procedure TTaskEditF.ProductTypeCBDropDown(Sender: TObject);
 begin
   g_ElecProductType.SetType2Combo(ProductTypeCB);
@@ -3337,29 +3361,6 @@ begin
   finally
     LFileNameList.Free;
     LFileSelectF.Free;
-  end;
-end;
-
-procedure TTaskEditF.ShowSearchVesselForm;
-var
-  LSearchVesselF: TSearchVesselF;
-begin
-  LSearchVesselF := TSearchVesselF.Create(nil);
-  try
-    LSearchVesselF.HullNoEdit.Text := HullNoEdit.Text;
-    LSearchVesselF.ShipNameEdit.Text := ShipNameEdit.Text;
-
-    if LSearchVesselF.ShowModal = mrOK then
-    begin
-      if LSearchVesselF.VesselListGrid.SelectedRow <> -1 then
-      begin
-        HullNoEdit.Text := LSearchVesselF.VesselListGrid.CellsByName['HullNo',LSearchVesselF.VesselListGrid.SelectedRow];
-        ShipNameEdit.Text := LSearchVesselF.VesselListGrid.CellsByName['ShipName',LSearchVesselF.VesselListGrid.SelectedRow];
-//        ShipNameEdit.Text := LSearchVesselF.VesselListGrid.CellsByName['ImoNo',LSearchVesselF.VesselListGrid.SelectedRow];
-      end;
-    end;
-  finally
-    LSearchVesselF.Free;
   end;
 end;
 

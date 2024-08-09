@@ -8,7 +8,7 @@ uses
   NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
   NxCustomGrid, NxGrid, AdvOfficeTabSet, Vcl.StdCtrls, Vcl.ComCtrls,
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
-  CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvToolBtn,
+  CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvEdit, AdvEdBtn, AdvToolBtn,
   Vcl.Mask, JvExMask, JvToolEdit, JvCombobox,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
 
@@ -30,7 +30,7 @@ uses
   UnitHiconisASWSInterface, thundax.lib.actions_pjh,
   UnitMAPSMacro2, UnitWorker4OmniMsgQ,
 
-  UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig;
+  UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord;
 
 type
   THiconisAsManageF = class(TForm)
@@ -51,8 +51,6 @@ type
     ComboBox1: TComboBox;
     ClaimStatusCombo: TComboBox;
     CustomerCombo: TComboBox;
-    HullNoEdit: TEdit;
-    ShipNameEdit: TEdit;
     BefAftCB: TComboBox;
     Panel1: TPanel;
     btn_Search: TAeroButton;
@@ -60,7 +58,6 @@ type
     AeroButton1: TAeroButton;
     WorkKindCB: TComboBox;
     ClaimNoEdit: TEdit;
-    OrderNoEdit: TEdit;
     PORNoEdit: TEdit;
     DisplayFinalCheck: TCheckBox;
     Button1: TButton;
@@ -172,6 +169,12 @@ type
     CheckIfexistclaiminDBbyxls1: TMenuItem;
     N7: TMenuItem;
     N8: TMenuItem;
+    HullNoEdit: TAdvEditBtn;
+    ShipNameEdit: TAdvEditBtn;
+    OrderNoEdit: TAdvEditBtn;
+    ImportHiconisProjectFromExcel1: TMenuItem;
+    GetShipNameHullNoProjNotoClipbrd1: TMenuItem;
+    ShowWarrantyExpireDate1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -226,6 +229,11 @@ type
     procedure ImportMaterialCodeFromExcel1Click(Sender: TObject);
     procedure CheckIfexistclaiminDBbyxls1Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
+    procedure HullNoEditClickBtn(Sender: TObject);
+    procedure OrderNoEditKeyPress(Sender: TObject; var Key: Char);
+    procedure ImportHiconisProjectFromExcel1Click(Sender: TObject);
+    procedure GetShipNameHullNoProjNotoClipbrd1Click(Sender: TObject);
+    procedure ShowWarrantyExpireDate1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -322,6 +330,7 @@ type
     procedure MakeCustReg(ARow: integer);
     procedure DisplayOLMsg2Grid(const task: IOmniTaskControl;
       const msg: TOmniMessage);
+    function GetWarrantyExpireDateBySelected(): TDate;
   protected
     procedure ShowTaskIDFromGrid;
     procedure ShowEmailIDFromGrid;
@@ -430,7 +439,7 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
-  UnitIPCMsgQUtil, UnitHiASOLUtil;
+  UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2;
 
 {$R *.dfm}
 
@@ -740,6 +749,11 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.OrderNoEditKeyPress(Sender: TObject; var Key: Char);
+begin
+  ExecuteSearch(Key);
+end;
+
 procedure THiconisAsManageF.PICCBChange(Sender: TObject);
 begin
   GetIsRemote(FRemoteIPAddress);
@@ -934,6 +948,16 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.GetShipNameHullNoProjNotoClipbrd1Click(
+  Sender: TObject);
+begin
+  if grid_Req.SelectedRow = -1 then
+    exit;
+
+  Clipboard.AsText := grid_Req.CellsByName['ShipName',grid_Req.SelectedRow] + ' (' +
+    grid_Req.CellsByName['HullNo',grid_Req.SelectedRow] + ') - ' + grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
+end;
+
 function THiconisAsManageF.GetSqlWhereFromQueryDate(AQueryDate: TQueryDateType): string;
 begin
   case AQueryDate of
@@ -1000,6 +1024,17 @@ begin
   LUtf8 := StringToUTF8(LStr);
   LStr := MakeBase64ToString(LUtf8);
   Result.Text := LStr;
+end;
+
+function THiconisAsManageF.GetWarrantyExpireDateBySelected: TDate;
+var
+  LHullNo: string;
+begin
+  if grid_Req.SelectedRow = -1 then
+    exit;
+
+  LHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
+  Result := TimelogToDatetime(CalcWarrantyExpireDateByHullNo(LHullNo));
 end;
 
 //procedure TDisplayTaskF.GetWhereConstArr(ASearchCondRec: TSearchCondRec;
@@ -1342,9 +1377,37 @@ begin
   grid_Req.ClearRows();
 end;
 
+procedure THiconisAsManageF.HullNoEditClickBtn(Sender: TObject);
+var
+  LVesselSearchParamRec: TVesselSearchParamRec;
+begin
+  LVesselSearchParamRec.fHullNo := HullNoEdit.Text;
+  LVesselSearchParamRec.fShipName := ShipNameEdit.Text;
+
+  if ShowSearchVesselForm(LVesselSearchParamRec) = mrOK then
+  begin
+    HullNoEdit.Text := LVesselSearchParamRec.fHullNo;
+    ShipNameEdit.Text := LVesselSearchParamRec.fShipName;
+  end;
+end;
+
 procedure THiconisAsManageF.HullNoEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
+end;
+
+procedure THiconisAsManageF.ImportHiconisProjectFromExcel1Click(
+  Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    if FileExists(OpenDialog1.FileName) then
+    begin
+      InitHiASProjectClient('');
+      ImportHiconisProjectFromXlsFile(OpenDialog1.FileName);
+      ShowMessage('Hiconis Project is imported completely.' + #13#10 + 'Please check the HiconisAS_Project.sqlite');
+    end;
+  end;
 end;
 
 procedure THiconisAsManageF.ImportMaterialCodeFromExcel1Click(Sender: TObject);
@@ -1496,8 +1559,7 @@ begin
   if grid_Req.SelectedRow = -1 then
     exit;
 
-  Clipboard.AsText := grid_Req.CellsByName['ShipName',grid_Req.SelectedRow] + ' (' +
-    grid_Req.CellsByName['HullNo',grid_Req.SelectedRow] + ') - ' + grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
+  Clipboard.AsText := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
 end;
 
 function THiconisAsManageF.GetIsRemote(var ARemoteAddr: string): Boolean;
@@ -1579,6 +1641,9 @@ begin
   AHiASIniConfig.FHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
   AHiASIniConfig.FShipName := grid_Req.CellsByName['ShipName',grid_Req.SelectedRow];
   AHiASIniConfig.FProjNo := grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
+  AHiASIniConfig.FClaimNo := grid_Req.CellsByName['ClaimNo',grid_Req.SelectedRow];
+  AHiASIniConfig.FSubject := grid_Req.CellsByName['Subject',grid_Req.SelectedRow];
+  AHiASIniConfig.FText := AHiASIniConfig.FClaimNo + '번 Claim 해결을 위한 자재 구입 목적의 예산 요청';
 end;
 
 procedure THiconisAsManageF.AsyncProcessCommandProc;
@@ -1667,6 +1732,11 @@ procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCo
 begin
 //  Create_ToDoList_Frm('', AToDoCollect, True,
 //    nil, nil);//InsertOrUpdateToDoList2DB, DeleteToDoListFromDB);
+end;
+
+procedure THiconisAsManageF.ShowWarrantyExpireDate1Click(Sender: TObject);
+begin
+  ShowMessage(DateTimeToStr(GetWarrantyExpireDateBySelected()));
 end;
 
 procedure THiconisAsManageF.StartOLControlWorker;
@@ -2762,6 +2832,8 @@ begin
 
       _GetToDoListFromTask(LID);
     end;
+
+    LID := -1;
   end
   else //ARow에 있는 Task의 Todo List만 보여줌
   begin

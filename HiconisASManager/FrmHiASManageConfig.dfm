@@ -19,7 +19,7 @@ object HiASConfigF: THiASConfigF
     Top = 0
     Width = 448
     Height = 408
-    ActivePage = FileTS
+    ActivePage = EmailTS
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -238,6 +238,24 @@ object HiASConfigF: THiASConfigF
         AutoSize = False
         Caption = #51088#51116' '#51649#53804#51077' '#45812#45817#51088':'
       end
+      object Label29: TLabel
+        Left = 26
+        Top = 258
+        Width = 136
+        Height = 16
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = #47932#47448' '#45812#45817#51088':'
+      end
+      object Label30: TLabel
+        Left = 26
+        Top = 288
+        Width = 136
+        Height = 16
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = #44592#49696' '#45812#45817#51088':'
+      end
       object Edit7: TEdit
         Tag = 13
         Left = 168
@@ -308,6 +326,26 @@ object HiASConfigF: THiASConfigF
         Hint = 'Text'
         ImeName = 'Microsoft IME 2010'
         TabOrder = 6
+      end
+      object Edit16: TEdit
+        Tag = 17
+        Left = 168
+        Top = 255
+        Width = 225
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft IME 2010'
+        TabOrder = 7
+      end
+      object Edit17: TEdit
+        Tag = 18
+        Left = 168
+        Top = 285
+        Width = 225
+        Height = 24
+        Hint = 'Text'
+        ImeName = 'Microsoft IME 2010'
+        TabOrder = 8
       end
     end
     object MQServerTS: TTabSheet
@@ -459,8 +497,6 @@ object HiASConfigF: THiASConfigF
     object FileTS: TTabSheet
       Caption = 'File'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = -21
       object Label6: TLabel
         Left = 36
         Top = 16
