@@ -70,10 +70,10 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\app;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\script;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\project\OpenSrc\lib\bcrypt-for-delphi-master;E:\pjh\project\OpenSrc\lib\scrypt-for-delphi-master;E:\pjh\project\util\GSManage;E:\pjh\project\OpenSrc\lib\htmlparser-master;E:\pjh\project\common;E:\pjh\project\OpenSrc\lib\OmniThreadLibrary;E:\pjh\project\OpenSrc\lib\OmniThreadLibrary\src;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\Dev\Lang\Delphi\Project\GSManage\Common;E:\pjh\Dev\Lang\Delphi\Project\RPA\Outlook;E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiMapManage;E:\pjh\Dev\Lang\Delphi\Project\GSManage;E:\pjh\Dev\Lang\Delphi\Common\DataType;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_Define>USE_SYN_CRYPT;GAMANAGER;$(DCC_Define)</DCC_Define>
         <Debugger_RunParams>/m9H21/32 /aM /c9</Debugger_RunParams>
-        <DCC_UnitSearchPath>E:\pjh\project\OpenSrc\lib\bcrypt-for-delphi-master;E:\pjh\project\OpenSrc\lib\scrypt-for-delphi-master;E:\pjh\project\util\GSManage;E:\pjh\project\OpenSrc\lib\htmlparser-master;E:\pjh\project\OpenSrc\lib\mORMot\SQLite3;E:\pjh\project\OpenSrc\lib\mORMot\SQLite3\sqlite3obj;E:\pjh\project\OpenSrc\lib\mORMot;E:\pjh\project\common;E:\pjh\project\OpenSrc\lib\OmniThreadLibrary;E:\pjh\project\OpenSrc\lib\OmniThreadLibrary\src;E:\pjh\Dev\Lang\Delphi\Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_DcuOutput>e:\pjh\dcu\win32</DCC_DcuOutput>
+        <DCC_DcuOutput>Y:\pjh\Dcu\Win32\$(MSBuildProjectName)</DCC_DcuOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>..\bin</DCC_ExeOutput>
@@ -89,7 +89,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\HiMAPManage\frmHiMAPDetail.pas">
+        <DCCReference Include="..\HiMapManage\frmHiMAPDetail2.pas">
             <Form>HiMAPDetailF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -99,46 +99,41 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\UnitVesselMasterRecord2.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\CommonData.pas"/>
         <DCCReference Include="..\UnitMakeHgsDB2.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitLogUtil.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitHiMAPRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\HiMAPManage\FrmHiMAPSelect.pas">
+        <DCCReference Include="..\HiMapManage\FrmHiMAPSelect2.pas">
             <Form>HiMAPSelectF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitMSBDData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitStringUtil.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\FrmFileSelect.pas">
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitGSFileRecord.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\FrmDisplayAnsiDeviceDesc.pas">
             <Form>AnsiDeviceDescF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitAnsiDeviceRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitMakeAnsiDeviceDB.pas"/>
+        <DCCReference Include="..\UnitAnsiDeviceRecord2.pas"/>
+        <DCCReference Include="..\UnitMakeAnsiDeviceDB2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\FrmAnsiDeviceNoList.pas">
             <Form>AnsiDeviceNoF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\FrmEditVesselInfo.pas">
+        <DCCReference Include="FrmEditVesselInfo2.pas">
             <Form>EditVesselInfoF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitNationRecord.pas"/>
+        <DCCReference Include="UnitNationRecord2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitNationData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\FrmViewNationCode.pas">
+        <DCCReference Include="FrmViewNationCode2.pas">
             <Form>ViewNationCodeF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\FrmViewFlag.pas">
+        <DCCReference Include="FrmViewFlag2.pas">
             <Form>FlagViewF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitEngineMasterRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\FrmViewEngineMaster.pas">
+        <DCCReference Include="UnitEngineMasterRecord2.pas"/>
+        <DCCReference Include="FrmViewEngineMaster2.pas">
             <Form>ViewEngineMasterF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -146,44 +141,21 @@
             <Form>VesselAdvancedSearchF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitElecMasterRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GeneratorManage\frmGeneratorDetail.pas">
+        <DCCReference Include="UnitElecMasterRecord2.pas"/>
+        <DCCReference Include="..\GeneratorManage\frmGeneratorDetail2.pas">
             <Form>GeneratorDetailF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GeneratorManage\UnitGeneratorRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitVariantFormUtil.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitRttiUtil.pas"/>
+        <DCCReference Include="..\GeneratorManage\UnitGeneratorRecord2.pas"/>
+        <DCCReference Include="..\..\..\Common\UnitVariantFormUtil2.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GeneratorManage\frmViewGeneratorMaster.pas">
             <Form>ViewGenMasterF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitVesselData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\Frames\FrameDragDropOutlook.pas">
-            <Form>DragOutlookFrame</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitCBData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitEnumHelper.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\Frames\FrameGSFileList.pas">
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitSimpleGenericEnum.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitCBRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\UnitElecServiceData.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitEngineMasterData.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\VesselList\UnitElecMasterData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitBaseRecord.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitHttpModule4CommonWS.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitCommonWSInterface.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\common\Unit\UnitOutlookIPCUtil.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\NoGitHub\Util\UnitCryptUtil.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\OutLookAddIn\OLMail4InqManage\OLMailWSCallbackInterface.pas"/>
         <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GAManageR\UnitGAServiceData.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GAManageR\UnitGAVarJsonUtil.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\GAManageR\UnitGAMakeReport.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\NoGitHub\RecordUnits\GAManager\UnitGAMasterRecord.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -256,8 +228,7 @@
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhIOCompProPkg.bpl">(untitled)</Excluded_Packages>
-                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhDelphiStandardPkg.bpl">(untitled)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\12.0\Bpl\DelphiXE5_RestApi.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k190.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp190.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

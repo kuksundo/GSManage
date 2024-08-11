@@ -4,7 +4,9 @@ interface
 
 uses
   Classes,
-  CommonData, UnitVesselData;
+  mormot.core.base, mormot.orm.core, mormot.rest.client, mormot.rest.sqlite3,
+  mormot.core.os, mormot.core.datetime, mormot.core.variants,
+  CommonData2, UnitVesselData2;
 
 const
   HGS_VESSELMASTER_DB_NAME = 'VesselList.sqlite';
@@ -274,8 +276,8 @@ var
 
 implementation
 
-uses SysUtils, mORMotSQLite3, Forms, VarRecUtils, Vcl.Dialogs, UnitStringUtil,
-  UnitFolderUtil, UnitRttiUtil, UnitmORMotUtil;
+uses SysUtils, Forms, VarRecUtils, Vcl.Dialogs, UnitStringUtil,
+  UnitFolderUtil2, UnitRttiUtil2, UnitmORMotUtil2;
 
 procedure InitVesselMasterClient(AVesselMasterDBName: string = '');
 var
@@ -330,7 +332,7 @@ end;
 
 function GetVesselMasterFromHullNo(const AHullNo: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'HullNo LIKE ?', ['%'+AHullNo+'%']);
 
   if Result.FillOne then
@@ -341,7 +343,7 @@ end;
 
 function GetVesselMasterFromShipName(const AShipName: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'ShipName LIKE ?', ['%'+AShipName+'%']);
 
   if Result.FillOne then
@@ -352,7 +354,7 @@ end;
 
 function GetVesselMasterFromIMONo(const AIMONo: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'IMONo LIKE ?', ['%'+AIMONo+'%']);
 
   if Result.FillOne then
@@ -363,7 +365,7 @@ end;
 
 function GetVesselMasterFromOwnerName(const AOwnerName: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'OwnerName LIKE ?', ['%'+AOwnerName+'%']);
 
   if Result.FillOne then
@@ -374,7 +376,7 @@ end;
 
 function GetVesselMasterFromTechName(const ATechName: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'TechManagerName LIKE ?', ['%'+ATechName+'%']);
 
   if Result.FillOne then
@@ -385,7 +387,7 @@ end;
 
 function GetVesselMasterFromOperatorName(const AOperatorName: string): TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'OperatorName LIKE ?', ['%'+AOperatorName+'%']);
 
   if Result.FillOne then
@@ -396,7 +398,7 @@ end;
 
 function GetVesselMasterFromSpecialSurveyDueZero: TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'SpecialSurveyDueDate = ?', [0]);
 
   if Result.FillOne then
@@ -407,7 +409,7 @@ end;
 
 function GetVesselMasterFromDockingSurveyDueZero: TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'DockingSurveyDueDate = ?', [0]);
 
   if Result.FillOne then
@@ -418,7 +420,7 @@ end;
 
 function GetVesselMasterFromUpdatedZero: TSQLVesselMaster;
 begin
-  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB,
+  Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm,
     'UpdatedDate = ?', [0]);
 
   if Result.FillOne then
@@ -429,7 +431,7 @@ end;
 
 function GetVesselInfo4SeaWebFromIMONo(const AIMONo: string): TSQLVesselInfo4SeaWeb;
 begin
-  Result := TSQLVesselInfo4SeaWeb.CreateAndFillPrepare(g_VesselInfo4SeaWebDB,
+  Result := TSQLVesselInfo4SeaWeb.CreateAndFillPrepare(g_VesselInfo4SeaWebDB.Orm,
     'IMONo LIKE ?', ['%'+AIMONo+'%']);
 
   if Result.FillOne then
@@ -616,7 +618,7 @@ end;
 
 function GetVesselInfo4SeaWebFromUpdatedNotZero: TSQLVesselInfo4SeaWeb;
 begin
-  Result := TSQLVesselInfo4SeaWeb.CreateAndFillPrepare(g_VesselInfo4SeaWebDB,
+  Result := TSQLVesselInfo4SeaWeb.CreateAndFillPrepare(g_VesselInfo4SeaWebDB.Orm,
     'UpdatedDate <> ?', [0]);
 
   if Result.FillOne then
@@ -884,7 +886,7 @@ begin
       LWhere := 'ID <> ? ';
     end;
 
-    Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB, Lwhere, ConstArray);
+    Result := TSQLVesselMaster.CreateAndFillPrepare(g_VesselMasterDB.Orm, Lwhere, ConstArray);
 
     if Result.FillOne then
     begin

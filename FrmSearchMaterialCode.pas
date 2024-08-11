@@ -53,7 +53,8 @@ var
 
 implementation
 
-uses CommonData2, UnitFolderUtil2, UnitNextGridUtil2, UnitElecServiceData2;
+uses CommonData2, UnitFolderUtil2, UnitNextGridUtil2, UnitElecServiceData2,
+  UnitHiconisASData;
 
 {$R *.dfm}
 

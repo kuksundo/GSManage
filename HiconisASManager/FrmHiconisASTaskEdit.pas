@@ -9,7 +9,7 @@ uses
   NxCustomGridControl, NxCustomGrid, NxGrid, AeroButtons, CurvyControls,
   Vcl.ImgList, AdvGlowButton, Vcl.ExtCtrls, Vcl.Menus, Vcl.Mask, JvExMask,
   AdvEdit, AdvEdBtn, JvToolEdit, JvBaseEdits, Clipbrd, Generics.Collections,
-  pjhComboBox, AdvToolBtn,
+  pjhComboBox, AdvToolBtn, Vcl.Buttons,
   DragDrop, DropTarget, DropSource, DragDropFile,
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
@@ -20,7 +20,7 @@ uses
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
   UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit,
-  UnitMacroListClass2, Vcl.Buttons
+  UnitMacroListClass2, UnitHiconisASData
   ;
 
 type
@@ -357,8 +357,6 @@ type
     function Get_Doc_ServiceOrder_Rec(AIdx: integer = 0): Doc_ServiceOrder_Rec;
     function Get_Doc_Cust_Reg_Rec: Doc_Cust_Reg_Rec;
 
-    //MAPS->QUOTATION관리->INQ.내용에 들어갈 내용을 Clipboard로 복사함
-    procedure Content2Clipboard(AContent: string);
     function GetQTN_InqContent: string;
 
     function CheckDocCompanySelection(ASOR: Doc_ServiceOrder_Rec): boolean;
@@ -484,7 +482,7 @@ uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
   DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
-  FrmToDoList2, UnitVesselMasterRecord2;
+  FrmToDoList2, UnitVesselMasterRecord2, UnitClipBoardUtil;
 
 {$R *.dfm}
 
@@ -1410,11 +1408,6 @@ end;
 procedure TTaskEditF.ClaimServiceKindCBChange(Sender: TObject);
 begin
   InitCurWorkCB();
-end;
-
-procedure TTaskEditF.Content2Clipboard(AContent: string);
-begin
-  Clipboard.AsText := AContent;
 end;
 
 procedure TTaskEditF.CurWorkCBChange(Sender: TObject);

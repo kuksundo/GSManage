@@ -11,8 +11,10 @@ uses
   Vcl.ImgList, Vcl.Menus,
   AdvSmoothSplashScreen, JvBaseDlg, JvSelectDirectory,
   pjhComboBox, AdvSmoothPanel, AdvSmoothExpanderPanel,
-  UnitGeneratorRecord, UnitVesselData, UnitCBData, UnitEngineMasterData, UnitNationRecord,
-  UnitEngineMasterRecord, UnitCommonWSInterface, UnitElecMasterData, UnitVesselMasterRecord2, CommonData;
+  mormot.core.base, mormot.orm.core, mormot.rest.client, mormot.rest.sqlite3,
+  mormot.core.os, mormot.core.datetime, mormot.core.variants,
+  UnitGeneratorRecord2, UnitVesselData2, UnitCBData, UnitEngineMasterData, UnitNationRecord2,
+  UnitEngineMasterRecord2, UnitCommonWSInterface2, UnitElecMasterData, UnitVesselMasterRecord2, CommonData2;
 
 type
   TVesselListService = class(TService4CommonWS)
@@ -226,12 +228,12 @@ var
 implementation
 
 uses
-  FrmEditVesselInfo, FrmHiMAPSelect, frmHiMAPDetail, FrmViewNationCode,
-  FrmAnsiDeviceNoList, FrmViewEngineMaster, FrmVesselAdvancedSearch, frmGeneratorDetail,
-  UnitHiMAPRecord, UnitMakeHgsDB,
-  UnitMakeAnsiDeviceDB, UnitAnsiDeviceRecord, HtmlParserEx,
-  UnitStringUtil, UnitExcelUtil, UnitMakeMasterCustomerDB,
-  UnitBase64Util;
+  FrmEditVesselInfo2, FrmHiMAPSelect2, frmHiMAPDetail2, FrmViewNationCode2,
+  FrmAnsiDeviceNoList, FrmViewEngineMaster2, FrmVesselAdvancedSearch, frmGeneratorDetail2,
+  UnitHiMAPRecord2, UnitMakeHgsDB2,
+  UnitMakeAnsiDeviceDB2, UnitAnsiDeviceRecord2, HtmlParserEx,
+  UnitStringUtil, UnitExcelUtil, UnitMakeMasterCustomerDB2,
+  UnitBase64Util2;
 
 {$R *.dfm}
 
@@ -326,7 +328,7 @@ var
   LSQLNationRecord: TSQLNationRecord;
   LStr: string;
 begin
-  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB,
+  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB.Orm,
     'ID > ?', [0]);
   try
     while LSQLNationRecord.FillOne do
@@ -1222,21 +1224,21 @@ begin
     LStrList.Text := LJson;
     LCommand := LStrList.Values['Command'];
 
-    if LCommand = CMD_REQ_VESSEL_LIST then
-    begin
-      LJson := LStrList.Values['Parameter'];
-      RecordLoadJson(LVesselSearchParamRec, LJson, TypeInfo(TVesselSearchParamRec));
-//      TDTF.DisplayTaskInfo2Grid(LSearchCondRec, True);
-//      LJson := TDTF.FTempJsonList.Text;
-      System.Delete(LJson, Length(LJson)-1,2);
-      Result := StringToUTF8(LJson);
-      Result := MakeRawUTF8ToBin64(Result);
-    end
-    else
-    if LCommand = '' then
-    begin
-
-    end;
+//    if LCommand = CMD_REQ_VESSEL_LIST then
+//    begin
+//      LJson := LStrList.Values['Parameter'];
+//      RecordLoadJson(LVesselSearchParamRec, LJson, TypeInfo(TVesselSearchParamRec));
+////      TDTF.DisplayTaskInfo2Grid(LSearchCondRec, True);
+////      LJson := TDTF.FTempJsonList.Text;
+//      System.Delete(LJson, Length(LJson)-1,2);
+//      Result := StringToUTF8(LJson);
+//      Result := MakeRawUTF8ToBin64(Result);
+//    end
+//    else
+//    if LCommand = '' then
+//    begin
+//
+//    end;
   finally
     LStrList.Free;
   end;

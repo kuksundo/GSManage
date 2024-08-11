@@ -3,9 +3,11 @@ unit UnitMakeHgsDB2;
 interface
 
 uses Sysutils, Dialogs, Classes, Forms,
-  mormot.core.datetime,
-  UnitVesselMasterRecord, UnitStringUtil, UnitFileSearchUtil, CommonData,
-  UnitVesselData, UnitExcelUtil, ;
+  mormot.core.base, mormot.core.datetime, mormot.core.variants, mormot.core.data,
+  mormot.core.unicode, mormot.core.text, mormot.core.os,
+  UnitVesselMasterRecord2, UnitStringUtil, UnitFileSearchUtil, CommonData2,
+  UnitVesselData2, UnitExcelUtil
+;
 
 procedure ImportVesselMasterFromXlsFile(AFileName: string);
 procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string);
@@ -24,8 +26,8 @@ procedure RemoveGEFromInstalledProductInVesselMaster;
 
 implementation
 
-uses FrmVesselList, UnitNationRecord, UnitEngineMasterRecord, UnitGeneratorRecord,
-  UnitEngineMasterData, UnitmORMotUtil, UnitDateUtil2;
+uses FrmVesselList2, UnitNationRecord2, UnitEngineMasterRecord2, UnitGeneratorRecord2,
+  UnitEngineMasterData, UnitmORMotUtil2, UnitDateUtil2;
 
 procedure ImportVesselMasterFromXlsFile(AFileName: string);
 var
@@ -228,7 +230,7 @@ var
   LWorkBook: OleVariant;
   LRange: OleVariant;
   LWorksheet: OleVariant;
-  LStr, LStr2, LColNoChar: string;
+  LStr, LStr2, LStr3, LColNoChar: string;
   i, LCol, LRow, LLastRow, LLastColumn: integer;
   LDoc: Variant;
   LExcelColumnList, LDBColumnIndexList: TStringList;
@@ -654,7 +656,7 @@ begin
 
   LStream := TMemoryStream.Create;
 //  LImage := TPngImage.Create;
-  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB,
+  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB.Orm,
     'ID > ?', [0]);
   try
     LLastRow := LSQLNationRecord.FillTable.RowCount;
@@ -701,7 +703,7 @@ begin
 
   LStream := TMemoryStream.Create;
 //  LImage := TPngImage.Create;
-  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB,
+  LSQLNationRecord := TSQLNationRecord.CreateAndFillPrepare(g_NationDB.Orm,
     'ID > ?', [0]);
   try
     LLastRow := LSQLNationRecord.FillTable.RowCount;

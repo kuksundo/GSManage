@@ -9,7 +9,7 @@ uses
   NxCustomGrid, NxGrid, AdvOfficeTabSet, Vcl.StdCtrls, Vcl.ComCtrls,
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
   CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvEdit, AdvEdBtn, AdvToolBtn,
-  Vcl.Mask, JvExMask, JvToolEdit, JvCombobox,
+  Vcl.Mask, JvExMask, JvToolEdit, JvCombobox, Vcl.Buttons,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
 
   mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
@@ -30,7 +30,9 @@ uses
   UnitHiconisASWSInterface, thundax.lib.actions_pjh,
   UnitMAPSMacro2, UnitWorker4OmniMsgQ,
 
-  UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord;
+  UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord,
+  UnitHiconisASData
+  ;
 
 type
   THiconisAsManageF = class(TForm)
@@ -159,7 +161,7 @@ type
     JvLabel7: TJvLabel;
     MaterialCodeEdit: TEdit;
     JvLabel11: TJvLabel;
-    SetFildCondCB: TComboBox;
+    FindCondCB: TComboBox;
     N27: TMenuItem;
     ExportToExcel2: TMenuItem;
     SaveDBAs1: TMenuItem;
@@ -175,6 +177,7 @@ type
     ImportHiconisProjectFromExcel1: TMenuItem;
     GetShipNameHullNoProjNotoClipbrd1: TMenuItem;
     ShowWarrantyExpireDate1: TMenuItem;
+    BitBtn1: TBitBtn;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -234,6 +237,8 @@ type
     procedure ImportHiconisProjectFromExcel1Click(Sender: TObject);
     procedure GetShipNameHullNoProjNotoClipbrd1Click(Sender: TObject);
     procedure ShowWarrantyExpireDate1Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure FindCondCBChange(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -331,6 +336,10 @@ type
     procedure DisplayOLMsg2Grid(const task: IOmniTaskControl;
       const msg: TOmniMessage);
     function GetWarrantyExpireDateBySelected(): TDate;
+
+    procedure SetDefaultFindCond;
+    procedure ClearFindCond;
+    procedure SetInputTodayCond;
   protected
     procedure ShowTaskIDFromGrid;
     procedure ShowEmailIDFromGrid;
@@ -433,9 +442,9 @@ implementation
 uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
-  UnitStringUtil, UnitExcelUtil,//UnitHttpModule4InqManageServer2,
+  UnitStringUtil, UnitExcelUtil, UnitClipBoardUtil,
 
-  Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil,
+  Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil, UnitDateUtil,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
@@ -816,6 +825,26 @@ begin
   g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
 end;
 
+procedure THiconisAsManageF.ClearFindCond;
+begin
+  FindCondCB.ItemIndex := -1;
+  ComboBox1.ItemIndex := -1;
+  ClaimServiceKindCB.Items.Text := '';
+  CustomerCombo.ItemIndex := -1;
+  ClaimStatusCombo.ItemIndex := -1;
+  CurWorkCB.ItemIndex := -1;
+  BefAftCB.ItemIndex := -1;
+  PORNoEdit.Text := '';
+  MaterialCodeEdit.Text := '';
+  OrderNoEdit.Text := '';
+  ClaimNoEdit.Text := '';
+  ShipNameEdit.Text := '';
+  HullNoEdit.Text := '';
+  DisplayFinalCheck.Checked := False;
+
+  SetDefaultFindCond;
+end;
+
 procedure THiconisAsManageF.Close1Click(Sender: TObject);
 begin
   Close;
@@ -937,6 +966,8 @@ begin
     FClaimKind := CauseKind1.Tag;
     FClaimCauseHW := CauseHW1.Tag;
     FClaimCauseSW := CauseSW1.Tag;
+
+    FIncludeClosed := DisplayFinalCheck.Checked;
 
 //    if PICCB.ItemIndex = -1 then
 //      PICCB.ItemIndex := 0;
@@ -1436,6 +1467,9 @@ begin
   g_ClaimCauseSW.InitArrayRecord(R_ClaimCauseSW);
   g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
   g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
+  g_HiASFindCondition.InitArrayRecord(R_HiASFindCondType);
+
+  g_HiASFindCondition.SetType2Combo(FindCondCB);
 
   LStrList := g_ClaimServiceKind.GetTypeLabels();
   try
@@ -1726,6 +1760,11 @@ begin
       end
     )
   );
+end;
+
+procedure THiconisAsManageF.BitBtn1Click(Sender: TObject);
+begin
+  Content2Clipboard(HullNoEdit.Text);
 end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
@@ -2162,16 +2201,14 @@ var
       else
       begin
         StatusBarPro1.Panels[0].Text := 'Local';
-        grid_Req_ClearRows;
+        grid_Req.BeginUpdate;
+        try
+          grid_Req_ClearRows;
 
-        while LSQLGSTask.FillOne do
-        begin
-          grid_Req.BeginUpdate;
-          try
+          while LSQLGSTask.FillOne do
             LoadTaskVar2Grid(LSQLGSTask, grid_Req);
-          finally
-            grid_Req.EndUpdate;
-          end;
+        finally
+          grid_Req.EndUpdate;
         end;
       end;
     finally
@@ -2317,21 +2354,12 @@ begin
       LWhere := LWhere + ' PO_No LIKE ? ';
     end;
 
-    ASearchCondRec.FCurWork := Ord(spFinal);
+//    ASearchCondRec.FCurWork := Ord(spFinal);
     //완료되지 않은 모든 Task를 보여줌
-    AddConstArray(ConstArray, [ASearchCondRec.FCurWork]);
+//    AddConstArray(ConstArray, [ASearchCondRec.FCurWork]);
 
-    if LWhere <> '' then
-      LWhere := LWhere + ' and ';
-
-    if not DisplayFinalCheck.Checked then
-    begin
-      LWhere := LWhere + 'CurrentWorkStatus <> ?';
-    end
-    else
-    begin
-      LWhere := LWhere + 'CurrentWorkStatus <= ?';
-    end;
+//    if LWhere <> '' then
+//      LWhere := LWhere + ' and ';
 
     if ASearchCondRec.FClaimStatus > 0 then
     begin
@@ -2339,6 +2367,16 @@ begin
       if LWhere <> '' then
         LWhere := LWhere + ' and ';
       LWhere := LWhere + ' ClaimStatus = ?';
+    end
+    else
+    begin
+      if not ASearchCondRec.FIncludeClosed then
+      begin
+        AddConstArray(ConstArray, [g_ClaimStatus.ToOrdinal(csClosed)]);
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + ' ClaimStatus <> ?'; //Closed Task 제외
+      end;
     end;
 
     if ASearchCondRec.FClaimServiceKind > 0 then
@@ -3068,6 +3106,27 @@ begin
   finally
     LConfigF.Free;
   end;
+end;
+
+procedure THiconisAsManageF.SetDefaultFindCond;
+begin
+
+end;
+
+procedure THiconisAsManageF.FindCondCBChange(Sender: TObject);
+begin
+  case THiASFindCondition(FindCondCB.ItemIndex) of
+    hfcNull: SetDefaultFindCond;
+    hfcInputToday: SetInputTodayCond;
+  end;
+end;
+
+procedure THiconisAsManageF.SetInputTodayCond;
+begin
+  ComboBox1.ItemIndex := Ord(qdtClaimInputDate);
+  rg_period.ItemIndex := 3;
+  dt_begin.Date := GetBeginTimeOfTheDay(now);
+  dt_end.Date := GetEndTimeOfTheDay(now);
 end;
 
 procedure THiconisAsManageF.SetNetworkInfo(ARootName, APortName, AKeyName: string);

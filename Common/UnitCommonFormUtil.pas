@@ -13,7 +13,7 @@ function ShowCheckGrp4EmailContainData(ACheckValueList: integer): integer;
 
 implementation
 
-uses FrmSelectCheckBox, UnitElecServiceData2;
+uses FrmSelectCheckBox, UnitElecServiceData2, UnitHiconisASData;
 
 function ShowCheckGrp4Claim(AClaimTypeKind, ACheckValueList: integer): integer;
 var
