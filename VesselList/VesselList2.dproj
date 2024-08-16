@@ -114,7 +114,7 @@
         </DCCReference>
         <DCCReference Include="..\UnitAnsiDeviceRecord2.pas"/>
         <DCCReference Include="..\UnitMakeAnsiDeviceDB2.pas"/>
-        <DCCReference Include="..\..\..\..\..\..\project\util\GSManage\FrmAnsiDeviceNoList.pas">
+        <DCCReference Include="..\FrmAnsiDeviceNoList2.pas">
             <Form>AnsiDeviceNoF</Form>
             <FormType>dfm</FormType>
         </DCCReference>

@@ -54,7 +54,8 @@ uses
   UnitIPCMsgQUtil in '..\..\..\Common\UnitIPCMsgQUtil.pas',
   UnitJsonUtil in '..\..\..\Common\UnitJsonUtil.pas',
   UnitHiASOLUtil in 'UnitHiASOLUtil.pas',
-  UnitHiASProjectRecord in 'UnitHiASProjectRecord.pas';
+  UnitHiASProjectRecord in 'UnitHiASProjectRecord.pas',
+  UnitHiconisDI16RecallRec in 'UnitHiconisDI16RecallRec.pas';
 
 {$R *.res}
 

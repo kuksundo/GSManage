@@ -515,6 +515,15 @@ object HiASConfigF: THiASConfigF
         ParentShowHint = False
         ShowHint = False
       end
+      object Label32: TLabel
+        Left = 36
+        Top = 264
+        Width = 243
+        Height = 16
+        Caption = 'DI Module Recall Status Json File Name:'
+        ParentShowHint = False
+        ShowHint = False
+      end
       object OLFolderListFilenameEdit: TJvFilenameEdit
         Tag = 21
         Left = 36
@@ -579,6 +588,7 @@ object HiASConfigF: THiASConfigF
         Text = ''
       end
       object JvFilenameEdit6: TJvFilenameEdit
+        Tag = 29
         Left = 36
         Top = 286
         Width = 381

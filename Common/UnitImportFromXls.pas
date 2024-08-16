@@ -5,14 +5,17 @@ interface
 uses Sysutils, Dialogs, System.Variants,
   mormot.core.variants, mormot.core.data, mormot.core.datetime,
   UnitExcelUtil,
-  UnitHiASMaterialCodeRecord, UnitHiASProjectRecord;
+  UnitHiASMaterialCodeRecord, UnitHiASProjectRecord, UnitHiconisDI16RecallRec;
 
 procedure ImportMaterialCodeFromXlsFile(AFileName: string);
 procedure ImportHiconisProjectFromXlsFile(AFileName: string);
+//Excel로부터 DI16 Recall 현황을 읽어서 AHiASDI16RecallDict에 저장함
+procedure ImportHiconisDIRecallFromXlsFile(AFileName: string;
+  var AHiASDI16RecallDict: THiASDI16RecallDict);
 
 implementation
 
-uses UnitStringUtil, UnitDateUtil2;
+uses UnitStringUtil, UnitDateUtil2, UnitRttiUtil2;
 
 procedure ImportMaterialCodeFromXlsFile(AFileName: string);
 var
@@ -162,6 +165,86 @@ begin
     LDoc.ModifyDate := TimeLogFromDateTime(Now);
 
     AddHiASProjectFromVariant(LDoc);
+    Inc(LIdx);
+  end;//while
+
+  LWorkBook.Close;
+  LExcel.Quit;
+end;
+
+procedure ImportHiconisDIRecallFromXlsFile(AFileName: string;
+  var AHiASDI16RecallDict: THiASDI16RecallDict);
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LRange: OleVariant;
+  LWorksheet: OleVariant;
+  LY,LM,LD: word;
+  LStr, LStrIdx, LStr3, LSectionPrefix: string;
+  LIdx: integer;
+  LDoc: Variant;
+  LDate: TDate;
+  LHiASDI16RecallRec: THiASDI16RecallRec;
+begin
+  if not FileExists(AFileName) then
+  begin
+    ShowMessage('File(' + AFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LExcel := GetActiveExcelOleObject(True);
+  LWorkBook := LExcel.Workbooks.Open(AFileName);
+//  LExcel.Visible := true;
+  LWorksheet := LExcel.ActiveSheet;
+
+  TDocVariant.New(LDoc, [dvoReturnNullForUnknownProperty]);
+
+  LStr := 'C';
+  LIdx := 5;
+
+  AHiASDI16RecallDict.Clear;
+
+  while true do
+  begin
+    LStrIdx := IntToStr(LIdx);
+
+    LRange := LWorksheet.range[LStr+LStrIdx];//HullNo
+
+    if LRange.FormulaR1C1 <> '' then
+    begin
+      LStr3 := LRange.FormulaR1C1;
+      LDoc.HullNo := LStr3;
+    end
+    else
+      break;
+
+    LRange := LWorksheet.range['E'+LStrIdx]; //VesselDeliveryDate
+    LDoc.VesselDeliveryDate := LRange.Text;
+    LRange := LWorksheet.range['F'+LStrIdx]; //PIC
+    LDoc.PIC := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['G'+LStrIdx]; //OrderQuantity
+    LDoc.OrderQuantity := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['H'+LStrIdx]; //NumOfInstalled
+    LDoc.NumOfInstalled := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['I'+LStrIdx]; //NumOfSpare
+    LDoc.NumOfSpare := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['J'+LStrIdx]; //NumOfTotalSupplied
+    LDoc.NumOfTotalSupplied := LRange.Text;
+    LRange := LWorksheet.range['K'+LStrIdx]; //NumOfDefective
+    LDoc.NumOfDefective := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['L'+LStrIdx]; //NumOfRecall
+    LDoc.NumOfRecall := LRange.FormulaR1C1;
+    LRange := LWorksheet.range['M'+LStrIdx]; //NumOfWarehoused(입고수량)
+    LDoc.NumOfWarehoused := LRange.Text;
+    LRange := LWorksheet.range['N'+LStrIdx]; //PartDeliveryDate2Customer
+    LDoc.PartDeliveryDate2Customer := LRange.Text;
+    LRange := LWorksheet.range['O'+LStrIdx]; //OnBoardDate
+    LDoc.OnBoardDate := LRange.Text;
+    LRange := LWorksheet.range['P'+LStrIdx]; //Notes
+    LDoc.Notes := LRange.FormulaR1C1;
+
+    LoadRecordFieldFromVariant(LHiASDI16RecallRec, TypeInfo(THiASDI16RecallRec), LDoc);
+    AHiASDI16RecallDict.TryAdd(LStr3, LHiASDI16RecallRec);
     Inc(LIdx);
   end;//while
 

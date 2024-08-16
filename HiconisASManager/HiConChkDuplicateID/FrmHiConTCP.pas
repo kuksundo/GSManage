@@ -5,20 +5,18 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RegularExpressions, Vcl.Menus,
-
-  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
-  mormot.core.collections, mormot.core.variants,
-
-  UnitChkDupIdData, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, NxScrollControl,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, NxScrollControl,
   NxCustomGridControl, NxCustomGrid, NxGrid, NxColumnClasses, NxColumns,
   AdvOfficeTabSet,
 
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
+  mormot.core.base, mormot.core.os, mormot.core.text,
+  mormot.core.collections, mormot.core.variants, mormot.core.json,
+  mormot.net.client, mormot.core.unicode, mormot.net.server,
+
   PngBitBtn, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdIOHandler,
-  IdGlobal, IdHTTP,
-
-  mormot.net.client, mormot.core.unicode, mormot.core.os,
-
-  HtmlParser, UnitTRegExUtil, UnitHtmlUtil
+  IdGlobal, IdHTTP, UnitTaskDialogMB,
+  UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit
   ;
 
 type
@@ -65,6 +63,12 @@ type
     MPMBackup1: TMenuItem;
     BitBtn1: TBitBtn;
     MPMName: TNxTextColumn;
+    LoadDupIdCheckResultFile1: TMenuItem;
+    N3: TMenuItem;
+    ShowProgress1: TMenuItem;
+    Kit1: TKit;
+    CheckConnection1: TMenuItem;
+    BitBtn3: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
     procedure SaveIPListToFile1Click(Sender: TObject);
@@ -78,6 +82,10 @@ type
     procedure CheckDuplicatedID1Click(Sender: TObject);
     procedure MPMBackup1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure LoadDupIdCheckResultFile1Click(Sender: TObject);
+    procedure ShowProgress1Click(Sender: TObject);
+    procedure CheckConnection1Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -107,20 +115,32 @@ type
     //AIpAddr: IP 한개임
     function DownloadBackupMPM(AIpAddr: string): string;
     function GetMPMNameFromIpAddrDic(AIpAddr: string): string;
+
   public
-    procedure GetIdFromMPM(ARec: TIpListRec);
+    function GetIdFromMPM(ARec: TIpListRec): integer;
     procedure GetIdFromMPM_Async(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
+    procedure GetIdsFromIpSelected;
     procedure HtmlParseFunc();
     procedure GetPreTagTextFromHtml();
 
+    function GetFileNameFromIpAddr(AIpAddr: string): string;
     function GetUrlFromIpRec(AIpAddr: string): string;
+    function GetIpListRecByIp(AIpAddr: string): TIpListRec;
+    function GetIpListRecByResName(AResName: string): TIpListRec;
+
+    procedure SetConnectStatus2IpAddrGridBySelected(AIdx: integer; AIsResetStatus: Boolean=false);
+    procedure SetGridByConnectStatusByIp(AIdx: integer; AIpAddr: string=''; AIsResetStatus: Boolean=false);
+
+    procedure SaveDupIdCheckResult2File(AIpAddr: string);
+    procedure LoadDupIdCheckResultFromFile(AIpAddr: string);
 
     procedure DisplayDuplicatedAddr();
     procedure SetVisibleAllGridRow(AIsShow: Boolean);
 
     function GetPortPrintDebug(AIpAddr, AMode: string): string;
     procedure Log(const AMsg: string);
+    procedure ShowTD(const ATDRec: TMsgBox);
   end;
 
 var
@@ -129,30 +149,41 @@ var
 implementation
 
 uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2,
-  amProgress.API, amProgress.Stream;//, amProgress;
-//  DomCore, Formatter;
+  UnitAnimationThread, UnitCryptUtil3, pingsend //amProgress.API, amProgress.Stream, amProgress;
+  ;
 
 {$R *.dfm}
+
+procedure THiconisTCPF.SetGridByConnectStatusByIp(AIdx: integer; AIpAddr: string;
+  AIsResetStatus: Boolean);
+begin
+  if PingHost(AIpAddr) = -1 then
+//      ChangeRowColorByIndex(IPAddrGrid, AIdx, clYellow)
+    ChangeRowFontColorByIndex(IPAddrGrid, AIdx, clRed)
+  else
+//      ChangeRowColorByIndex(IPAddrGrid, AIdx, clGreen)
+    ChangeRowFontColorByIndex(IPAddrGrid, AIdx, clBlack);
+end;
 
 function THiconisTCPF.BackupMPM(AIpAddrList: string): string;
 var
   LIpAddr: string;
-  LProgress: IProgress;
+//  LProgress: IProgress;
 begin
-  LProgress := ShowProgress('Downloading MPM...', False);
-  LProgress.EnableAbort := True;
-  LProgress.Marquee := True;
-
-  LProgress.UpdateMessage('Changing...');
-
-  while (not LProgress.Aborted) do
-  begin
+//  LProgress := ShowProgress('Downloading MPM...', False);
+//  LProgress.EnableAbort := True;
+//  LProgress.Marquee := True;
+//
+//  LProgress.UpdateMessage('Changing...');
+//
+//  while (not LProgress.Aborted) do
+//  begin
     while AIpAddrList <> '' do
     begin
       LIpAddr := StrToken(AIpAddrList, ';');
       DownloadBackupMPM(LIpAddr);
     end;//while
-  end;
+//  end;
 end;
 
 procedure THiconisTCPF.BitBtn1Click(Sender: TObject);
@@ -163,6 +194,11 @@ begin
   finally
     TagAddrGrid.EndUpdate();
   end;
+end;
+
+procedure THiconisTCPF.BitBtn3Click(Sender: TObject);
+begin
+  SetConnectStatus2IpAddrGridBySelected(IpAddrGrid.SelectedRow);
 end;
 
 procedure THiconisTCPF.BitBtn4Click(Sender: TObject);
@@ -183,9 +219,21 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.CheckConnection1Click(Sender: TObject);
+begin
+  if IpAddrGrid.SelectedRow = -1 then
+  begin
+    ShowMessage('IP를 선택하세요.');
+    exit;
+  end;
+
+  SetConnectStatus2IpAddrGridBySelected(IpAddrGrid.SelectedRow);
+end;
+
 procedure THiconisTCPF.CheckDuplicatedID1Click(Sender: TObject);
 begin
-  GetIdsFromIpListDic();
+//  GetIdsFromIpListDic();
+  GetIdsFromIpSelected();
 end;
 
 procedure THiconisTCPF.DisplayDuplicatedAddr;
@@ -280,7 +328,13 @@ begin
   FTCPResponse := TStringList.Create;
 end;
 
-procedure THiconisTCPF.GetIdFromMPM(ARec: TIpListRec);
+function THiconisTCPF.GetFileNameFromIpAddr(AIpAddr: string): string;
+begin
+  EnsureDirectoryExists('c:\temp\');
+  Result := 'c:\temp\' + replaceString(AIpAddr, '.', '_') + '.pjh';
+end;
+
+function THiconisTCPF.GetIdFromMPM(ARec: TIpListRec): integer;
 var
   LCon: RawByteString;
   LUrl, LIpAddr: string;
@@ -289,8 +343,18 @@ begin
     exit;
 
   LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
   LUrl := GetUrlFromIpRec(LIpAddr);
-  LCon := HttpGet(LUrl);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
 
   if LCon = '' then
   begin
@@ -370,6 +434,44 @@ begin
 //    GetIdFromMPM(LIpListRec);
     GetIdFromMPM_Async(LIpListRec);
   end;
+end;
+
+procedure THiconisTCPF.GetIdsFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  TagAddrGrid.ClearRows;
+  FIpNIdList.Clear;
+  FIpNDupIdList.Clear;
+
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetIdFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>')
+      else
+        SaveDupIdCheckResult2File(LIp);
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetIpListRecByIp(AIpAddr: string): TIpListRec;
+begin
+  if not FIpAddrDic.TryGetValue(AIpAddr, Result) then
+    Result := Default(TIpListRec);
+end;
+
+function THiconisTCPF.GetIpListRecByResName(AResName: string): TIpListRec;
+begin
+  if not FIpAddrDic.TryGetValue(AResName, Result) then
+    Result := Default(TIpListRec);
 end;
 
 function THiconisTCPF.GetMPMNameFromIpAddrDic(AIpAddr: string): string;
@@ -496,6 +598,38 @@ end;
 //  SetIdList2Grid(LIpAddr);
 //end;
 
+procedure THiconisTCPF.LoadDupIdCheckResultFile1Click(Sender: TObject);
+var
+  LIp: string;
+begin
+  if IPAddrGrid.SelectedRow = -1 then
+    exit;
+
+    LIp := IPAddrGrid.CellsByName['PMPM_PIP', IPAddrGrid.SelectedRow];
+//    LIp := IPAddrGrid.CellsByName['RES_NAME', IPAddrGrid.SelectedRow];
+    LoadDupIdCheckResultFromFile(LIp);
+end;
+
+procedure THiconisTCPF.LoadDupIdCheckResultFromFile(AIpAddr: string);
+var
+  LResultRec: TResultCheckDupIDRec;
+  LUtf8: RawUtf8;
+  LFileName: string;
+begin
+  LFileName := GetFileNameFromIpAddr(AIpAddr);
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File Not Found => ' + LFileName);
+  end;
+
+  LUtf8 := StringFromFile(LFileName);
+  LUtf8 := MakeDecryptNBase64String(LUtf8);
+
+  LUtf8 := JSONReformat(LUtf8, jsonHumanReadable);
+  ShowMessage(Utf8ToString(LUtf8));
+end;
+
 procedure THiconisTCPF.LoadIpListFromFile(AFileName: string);
 var
   LRawStr: RawByteString;
@@ -544,6 +678,31 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.SaveDupIdCheckResult2File(AIpAddr: string);
+var
+  LIDList: TIDList;
+  LResultRec: TResultCheckDupIDRec;
+  LUtf8: RawUtf8;
+  LFileName: string;
+begin
+  LResultRec := Default(TResultCheckDupIDRec);
+  LResultRec.ResourceInfoRec.PMPM_PIP := AIpAddr;
+
+  if FIpNDupIdList.TryGetValue(AIpAddr, LIDList) then
+    LResultRec.DupIdCount := IntToStr(LIDList.Count);
+  LResultRec.CheckDate := FormatDateTime('yyyy-mm-dd hh:nn:ss', now);
+
+  LUtf8 := RecordSaveJson(LResultRec, TypeInfo(TResultCheckDupIDRec));
+  LUtf8 := MakeBase64NEncrypString(LUtf8);
+  LFileName := GetFileNameFromIpAddr(AIpAddr);
+
+  if FileFromString(LUtf8, LFileName) then
+  begin
+//    ShowMessage('File is saved successfully => ' + LFileName);
+    ShowMessage('Duplicated ID 검사가 완료 되었습니다.' + #13#10 + 'Duplicated ID 건수 : [' + LResultRec.DupIdCount + ']');
+  end;
+end;
+
 procedure THiconisTCPF.SaveIpListToFile(AFileName: string);
 var
   LJson: string;
@@ -557,6 +716,30 @@ begin
   if SaveDialog1.Execute then
   begin
     SaveIpListToFile(SaveDialog1.FileName);
+  end;
+end;
+
+procedure THiconisTCPF.SetConnectStatus2IpAddrGridBySelected(AIdx: integer;
+  AIsResetStatus: Boolean);
+var
+  LIp: string;
+  LIsAll: Boolean;
+  i: integer;
+begin
+  LIsAll := AIdx = -1;
+
+  if LIsAll then
+  begin
+    for i := 0 to IPAddrGrid.RowCount - 1 do
+    begin
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      SetGridByConnectStatusByIp(i, LIp);
+    end;
+  end
+  else
+  begin
+    LIp := IPAddrGrid.CellsByName['PMPM_PIP', AIdx];
+    SetGridByConnectStatusByIp(AIdx, LIp);
   end;
 end;
 
@@ -609,7 +792,9 @@ begin
     end;//for
 
     FIpNIdList.Add(AIpAddr, LIdDic);
-    FIpNDupIdList.Add(AIpAddr, LDupList);
+
+    if LDupList.Count > 0 then
+      FIpNDupIdList.Add(AIpAddr, LDupList);
   finally
     TagAddrGrid.EndUpdate();
     LStrList.Free;
@@ -631,16 +816,17 @@ begin
     while AIpAddr <> '' do
     begin
       LIpAddr := StrToken(AIpAddr, ';');
-      LIDList := FIpNDupIdList.Items[LIpAddr];
-
-      for i := 0 to LIDList.Count - 1 do
+      if FIpNDupIdList.TryGetValue(LIpAddr, LIDList) then
       begin
-        LDupRec := LIDList.Items[i];
+        for i := 0 to LIDList.Count - 1 do
+        begin
+          LDupRec := LIDList.Items[i];
 
-        LRow := TagAddrGrid.AddRow();
-        TagAddrGrid.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
-        TagAddrGrid.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
-        TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+          LRow := TagAddrGrid.AddRow();
+          TagAddrGrid.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
+          TagAddrGrid.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
+          TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+        end;
       end;
     end;//while
   finally
@@ -691,6 +877,27 @@ begin
   finally
     TagAddrGrid.EndUpdate();
   end;
+end;
+
+procedure THiconisTCPF.ShowProgress1Click(Sender: TObject);
+var
+  ani : TAnimationThread;
+  r : TRect;
+begin
+  r := panel1.clientrect;
+  InflateRect(r, - panel1.bevelwidth, - panel1.bevelwidth);
+  ani := TanimationThread.Create(panel1, r, panel1.color, clBlue, 25);
+  BitBtn1.Enabled := False;
+  Application.ProcessMessages;
+  Sleep(30000);  // replace with query.Open or such
+  BitBtn1.Enabled := True;
+  ani.Terminate;
+  ShowMessage('Done');
+end;
+
+procedure THiconisTCPF.ShowTD(const ATDRec: TMsgBox);
+begin
+  TD('').WindowCaption(ATDRec.FCaption).Execute(Self);
 end;
 
 procedure THiconisTCPF.TaskTabChange(Sender: TObject);

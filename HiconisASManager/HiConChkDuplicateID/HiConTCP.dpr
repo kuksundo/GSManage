@@ -8,7 +8,10 @@ uses
   UnitChkDupIdData in 'UnitChkDupIdData.pas',
   UnitTRegExUtil in '..\..\..\..\Common\UnitTRegExUtil.pas',
   UnitHtmlUtil in '..\..\..\..\Common\UnitHtmlUtil.pas',
-  UnitHiConTCPWorker in 'UnitHiConTCPWorker.pas';
+  UnitHiConTCPWorker in 'UnitHiConTCPWorker.pas',
+  UnitCryptUtil3 in '..\..\..\..\NoGitHub\Util\UnitCryptUtil3.pas',
+  UnitHiconSystemDBUtil in '..\UnitHiconSystemDBUtil.pas',
+  UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas';
 
 {$R *.res}
 

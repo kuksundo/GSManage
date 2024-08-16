@@ -31,7 +31,7 @@ uses
   UnitMAPSMacro2, UnitWorker4OmniMsgQ,
 
   UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord,
-  UnitHiconisASData
+  UnitHiconisASData, UnitHiconisDI16RecallRec
   ;
 
 type
@@ -178,6 +178,8 @@ type
     GetShipNameHullNoProjNotoClipbrd1: TMenuItem;
     ShowWarrantyExpireDate1: TMenuItem;
     BitBtn1: TBitBtn;
+    ImportDIModuleRecallData1: TMenuItem;
+    ShowDIRecallStatus1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -239,6 +241,7 @@ type
     procedure ShowWarrantyExpireDate1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure FindCondCBChange(Sender: TObject);
+    procedure ImportDIModuleRecallData1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -272,6 +275,7 @@ type
 
     FOLCmdSenderHandle: THandle;//OLControlWorker의 Respond값을 전달하기 위한 Handle
     FOLMailListFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
+    FHiASDI16RecallDict: THiASDI16RecallDict;
 
     procedure InitEnum;
     procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
@@ -336,10 +340,14 @@ type
     procedure DisplayOLMsg2Grid(const task: IOmniTaskControl;
       const msg: TOmniMessage);
     function GetWarrantyExpireDateBySelected(): TDate;
+    function GetDeliveryDateBySelected(): TDate;
+    function GetWarrantyPeriodBySelected(): string;
 
     procedure SetDefaultFindCond;
     procedure ClearFindCond;
     procedure SetInputTodayCond;
+
+    procedure LoadHiASDIRecallDataFromFile();
   protected
     procedure ShowTaskIDFromGrid;
     procedure ShowEmailIDFromGrid;
@@ -411,6 +419,9 @@ type
     procedure ShowTodoListFormFromDBByGridRow(ARow: integer);
     procedure ShowToDoListFormFromList(ATaskId: TID; AToDoList: TpjhToDoList);
 
+    procedure ShowDIRecallStatusBySelected();
+    procedure ShowDiRecallStatusFromRec(ARec: THiASDI16RecallRec);
+
     procedure SetUserNameNIPAddressFromRegServer;
 
     //--> Remote Command Proess
@@ -442,7 +453,7 @@ implementation
 uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   UnitGSFileRecord2, getIp, UnitBase64Util2,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
-  UnitStringUtil, UnitExcelUtil, UnitClipBoardUtil,
+  UnitStringUtil, UnitExcelUtil, UnitClipBoardUtil, UnitOutLookUtil,
 
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil, UnitDateUtil,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
@@ -547,6 +558,21 @@ begin
     CellByName['ClaimClosedDate', ARow].AsDateTime := TimeLogToDateTime(ClaimClosedDate);
     TIDList(Row[ARow].Data).EmailId := EmailID;
   end;
+end;
+
+procedure THiconisAsManageF.LoadHiASDIRecallDataFromFile;
+var
+  LUtf8: RawUtf8;
+  LStr: string;
+begin
+  if FHiASIniConfig.FDIModuleRecallStatusFN = '' then
+  begin
+    ShowMessage('FHiASIniConfig.FDIModuleRecallStatusFN is empty');
+    exit;
+  end;
+
+  LUtf8 := StringFromFile(FHiASIniConfig.FDIModuleRecallStatusFN);
+  FHiASDI16RecallDict.Data.LoadFromJson(LUtf8);
 end;
 
 procedure THiconisAsManageF.LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
@@ -1068,6 +1094,17 @@ begin
   Result := TimelogToDatetime(CalcWarrantyExpireDateByHullNo(LHullNo));
 end;
 
+function THiconisAsManageF.GetWarrantyPeriodBySelected: string;
+var
+  LHullNo: string;
+begin
+  if grid_Req.SelectedRow = -1 then
+    exit;
+
+  LHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
+  Result := GetWarrantyPeriodByHullNo(LHullNo);
+end;
+
 //procedure TDisplayTaskF.GetWhereConstArr(ASearchCondRec: TSearchCondRec;
 //  var AWhere: string);// var AConstArr: TConstArray);
 //var
@@ -1427,6 +1464,24 @@ begin
   ExecuteSearch(Key);
 end;
 
+procedure THiconisAsManageF.ImportDIModuleRecallData1Click(Sender: TObject);
+var
+  LJson: RawUtf8;
+  LFileName: string;
+begin
+  if OpenDialog1.Execute then
+  begin
+    if FileExists(OpenDialog1.FileName) then
+    begin
+      ImportHiconisDIRecallFromXlsFile(OpenDialog1.FileName, FHiASDI16RecallDict);
+      LJson := FHiASDI16RecallDict.Data.SaveToJson();
+      LFileName := FHiASIniConfig.FDIModuleRecallStatusFN;
+      FileFromString(LJson, LFileName);
+      ShowMessage('Hiconis DI16 Recall Status is saved to => ' + LFileName);
+    end;
+  end;
+end;
+
 procedure THiconisAsManageF.ImportHiconisProjectFromExcel1Click(
   Sender: TObject);
 begin
@@ -1586,6 +1641,17 @@ begin
   finally
     LTask.Free;
   end;
+end;
+
+function THiconisAsManageF.GetDeliveryDateBySelected: TDate;
+var
+  LHullNo: string;
+begin
+  if grid_Req.SelectedRow = -1 then
+    exit;
+
+  LHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
+  Result := TimelogToDatetime(GetDeliveryDateByHullNo(LHullNo));
 end;
 
 procedure THiconisAsManageF.GetHullNoToClipboard1Click(Sender: TObject);
@@ -1775,7 +1841,9 @@ end;
 
 procedure THiconisAsManageF.ShowWarrantyExpireDate1Click(Sender: TObject);
 begin
-  ShowMessage(DateTimeToStr(GetWarrantyExpireDateBySelected()));
+  ShowMessage('Delivery Date: ' + DateTimeToStr(GetDeliveryDateBySelected()) + #13#10 +
+   'Warranty Expire: ' + DateTimeToStr(GetWarrantyExpireDateBySelected()) + #13#10 +
+   'Warranty Period: ' + GetWarrantyPeriodBySelected());
 end;
 
 procedure THiconisAsManageF.StartOLControlWorker;
@@ -2640,13 +2708,16 @@ begin
   FTaskEditConfig.IPCMQ2RespondOLEmail := TOmniMessageQueue.Create(1000);
   FTaskEditConfig.IPCMQCommandOLCalendar := FTaskEditConfig.IPCMQCommandOLEmail;
   FTaskEditConfig.IPCMQ2RespondOLCalendar := FTaskEditConfig.IPCMQ2RespondOLEmail;
-//  FTaskEditConfig.IPCMQCommandOLCalendar := TOmniMessageQueue.Create(1000);
-//  FTaskEditConfig.IPCMQ2RespondOLCalendar := TOmniMessageQueue.Create(1000);
+
+  FHiASDI16RecallDict := Collections.NewKeyValue<String, THiASDI16RecallRec>;
 
   //FrameOLEmailList에서 OLControlWorker 생성하는 것 방지
   FTaskEditConfig.IsUseOLControlWorkerFromEmailList := False;
 
-  StartOLControlWorker();
+  if CheckOutLookInstalled then
+    StartOLControlWorker()
+  else
+    ShowMessage('Outlook does not exists!');
 
   InitEnum();
   Parallel.TaskConfig.OnMessage(WM_OLMSG_RESULT,DisplayOLMsg2Grid);
@@ -2655,13 +2726,15 @@ begin
   InitUserClient(Application.ExeName);
   InitClient4GSTariff(Application.ExeName);
   InitHiASMaterialCodeClient(Application.ExeName);
+  InitHiASProjectClient(Application.ExeName);
   AsyncProcessCommandProc();
   rg_periodClick(nil);
   g_ExecuteFunction := ExecFunc;
   g_GSDocType.InitArrayRecord(R_GSDocType);
 
-  LoadConfigFromFile;
+  LoadConfigFromFile();
 
+  LoadHiASDIRecallDataFromFile();
 end;
 
 procedure THiconisAsManageF.FormDestroy(Sender: TObject);
@@ -3146,6 +3219,36 @@ end;
 procedure THiconisAsManageF.ShipNameEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
+end;
+
+procedure THiconisAsManageF.ShowDIRecallStatusBySelected;
+var
+  LHullNo: string;
+  LHiASDI16RecallRec: THiASDI16RecallRec;
+begin
+  if grid_Req.SelectedRow = -1 then
+    exit;
+
+  LHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
+
+  if FHiASDI16RecallDict.TryGetValue(LHullNo, LHiASDI16RecallRec) then
+  begin
+    ShowDiRecallStatusFromRec(LHiASDI16RecallRec);
+  end
+  else
+    ShowMessage('DI Module Recall 대상 호선이 아닙니다.');
+end;
+
+procedure THiconisAsManageF.ShowDiRecallStatusFromRec(ARec: THiASDI16RecallRec);
+var
+  LStr: string;
+begin
+  LStr := 'Hull No: ' + ARec.HullNo + #13#10 +
+    '인도일자: ' + ARec.VesselDeliveryDate + #13#10 +
+    '발주수량: ' + ARec.OrderQuantity + #13#10 +
+    '입고수량: ' + ARec.NumOfWarehoused + #13#10 +
+    '배송일자: ' + ARec.PartDeliveryDate2Customer;
+  ShowMessage(LStr);
 end;
 
 procedure THiconisAsManageF.ShowEmailID1Click(Sender: TObject);

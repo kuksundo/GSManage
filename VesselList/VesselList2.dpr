@@ -14,7 +14,7 @@ uses
   FrmDisplayAnsiDeviceDesc in '..\..\..\..\..\..\project\util\GSManage\FrmDisplayAnsiDeviceDesc.pas' {AnsiDeviceDescF},
   UnitAnsiDeviceRecord2 in '..\UnitAnsiDeviceRecord2.pas',
   UnitMakeAnsiDeviceDB2 in '..\UnitMakeAnsiDeviceDB2.pas',
-  FrmAnsiDeviceNoList in '..\..\..\..\..\..\project\util\GSManage\FrmAnsiDeviceNoList.pas' {AnsiDeviceNoF},
+  FrmAnsiDeviceNoList2 in '..\FrmAnsiDeviceNoList2.pas' {AnsiDeviceNoF},
   FrmEditVesselInfo2 in 'FrmEditVesselInfo2.pas' {EditVesselInfoF},
   UnitNationRecord2 in 'UnitNationRecord2.pas',
   UnitNationData in '..\..\..\..\..\..\project\util\GSManage\VesselList\UnitNationData.pas',

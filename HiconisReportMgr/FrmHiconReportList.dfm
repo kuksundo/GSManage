@@ -1,9 +1,9 @@
-object HiconisAsManageF: THiconisAsManageF
+object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = 'HiconisAsManageF'
-  ClientHeight = 649
-  ClientWidth = 1160
+  Caption = 'Form2'
+  ClientHeight = 638
+  ClientWidth = 1156
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,22 +12,21 @@ object HiconisAsManageF: THiconisAsManageF
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
-  OnClose = FormClose
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
     Top = 3
-    Width = 1160
+    Width = 1156
     Height = 134
     Margins.Left = 0
     Margins.Right = 0
     Align = alTop
     Rounding = 4
     TabOrder = 0
+    ExplicitLeft = -108
+    ExplicitWidth = 1160
     object JvLabel2: TJvLabel
       AlignWithMargins = True
       Left = 8
@@ -84,8 +83,8 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel6: TJvLabel
       AlignWithMargins = True
-      Left = 358
-      Top = 39
+      Left = 556
+      Top = 10
       Width = 80
       Height = 25
       Alignment = taCenter
@@ -117,7 +116,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Claim Status'
+      Caption = 'WorkCode'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -144,7 +143,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #50836#52397#49324
+      Caption = #49440#51452
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -165,13 +164,13 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel4: TJvLabel
       AlignWithMargins = True
-      Left = 556
-      Top = 9
+      Left = 358
+      Top = 40
       Width = 80
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Claim No.'
+      Caption = #51089#49457#51088
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -244,22 +243,6 @@ object HiconisAsManageF: THiconisAsManageF
       HotTrackFont.Name = #47569#51008' '#44256#46357
       HotTrackFont.Style = []
     end
-    object MakeCertButton: TAdvToolButton
-      Left = 754
-      Top = 101
-      Width = 80
-      Height = 29
-      Hint = #44033' MenuItem Tag'#50640' Claim'#50896#51064' '#49440#53469#44050' '#51200#51109#46120
-      AutoThemeAdapt = False
-      ColorDown = 14210002
-      ColorHot = 13289415
-      DropDownButton = True
-      DropDownMenu = ClaimPopup
-      Caption = 'Claim '#50896#51064
-      ImageIndex = 4
-      Rounded = True
-      Version = '1.6.1.1'
-    end
     object JvLabel40: TJvLabel
       AlignWithMargins = True
       Left = 358
@@ -268,7 +251,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #49436#48708#49828#50976#54805
+      Caption = 'Report '#51333#47448
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -341,6 +324,33 @@ object HiconisAsManageF: THiconisAsManageF
       HotTrackFont.Name = #47569#51008' '#44256#46357
       HotTrackFont.Style = []
     end
+    object JvLabel10: TJvLabel
+      AlignWithMargins = True
+      Left = 358
+      Top = 101
+      Width = 80
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #48320#44221#49324#54637
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
     object PeriodPanel: TCurvyPanel
       AlignWithMargins = True
       Left = 91
@@ -363,17 +373,12 @@ object HiconisAsManageF: THiconisAsManageF
         Top = 26
         Width = 255
         Height = 35
+        Margins.Top = 1
         BorderStyle = bsNone
         Version = '1.3.8.5'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = #47569#51008' '#44256#46357
-        Font.Style = []
+        Align = alTop
         ParentBackground = False
-        ParentFont = False
         TabOrder = 0
-        OnClick = rg_periodClick
         Columns = 4
         ItemIndex = 1
         Items.Strings = (
@@ -407,10 +412,11 @@ object HiconisAsManageF: THiconisAsManageF
         TabOrder = 2
       end
       object ComboBox1: TComboBox
-        Left = 3
-        Top = 5
-        Width = 255
+        Left = 0
+        Top = 0
+        Width = 261
         Height = 25
+        Align = alTop
         Style = csDropDownList
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -420,10 +426,12 @@ object HiconisAsManageF: THiconisAsManageF
         ImeName = 'Microsoft IME 2010'
         ParentFont = False
         TabOrder = 3
-        OnDropDown = ComboBox1DropDown
+        ExplicitLeft = 3
+        ExplicitTop = 5
+        ExplicitWidth = 255
       end
     end
-    object ClaimStatusCombo: TComboBox
+    object WorkCodeCB: TComboBox
       Left = 639
       Top = 70
       Width = 109
@@ -437,7 +445,6 @@ object HiconisAsManageF: THiconisAsManageF
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
       TabOrder = 1
-      OnDropDown = ClaimStatusComboDropDown
     end
     object CustomerCombo: TComboBox
       Left = 639
@@ -453,32 +460,14 @@ object HiconisAsManageF: THiconisAsManageF
       ParentFont = False
       TabOrder = 2
     end
-    object BefAftCB: TComboBox
-      Left = 679
-      Top = 102
-      Width = 57
-      Height = 24
-      Style = csDropDownList
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ImeName = 'Microsoft IME 2010'
-      ParentFont = False
-      TabOrder = 3
-      Items.Strings = (
-        ''
-        #51060#51204
-        #51060#54980)
-    end
     object Panel1: TPanel
-      Left = 955
+      Left = 951
       Top = 0
       Width = 205
       Height = 134
       Align = alRight
-      TabOrder = 4
+      TabOrder = 3
+      ExplicitLeft = 955
       object btn_Search: TAeroButton
         AlignWithMargins = True
         Left = 3
@@ -492,7 +481,6 @@ object HiconisAsManageF: THiconisAsManageF
         Align = alRight
         Caption = #51312#54924
         TabOrder = 0
-        OnClick = btn_SearchClick
       end
       object btn_Close: TAeroButton
         AlignWithMargins = True
@@ -507,7 +495,6 @@ object HiconisAsManageF: THiconisAsManageF
         Align = alRight
         Caption = #45803#44592
         TabOrder = 1
-        OnClick = btn_CloseClick
       end
       object AeroButton1: TAeroButton
         AlignWithMargins = True
@@ -522,38 +509,16 @@ object HiconisAsManageF: THiconisAsManageF
         Align = alRight
         Caption = #54624#51068
         TabOrder = 2
-        OnClick = AeroButton1Click
       end
     end
-    object WorkKindCB: TComboBox
-      Left = 358
-      Top = 101
-      Width = 80
-      Height = 25
-      Style = csDropDownList
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = [fsBold]
-      ImeName = 'Microsoft IME 2010'
-      ItemIndex = 0
-      ParentFont = False
-      TabOrder = 5
-      Text = #54788#51116#51089#50629
-      Items.Strings = (
-        #54788#51116#51089#50629
-        #45796#51020#51089#50629)
-    end
-    object ClaimNoEdit: TEdit
-      Left = 639
-      Top = 12
+    object AuthorEdit: TEdit
+      Left = 441
+      Top = 43
       Width = 112
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 6
-      OnKeyPress = HullNoEditKeyPress
+      TabOrder = 4
     end
     object PORNoEdit: TEdit
       Left = 837
@@ -561,8 +526,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 7
-      OnKeyPress = HullNoEditKeyPress
+      TabOrder = 5
     end
     object DisplayFinalCheck: TCheckBox
       Left = 840
@@ -570,7 +534,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 114
       Height = 17
       Caption = #50756#47308#51089#50629' '#54364#49884
-      TabOrder = 8
+      TabOrder = 6
     end
     object Button1: TButton
       Left = 312
@@ -578,24 +542,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 40
       Height = 25
       Caption = 'Clear'
-      TabOrder = 9
-      OnClick = Button1Click
-    end
-    object CurWorkCB: TComboBox
-      Left = 441
-      Top = 101
-      Width = 232
-      Height = 24
-      Style = csDropDownList
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ImeName = 'Microsoft IME 2010'
-      ParentFont = False
-      TabOrder = 10
-      OnDropDown = CurWorkCBDropDown
+      TabOrder = 7
     end
     object MaterialCodeEdit: TEdit
       Left = 837
@@ -603,8 +550,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 11
-      OnKeyPress = HullNoEditKeyPress
+      TabOrder = 8
     end
     object FindCondCB: TComboBox
       Left = 103
@@ -619,18 +565,17 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 12
-      OnChange = FindCondCBChange
+      TabOrder = 9
     end
-    object ClaimServiceKindCB: TJvCheckedComboBox
-      Left = 436
+    object ReportKindCB: TJvCheckedComboBox
+      Left = 440
       Top = 72
       Width = 114
       Height = 21
       CapSelectAll = '&Select all'
       CapDeSelectAll = '&Deselect all'
       CapInvertAll = '&Invert all'
-      TabOrder = 13
+      TabOrder = 10
     end
     object HullNoEdit: TAdvEditBtn
       Left = 465
@@ -654,10 +599,9 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 14
+      TabOrder = 11
       Text = ''
       Visible = True
-      OnKeyPress = HullNoEditKeyPress
       Version = '1.3.5.0'
       ButtonStyle = bsButton
       ButtonWidth = 20
@@ -689,11 +633,10 @@ object HiconisAsManageF: THiconisAsManageF
         BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
         B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      OnClickBtn = HullNoEditClickBtn
     end
     object ShipNameEdit: TAdvEditBtn
-      Left = 440
-      Top = 39
+      Left = 638
+      Top = 10
       Width = 114
       Height = 21
       EditAlign = eaCenter
@@ -713,10 +656,9 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 15
+      TabOrder = 12
       Text = ''
       Visible = True
-      OnKeyPress = ShipNameEditKeyPress
       Version = '1.3.5.0'
       ButtonStyle = bsButton
       ButtonWidth = 20
@@ -748,7 +690,6 @@ object HiconisAsManageF: THiconisAsManageF
         BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
         B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      OnClickBtn = HullNoEditClickBtn
     end
     object OrderNoEdit: TAdvEditBtn
       Left = 835
@@ -772,10 +713,9 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 16
+      TabOrder = 13
       Text = ''
       Visible = True
-      OnKeyPress = OrderNoEditKeyPress
       Version = '1.3.5.0'
       ButtonStyle = bsButton
       ButtonWidth = 20
@@ -840,336 +780,29 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 17
-      OnClick = BitBtn1Click
+      TabOrder = 14
+    end
+    object CheckBoxGrp: TAdvOfficeCheckGroup
+      Left = 439
+      Top = 101
+      Width = 395
+      Height = 25
+      Version = '1.3.8.5'
+      ParentBackground = False
+      TabOrder = 15
+      Columns = 3
+      Ellipsis = False
     end
   end
   object TaskTab: TAdvOfficeTabSet
     Left = 0
     Top = 140
-    Width = 1160
+    Width = 1156
     Height = 27
     AdvOfficeTabs = <
       item
         Caption = #51204#52404
         Name = 'TOfficeTabCollectionItem5'
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = 'PO '#51077#49688' '#45824#44592
-        ImageIndex = 12
-        Name = 'spPOReq2Cust'
-        Tag = 12
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = 'QTN '#51077#47141' '#45824#44592
-        ImageIndex = 14
-        Name = 'spPORecvFromCust'
-        Tag = 14
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = #49688#53685' '#51077#47141' '#45824#44592
-        ImageIndex = 15
-        Name = 'spQtnApproval'
-        Tag = 16
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = 'SR '#51217#49688#50756#47308
-        ImageIndex = 23
-        Name = 'spSRRecvFromSubCon'
-        Tag = 24
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = 'Invoice '#49569#48512' '#50756#47308
-        ImageIndex = 26
-        Name = 'spInvoiceSend2Cust'
-        Tag = 27
-        TabAppearance.BorderColor = clNone
-        TabAppearance.BorderColorHot = 15383705
-        TabAppearance.BorderColorSelected = 14922381
-        TabAppearance.BorderColorSelectedHot = 6343929
-        TabAppearance.BorderColorDisabled = clNone
-        TabAppearance.BorderColorDown = clNone
-        TabAppearance.Color = clBtnFace
-        TabAppearance.ColorTo = clWhite
-        TabAppearance.ColorSelected = 16709360
-        TabAppearance.ColorSelectedTo = 16445929
-        TabAppearance.ColorDisabled = clWhite
-        TabAppearance.ColorDisabledTo = clSilver
-        TabAppearance.ColorHot = 14542308
-        TabAppearance.ColorHotTo = 16768709
-        TabAppearance.ColorMirror = clWhite
-        TabAppearance.ColorMirrorTo = clWhite
-        TabAppearance.ColorMirrorHot = 14016477
-        TabAppearance.ColorMirrorHotTo = 10736609
-        TabAppearance.ColorMirrorSelected = 16445929
-        TabAppearance.ColorMirrorSelectedTo = 16181984
-        TabAppearance.ColorMirrorDisabled = clWhite
-        TabAppearance.ColorMirrorDisabledTo = clSilver
-        TabAppearance.Font.Charset = DEFAULT_CHARSET
-        TabAppearance.Font.Color = clWindowText
-        TabAppearance.Font.Height = -11
-        TabAppearance.Font.Name = 'Tahoma'
-        TabAppearance.Font.Style = []
-        TabAppearance.Gradient = ggVertical
-        TabAppearance.GradientMirror = ggVertical
-        TabAppearance.GradientHot = ggRadial
-        TabAppearance.GradientMirrorHot = ggVertical
-        TabAppearance.GradientSelected = ggVertical
-        TabAppearance.GradientMirrorSelected = ggVertical
-        TabAppearance.GradientDisabled = ggVertical
-        TabAppearance.GradientMirrorDisabled = ggVertical
-        TabAppearance.TextColor = 9126421
-        TabAppearance.TextColorHot = 9126421
-        TabAppearance.TextColorSelected = 9126421
-        TabAppearance.TextColorDisabled = clGray
-        TabAppearance.ShadowColor = 15255470
-        TabAppearance.HighLightColorSelected = 16775871
-        TabAppearance.HighLightColorHot = 16643309
-        TabAppearance.HighLightColorSelectedHot = 12451839
-        TabAppearance.HighLightColorDown = 16776144
-        TabAppearance.BackGround.Color = 16767935
-        TabAppearance.BackGround.ColorTo = clNone
-        TabAppearance.BackGround.Direction = gdHorizontal
-      end
-      item
-        Caption = #47588#52636' '#52376#47532' '#45824#44592
-        Name = 'spInvoiceConfirmFromCust'
-        Tag = 28
         TabAppearance.BorderColor = clNone
         TabAppearance.BorderColorHot = 15383705
         TabAppearance.BorderColorSelected = 14922381
@@ -1558,13 +1191,14 @@ object HiconisAsManageF: THiconisAsManageF
     ButtonSettings.ScrollButtonLastHint = 'Last'
     TabSettings.Alignment = taCenter
     TabSettings.Width = 110
-    OnChange = TaskTabChange
+    ExplicitLeft = -108
+    ExplicitWidth = 1160
   end
   object grid_Req: TNextGrid
     Left = 0
     Top = 167
-    Width = 1160
-    Height = 463
+    Width = 1156
+    Height = 452
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Align = alClient
@@ -1577,8 +1211,9 @@ object HiconisAsManageF: THiconisAsManageF
     PopupMenu = PopupMenu1
     TabOrder = 2
     TabStop = True
-    OnCellDblClick = grid_ReqCellDblClick
-    OnKeyDown = grid_ReqKeyDown
+    ExplicitLeft = -108
+    ExplicitWidth = 1160
+    ExplicitHeight = 463
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1788,7 +1423,6 @@ object HiconisAsManageF: THiconisAsManageF
       Position = 10
       SortType = stAlphabetic
       Width = 60
-      OnButtonClick = EmailButtonClick
     end
     object ReqCustomer: TNxTextColumn
       Alignment = taCenter
@@ -2080,8 +1714,8 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object StatusBarPro1: TStatusBarPro
     Left = 0
-    Top = 630
-    Width = 1160
+    Top = 619
+    Width = 1156
     Height = 19
     Panels = <
       item
@@ -2100,6 +1734,9 @@ object HiconisAsManageF: THiconisAsManageF
         Width = 50
       end>
     SimplePanel = False
+    ExplicitLeft = -108
+    ExplicitTop = 630
+    ExplicitWidth = 1160
   end
   object imagelist24x24: TImageList
     ColorDepth = cd32Bit
@@ -2109,7 +1746,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000480418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000500418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2419,7 +2056,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402580410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402600410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2568,7 +2205,6 @@ object HiconisAsManageF: THiconisAsManageF
         object N7: TMenuItem
           Tag = 1
           Caption = #48512#54408#50696#49328#51613#50529' '#50836#52397
-          OnClick = N7Click
         end
         object N8: TMenuItem
           Tag = 2
@@ -2577,12 +2213,10 @@ object HiconisAsManageF: THiconisAsManageF
         object N12: TMenuItem
           Tag = 3
           Caption = #51088#51116#51649#53804#51077' '#50836#52397
-          OnClick = N12Click
         end
         object N15: TMenuItem
           Tag = 4
           Caption = #52636#54616#51648#49884' '#50836#52397
-          OnClick = N15Click
         end
       end
       object N17: TMenuItem
@@ -2590,17 +2224,14 @@ object HiconisAsManageF: THiconisAsManageF
         object N18: TMenuItem
           Tag = 5
           Caption = #50629#52404#48169#49440#44032#45733#50836#52397
-          OnClick = N18Click
         end
         object N20: TMenuItem
           Tag = 11
           Caption = #44592#49457#54869#51064#50836#52397
-          OnClick = N20Click
         end
         object N21: TMenuItem
           Tag = 12
           Caption = #44592#49457#52376#47532#50836#52397
-          OnClick = N21Click
         end
       end
     end
@@ -2608,7 +2239,6 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = #49436#48708#49828#47532#54252#53944' '#51077#49688' '#54980' '#50629#47924' '#51208#52264
       object Invoice4: TMenuItem
         Caption = 'Invoice '#51089#49457
-        OnClick = Invoice4Click
       end
       object Invoice3: TMenuItem
         Caption = 'Invoice '#49569#48512' -> '#44256#44061
@@ -2622,25 +2252,21 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object ToDOList1: TMenuItem
       Caption = 'To Do List'
-      OnClick = ToDOList1Click
     end
     object N22: TMenuItem
       Caption = '-'
     end
     object GetHullNoToClipboard1: TMenuItem
       Caption = 'Get Hull No To Clipboard'
-      OnClick = GetHullNoToClipboard1Click
     end
     object GetShipNameHullNoProjNotoClipbrd1: TMenuItem
       Caption = 'Get ShipName(HullNo-ProjNo) to Clipbrd'
-      OnClick = GetShipNameHullNoProjNotoClipbrd1Click
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object DeleteTask1: TMenuItem
       Caption = 'Delete Task'
-      OnClick = DeleteTask1Click
     end
     object N2: TMenuItem
       Caption = '-'
@@ -2649,7 +2275,6 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = #50900#48324#47928#49436
       object N4: TMenuItem
         Caption = #50900#48324' '#50808#51452#50857#50669#48708' '#51064#48372#51060#49828' '#52376#47532' '#54788#54889
-        OnClick = N4Click
       end
     end
     object N10: TMenuItem
@@ -2657,26 +2282,21 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object ShowWarrantyExpireDate1: TMenuItem
       Caption = 'Show Warranty ExpireDate'
-      OnClick = ShowWarrantyExpireDate1Click
     end
     object ShowDIRecallStatus1: TMenuItem
       Caption = 'Show DI Recall Status By Selected'
     end
     object ShowTaskID1: TMenuItem
       Caption = 'Show TaskID'
-      OnClick = ShowTaskID1Click
     end
     object ShowEmailID1: TMenuItem
       Caption = 'Show EmailID'
-      OnClick = ShowEmailID1Click
     end
     object ShowGSFileID1: TMenuItem
       Caption = 'Show GSFileID'
-      OnClick = ShowGSFileID1Click
     end
     object GetJsonValues1: TMenuItem
       Caption = 'GetJsonValues'
-      OnClick = GetJsonValues1Click
     end
   end
   object MainMenu1: TMainMenu
@@ -2686,18 +2306,15 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = #54028#51068
       object CreateNewTask1: TMenuItem
         Caption = 'Create New Task'
-        OnClick = CreateNewTask1Click
       end
       object N24: TMenuItem
         Caption = '-'
       end
       object ExportToExcel2: TMenuItem
         Caption = 'Export To Excel'
-        OnClick = ExportToExcel2Click
       end
       object SaveDBAs1: TMenuItem
         Caption = 'Save DB As...'
-        OnClick = SaveDBAs1Click
       end
       object N27: TMenuItem
         Caption = '-'
@@ -2705,28 +2322,23 @@ object HiconisAsManageF: THiconisAsManageF
       object ImportMaterialCodeFromExcel1: TMenuItem
         Caption = 'Import MaterialCode From Excel'
         Hint = #51088#51116#53076#46300#47484' '#44032#51256#50752#49436' MatreialCode.sqlite '#49373#49457
-        OnClick = ImportMaterialCodeFromExcel1Click
       end
       object ImportHiconisProjectFromExcel1: TMenuItem
         Caption = 'Import Hiconis Project From Excel'
         Hint = 'Hiconis '#44277#49324' '#48372#51613#44592#44036' '#44032#51256#50752#49436' _Project.sqlite '#49373#49457
-        OnClick = ImportHiconisProjectFromExcel1Click
       end
       object ImportDIModuleRecallData1: TMenuItem
         Caption = 'Import DI Module Recall Data'
         Hint = 'DI Module Recall '#45824#49345' '#54788#54889' '#51088#47308#47484' Dict'#47196' '#48320#54872
-        OnClick = ImportDIModuleRecallData1Click
       end
       object CheckIfexistclaiminDBbyxls1: TMenuItem
         Caption = 'Check If exist claim in DB by xls'
-        OnClick = CheckIfexistclaiminDBbyxls1Click
       end
       object N28: TMenuItem
         Caption = '-'
       end
       object Close1: TMenuItem
         Caption = 'Close'
-        OnClick = Close1Click
       end
     end
     object MenuItem1: TMenuItem
@@ -2757,18 +2369,15 @@ object HiconisAsManageF: THiconisAsManageF
       Caption = #49444#51221
       object N26: TMenuItem
         Caption = #54872#44221#49444#51221
-        OnClick = N26Click
       end
     end
     object ariff1: TMenuItem
       Caption = 'Tariff'
       object ViewTariff1: TMenuItem
         Caption = 'View Tariff'
-        OnClick = ViewTariff1Click
       end
       object EditTariff1: TMenuItem
         Caption = 'Edit Tariff'
-        OnClick = EditTariff1Click
       end
     end
   end
@@ -2779,7 +2388,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800800520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800880520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3316,7 +2925,6 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object DropEmptyTarget1: TDropEmptyTarget
     DragTypes = [dtCopy, dtLink]
-    OnDrop = DropEmptyTarget1Drop
     Target = grid_Req
     WinTarget = 0
     Left = 212
@@ -3353,7 +2961,6 @@ object HiconisAsManageF: THiconisAsManageF
   end
   object Timer1: TTimer
     Interval = 5000
-    OnTimer = Timer1Timer
     Left = 64
     Top = 264
   end
@@ -3367,23 +2974,18 @@ object HiconisAsManageF: THiconisAsManageF
     Top = 264
     object Category1: TMenuItem
       Caption = 'Category'
-      OnClick = Category1Click
     end
     object Location1: TMenuItem
       Caption = 'Location'
-      OnClick = Location1Click
     end
     object CauseKind1: TMenuItem
       Caption = 'CauseKind'
-      OnClick = CauseKind1Click
     end
     object CauseHW1: TMenuItem
       Caption = 'CauseHW'
-      OnClick = CauseHW1Click
     end
     object CauseSW1: TMenuItem
       Caption = 'CauseSW'
-      OnClick = CauseSW1Click
     end
   end
 end

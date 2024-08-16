@@ -9,8 +9,8 @@ uses
   Vcl.Buttons, Vcl.ExtCtrls,
 
   mormot.core.variants, mormot.core.unicode, mormot.core.collections,
-  mormot.db.sql.oledb, mormot.db.sql, mormot.core.base,
-  UnitChkDupIdData;
+  mormot.core.base,
+  UnitChkDupIdData, UnitHiconSystemDBUtil;
 
 type
   TIPListF = class(TForm)
@@ -37,7 +37,6 @@ type
 
     function GetIpList2JsonFromGrid(): string;
     function GetIPListFromJson(AJson: string): IList<TIpListRec>;
-    function GetIpList2JsonFromDB(ADBFileName: string=''): string;
   end;
 
   procedure SetIpListFromJson2Grid(AJson: string; AGrid: TNextGrid);
@@ -133,47 +132,18 @@ begin
 end;
 
 procedure TIPListF.BitBtn5Click(Sender: TObject);
+var
+  LUtf8: RawUtf8;
+  LVar: variant;
 begin
-  GetIpList2JsonFromDB();
+  LUtf8 := THiConSystemDB.GetResourceList2JsonFromDB();
+  LVar := _JSON(LUtf8);
+  AddNextGridRowsFromVariant2(IPAddrGrid, LVar, True);
 end;
 
 procedure TIPListF.FormCreate(Sender: TObject);
 begin
   FIpAddrDic := Collections.NewKeyValue<string, TIpListRec>;
-end;
-
-function TIPListF.GetIpList2JsonFromDB(ADBFileName: string): string;
-var
-  LProps: TOleDBConnectionProperties;
-  LConn: TSQLDBConnection;
-  LQuery: TSQLDBStatement;
-  LUtf8: RawUtf8;
-  LVar: variant;
-begin
-  if ADBFileName = '' then
-    ADBFileName := 'D:\ACONIS-NX\DB\system_bak.accdb';
-
-  LProps := TSqlDBOleDBACEConnectionProperties.Create(ADBFileName,'', '','');//'e:\temp\system_bak.accdb'
-  try
-    LConn := LProps.NewConnection;
-    try
-      LConn.Connect;
-
-      LQuery := LConn.NewStatement;
-      try
-        LQuery.Execute('select RES_NAME, PMPM_PIP, PMPM_SIP from RESOURCE', True);
-        LUtf8 := LQuery.FetchAllAsJson(True);
-        LVar := _JSON(LUtf8);
-        AddNextGridRowsFromVariant2(IPAddrGrid, LVar, True);
-      finally
-        LQuery.Free;
-      end;
-    finally
-      LConn.Free;
-    end;
-  finally
-    LProps.Free;
-  end;
 end;
 
 function TIPListF.GetIpList2JsonFromGrid: string;

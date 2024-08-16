@@ -81,6 +81,8 @@ type
   function GetHiASProjectByProjectNo(const AProjNo: string): TOrmHiASProject;
   function GetHiASProjectByHullNo(const AHullNo: string): TOrmHiASProject;
 
+  function GetWarrantyPeriodByHullNo(const AHullNo: string): string;
+  function GetDeliveryDateByHullNo(const AHullNo: string): TTimeLog;
   function CalcWarrantyExpireDateByHullNo(const AHullNo: string): TTimeLog;
 
   procedure AddHiASProjectFromVariant(AVar: variant);
@@ -161,6 +163,42 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetWarrantyPeriodByHullNo(const AHullNo: string): string;
+var
+  LOrmHiASProject: TOrmHiASProject;
+  LDate: TDate;
+begin
+  Result := '';
+
+  LOrmHiASProject := GetHiASProjectByHullNo(AHullNo);
+  try
+    if LOrmHiASProject.IsUpdate then
+    begin
+      Result := LOrmHiASProject.fTotalWarrantyPeriod + LOrmHiASProject.fWarrantyCond1_Period_Unit;
+    end;
+  finally
+    LOrmHiASProject.Free;
+  end;
+end;
+
+function GetDeliveryDateByHullNo(const AHullNo: string): TTimeLog;
+var
+  LOrmHiASProject: TOrmHiASProject;
+  LDate: TDate;
+begin
+  Result := 0;
+
+  LOrmHiASProject := GetHiASProjectByHullNo(AHullNo);
+  try
+    if LOrmHiASProject.IsUpdate then
+    begin
+      Result := LOrmHiASProject.DeliveryDate;
+    end;
+  finally
+    LOrmHiASProject.Free;
+  end;
 end;
 
 function CalcWarrantyExpireDateByHullNo(const AHullNo: string): TTimeLog;

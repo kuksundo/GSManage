@@ -229,7 +229,7 @@ implementation
 
 uses
   FrmEditVesselInfo2, FrmHiMAPSelect2, frmHiMAPDetail2, FrmViewNationCode2,
-  FrmAnsiDeviceNoList, FrmViewEngineMaster2, FrmVesselAdvancedSearch, frmGeneratorDetail2,
+  FrmAnsiDeviceNoList2, FrmViewEngineMaster2, FrmVesselAdvancedSearch, frmGeneratorDetail2,
   UnitHiMAPRecord2, UnitMakeHgsDB2,
   UnitMakeAnsiDeviceDB2, UnitAnsiDeviceRecord2, HtmlParserEx,
   UnitStringUtil, UnitExcelUtil, UnitMakeMasterCustomerDB2,
@@ -404,7 +404,7 @@ begin
   begin
     if FileExists(OpenDialog1.FileName) then
     begin
-      ImportVesselMasterFromMapsExportedXlsFile(OpenDialog1.FileName);
+      ImportVesselMasterFromMapsExportedXlsFile(OpenDialog1.FileName, True);
       GetVesselList2Grid;
     end;
   end;

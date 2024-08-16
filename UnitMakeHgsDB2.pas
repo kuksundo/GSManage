@@ -10,7 +10,7 @@ uses Sysutils, Dialogs, Classes, Forms,
 ;
 
 procedure ImportVesselMasterFromXlsFile(AFileName: string);
-procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string);
+procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string; AIsOnlyAdd: Boolean=False);
 procedure ImportVesselMasterFromMapsExportedXlsFile2(AFileName: string);
 procedure ImportVesselDeliveryFromXlsFile(AFileName: string);
 procedure ImportVesselGuaranteePerionNDeliveryDateFromXlsFile(AFileName: string);
@@ -194,7 +194,7 @@ begin
   end;
 end;
 
-procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string);
+procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string; AIsOnlyAdd: Boolean);
 const
   VesselListDBColumnAry : array[0..49] of string =
     ('VesselSanction', 'InstalledLocation', 'HullNo', 'ShipName', 'IMONo', 'ShipType', 'CargoSize',
@@ -305,13 +305,19 @@ begin
 
         if LStr <> '' then
         begin
-          if (LStr = 'Special Survey Due 1') or (LStr = 'Special Survey Due 2') or
-            (LStr = 'Docking Survey Due 1') or (LStr = 'Docking Survey Due 2') or
-            (LStr = '선박인도일') then
+          if (LStr = 'SpecialSurveyDueDate') or (LStr = 'DockingSurveyDueDate') or
+            (LStr = 'SpecialSurveyDueDate2') or (LStr = 'DockingSurveyDueDate2') or
+            (LStr = 'DeliveryDate') then
           begin
-            LStr2 := LRange.FormulaR1C1;
-            LDate := GetDateFromFormatStr('yyyy-mm-dd', '-', LStr3);
-            TDocVariantData(LDoc).Value[LStr] := TimeLogFromDateTime(LDate);
+            LStr2 := LRange.Text;
+
+            if LStr2 <> '' then
+            begin
+              LDate := GetDateFromFormatStr('yyyy-mm-dd', '-', LStr2);
+              TDocVariantData(LDoc).Value[LStr] := TimeLogFromDateTime(LDate);
+            end
+            else
+              TDocVariantData(LDoc).Value[LStr] := 0;
           end
           else
             TDocVariantData(LDoc).Value[LStr] := LRange.FormulaR1C1;
@@ -371,7 +377,12 @@ begin
 
       //    if (LDoc.VesselStatus <> '') and (LDoc.VesselStatus <> 'Broken Up') then
       if LDoc.IMONo <> '' then
-        AddOrUpdateVesselMasterFromVariant(LDoc);
+      begin
+        if AIsOnlyAdd then
+          AddVesselMasterFromVariant(LDoc)
+        else
+          AddOrUpdateVesselMasterFromVariant(LDoc);
+      end;
 
 //      Inc(LRow);
 //      LRange := LWorksheet.range['A'+IntToStr(LRow)];

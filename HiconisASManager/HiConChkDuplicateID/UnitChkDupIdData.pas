@@ -5,7 +5,7 @@ interface
 uses System.Classes, UnitEnumHelper;
 
 type
-  TIpListRec = record
+  TIpListRec = packed record
     RES_NAME,
     PMPM_PIP,
     PMPM_SIP,
@@ -13,15 +13,60 @@ type
     : string;
   end;
 
-  TIDListRec = record
+  TIDListRec = packed record
     MMAddress,
     TagId
     : string;
   end;
 
-  TDupIDListRec = record
+  TDupIDListRec = packed record
     IpRec: TIpListRec;
     DupIdRec: TIDListRec;
+  end;
+
+  TSVRInfoRec = packed record
+    SVR_NAME,
+    DESCRIPTION,
+    PIP,
+    SIP
+    : string;
+  end;
+
+  TEngineerInfoRec = packed record
+    EngineerId,
+    EngineerName
+    : string;
+  end;
+
+  TVesselInfoRec = packed record
+    HullNo,
+    ShipName,
+    IMONo
+    : string;
+  end;
+
+  TResourceInfoRec = packed record
+    RES_NAME,
+    DESCRIPTION,
+    PMPMName,
+    PMPM_PIP,
+    PMPM_SIP,
+    SMPMName,
+    SMPMPIP,
+    SMPMSIP,
+    ResID
+    : string;
+  end;
+
+  TResultCheckDupIDRec = packed record
+//    SVRInfoRec: TSVRInfoRec;
+//    EngineerInfoRec: TEngineerInfoRec;
+    VesselInfoRec: TVesselInfoRec;
+    ResourceInfoRec: TResourceInfoRec;
+    DupIdCount,
+    CheckDate,
+    CreateDate
+    : string;
   end;
 
 implementation
