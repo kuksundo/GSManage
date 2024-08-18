@@ -2,16 +2,23 @@ program HiConReportMgr;
 
 uses
   Vcl.Forms,
-  FrmHiconReportList in 'FrmHiconReportList.pas' {Form2},
+  mormot.db.raw.sqlite3.static,
+  FrmHiconReportList in 'FrmHiconReportList.pas' {HiConReportListF},
   UnitCheckGrpAdvUtil in '..\..\..\Common\UnitCheckGrpAdvUtil.pas',
   UnitHiConReportListOrm in 'UnitHiConReportListOrm.pas',
-  UnitHiConReportWorkItemOrm in 'UnitHiConReportWorkItemOrm.pas';
+  UnitHiConReportWorkItemOrm in 'UnitHiConReportWorkItemOrm.pas',
+  UnitHiConReportMgrData in 'UnitHiConReportMgrData.pas',
+  FrmHiconReportEdit in 'FrmHiconReportEdit.pas' {HiConReportEditF},
+  FrmHiReportWorkItemEdit in 'FrmHiReportWorkItemEdit.pas' {RptWorkItemF};
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm2, Form2);
+  Application.CreateForm(THiConReportListF, HiConReportListF);
+  Application.CreateForm(THiConReportEditF, HiConReportEditF);
+  Application.CreateForm(TRptWorkItemF, RptWorkItemF);
   Application.Run;
 end.

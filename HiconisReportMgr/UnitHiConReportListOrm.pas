@@ -13,9 +13,11 @@ type
     fKeyID, //unique id(GUID)
     fProjectNo, //공사번호
     fHullNo, //호선번호
+    fShipName, //호선명
     fVesselType, //선종
     fShipOwner, //선주
     fClassSociety, //선급
+    fReportSubject,
     fReportAuthorID, //보고서 작성자 ID
     fReportAuthorName, //보고서 작성자 이름
     fCurrentWorkDesc,//당일(주) 진행 업무
@@ -28,6 +30,8 @@ type
 
     FIsUpdate: Boolean;
 
+    fWorkBeginTime,//업무 시작 시간
+    fWorkEndTime,//업무 종료 시간
     fReportMakeDate,//보고서 작성 일자
     fModifyDate
     :TTimeLog;
@@ -38,8 +42,10 @@ type
     property KeyID : RawUTF8 read fKeyID write fKeyID;
     property ProjectNo : RawUTF8 read fProjectNo write fProjectNo;
     property HullNo: RawUTF8 read fHullNo write fHullNo;
+    property ShipName: RawUTF8 read fShipName write fShipName;
     property ShipOwner: RawUTF8 read fShipOwner write fShipOwner;
     property ClassSociety: RawUTF8 read fClassSociety write fClassSociety;
+    property ReportSubject: RawUTF8 read fReportSubject write fReportSubject;
     property ReportAuthorID: RawUTF8 read fReportAuthorID write fReportAuthorID;
     property ReportAuthorName: RawUTF8 read fReportAuthorName write fReportAuthorName;
     property CurrentWorkDesc : RawUTF8 read fCurrentWorkDesc write fCurrentWorkDesc;
@@ -48,7 +54,9 @@ type
     property ReportKind: integer read fReportKind write fReportKind;
     property ModifyItems: integer read fModifyItems write fModifyItems;
 
-    property ReportMakeDate: TTimeLog read fReportMakeDate write fReportMakeDate;
+    property WorkBeginTime: TTimeLog read fWorkBeginTime write fWorkBeginTime;
+    property WorkEndTime: TTimeLog read fWorkEndTime write fWorkEndTime;
+    property ReportMakeDate: TTimeLog read fReportMakeDate write fReportMakeDate;
     property ModifyDate: TTimeLog read fModifyDate write fModifyDate;
   end;
 

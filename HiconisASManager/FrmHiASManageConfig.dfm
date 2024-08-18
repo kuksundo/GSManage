@@ -19,7 +19,7 @@ object HiASConfigF: THiASConfigF
     Top = 0
     Width = 448
     Height = 408
-    ActivePage = EmailTS
+    ActivePage = TabSheet3
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText

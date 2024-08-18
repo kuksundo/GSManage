@@ -11,11 +11,11 @@ type
   TOrmHiconReportDetail = class(TOrm)
   private
     fKeyID, //unique id(GUID)
-    fWorkCode, //WorkCode
     fWorkDetail,//업무상세
     fWorkDetailRemark//업무상세추가
     : RawUTF8;
 
+    fWorkCode, //WorkCode
     fWorkHours //업무시간
     : integer;
 
@@ -30,10 +30,10 @@ type
     property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
     property KeyID : RawUTF8 read fKeyID write fKeyID;
-    property WorkCode : RawUTF8 read fWorkCode write fWorkCode;
     property WorkDetail: RawUTF8 read fWorkDetail write fWorkDetail;
     property WorkDetailRemark: RawUTF8 read fWorkDetailRemark write fWorkDetailRemark;
 
+    property WorkCode : integer read fWorkCode write fWorkCode;
     property WorkHours: integer read fWorkHours write fWorkHours;
 
     property WorkBeginTime: TTimeLog read fWorkBeginTime write fWorkBeginTime;
