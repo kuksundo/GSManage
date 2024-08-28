@@ -28,6 +28,7 @@ type
     JvLabel3: TJvLabel;
     CreateDate: TDateTimePicker;
     MaterialCode: TAdvEditBtn;
+    IsReclaim: TCheckBox;
     procedure MaterialCodeClickBtn(Sender: TObject);
   private
     { Private declarations }
@@ -52,7 +53,7 @@ var
   LASMaterialF: TMaterialDetailF;
 begin
   Result := -1;
-  
+
   LASMaterialF := TMaterialDetailF.Create(nil);
   try
     with LASMaterialF do
@@ -72,12 +73,13 @@ begin
       //"저장" 버튼을 누른 경우
       if Result = mrOK then
       begin
-        ADoc.MaterialCode := MaterialCode.Text;
-        ADoc.MaterialName := MaterialName.Text;
-        ADoc.NeedCount := NeedCount.Text;
-        ADoc.UnitPrice := UnitPrice.Text;
-        ADoc.NeedDate := DateTimeToStr(NeedDate.Date);
-        ADoc.CreateDate := DateTimeToStr(CreateDate.Date);
+//        ADoc.MaterialCode := MaterialCode.Text;
+//        ADoc.MaterialName := MaterialName.Text;
+//        ADoc.NeedCount := NeedCount.Text;
+//        ADoc.UnitPrice := UnitPrice.Text;
+//        ADoc.NeedDate := DateTimeToStr(NeedDate.Date);
+//        ADoc.CreateDate := DateTimeToStr(CreateDate.Date);
+//        ADoc.IsReclaim := IsReclaim.Checked;
 
         LoadMaterialDetailVarFromForm(ADoc);
       end;
@@ -101,7 +103,7 @@ procedure TMaterialDetailF.LoadMaterialDetailVarFromForm(var AVar: variant);
 var
   LJson: string;  
 begin
-  LJson := GetCompNameValue2JsonFromForm(Self);
+  LJson := GetCompNameValue2JsonFromFormByClassType(Self);// GetCompNameValue2JsonFromForm(Self);
   AVar := _JSON(StringToUtf8(LJson));
 end;
 

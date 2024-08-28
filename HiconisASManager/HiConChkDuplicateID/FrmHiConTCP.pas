@@ -10,6 +10,7 @@ uses
   AdvOfficeTabSet,
 
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
+  OtlSync,
   mormot.core.base, mormot.core.os, mormot.core.text,
   mormot.core.collections, mormot.core.variants, mormot.core.json,
   mormot.net.client, mormot.core.unicode, mormot.net.server,
@@ -69,7 +70,10 @@ type
     Kit1: TKit;
     CheckConnection1: TMenuItem;
     BitBtn3: TBitBtn;
+    N4: TMenuItem;
+
     procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn4Click(Sender: TObject);
     procedure SaveIPListToFile1Click(Sender: TObject);
     procedure LoadIPListFromFile1Click(Sender: TObject);
@@ -77,7 +81,6 @@ type
     procedure PngBitBtn1Click(Sender: TObject);
     procedure PngBitBtn2Click(Sender: TObject);
 //    procedure IPAddrGridSelectCell(Sender: TObject; ACol, ARow: Integer);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure GetPortPrint1Click(Sender: TObject);
     procedure CheckDuplicatedID1Click(Sender: TObject);
     procedure MPMBackup1Click(Sender: TObject);
@@ -102,6 +105,11 @@ type
 
     FTCPResponse: TStringList;
 
+    FCancelToken: IOmniCancellationToken;
+    FWorker  : IOmniParallelLoop<integer>;
+    FIpList,
+    FMPMBackupResultList: TStringList;
+
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
     procedure SaveIpListToFile(AFileName: string);
     procedure LoadIpListFromFile(AFileName: string);
@@ -113,7 +121,9 @@ type
     //AIpAddrList: ';'로 구분됨
     function BackupMPM(AIpAddrList: string): string;
     //AIpAddr: IP 한개임
-    function DownloadBackupMPM(AIpAddr: string): string;
+    function DownloadBackupMPMAsync(AIpAddr: string): string;
+    //AIpList: ';'로 구분됨
+    function DownloadBackupMPMForEach(AIpList: string): string;
     function GetMPMNameFromIpAddrDic(AIpAddr: string): string;
 
   public
@@ -148,8 +158,9 @@ var
 
 implementation
 
-uses UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2,
-  UnitAnimationThread, UnitCryptUtil3, pingsend //amProgress.API, amProgress.Stream, amProgress;
+uses System.TimeSpan, System.Diagnostics,
+  UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2,
+  UnitAnimationThread, UnitCryptUtil3, pingsend, FrmElapsedTime
   ;
 
 {$R *.dfm}
@@ -181,7 +192,7 @@ begin
     while AIpAddrList <> '' do
     begin
       LIpAddr := StrToken(AIpAddrList, ';');
-      DownloadBackupMPM(LIpAddr);
+      DownloadBackupMPMAsync(LIpAddr);
     end;//while
 //  end;
 end;
@@ -256,7 +267,7 @@ begin
   end;
 end;
 
-function THiconisTCPF.DownloadBackupMPM(AIpAddr: string): string;
+function THiconisTCPF.DownloadBackupMPMAsync(AIpAddr: string): string;
 var
   LResult: string;
 begin
@@ -310,9 +321,118 @@ begin
   );
 end;
 
+function THiconisTCPF.DownloadBackupMPMForEach(AIpList: string): string;
+var
+  LStr: string;
+begin
+  if not Assigned(FIpList) then
+    FIpList := TStringList.Create
+  else
+    FIpList.Clear;
+
+  while AIpList <> '' do
+  begin
+    LStr := StrToken(AIpList, ';');
+    FIpList.Add(LStr);
+  end;
+
+  if not Assigned(FMPMBackupResultList) then
+    FMPMBackupResultList := TStringList.Create
+  else
+    FMPMBackupResultList.Clear;
+
+  ShowElapsedTimeForm();
+
+  FWorker := Parallel.ForEach(0, FIpList.Count - 1)
+    .CancelWith(FCancelToken)
+    .NumTasks(FIpList.Count)
+    .PreserveOrder
+    .NoWait
+    .OnStop(
+        procedure (const task: IOmniTask)
+        begin
+          // because of NoWait, OnStop delegate is invoked from the worker code;
+          //we must not destroy the worker at that point or the program will block
+          task.Invoke(
+            procedure
+            begin
+              ElapsedTimeF.Hide;
+              ElapsedTimeF.Free;
+              FMPMBackupResultList.SaveToFile('c:\temp\FMPMBackupResultList.txt');
+              ShowMessage(FMPMBackupResultList.Text);
+            end
+
+          );//Invoke
+        end
+    ); //OnStop
+
+    FWorker.Execute(
+      procedure (const task: IOmniTask; const i: integer)
+      var
+        LHttp: TIdHttp;
+        LIpAddr, Lurl, LQuery, LFullUrl, LBackupFileSufix, LFN: string;
+        LStream: TMemoryStream;
+        LStopWatch: TStopWatch;
+      begin
+        LIpAddr := FIpList.Strings[i];
+
+        if PingHost(LIpAddr) = -1 then
+        begin
+          FMPMBackupResultList.Add(LiPAddr + ' : bad connection!');
+        end
+        else
+        begin
+          LStopWatch := TStopWatch.StartNew;
+          LHttp := TIdHttp.Create(nil);
+          try
+            LUrl := 'http://' + LIpAddr + '/Backup';
+            LQuery := '&=Make%20Backup';
+            LFullUrl := LUrl + '?' + LQuery;
+
+            LFullUrl := LHttp.Get(LFullUrl);
+
+            if Pos('Download Backup', LFullUrl) > 0  then
+            begin
+              LStream := TMemoryStream.Create;
+              try
+                LUrl := 'http://' + LIpAddr + '/';
+                //IP 마지막 주소값을 가져옴
+                LBackupFileSufix := strTokenRev(LIpAddr, '.');
+                LFN := 'MPM' + LBackupFileSufix + '.tgz';
+                LQuery := '&=Download+Backup';
+                LFullUrl := LUrl + '/' + LFN;// + '?' + LQuery;
+
+                LHttp.Get(LFullUrl, LStream);
+                LFN := 'c:\temp\' + LFN;
+                LStream.SaveToFile(LFN);
+
+                LFN := LFN + ' => Elapsed Time : ' +
+                  IntToStr(LStopWatch.Elapsed.Minutes) + '분 ' +
+                  IntToStr(LStopWatch.Elapsed.Seconds) + '초';
+                FMPMBackupResultList.Add(LFN);
+              finally
+                LStream.Free;
+              end;
+            end;
+    //          ShowMessage(Lurl);
+          finally
+            LHttp.Free;
+            LStopWatch.Stop;
+          end;
+        end;//if ping
+      end
+    );
+end;
+
 procedure THiconisTCPF.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   FTCPResponse.Free;
+
+  if Assigned(FIpList) then
+    FIpList.Free;
+
+  if Assigned(FMPMBackupResultList) then
+    FMPMBackupResultList.Free;
 end;
 
 procedure THiconisTCPF.FormCreate(Sender: TObject);
@@ -555,12 +675,15 @@ begin
   Result := '';
   LList := '';
 
-  for i := 0 to IPAddrGrid.SelectedCount - 1 do
+  for i := 0 to IPAddrGrid.RowCount - 1 do
   begin
-    if AIsMaster then
-      LList := LList + IPAddrGrid.CellsByName['PMPM_PIP', IPAddrGrid.SelectedRow] + ';'
-    else
-      LList := LList + IPAddrGrid.CellsByName['PMPM_SIP', IPAddrGrid.SelectedRow] + ';';
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      if AIsMaster then
+        LList := LList + IPAddrGrid.CellsByName['PMPM_PIP', i] + ';'
+      else
+        LList := LList + IPAddrGrid.CellsByName['PMPM_SIP', i] + ';';
+    end;
   end;
 
   Result := LList;
@@ -660,9 +783,10 @@ procedure THiconisTCPF.MPMBackup1Click(Sender: TObject);
 var
   LIpAddr: string;
 begin
+  //';'로 구분됨
   LIpAddr := GetSelectedIpAddrList();
-
-  BackupMPM(LIpAddr);
+  DownloadBackupMPMForEach(LIpAddr);
+//  BackupMPM(LIpAddr);
 end;
 
 procedure THiconisTCPF.PngBitBtn1Click(Sender: TObject);
@@ -880,20 +1004,23 @@ begin
 end;
 
 procedure THiconisTCPF.ShowProgress1Click(Sender: TObject);
-var
-  ani : TAnimationThread;
-  r : TRect;
+//var
+//  ani : TAnimationThread;
+//  r : TRect;
 begin
-  r := panel1.clientrect;
-  InflateRect(r, - panel1.bevelwidth, - panel1.bevelwidth);
-  ani := TanimationThread.Create(panel1, r, panel1.color, clBlue, 25);
-  BitBtn1.Enabled := False;
-  Application.ProcessMessages;
-  Sleep(30000);  // replace with query.Open or such
-  BitBtn1.Enabled := True;
-  ani.Terminate;
-  ShowMessage('Done');
+//  r := panel1.clientrect;
+//  InflateRect(r, - panel1.bevelwidth, - panel1.bevelwidth);
+//  ani := TanimationThread.Create(panel1, r, panel1.color, clBlue, 25);
+//  BitBtn1.Enabled := False;
+//  Application.ProcessMessages;
+//  Sleep(30000);  // replace with query.Open or such
+//  BitBtn1.Enabled := True;
+//  ani.Terminate;
+//  ShowMessage('Done');
+
+  ShowModalElapsedTimeForm();
 end;
+
 
 procedure THiconisTCPF.ShowTD(const ATDRec: TMsgBox);
 begin

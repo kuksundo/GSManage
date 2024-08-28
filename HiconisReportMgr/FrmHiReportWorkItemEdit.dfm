@@ -11,17 +11,19 @@ object RptWorkItemF: TRptWorkItemF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object JvLabel36: TJvLabel
     AlignWithMargins = True
     Left = 30
     Top = 17
-    Width = 81
+    Width = 89
     Height = 25
     Alignment = taCenter
     AutoSize = False
-    Caption = #51089#50629#49884#51089#51068
+    Caption = #51089#50629#49884#51089#49884#44033
     Color = 14671839
     FrameColor = clGrayText
     Font.Charset = ANSI_CHARSET
@@ -57,11 +59,11 @@ object RptWorkItemF: TRptWorkItemF
     AlignWithMargins = True
     Left = 143
     Top = 17
-    Width = 77
+    Width = 89
     Height = 25
     Alignment = taCenter
     AutoSize = False
-    Caption = #51089#50629#51333#47308#51068
+    Caption = #51089#50629#51333#47308#49884#44033
     Color = 14671839
     FrameColor = clGrayText
     Font.Charset = ANSI_CHARSET
@@ -188,24 +190,26 @@ object RptWorkItemF: TRptWorkItemF
     HotTrackFont.Name = #47569#51008' '#44256#46357
     HotTrackFont.Style = []
   end
-  object WorkBeginTime: TDateTimePicker
+  object WorkItemBeginTime: TDateTimePicker
     Left = 30
     Top = 48
-    Width = 89
+    Width = 93
     Height = 24
     Date = 42843.827708518520000000
     Time = 42843.827708518520000000
     ImeName = 'Microsoft IME 2010'
+    Kind = dtkTime
     TabOrder = 0
   end
-  object WorkEndTime: TDateTimePicker
+  object WorkItemEndTime: TDateTimePicker
     Left = 143
     Top = 48
-    Width = 89
+    Width = 98
     Height = 24
     Date = 42843.827708518520000000
     Time = 42843.827708518520000000
     ImeName = 'Microsoft IME 2010'
+    Kind = dtkTime
     TabOrder = 1
   end
   object WorkHours: TEdit
@@ -213,6 +217,7 @@ object RptWorkItemF: TRptWorkItemF
     Top = 50
     Width = 65
     Height = 21
+    Alignment = taCenter
     TabOrder = 2
   end
   object WorkCode: TComboBox
@@ -222,7 +227,7 @@ object RptWorkItemF: TRptWorkItemF
     Height = 21
     TabOrder = 3
   end
-  object NextWorkDesc: TMemo
+  object WorkDetailRemark: TMemo
     Left = 30
     Top = 201
     Width = 394
@@ -232,14 +237,15 @@ object RptWorkItemF: TRptWorkItemF
     ImeMode = imSHanguel
     ImeName = 'Microsoft IME 2010'
     ScrollBars = ssVertical
-    TabOrder = 4
+    TabOrder = 5
   end
-  object Edit1: TEdit
+  object WorkDetail: TEdit
     Left = 30
     Top = 120
     Width = 398
     Height = 21
-    TabOrder = 5
+    Alignment = taCenter
+    TabOrder = 4
   end
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
@@ -252,8 +258,6 @@ object RptWorkItemF: TRptWorkItemF
     Align = alBottom
     Rounding = 4
     TabOrder = 6
-    ExplicitLeft = -5
-    ExplicitTop = 350
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 387
@@ -267,7 +271,6 @@ object RptWorkItemF: TRptWorkItemF
       Caption = #45803#44592
       ModalResult = 2
       TabOrder = 0
-      ExplicitLeft = 268
     end
     object AeroButton1: TAeroButton
       AlignWithMargins = True
@@ -281,7 +284,22 @@ object RptWorkItemF: TRptWorkItemF
       Caption = #51201#50857
       ModalResult = 1
       TabOrder = 1
-      ExplicitLeft = 187
+    end
+    object ReportKey4Item: TEdit
+      Left = 3
+      Top = 9
+      Width = 108
+      Height = 21
+      TabOrder = 2
+      Visible = False
+    end
+    object WorkItemKey: TEdit
+      Left = 117
+      Top = 10
+      Width = 108
+      Height = 21
+      TabOrder = 3
+      Visible = False
     end
   end
 end

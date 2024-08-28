@@ -9,7 +9,8 @@ uses
   UnitHiConReportWorkItemOrm in 'UnitHiConReportWorkItemOrm.pas',
   UnitHiConReportMgrData in 'UnitHiConReportMgrData.pas',
   FrmHiconReportEdit in 'FrmHiconReportEdit.pas' {HiConReportEditF},
-  FrmHiReportWorkItemEdit in 'FrmHiReportWorkItemEdit.pas' {RptWorkItemF};
+  FrmHiReportWorkItemEdit in 'FrmHiReportWorkItemEdit.pas' {RptWorkItemF},
+  UnitHiConReportMakeUtil in 'UnitHiConReportMakeUtil.pas';
 
 {$R *.res}
 

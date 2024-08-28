@@ -180,6 +180,7 @@ type
     BitBtn1: TBitBtn;
     ImportDIModuleRecallData1: TMenuItem;
     ShowDIRecallStatus1: TMenuItem;
+    BitBtn2: TBitBtn;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -242,6 +243,8 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure FindCondCBChange(Sender: TObject);
     procedure ImportDIModuleRecallData1Click(Sender: TObject);
+    procedure ShowDIRecallStatus1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -970,9 +973,9 @@ begin
     FFrom := dt_Begin.Date;
     FTo := dt_end.Date;
     FQueryDate := LQueryDateType;
-    FHullNo := HullNoEdit.Text;
-    FShipName := ShipNameEdit.Text;
-    FCustomer := CustomerCombo.Text;
+    FHullNo := Trim(HullNoEdit.Text);
+    FShipName := Trim(ShipNameEdit.Text);
+    FCustomer := Trim(CustomerCombo.Text);
 //    FProdType := ProductTypeCombo.Text;
     FClaimStatus := ClaimStatusCombo.ItemIndex;
 //    FSubject := SubjectEdit.Text;
@@ -980,9 +983,9 @@ begin
     FCurWork :=  CurWorkCB.ItemIndex;
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
-    FClaimNo := ClaimNoEdit.Text;
+    FClaimNo := Trim(ClaimNoEdit.Text);
 //    FQtnNo := QtnNoEdit.Text;
-    FOrderNo := OrderNoEdit.Text;
+    FOrderNo := Trim(OrderNoEdit.Text);
 //    FPoNo := PONoEdit.Text;
     FPorNo := PorNoEdit.Text;
     FMaterialCode := MaterialCodeEdit.Text;
@@ -1831,6 +1834,11 @@ end;
 procedure THiconisAsManageF.BitBtn1Click(Sender: TObject);
 begin
   Content2Clipboard(HullNoEdit.Text);
+end;
+
+procedure THiconisAsManageF.BitBtn2Click(Sender: TObject);
+begin
+  Content2Clipboard(OrderNoEdit.Text);
 end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
@@ -3219,6 +3227,11 @@ end;
 procedure THiconisAsManageF.ShipNameEditKeyPress(Sender: TObject; var Key: Char);
 begin
   ExecuteSearch(Key);
+end;
+
+procedure THiconisAsManageF.ShowDIRecallStatus1Click(Sender: TObject);
+begin
+  ShowDIRecallStatusBySelected();
 end;
 
 procedure THiconisAsManageF.ShowDIRecallStatusBySelected;

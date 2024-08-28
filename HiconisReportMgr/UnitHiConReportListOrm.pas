@@ -10,7 +10,8 @@ uses SysUtils, Classes, Generics.Collections, Forms,
 type
   TOrmHiconReportList = class(TOrm)
   private
-    fKeyID, //unique id(GUID)
+    fReportKey: TTimeLog;
+
     fProjectNo, //공사번호
     fHullNo, //호선번호
     fShipName, //호선명
@@ -21,7 +22,8 @@ type
     fReportAuthorID, //보고서 작성자 ID
     fReportAuthorName, //보고서 작성자 이름
     fCurrentWorkDesc,//당일(주) 진행 업무
-    fNextWorkDesc//다음(주) 진행 업무
+    fNextWorkDesc,//다음(주) 진행 업무
+    fOwnerComment
     : RawUTF8;
 
     fReportKind, //보고서 종류
@@ -32,14 +34,14 @@ type
 
     fWorkBeginTime,//업무 시작 시간
     fWorkEndTime,//업무 종료 시간
-    fReportMakeDate,//보고서 작성 일자
+    fReportMakeDate,//보고서 작성 일자(Keyid로 사용)
     fModifyDate
     :TTimeLog;
   public
     //True : DB Update, False: DB Add
     property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
-    property KeyID : RawUTF8 read fKeyID write fKeyID;
+    property ReportKey : TTimeLog read fReportKey write fReportKey;
     property ProjectNo : RawUTF8 read fProjectNo write fProjectNo;
     property HullNo: RawUTF8 read fHullNo write fHullNo;
     property ShipName: RawUTF8 read fShipName write fShipName;
@@ -50,21 +52,22 @@ type
     property ReportAuthorName: RawUTF8 read fReportAuthorName write fReportAuthorName;
     property CurrentWorkDesc : RawUTF8 read fCurrentWorkDesc write fCurrentWorkDesc;
     property NextWorkDesc: RawUTF8 read fNextWorkDesc write fNextWorkDesc;
+    property OwnerComment: RawUTF8 read fOwnerComment write fOwnerComment;
 
     property ReportKind: integer read fReportKind write fReportKind;
     property ModifyItems: integer read fModifyItems write fModifyItems;
 
+    property ReportMakeDate: TTimeLog read fReportMakeDate write fReportMakeDate;
     property WorkBeginTime: TTimeLog read fWorkBeginTime write fWorkBeginTime;
     property WorkEndTime: TTimeLog read fWorkEndTime write fWorkEndTime;
-    property ReportMakeDate: TTimeLog read fReportMakeDate write fReportMakeDate;
-    property ModifyDate: TTimeLog read fModifyDate write fModifyDate;
-  end;
+    property ModifyDate: TTimeLog read fModifyDate write fModifyDate;
+  end;
 
   function CreateModelHiconReportList: TOrmModel;
   procedure InitHiconReportListClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiconReportListClient();
 
-  function GetHiconReportListByKeyID(const AKeyID: string): TOrmHiconReportList;
+  function GetHiconReportListByKeyID(const AKeyID: TTimeLog): TOrmHiconReportList;
   function GetHiconReportListByProjectNo(const AProjNo: string): TOrmHiconReportList;
   function GetHiconReportListByHullNo(const AHullNo: string): TOrmHiconReportList;
   function GetHiReportListByHullNoNMakeDate(const AHullNo: string; AReportMakeDate: TTimeLog): TOrmHiconReportList;
@@ -72,6 +75,8 @@ type
 
   procedure AddHiconReportListFromVariant(AVar: variant);
   procedure AddOrUpdateHiconReportList(AOrm: TOrmHiconReportList);
+
+  procedure DeleteHiconReportListByKey(const AKeyID: TTimeLog);
 
 var
   g_HiconReportListDB: TRestClientURI;
@@ -103,7 +108,7 @@ begin
   if LStr = '.exe' then
   begin
     LFileName := ChangeFileExt(ExtractFileName(AExeName),'.sqlite');
-    LFileName := LFileName.Replace('.sqlite', '_Project.sqlite');
+    LFileName := LFileName.Replace('.sqlite', '_ReportList.sqlite');
     LFilePath := GetSubFolderPath(LFilePath, 'db');
   end;
 
@@ -130,9 +135,9 @@ procedure DestroyHiconReportListClient();
     FreeAndNil(HiconReportListModel);
 end;
 
-function GetHiconReportListByKeyID(const AKeyID: string): TOrmHiconReportList;
+function GetHiconReportListByKeyID(const AKeyID: TTimeLog): TOrmHiconReportList;
 begin
-  Result := TOrmHiconReportList.CreateAndFillPrepare(g_HiconReportListDB.orm, 'KeyID = ?', [AKeyID]);
+  Result := TOrmHiconReportList.CreateAndFillPrepare(g_HiconReportListDB.orm, 'ReportKey = ?', [AKeyID]);
 
   if Result.FillOne then
     Result.IsUpdate := True
@@ -189,10 +194,10 @@ end;
 
 procedure AddHiconReportListFromVariant(AVar: variant);
 var
-  LKeyID: string;
+  LKeyID: TTimeLog;
   LOrmHiconReportList: TOrmHiconReportList;
 begin
-  LKeyID := AVar.KeyID;
+  LKeyID := AVar.ReportKey;
 
   LOrmHiconReportList := GetHiconReportListByKeyID(LKeyID);
   try
@@ -213,6 +218,11 @@ begin
   begin
     g_HiconReportListDB.Add(AOrm, true);
   end;
+end;
+
+procedure DeleteHiconReportListByKey(const AKeyID: TTimeLog);
+begin
+  g_HiconReportListDB.Delete(TOrmHiconReportList, 'ReportKey = ?', [AKeyID]);
 end;
 
 initialization

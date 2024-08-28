@@ -11,7 +11,8 @@ uses
   UnitHiConTCPWorker in 'UnitHiConTCPWorker.pas',
   UnitCryptUtil3 in '..\..\..\..\NoGitHub\Util\UnitCryptUtil3.pas',
   UnitHiconSystemDBUtil in '..\UnitHiconSystemDBUtil.pas',
-  UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas';
+  UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas',
+  FrmElapsedTime in '..\..\..\..\Common\Form\FrmElapsedTime.pas' {ElapsedTimeF};
 
 {$R *.res}
 

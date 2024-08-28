@@ -12,23 +12,26 @@ uses
 type
   TRptWorkItemF = class(TForm)
     JvLabel36: TJvLabel;
-    WorkBeginTime: TDateTimePicker;
+    WorkItemBeginTime: TDateTimePicker;
     Label2: TLabel;
     JvLabel37: TJvLabel;
-    WorkEndTime: TDateTimePicker;
+    WorkItemEndTime: TDateTimePicker;
     JvLabel1: TJvLabel;
     JvLabel2: TJvLabel;
     WorkHours: TEdit;
     WorkCode: TComboBox;
     JvLabel16: TJvLabel;
     JvLabel38: TJvLabel;
-    NextWorkDesc: TMemo;
-    Edit1: TEdit;
+    WorkDetailRemark: TMemo;
+    WorkDetail: TEdit;
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
+    ReportKey4Item: TEdit;
+    WorkItemKey: TEdit;
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+    procedure InitEnum();
   public
     procedure LoadRptWorkItemVar2Form(AVar: variant);
     procedure LoadRptWorkItemVarFromForm(var AVar: variant);
@@ -41,13 +44,15 @@ var
 
 implementation
 
-uses UnitRttiUtil2, UnitStringUtil;
+uses UnitRttiUtil2, UnitStringUtil, UnitHiConReportMgrData;
 
 {$R *.dfm}
 
 function DisplayRptWorkItemEditForm(var ADoc: variant): integer;
 var
   LRptWorkItemF: TRptWorkItemF;
+  LJson: string;
+  LVar: variant;
 begin
   Result := -1;
 
@@ -55,30 +60,22 @@ begin
   try
     with LRptWorkItemF do
     begin
-      if ADoc.KeyID = '' then
-      begin
-        Caption := Caption + ' (New)';
-      end
-      else
-      begin
-        Caption := Caption + ' (Update)';
-        LoadRptWorkItemVar2Form(ADoc);
-      end;
+      LoadRptWorkItemVar2Form(ADoc);
 
       Result := ShowModal;
 
       //"저장" 버튼을 누른 경우
       if Result = mrOK then
       begin
-        if ADoc.KeyID = '' then
-          ADoc.KeyID := NewGUID;
+//        LJson := GetCompNameValue2JsonFromFormByClassType(LRptWorkItemF);
 
-        ADoc.WorkCode := WorkCode.Text;
-        ADoc.WorkHours := WorkHours.Text;
-        ADoc.WorkBeginTime := WorkBeginTime.DateTime;
-        ADoc.WorkEndTime := WorkEndTime.DateTime;
-        ADoc.ModifyDate := DateTimeToStr(now);
+//        ADoc.WorkCode := WorkCode.Text;
+//        ADoc.WorkHours := WorkHours.Text;
+//        ADoc.WorkBeginTime := WorkBeginTime.DateTime;
+//        ADoc.WorkEndTime := WorkEndTime.DateTime;
+//        ADoc.ModifyDate := DateTimeToStr(now);
 
+//        LVar := _Json(LJson);
         LoadRptWorkItemVarFromForm(ADoc);
       end;
     end;//with
@@ -89,19 +86,29 @@ end;
 
 { TRptWorkItemF }
 
+procedure TRptWorkItemF.FormCreate(Sender: TObject);
+begin
+  InitEnum();
+end;
+
+procedure TRptWorkItemF.InitEnum;
+begin
+  g_HiRptWorkCode.SetType2Combo(WorkCode);
+end;
+
 procedure TRptWorkItemF.LoadRptWorkItemVar2Form(AVar: variant);
 var
   LJson: string;
 begin
   LJson := VariantToString(AVar);
-  SetCompNameValueFromJson2Form(Self, LJson);
+  SetCompNameValueFromJson2FormByClassType(Self, LJson);
 end;
 
 procedure TRptWorkItemF.LoadRptWorkItemVarFromForm(var AVar: variant);
 var
   LJson: string;
 begin
-  LJson := GetCompNameValue2JsonFromForm(Self);
+  LJson := GetCompNameValue2JsonFromFormByClassType(Self);
   AVar := _JSON(StringToUtf8(LJson));
 end;
 

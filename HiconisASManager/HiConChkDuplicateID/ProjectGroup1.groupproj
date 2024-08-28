@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{C2C9DBCA-5B1A-4066-81F7-877396A6A482}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="HiConTCP.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\..\..\..\vcl\ggbar.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="HiConTCP">
+        <MSBuild Projects="HiConTCP.dproj"/>
+    </Target>
+    <Target Name="HiConTCP:Clean">
+        <MSBuild Projects="HiConTCP.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="HiConTCP:Make">
+        <MSBuild Projects="HiConTCP.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ggbar">
+        <MSBuild Projects="..\..\..\..\..\..\..\vcl\ggbar.dproj"/>
+    </Target>
+    <Target Name="ggbar:Clean">
+        <MSBuild Projects="..\..\..\..\..\..\..\vcl\ggbar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ggbar:Make">
+        <MSBuild Projects="..\..\..\..\..\..\..\vcl\ggbar.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="HiConTCP;ggbar"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="HiConTCP:Clean;ggbar:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="HiConTCP:Make;ggbar:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

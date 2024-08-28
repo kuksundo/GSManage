@@ -5,50 +5,59 @@ interface
 uses SysUtils, Classes, Generics.Collections, Forms,
   mormot.core.base, mormot.orm.core, mormot.rest.client, mormot.core.os,
   mormot.rest.sqlite3, mormot.orm.base, mormot.core.data, mormot.core.variants,
-  mormot.core.datetime, mormot.core.json;
+  mormot.core.datetime, mormot.core.collections, mormot.core.json;
 
 type
   TOrmHiconReportDetail = class(TOrm)
   private
-    fKeyID, //unique id(GUID)
+    fReportKey4Item, //Report KeyID
+    fWorkItemKey     //WorkItem KeyID
+    : TTimeLog;
     fWorkDetail,//업무상세
     fWorkDetailRemark//업무상세추가
     : RawUTF8;
 
-    fWorkCode, //WorkCode
+    fWorkCode, //WorkCode(g_HiRptWorkCode)
     fWorkHours //업무시간
     : integer;
 
     FIsUpdate: Boolean;
 
-    fWorkBeginTime,//업무 시작 시간
-    fWorkEndTime,//업무 종료 시간
-    fModifyDate
+    fWorkItemBeginTime,//업무 시작 시간
+    fWorkItemEndTime,//업무 종료 시간
+    fModifyDate_Item
     :TTimeLog;
   public
     //True : DB Update, False: DB Add
     property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
-    property KeyID : RawUTF8 read fKeyID write fKeyID;
+    property ReportKey4Item: TTimeLog read fReportKey4Item write fReportKey4Item;
+    property WorkItemKey : TTimeLog read fWorkItemKey write fWorkItemKey;
     property WorkDetail: RawUTF8 read fWorkDetail write fWorkDetail;
     property WorkDetailRemark: RawUTF8 read fWorkDetailRemark write fWorkDetailRemark;
 
     property WorkCode : integer read fWorkCode write fWorkCode;
     property WorkHours: integer read fWorkHours write fWorkHours;
 
-    property WorkBeginTime: TTimeLog read fWorkBeginTime write fWorkBeginTime;
-    property WorkEndTime: TTimeLog read fWorkEndTime write fWorkEndTime;
-    property ModifyDate: TTimeLog read fModifyDate write fModifyDate;
+    property WorkItemBeginTime: TTimeLog read fWorkItemBeginTime write fWorkItemBeginTime;
+    property WorkItemEndTime: TTimeLog read fWorkItemEndTime write fWorkItemEndTime;
+    property ModifyDate_Item: TTimeLog read fModifyDate_Item write fModifyDate_Item;
   end;
 
   function CreateModelHiconReportDetail: TOrmModel;
   procedure InitHiconReportDetailClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiconReportDetailClient();
 
-  function GetHiconReportDetailByKeyID(const AKeyID: string): TOrmHiconReportDetail;
+  function GetHiconReportDetailByReportKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
+  function GetHiconReportDetailByItemKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
+  function GetHiRptDetailJsonAryByReportKey(const AKeyID: TTimeLog): variant;
 
-  procedure AddHiconReportDetailFromVariant(AVar: variant);
-  procedure AddOrUpdateHiconReportDetail(AOrm: TOrmHiconReportDetail);
+  procedure AddHiconReportDetailFromVariant(AVar: variant; AOnlyAdd: Boolean);
+  procedure AddHiconReportDetailFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean=False);
+  procedure AddOrUpdateHiconReportDetail(AOrm: TOrmHiconReportDetail; AOnlyAdd: Boolean=false);
+
+  procedure DeleteHiconReportDetailByRptKey(const AKeyID: TTimeLog);
+  procedure DeleteHiconReportDetailByItemKey(const AKeyID: TTimeLog);
 
 var
   g_HiconReportDetailDB: TRestClientURI;
@@ -80,7 +89,7 @@ begin
   if LStr = '.exe' then
   begin
     LFileName := ChangeFileExt(ExtractFileName(AExeName),'.sqlite');
-    LFileName := LFileName.Replace('.sqlite', '_Project.sqlite');
+    LFileName := LFileName.Replace('.sqlite', '_WorkItem.sqlite');
     LFilePath := GetSubFolderPath(LFilePath, 'db');
   end;
 
@@ -107,9 +116,9 @@ procedure DestroyHiconReportDetailClient();
     FreeAndNil(HiconReportDetailModel);
 end;
 
-function GetHiconReportDetailByKeyID(const AKeyID: string): TOrmHiconReportDetail;
+function GetHiconReportDetailByReportKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
 begin
-  Result := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'KeyID = ?', [AKeyID]);
+  Result := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'ReportKey4Item = ?', [AKeyID]);
 
   if Result.FillOne then
     Result.IsUpdate := True
@@ -117,24 +126,73 @@ begin
     Result.IsUpdate := False;
 end;
 
-procedure AddHiconReportDetailFromVariant(AVar: variant);
+function GetHiconReportDetailByItemKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
+begin
+  Result := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'WorkItemKey = ?', [AKeyID]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetHiRptDetailJsonAryByReportKey(const AKeyID: TTimeLog): variant;
 var
-  LKeyID: string;
+  LOrmHiconReportDetail: TOrmHiconReportDetail;
+  LDocList: IList<TOrmHiconReportDetail>;
+  LUtf8: RawUtf8;
+begin
+  LOrmHiconReportDetail := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'ReportKey4Item = ?', [AKeyID]);
+  try
+    LDocList := LOrmHiconReportDetail.FillTable.ToIList<TOrmHiconReportDetail>;
+    LUtf8 := LDocList.Data.SaveToJson();
+    Result := _JSON(LUtf8);
+  finally
+    LOrmHiconReportDetail.Free;
+  end;
+end;
+
+procedure AddHiconReportDetailFromVariant(AVar: variant; AOnlyAdd: Boolean);
+var
+  LKeyID: TTimeLog;
   LOrmHiconReportDetail: TOrmHiconReportDetail;
 begin
-  LKeyID := AVar.KeyID;
+  if AOnlyAdd then
+    LOrmHiconReportDetail := TOrmHiconReportDetail.Create
+  else
+  begin
+    LKeyID := AVar.WorkItemKey;
+    LOrmHiconReportDetail := GetHiconReportDetailByItemKey(LKeyID);
+  end;
 
-  LOrmHiconReportDetail := GetHiconReportDetailByKeyID(LKeyID);
   try
     LoadRecordPropertyFromVariant(LOrmHiconReportDetail, AVar);
-    AddOrUpdateHiconReportDetail(LOrmHiconReportDetail);
+    AddOrUpdateHiconReportDetail(LOrmHiconReportDetail, AOnlyAdd);
   finally
     FreeAndNil(LOrmHiconReportDetail);
   end;
 end;
 
-procedure AddOrUpdateHiconReportDetail(AOrm: TOrmHiconReportDetail);
+procedure AddHiconReportDetailFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean);
+var
+  LDocList: IDocList;
+  LAryUtf8: RawUtf8;
+  LVar: variant;
 begin
+  LAryUtf8 := AJsonAry;
+  LDocList := DocList(LAryUtf8);
+
+  for LVar in LDocList do
+  begin
+    AddHiconReportDetailFromVariant(LVar, AOnlyAdd);
+  end;//for
+end;
+
+procedure AddOrUpdateHiconReportDetail(AOrm: TOrmHiconReportDetail; AOnlyAdd: Boolean);
+begin
+  if AOnlyAdd then
+    g_HiconReportDetailDB.Add(AOrm, true)
+  else
   if AOrm.IsUpdate then
   begin
     g_HiconReportDetailDB.Update(AOrm);
@@ -143,6 +201,16 @@ begin
   begin
     g_HiconReportDetailDB.Add(AOrm, true);
   end;
+end;
+
+procedure DeleteHiconReportDetailByRptKey(const AKeyID: TTimeLog);
+begin
+  g_HiconReportDetailDB.Delete(TOrmHiconReportDetail, 'ReportKey4Item = ?', [AKeyID]);
+end;
+
+procedure DeleteHiconReportDetailByItemKey(const AKeyID: TTimeLog);
+begin
+  g_HiconReportDetailDB.Delete(TOrmHiconReportDetail, 'WorkItemKey = ?', [AKeyID]);
 end;
 
 initialization

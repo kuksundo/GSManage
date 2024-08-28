@@ -273,6 +273,8 @@ type
     Button4: TButton;
     OrderNoEdit: TAdvEditBtn;
     BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    IsReclaim: TNxCheckBoxColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -340,6 +342,7 @@ type
     procedure Button4Click(Sender: TObject);
     procedure OrderNoEditClickBtn(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -1249,6 +1252,11 @@ end;
 procedure TTaskEditF.BitBtn1Click(Sender: TObject);
 begin
   Content2Clipboard(HullNoEdit.Text);
+end;
+
+procedure TTaskEditF.BitBtn2Click(Sender: TObject);
+begin
+  Content2Clipboard(OrderNoEdit.Text);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -2940,13 +2948,13 @@ begin
   begin
     TDocVariant.New(LDoc);
     LDoc.PorNo := '';
-    LDoc.TaskID := FTask.ID;
   end
   else
   begin
     LDoc := _JSON(StringToUtf8(FMatDeliveryInfoJson));
   end;
 
+  LDoc.TaskID := FTask.ID;
   //"저장" 버튼을 누르면 True
   if DisplayMaterial2EditForm(LDoc) then
   begin

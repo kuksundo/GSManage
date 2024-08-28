@@ -12,6 +12,7 @@ object HiConReportListF: THiConReportListF
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object CurvyPanel1: TCurvyPanel
@@ -135,8 +136,8 @@ object HiConReportListF: THiConReportListF
     end
     object JvLabel3: TJvLabel
       AlignWithMargins = True
-      Left = 556
-      Top = 40
+      Left = 753
+      Top = 39
       Width = 80
       Height = 25
       Alignment = taCenter
@@ -168,7 +169,7 @@ object HiConReportListF: THiConReportListF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #51089#49457#51088
+      Caption = #51089#49457#51088#51060#47492
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -216,13 +217,13 @@ object HiConReportListF: THiConReportListF
     end
     object JvLabel9: TJvLabel
       AlignWithMargins = True
-      Left = 754
-      Top = 39
+      Left = 755
+      Top = 70
       Width = 79
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #51088#51116'Por No.'
+      Caption = #49440#44553
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -249,34 +250,7 @@ object HiConReportListF: THiConReportListF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Report '#51333#47448
-      Color = 14671839
-      FrameColor = clGrayText
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = [fsBold]
-      Layout = tlCenter
-      ParentColor = False
-      ParentFont = False
-      RoundedFrame = 3
-      Transparent = True
-      HotTrackFont.Charset = ANSI_CHARSET
-      HotTrackFont.Color = clWindowText
-      HotTrackFont.Height = -13
-      HotTrackFont.Name = #47569#51008' '#44256#46357
-      HotTrackFont.Style = []
-    end
-    object JvLabel7: TJvLabel
-      AlignWithMargins = True
-      Left = 754
-      Top = 70
-      Width = 79
-      Height = 25
-      Alignment = taCenter
-      AutoSize = False
-      Caption = #51088#51116#48264#54840
+      Caption = #48372#44256#49436#51333#47448
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -331,6 +305,33 @@ object HiConReportListF: THiConReportListF
       Alignment = taCenter
       AutoSize = False
       Caption = #48320#44221#49324#54637
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel12: TJvLabel
+      AlignWithMargins = True
+      Left = 556
+      Top = 40
+      Width = 80
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51089#49457#51088#49324#48264
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -442,8 +443,8 @@ object HiConReportListF: THiConReportListF
       TabOrder = 1
     end
     object ShipOwnerCombo: TComboBox
-      Left = 639
-      Top = 39
+      Left = 836
+      Top = 38
       Width = 112
       Height = 25
       Font.Charset = ANSI_CHARSET
@@ -508,7 +509,7 @@ object HiConReportListF: THiConReportListF
         OnClick = AeroButton1Click
       end
     end
-    object AuthorEdit: TEdit
+    object AuthorNameEdit: TEdit
       Left = 441
       Top = 43
       Width = 112
@@ -517,21 +518,13 @@ object HiConReportListF: THiConReportListF
       ImeName = 'Microsoft IME 2010'
       TabOrder = 4
     end
-    object PORNoEdit: TEdit
-      Left = 837
-      Top = 39
+    object ClassSocietyEdit: TEdit
+      Left = 838
+      Top = 70
       Width = 112
       Height = 21
       ImeName = 'Microsoft IME 2010'
       TabOrder = 5
-    end
-    object DisplayFinalCheck: TCheckBox
-      Left = 840
-      Top = 105
-      Width = 114
-      Height = 17
-      Caption = #50756#47308#51089#50629' '#54364#49884
-      TabOrder = 6
     end
     object Button1: TButton
       Left = 312
@@ -539,16 +532,8 @@ object HiConReportListF: THiConReportListF
       Width = 40
       Height = 25
       Caption = 'Clear'
-      TabOrder = 7
+      TabOrder = 6
       OnClick = Button1Click
-    end
-    object MaterialCodeEdit: TEdit
-      Left = 837
-      Top = 70
-      Width = 112
-      Height = 21
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 8
     end
     object FindCondCB: TComboBox
       Left = 103
@@ -563,7 +548,7 @@ object HiConReportListF: THiConReportListF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 7
     end
     object HullNoEdit: TAdvEditBtn
       Left = 465
@@ -587,7 +572,7 @@ object HiConReportListF: THiConReportListF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 10
+      TabOrder = 8
       Text = ''
       Visible = True
       Version = '1.3.5.0'
@@ -621,6 +606,7 @@ object HiConReportListF: THiConReportListF
         BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
         B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      OnClickBtn = HullNoEditClickBtn
     end
     object ShipNameEdit: TAdvEditBtn
       Left = 638
@@ -644,7 +630,7 @@ object HiConReportListF: THiConReportListF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 11
+      TabOrder = 9
       Text = ''
       Visible = True
       Version = '1.3.5.0'
@@ -701,7 +687,7 @@ object HiConReportListF: THiConReportListF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 12
+      TabOrder = 10
       Text = ''
       Visible = True
       Version = '1.3.5.0'
@@ -768,18 +754,8 @@ object HiConReportListF: THiConReportListF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 13
-    end
-    object ModifyItemGrp: TAdvOfficeCheckGroup
-      Left = 439
-      Top = 101
-      Width = 395
-      Height = 25
-      Version = '1.3.8.5'
-      ParentBackground = False
-      TabOrder = 14
-      Columns = 3
-      Ellipsis = False
+      TabOrder = 11
+      OnClick = BitBtn1Click
     end
     object ReportKindCombo: TComboBox
       Left = 440
@@ -794,7 +770,26 @@ object HiConReportListF: THiConReportListF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 15
+      TabOrder = 12
+    end
+    object ModifyItemCheckCombo: TJvCheckedComboBox
+      Left = 442
+      Top = 104
+      Width = 135
+      Height = 21
+      CapSelectAll = '&Select all'
+      CapDeSelectAll = '&Deselect all'
+      CapInvertAll = '&Invert all'
+      TabOrder = 13
+    end
+    object ReportAuthorIDEdit: TEdit
+      Left = 639
+      Top = 43
+      Width = 112
+      Height = 21
+      CharCase = ecUpperCase
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 14
     end
   end
   object TaskTab: TAdvOfficeTabSet
@@ -1233,7 +1228,370 @@ object HiConReportListF: THiConReportListF
       SortType = stAlphabetic
       Width = 30
     end
-    object OrderNo: TNxTextColumn
+    object RowID: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'RowID'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 1
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ReportKey: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'ReportKey'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 2
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object HullNo: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'HullNo'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 3
+      SortType = stAlphabetic
+    end
+    object ReportSubject: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 400
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #48372#44256#49436' '#51228#47785
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 4
+      SortType = stAlphabetic
+      Width = 400
+    end
+    object CurrentWorkDesc: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'CurrentWorkDesc'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 5
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object NextWorkDesc: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'NextWorkDesc'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 6
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object ModifyItems: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'ModifyItems'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 7
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ReportKind: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'ReportKind'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 8
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ShipName: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 150
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49440#48149#51060#47492
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 9
+      SortType = stAlphabetic
+      Width = 150
+    end
+    object ShipOwner: TNxTextColumn
+      Alignment = taCenter
+      DefaultWidth = 120
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49440#51452
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 10
+      SortType = stAlphabetic
+      Width = 120
+    end
+    object ClassSociety: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49440#44553
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 11
+      SortType = stAlphabetic
+    end
+    object ReportAuthorID: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51089#49457#51088' '#49324#48264
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 12
+      SortType = stAlphabetic
+    end
+    object ReportAuthorName: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51089#49457#51088' '#51060#47492
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 13
+      SortType = stAlphabetic
+    end
+    object WorkBeginTime: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'WorkBeginTime'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 14
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object WorkEndTime: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'WorkEndTime'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 15
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ReportMakeDate: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'ReportMakeDate'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 16
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ModifyDate: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'ModifyDate'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 17
+      SortType = stNumeric
+      Visible = False
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object ProjectNo: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -1247,467 +1605,28 @@ object HiConReportListF: THiConReportListF
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
-      ParentFont = False
-      Position = 1
-      SortType = stAlphabetic
-    end
-    object HullNo: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #54840#49440#48264#54840
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 2
-      SortType = stAlphabetic
-    end
-    object ShipName: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 110
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #54840#49440#47749
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 3
-      SortType = stAlphabetic
-      Width = 110
-    end
-    object ClaimNo: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Claim No.'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 4
-      SortType = stAlphabetic
-    end
-    object Subject: TNxTextColumn
-      DefaultWidth = 300
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #44277#49324#49444#47749
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 5
-      SortType = stAlphabetic
-      Width = 300
-    end
-    object Status: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 200
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #54788#51116#51089#50629
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 6
-      SortType = stAlphabetic
-      Width = 200
-    end
-    object NextProcess: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 200
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #45796#51020#51089#50629
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 7
-      SortType = stAlphabetic
-      Width = 200
-    end
-    object ClaimServiceKind: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Service'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 8
-      SortType = stAlphabetic
-    end
-    object ClaimStatus: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Status'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 9
-      SortType = stAlphabetic
-    end
-    object Email: TNxButtonColumn
-      Alignment = taCenter
-      DefaultWidth = 60
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Email'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coCanSort, coEditing, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 10
-      SortType = stAlphabetic
-      Width = 60
-    end
-    object ReqCustomer: TNxTextColumn
-      Alignment = taCenter
-      DefaultWidth = 120
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #50836#52397#49324
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 11
-      SortType = stAlphabetic
-      Visible = False
-      Width = 120
-    end
-    object ProdType: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #51228#54408#44396#48516
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 12
-      SortType = stAlphabetic
-    end
-    object RecvDate: TNxDateColumn
-      Alignment = taCenter
-      DefaultValue = '2014-01-24'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = #51217#49688#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 13
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object EMailID: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      Header.Caption = 'RECEIVE_ID'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 14
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object PONo: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 15
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object QtnNo: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 16
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object CustomerName: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 17
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object QtnInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 18
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object OrderInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 19
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object InvoiceInputDate: TNxDateColumn
-      DefaultValue = '2017-04-18'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 20
-      SortType = stDate
-      Visible = False
-      NoneCaption = 'None'
-      TodayCaption = 'Today'
-    end
-    object CustomerAddress: TNxMemoColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 21
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object ClaimRecvDate: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Claim '#51217#49688#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 22
       SortType = stAlphabetic
     end
-    object ClaimInputDate: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Claim '#46321#47197#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 23
-      SortType = stAlphabetic
-    end
-    object ClaimReadyDate: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Claim '#51312#52824#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 24
-      SortType = stAlphabetic
-    end
-    object ClaimClosedDate: TNxTextColumn
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'Claim '#50756#47308#51068
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      ParentFont = False
-      Position = 25
-      SortType = stAlphabetic
-    end
-    object Importance: TNxTextColumn
+    object OwnerComment: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = #51473#50836#46020
+      Header.Caption = #49440#51452'/'#49440#44553' Comment'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText
       Header.Font.Height = -11
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 26
+      Position = 19
       SortType = stAlphabetic
     end
   end
@@ -1742,7 +1661,7 @@ object HiConReportListF: THiConReportListF
     Left = 16
     Top = 208
     Bitmap = {
-      494C0101010070005C0418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101010070008C0418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2052,7 +1971,7 @@ object HiConReportListF: THiConReportListF
     Left = 104
     Top = 208
     Bitmap = {
-      494C0101020054026C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101020054029C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2194,105 +2113,39 @@ object HiConReportListF: THiConReportListF
   object PopupMenu1: TPopupMenu
     Left = 160
     Top = 208
-    object Mail1: TMenuItem
-      Caption = 'EMail'
-      object Create1: TMenuItem
-        Caption = 'Create'
-        object N7: TMenuItem
-          Tag = 1
-          Caption = #48512#54408#50696#49328#51613#50529' '#50836#52397
-        end
-        object N8: TMenuItem
-          Tag = 2
-          Caption = #51088#51116#51077#44256' '#50836#52397
-        end
-        object N12: TMenuItem
-          Tag = 3
-          Caption = #51088#51116#51649#53804#51077' '#50836#52397
-        end
-        object N15: TMenuItem
-          Tag = 4
-          Caption = #52636#54616#51648#49884' '#50836#52397
-        end
-      end
-      object N17: TMenuItem
-        Caption = #54596#46300#49436#48708#49828
-        object N18: TMenuItem
-          Tag = 5
-          Caption = #50629#52404#48169#49440#44032#45733#50836#52397
-        end
-        object N20: TMenuItem
-          Tag = 11
-          Caption = #44592#49457#54869#51064#50836#52397
-        end
-        object N21: TMenuItem
-          Tag = 12
-          Caption = #44592#49457#52376#47532#50836#52397
-        end
-      end
-    end
-    object N6: TMenuItem
-      Caption = #49436#48708#49828#47532#54252#53944' '#51077#49688' '#54980' '#50629#47924' '#51208#52264
-      object Invoice4: TMenuItem
-        Caption = 'Invoice '#51089#49457
-      end
-      object Invoice3: TMenuItem
-        Caption = 'Invoice '#49569#48512' -> '#44256#44061
-      end
-      object InvoiceConfirm2: TMenuItem
-        Caption = 'Invoice Confirm <- '#44256#44061
-      end
+    object DeleteTask1: TMenuItem
+      Caption = 'Delete Report'
+      OnClick = DeleteTask1Click
     end
     object N23: TMenuItem
       Caption = '-'
+      Visible = False
     end
     object ToDOList1: TMenuItem
-      Caption = 'To Do List'
+      Caption = 'Export Selected To Excel'
+      object N8: TMenuItem
+        Caption = #51204#51228' '#48372#44256#49436
+        OnClick = N8Click
+      end
+      object N10: TMenuItem
+        Caption = #50836#50557' '#48372#44256#49436
+      end
+      object N13: TMenuItem
+        Caption = #53076#46300' '#48372#44256#49436
+      end
+      object N12: TMenuItem
+        Caption = '-'
+      end
+      object N11: TMenuItem
+        Caption = #54788#51116' '#54868#47732
+      end
     end
     object N22: TMenuItem
       Caption = '-'
     end
-    object GetHullNoToClipboard1: TMenuItem
-      Caption = 'Get Hull No To Clipboard'
-    end
     object GetShipNameHullNoProjNotoClipbrd1: TMenuItem
       Caption = 'Get ShipName(HullNo-ProjNo) to Clipbrd'
-    end
-    object N1: TMenuItem
-      Caption = '-'
-    end
-    object DeleteTask1: TMenuItem
-      Caption = 'Delete Task'
-    end
-    object N2: TMenuItem
-      Caption = '-'
-    end
-    object N3: TMenuItem
-      Caption = #50900#48324#47928#49436
-      object N4: TMenuItem
-        Caption = #50900#48324' '#50808#51452#50857#50669#48708' '#51064#48372#51060#49828' '#52376#47532' '#54788#54889
-      end
-    end
-    object N10: TMenuItem
-      Caption = '-'
-    end
-    object ShowWarrantyExpireDate1: TMenuItem
-      Caption = 'Show Warranty ExpireDate'
-    end
-    object ShowDIRecallStatus1: TMenuItem
-      Caption = 'Show DI Recall Status By Selected'
-    end
-    object ShowTaskID1: TMenuItem
-      Caption = 'Show TaskID'
-    end
-    object ShowEmailID1: TMenuItem
-      Caption = 'Show EmailID'
-    end
-    object ShowGSFileID1: TMenuItem
-      Caption = 'Show GSFileID'
-    end
-    object GetJsonValues1: TMenuItem
-      Caption = 'GetJsonValues'
+      Visible = False
     end
   end
   object MainMenu1: TMainMenu
@@ -2301,40 +2154,52 @@ object HiConReportListF: THiConReportListF
     object File1: TMenuItem
       Caption = #54028#51068
       object CreateNewTask1: TMenuItem
-        Caption = 'Create New Task'
+        Caption = 'Create New Report'
+        OnClick = CreateNewTask1Click
       end
       object N24: TMenuItem
         Caption = '-'
       end
       object ExportToExcel2: TMenuItem
         Caption = 'Export To Excel'
+        object N2: TMenuItem
+          Caption = #48372#44256#49436' '#51204#52404
+        end
+        object N3: TMenuItem
+          Caption = #48372#44256#49436' '#50836#50557#48376
+        end
+        object N4: TMenuItem
+          Caption = #53076#46300#48324' '#48372#44256#49436
+        end
+        object N6: TMenuItem
+          Caption = '-'
+        end
+        object N7: TMenuItem
+          Caption = #54788#51116' '#49828#53356#47536
+          OnClick = N7Click
+        end
       end
-      object SaveDBAs1: TMenuItem
-        Caption = 'Save DB As...'
-      end
-      object N27: TMenuItem
+      object N9: TMenuItem
         Caption = '-'
       end
-      object ImportMaterialCodeFromExcel1: TMenuItem
-        Caption = 'Import MaterialCode From Excel'
-        Hint = #51088#51116#53076#46300#47484' '#44032#51256#50752#49436' MatreialCode.sqlite '#49373#49457
-      end
-      object ImportHiconisProjectFromExcel1: TMenuItem
-        Caption = 'Import Hiconis Project From Excel'
-        Hint = 'Hiconis '#44277#49324' '#48372#51613#44592#44036' '#44032#51256#50752#49436' _Project.sqlite '#49373#49457
-      end
-      object ImportDIModuleRecallData1: TMenuItem
-        Caption = 'Import DI Module Recall Data'
-        Hint = 'DI Module Recall '#45824#49345' '#54788#54889' '#51088#47308#47484' Dict'#47196' '#48320#54872
-      end
-      object CheckIfexistclaiminDBbyxls1: TMenuItem
-        Caption = 'Check If exist claim in DB by xls'
+      object SaveastoDFM1: TMenuItem
+        Caption = 'Save as to DFM'
+        Visible = False
+        OnClick = SaveastoDFM1Click
       end
       object N28: TMenuItem
+        Caption = '-'
+        Visible = False
+      end
+      object Print1: TMenuItem
+        Caption = 'Print'
+      end
+      object N1: TMenuItem
         Caption = '-'
       end
       object Close1: TMenuItem
         Caption = 'Close'
+        OnClick = Close1Click
       end
     end
     object MenuItem1: TMenuItem
@@ -2384,7 +2249,7 @@ object HiConReportListF: THiConReportListF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010400C800A00520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010400C800D00520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3450,13 +3315,8 @@ object HiConReportListF: THiConReportListF
   object DropEmptyTarget1: TDropEmptyTarget
     DragTypes = [dtCopy, dtLink]
     Target = HiRptListGrid
+    WinTarget = 0
     Left = 212
-    Top = 212
-  end
-  object DataFormatAdapterOutlook: TDataFormatAdapter
-    DragDropComponent = DropEmptyTarget1
-    DataFormatName = 'TOutlookDataFormat'
-    Left = 244
     Top = 212
   end
   object DropEmptySource1: TDropEmptySource
@@ -3492,23 +3352,10 @@ object HiConReportListF: THiConReportListF
     Left = 104
     Top = 264
   end
-  object ClaimPopup: TPopupMenu
-    Left = 160
-    Top = 264
-    object Category1: TMenuItem
-      Caption = 'Category'
-    end
-    object Location1: TMenuItem
-      Caption = 'Location'
-    end
-    object CauseKind1: TMenuItem
-      Caption = 'CauseKind'
-    end
-    object CauseHW1: TMenuItem
-      Caption = 'CauseHW'
-    end
-    object CauseSW1: TMenuItem
-      Caption = 'CauseSW'
-    end
+  object DataFormatAdapterOutlook1: TDataFormatAdapter
+    DragDropComponent = DropEmptyTarget1
+    DataFormatName = 'TOutlookDataFormat'
+    Left = 244
+    Top = 212
   end
 end

@@ -173,8 +173,8 @@ object HiconisTCPF: THiconisTCPF
       ColorLine = clLime
       ColorFont = clLime
       ThreadActivity = True
-      CurrentProcessID = 6620
-      CurrentThreadID = 6616
+      CurrentProcessID = 5708
+      CurrentThreadID = 2348
       Strings.Strings = (
         #49892#54665#51473'...')
       Steps = 4
@@ -967,13 +967,16 @@ object HiconisTCPF: THiconisTCPF
     object N2: TMenuItem
       Caption = '-'
     end
+    object MPMBackup1: TMenuItem
+      Caption = 'MPM Backup From Selected'
+      OnClick = MPMBackup1Click
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
     object GetPortPrint1: TMenuItem
       Caption = 'Get Port Print Debug'
       OnClick = GetPortPrint1Click
-    end
-    object MPMBackup1: TMenuItem
-      Caption = 'MPM Backup'
-      OnClick = MPMBackup1Click
     end
     object ShowProgress1: TMenuItem
       Caption = 'Show Progress'

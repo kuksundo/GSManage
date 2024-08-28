@@ -311,7 +311,7 @@ object MaterialDetailF: TMaterialDetailF
     Left = 114
     Top = 45
     Width = 195
-    Height = 24
+    Height = 21
     Hint = 'Text'
     EditAlign = eaCenter
     EmptyTextStyle = []
@@ -365,5 +365,13 @@ object MaterialDetailF: TMaterialDetailF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
       B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     OnClickBtn = MaterialCodeClickBtn
+  end
+  object IsReclaim: TCheckBox
+    Left = 224
+    Top = 144
+    Width = 97
+    Height = 17
+    Caption = 'Is Reclaim'
+    TabOrder = 8
   end
 end

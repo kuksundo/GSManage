@@ -199,9 +199,9 @@ procedure TSearchVesselF.GetVesselSearchParam2Rec(
   var AVesselSearchParamRec: TVesselSearchParamRec);
 begin
   AVesselSearchParamRec.fQueryDate := vqdtNull;
-  AVesselSearchParamRec.fHullNo := HullNoEdit.Text;
-  AVesselSearchParamRec.fShipName := ShipNameEdit.Text;
-  AVesselSearchParamRec.fIMONo := ImoNoEdit.Text;
+  AVesselSearchParamRec.fHullNo := Trim(HullNoEdit.Text);
+  AVesselSearchParamRec.fShipName := Trim(ShipNameEdit.Text);
+  AVesselSearchParamRec.fIMONo := Trim(ImoNoEdit.Text);
 end;
 
 procedure TSearchVesselF.HullNoEditKeyPress(Sender: TObject; var Key: Char);

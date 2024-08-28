@@ -4,12 +4,14 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, DropSource, DragDrop,
-  DropTarget, Vcl.Menus, Vcl.ImgList, SBPro, NxColumnClasses, NxColumns,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus, Vcl.ImgList,
+  SBPro, NxColumnClasses, NxColumns,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, AdvOfficeTabSet,
   Vcl.Buttons, AdvEdit, AdvEdBtn, Vcl.Mask, JvExMask, JvToolEdit, JvCombobox,
   Vcl.StdCtrls, AeroButtons, Vcl.ComCtrls, AdvGroupBox, AdvOfficeButtons,
   AdvToolBtn, JvExControls, JvLabel, CurvyControls,
+
+  DragDropInternet,DropSource,DragDropFile,DragDropFormats, DragDrop, DropTarget,
 
   mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
   mormot.rest.server, mormot.soa.server, mormot.core.datetime, mormot.rest.memserver,
@@ -17,7 +19,7 @@ uses
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
   mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
 
-  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportListOrm;
+  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportListOrm, UnitHiConReportWorkItemOrm;
 
 type
   THiConReportListF = class(TForm)
@@ -31,7 +33,6 @@ type
     JvLabel8: TJvLabel;
     JvLabel9: TJvLabel;
     JvLabel40: TJvLabel;
-    JvLabel7: TJvLabel;
     JvLabel11: TJvLabel;
     PeriodPanel: TCurvyPanel;
     Label4: TLabel;
@@ -45,11 +46,9 @@ type
     btn_Search: TAeroButton;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
-    AuthorEdit: TEdit;
-    PORNoEdit: TEdit;
-    DisplayFinalCheck: TCheckBox;
+    AuthorNameEdit: TEdit;
+    ClassSocietyEdit: TEdit;
     Button1: TButton;
-    MaterialCodeEdit: TEdit;
     FindCondCB: TComboBox;
     HullNoEdit: TAdvEditBtn;
     ShipNameEdit: TAdvEditBtn;
@@ -58,78 +57,20 @@ type
     TaskTab: TAdvOfficeTabSet;
     HiRptListGrid: TNextGrid;
     NxIncrementColumn1: TNxIncrementColumn;
-    OrderNo: TNxTextColumn;
-    HullNo: TNxTextColumn;
-    ShipName: TNxTextColumn;
-    ClaimNo: TNxTextColumn;
-    Subject: TNxTextColumn;
-    Status: TNxTextColumn;
-    NextProcess: TNxTextColumn;
-    ClaimServiceKind: TNxTextColumn;
-    ClaimStatus: TNxTextColumn;
-    Email: TNxButtonColumn;
-    ReqCustomer: TNxTextColumn;
-    ProdType: TNxTextColumn;
-    RecvDate: TNxDateColumn;
-    EMailID: TNxTextColumn;
-    PONo: TNxTextColumn;
-    QtnNo: TNxTextColumn;
-    CustomerName: TNxTextColumn;
-    QtnInputDate: TNxDateColumn;
-    OrderInputDate: TNxDateColumn;
-    InvoiceInputDate: TNxDateColumn;
-    CustomerAddress: TNxMemoColumn;
-    ClaimRecvDate: TNxTextColumn;
-    ClaimInputDate: TNxTextColumn;
-    ClaimReadyDate: TNxTextColumn;
-    ClaimClosedDate: TNxTextColumn;
-    Importance: TNxTextColumn;
     StatusBarPro1: TStatusBarPro;
     imagelist24x24: TImageList;
     ImageList16x16: TImageList;
     PopupMenu1: TPopupMenu;
-    Mail1: TMenuItem;
-    Create1: TMenuItem;
-    N7: TMenuItem;
-    N8: TMenuItem;
-    N12: TMenuItem;
-    N15: TMenuItem;
-    N17: TMenuItem;
-    N18: TMenuItem;
-    N20: TMenuItem;
-    N21: TMenuItem;
-    N6: TMenuItem;
-    Invoice4: TMenuItem;
-    Invoice3: TMenuItem;
-    InvoiceConfirm2: TMenuItem;
     N23: TMenuItem;
     ToDOList1: TMenuItem;
     N22: TMenuItem;
-    GetHullNoToClipboard1: TMenuItem;
     GetShipNameHullNoProjNotoClipbrd1: TMenuItem;
-    N1: TMenuItem;
     DeleteTask1: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    N4: TMenuItem;
-    N10: TMenuItem;
-    ShowWarrantyExpireDate1: TMenuItem;
-    ShowDIRecallStatus1: TMenuItem;
-    ShowTaskID1: TMenuItem;
-    ShowEmailID1: TMenuItem;
-    ShowGSFileID1: TMenuItem;
-    GetJsonValues1: TMenuItem;
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     CreateNewTask1: TMenuItem;
     N24: TMenuItem;
     ExportToExcel2: TMenuItem;
-    SaveDBAs1: TMenuItem;
-    N27: TMenuItem;
-    ImportMaterialCodeFromExcel1: TMenuItem;
-    ImportHiconisProjectFromExcel1: TMenuItem;
-    ImportDIModuleRecallData1: TMenuItem;
-    CheckIfexistclaiminDBbyxls1: TMenuItem;
     N28: TMenuItem;
     Close1: TMenuItem;
     MenuItem1: TMenuItem;
@@ -147,38 +88,92 @@ type
     EditTariff1: TMenuItem;
     ImageList32x32: TImageList;
     DropEmptyTarget1: TDropEmptyTarget;
-    DataFormatAdapterOutlook: TDataFormatAdapter;
     DropEmptySource1: TDropEmptySource;
     DataFormatAdapter2: TDataFormatAdapter;
     DataFormatAdapterTarget: TDataFormatAdapter;
     DataFormatAdapter1: TDataFormatAdapter;
     Timer1: TTimer;
     OpenDialog1: TOpenDialog;
-    ClaimPopup: TPopupMenu;
-    Category1: TMenuItem;
-    Location1: TMenuItem;
-    CauseKind1: TMenuItem;
-    CauseHW1: TMenuItem;
-    CauseSW1: TMenuItem;
     JvLabel10: TJvLabel;
-    ModifyItemGrp: TAdvOfficeCheckGroup;
     ReportKindCombo: TComboBox;
+    DataFormatAdapterOutlook1: TDataFormatAdapter;
+    ModifyItemCheckCombo: TJvCheckedComboBox;
+    N9: TMenuItem;
+    SaveastoDFM1: TMenuItem;
+
+    RowID:TnxNumberColumn;
+    ProjectNo:TnxTextColumn;
+    HullNo:TnxTextColumn;
+    ShipName:TnxTextColumn;
+    ShipOwner:TnxTextColumn;
+    ClassSociety:TnxTextColumn;
+    ReportSubject:TnxTextColumn;
+    ReportAuthorID:TnxTextColumn;
+    ReportAuthorName:TnxTextColumn;
+    CurrentWorkDesc:TnxTextColumn;
+    NextWorkDesc:TnxTextColumn;
+    ReportKind:TnxNumberColumn;
+    ModifyItems:TnxNumberColumn;
+    WorkBeginTime:TnxNumberColumn;
+    WorkEndTime:TnxNumberColumn;
+    ReportMakeDate:TnxNumberColumn;
+    ModifyDate:TnxNumberColumn;
+    ReportKey: TNxNumberColumn;
+    JvLabel12: TJvLabel;
+    ReportAuthorIDEdit: TEdit;
+    Print1: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    OwnerComment: TNxTextColumn;
+
     procedure btn_SearchClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
     procedure HiRptListGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
+    procedure FormCreate(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure HullNoEditClickBtn(Sender: TObject);
+    procedure SaveastoDFM1Click(Sender: TObject);
+    procedure DeleteTask1Click(Sender: TObject);
+    procedure CreateNewTask1Click(Sender: TObject);
+    procedure Close1Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
   private
+    procedure InitVar();
+    procedure InitEnum();
+
+//    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
+//      Index: integer; out AStream: IStream);
+
     procedure GetSearchCondRec(var ARec: THiRptMgrSearchCondRec);
-    procedure DisplayReportList2GridByConstArray(const LWhere: string; const AAry: TConstArray);
+    procedure DisplayReportList2GridByConstArray(AWhere: string; const AAry: TConstArray);
     function GetSqlWhereFromQueryDate(AQueryDate: THiRptMgrQueryDateType): string;
   protected
     procedure ClearFindCondForm();
     procedure HiRptEdit(const ARow: integer=-1);
+    procedure LoadReportListFromJson2Grid(AJson: RawUtf8; ARow: integer);
     procedure LoadReportVar2Grid(AVar: variant; ARow: integer=-1);
     procedure LoadReportVarFromGrid(var AVar: variant; const ARow: integer=-1);
+    function GetWorkItemJsonFromSelectedRow(): RawUtf8;
+
+    procedure DeleteReportFromSelectedGrid();
+    procedure DeleteReportByReportKey(const ARptKey: TTimeLog);
+    procedure DeleteReportListByReportKey(const ARptKey: TTimeLog);
+    procedure DeleteWorkItemByReportKey(const ARptKey: TTimeLog);
   public
     procedure DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
+    procedure MakeReportBySelected();
   end;
 
 var
@@ -187,13 +182,19 @@ var
 implementation
 
 uses UnitComboBoxUtil, UnitCheckGrpAdvUtil, JHP.Util.Bit32Helper, UnitNextGridUtil2,
-  FrmHiconReportEdit;
+  UnitStringUtil, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitExcelUtil,
+  FrmHiconReportEdit, FrmSearchVessel2, UnitDFMUtil, UnitHiConReportMakeUtil;
 
 {$R *.dfm}
 
 procedure THiConReportListF.AeroButton1Click(Sender: TObject);
 begin
   HiRptEdit();
+end;
+
+procedure THiConReportListF.BitBtn1Click(Sender: TObject);
+begin
+  Content2Clipboard(HullNoEdit.Text);
 end;
 
 procedure THiConReportListF.btn_CloseClick(Sender: TObject);
@@ -221,10 +222,67 @@ begin
   HullNoEdit.Text := '';
   ShipNameEdit.Text := '';
   ProjNoEdit.Text := '';
-  AuthorEdit.Text := '';
+  AuthorNameEdit.Text := '';
   HullNoEdit.Text := '';
   ShipNameEdit.Text := '';
+  ClassSocietyEdit.Text := '';
+  ReportAuthorIDEdit.Text := '';
 
+  ReportKindCombo.ItemIndex := -1;
+  WorkCodeCB.ItemIndex := -1;
+
+  ModifyItemCheckCombo.SetUnCheckedAll();// := -1;
+end;
+
+procedure THiConReportListF.Close1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure THiConReportListF.CreateNewTask1Click(Sender: TObject);
+begin
+  HiRptEdit();
+end;
+
+procedure THiConReportListF.DeleteReportByReportKey(const ARptKey: TTimeLog);
+begin
+  DeleteReportListByReportKey(ARptKey);
+  DeleteWorkItemByReportKey(ARptKey);
+end;
+
+procedure THiConReportListF.DeleteReportFromSelectedGrid;
+var
+  LRptKey: TTimeLog;
+begin
+  if HiRptListGrid.SelectedRow = -1 then
+    exit;
+
+  if MessageDlg('선택한 Report를 삭제 할까요?.' + #13#10 +
+    '삭제 후에는 복원이 안 됩니다..' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
+    exit;
+
+  LRptKey := StrToInt64Def(HiRptListGrid.CellsByName['ReportKey', HiRptListGrid.SelectedRow],0);
+  DeleteReportByReportKey(LRptKey);
+
+  ShowMessage('Reoprt 삭제가 완료 되었습니다.');
+
+  btn_SearchClick(nil);
+end;
+
+procedure THiConReportListF.DeleteReportListByReportKey(
+  const ARptKey: TTimeLog);
+begin
+  DeleteHiconReportListByKey(ARptKey);
+end;
+
+procedure THiConReportListF.DeleteTask1Click(Sender: TObject);
+begin
+  DeleteReportFromSelectedGrid();
+end;
+
+procedure THiConReportListF.DeleteWorkItemByReportKey(const ARptKey: TTimeLog);
+begin
+  DeleteHiconReportDetailByRptKey(ARptKey);
 end;
 
 procedure THiConReportListF.DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
@@ -364,24 +422,34 @@ begin
 //      LWhere := LWhere + LWhere2;
 //    end;
 
+  if LWhere = '' then
+  begin
+    LWhere := 'ID <> ?';
+    AddConstArray(ConstArray, [0]);
+  end;
+
     DisplayReportList2GridByConstArray(LWhere, ConstArray);
   finally
     FinalizeConstArray(ConstArray);
   end;
 end;
 
-procedure THiConReportListF.DisplayReportList2GridByConstArray(const LWhere: string;
+procedure THiConReportListF.DisplayReportList2GridByConstArray(AWhere: string;
   const AAry: TConstArray);
 var
   LOrmHiconReportList: TOrmHiconReportList;
   LUtf8: RawUtf8;
+  LDocList: IList<TOrmHiconReportList>;
 begin
-  LOrmHiconReportList := TOrmHiconReportList.CreateAndFillPrepare(g_HiconReportListDB.Orm, LWhere, AAry);
+  LOrmHiconReportList := TOrmHiconReportList.CreateAndFillPrepare(g_HiconReportListDB.Orm, AWhere, AAry);
   try
     HiRptListGrid.BeginUpdate;
     try
-      LUtf8 := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
-      AddNextGridRowsFromJsonAry(HiRptListGrid, LUtf8);
+//      LUtf8 := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
+      LDocList := LOrmHiconReportList.FillTable.ToIList<TOrmHiconReportList>;
+      LUtf8 := LDocList.Data.SaveToJson();
+      AddNextGridRowsFromJsonAry(HiRptListGrid, LUtf8, HiRptListGrid.Columns.Count = 0);
+//      AddNextGridRowsFromJsonAry(HiRptListGrid, LUtf8, True);
     finally
       HiRptListGrid.EndUpdate;
     end;
@@ -389,6 +457,11 @@ begin
   finally
     FreeAndNil(LOrmHiconReportList);
   end;
+end;
+
+procedure THiConReportListF.FormCreate(Sender: TObject);
+begin
+  InitVar();
 end;
 
 procedure THiConReportListF.GetSearchCondRec(var ARec: THiRptMgrSearchCondRec);
@@ -410,13 +483,14 @@ begin
     FShipOwner := ShipOwnerCombo.Text;
     FProjNo := ProjNoEdit.Text;
 
+    FReportAuthorID := ReportAuthorIDEdit.Text;
+    FReportAuthorName := AuthorNameEdit.Text;
+
     FReportKind := ReportKindCombo.ItemIndex;
     FWorkCode := WorkCodeCB.ItemIndex;
     FReportKind := ReportKindCombo.ItemIndex;
 
-    FModifyItems :=  GetSetsFromCheckGrp(ModifyItemGrp);
-
-    FIncludeClosed := DisplayFinalCheck.Checked;
+    FModifyItems :=  GetSetFromCheckCombo(ModifyItemCheckCombo);
   end;//with
 end;
 
@@ -429,29 +503,112 @@ begin
 //  end;
 end;
 
+function THiConReportListF.GetWorkItemJsonFromSelectedRow: RawUtf8;
+var
+  LKeyId: TTimeLog;
+  LOrmHiconReportDetail: TOrmHiconReportDetail;
+  LDocList: IList<TOrmHiconReportDetail>;
+begin
+  if HiRptListGrid.SelectedRow = -1 then
+    LKeyId := 0
+  else
+    LKeyId := StrToInt64Def(HiRptListGrid.CellByName['ReportKey', HiRptListGrid.SelectedRow].AsString, 0);
+
+  LOrmHiconReportDetail := GetHiconReportDetailByReportKey(LKeyId);
+  try
+    LDocList := LOrmHiconReportDetail.FillTable.ToIList<TOrmHiconReportDetail>;
+    Result := LDocList.Data.SaveToJson();
+  finally
+    LOrmHiconReportDetail.Free;
+  end;
+end;
+
 procedure THiConReportListF.HiRptEdit(const ARow: integer);
 var
   LVar: variant;
+  LRptUtf8, LWorkItemUtf8: RawUtf8;
+  LOrmHiconReportList: TOrmHiconReportList;
 begin
   TDocVariant.New(LVar);
 
   if ARow = -1 then //Add
   begin
+    LOrmHiconReportList := TOrmHiconReportList.Create;
+    try
+      LOrmHiconReportList.ReportKey := TimeLogFromDateTime(now);
+      LOrmHiconReportList.ReportMakeDate := TimeLogFromDateTime(now);
+      LOrmHiconReportList.ModifyDate := TimeLogFromDateTime(now);
+//      LOrmHiconReportList.WorkBeginTime := TimeLogFromDateTime(now);
+//      LOrmHiconReportList.WorkEndTime := TimeLogFromDateTime(now);
+
+      LRptUtf8 := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
+      LWorkItemUtf8 := '';
+    finally
+      LOrmHiconReportList.Free;
+    end;
   end
   else
   begin
-    LoadReportVarFromGrid(LVar, ARow);
+//    LoadReportVarFromGrid(LVar, ARow);
+    LRptUtf8 := GetJsonFromSelectedRow(HiRptListGrid);
+    //Grid의 ReportMakeDate를 KeyId로 사용하여 TOrmHiconReportDetail DB 에서 가져옴
+    LWorkItemUtf8 := GetWorkItemJsonFromSelectedRow();
   end;
 
   //"저장" 버튼을 누르면 True
-  if DisplayHiRptEditForm(LVar) = mrOK then
-    LoadReportVar2Grid(LVar, ARow);
+  if DisplayHiRptEditForm(LRptUtf8, LWorkItemUtf8) = mrOK then
+    LoadReportListFromJson2Grid(LRptUtf8, ARow);
 end;
 
 procedure THiConReportListF.HiRptListGridCellDblClick(Sender: TObject; ACol,
   ARow: Integer);
 begin
   HiRptEdit(ARow);
+end;
+
+procedure THiConReportListF.HullNoEditClickBtn(Sender: TObject);
+var
+  LVesselSearchParamRec: TVesselSearchParamRec;
+begin
+  LVesselSearchParamRec.fHullNo := HullNoEdit.Text;
+  LVesselSearchParamRec.fShipName := ShipNameEdit.Text;
+
+  if ShowSearchVesselForm(LVesselSearchParamRec) = mrOK then
+  begin
+    HullNoEdit.Text := LVesselSearchParamRec.fHullNo;
+    ShipNameEdit.Text := LVesselSearchParamRec.fShipName;
+  end;
+end;
+
+procedure THiConReportListF.InitEnum;
+begin
+  g_HiRptMgrQueryDateType.InitArrayRecord(R_HiRptMgrQueryDateType);
+  g_HiRptWorkCode.InitArrayRecord(R_HiRptWorkCode);
+  g_HiRptKind.InitArrayRecord(R_HiRptKind);
+  g_HiRptModifiedItem.InitArrayRecord(R_HiRptModifiedItem);
+
+  g_HiRptKind.SetType2Combo(ReportKindCombo);
+  g_HiRptModifiedItem.SetType2List(ModifyItemCheckCombo.Items);
+end;
+
+procedure THiConReportListF.InitVar;
+begin
+  InitHiconReportListClient('');
+  InitHiconReportDetailClient('');
+
+  InitEnum();
+
+  DOC_DIR := ExtractFilePath(Application.ExeName) + 'db\files\';
+//  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+end;
+
+procedure THiConReportListF.LoadReportListFromJson2Grid(AJson: RawUtf8;
+  ARow: integer);
+var
+  LVar: variant;
+begin
+  LVar := _JSON(AJson);
+  LoadReportVar2Grid(LVar, ARow);
 end;
 
 procedure THiConReportListF.LoadReportVar2Grid(AVar: variant; ARow: integer);
@@ -475,5 +632,57 @@ begin
   else
     AVar := GetNxGridRow2Variant(HiRptListGrid, ARow);
 end;
+
+procedure THiConReportListF.MakeReportBySelected;
+var
+  LRptKey: TTimeLog;
+  LJson: string;
+  LOrmHiconReportList: TOrmHiconReportList;
+  LHiconReportRec: THiconReportRec;
+  LVar: variant;
+  LDocList: IList<TOrmHiconReportDetail>;
+begin
+  if HiRptListGrid.SelectedRow = -1 then
+  begin
+    ShowMessage('출력 할 Reoprt 를 선택하세요.');
+    exit;
+  end;
+
+  LRptKey := StrToInt64Def(HiRptListGrid.CellsByName['ReportKey', HiRptListGrid.SelectedRow],0);
+
+  try
+    LOrmHiconReportList := GetHiconReportListByKeyID(LRptKey);
+    LHiconReportRec.FReportListJson := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
+
+    Lvar := GetHiRptDetailJsonAryByReportKey(LRptKey);
+    LHiconReportRec.FReportDetailJsonAry := UTF8ToString(Lvar);
+  finally
+    LOrmHiconReportList.Free;
+  end;
+
+  MakeCommissionReportTotal(LHiconReportRec);
+end;
+
+procedure THiConReportListF.N7Click(Sender: TObject);
+begin
+  NextGridToExcel(HiRptListGrid);
+end;
+
+procedure THiConReportListF.N8Click(Sender: TObject);
+begin
+  MakeReportBySelected();
+end;
+
+procedure THiConReportListF.SaveastoDFM1Click(Sender: TObject);
+begin
+  SaveToDFM2('c:\temp\'+ ChangeFileExt(ExtractFileName(Application.ExeName), '.txt'), Self);
+end;
+
+//procedure THiConReportListF.OnGetStream(
+//  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
+//  out AStream: IStream);
+//begin
+//
+//end;
 
 end.

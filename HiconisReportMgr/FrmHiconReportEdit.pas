@@ -8,13 +8,14 @@ uses
   Vcl.Menus, Vcl.ImgList, Vcl.Buttons, AdvEdit, AdvEdBtn, CurvyControls,
   pjhComboBox, NxColumnClasses, Vcl.StdCtrls, AeroButtons, Vcl.ExtCtrls,
   NxColumns, NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
-  AdvGlowButton, Vcl.ComCtrls, AdvToolBtn, JvExControls, JvLabel,
+  AdvGlowButton, Vcl.ComCtrls, AdvToolBtn, JvExControls, JvLabel, AdvGroupBox,
+  AdvOfficeButtons,
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
-  UnitHiConReportListOrm, AdvGroupBox, AdvOfficeButtons
+  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm
   ;
 
 type
@@ -25,16 +26,11 @@ type
     JvLabel37: TJvLabel;
     Label2: TLabel;
     JvLabel38: TJvLabel;
-    JvLabel40: TJvLabel;
     JvLabel16: TJvLabel;
-    JvLabel17: TJvLabel;
     WorkBeginTime: TDateTimePicker;
     WorkEndTime: TDateTimePicker;
     NextWorkDesc: TMemo;
-    Button3: TButton;
     CurrentWorkDesc: TMemo;
-    ClaimServiceKindCB: TComboBox;
-    ClaimStatusCombo: TComboBox;
     TabSheet3: TTabSheet;
     JvLabel13: TJvLabel;
     Panel3: TPanel;
@@ -48,91 +44,15 @@ type
     FilePath: TNxTextColumn;
     DocType: TNxTextColumn;
     SubConTS: TTabSheet;
-    Splitter1: TSplitter;
     Panel1: TPanel;
     AeroButton2: TAeroButton;
     AeroButton3: TAeroButton;
     WorkItemGrid: TNextGrid;
     NxIncrementColumn1: TNxIncrementColumn;
-    CompanyName: TNxTextColumn;
-    OfficePhone: TNxTextColumn;
-    MobilePhone: TNxTextColumn;
-    EMail: TNxTextColumn;
-    CompanyCode: TNxTextColumn;
-    ServicePO: TNxTextColumn;
-    ManagerName: TNxTextColumn;
-    Position: TNxTextColumn;
-    CompanyAddress: TNxTextColumn;
-    Nation: TNxTextColumn;
-    CompanyTypes: TNxTextColumn;
-    TaskID: TNxTextColumn;
-    RowID: TNxTextColumn;
-    FirstName: TNxTextColumn;
-    Surname: TNxTextColumn;
-    SECount: TNxTextColumn;
-    SubConPrice: TNxTextColumn;
-    InvoiceItems: TNxMemoColumn;
-    InvoiceFiles: TNxMemoColumn;
-    UniqueSubConID: TNxTextColumn;
-    SubConInvoiceNo: TNxTextColumn;
-    BusinessAreas: TNxTextColumn;
-    ShipProductTypes: TNxTextColumn;
-    Engine2SProductTypes: TNxTextColumn;
-    Engine4SProductTypes: TNxTextColumn;
-    ElecProductTypes: TNxTextColumn;
-    ElecProductDetailTypes: TNxTextColumn;
-    Action: TNxTextColumn;
-    CompanyName2: TNxTextColumn;
-    TabSheet4: TTabSheet;
-    Panel6: TPanel;
-    JvLabel18: TJvLabel;
-    AeroButton5: TAeroButton;
-    DeleteMaterialBtn: TAeroButton;
-    AeroButton7: TAeroButton;
-    PORNoEdit: TEdit;
-    MaterialGrid: TNextGrid;
-    PORNo: TNxTextColumn;
-    MaterialCode: TNxTextColumn;
-    MaterialName: TNxTextColumn;
-    LeadTime: TNxTextColumn;
-    NeedCount: TNxTextColumn;
-    UnitPrice: TNxTextColumn;
-    NeedDate: TNxDateColumn;
-    CreateDate: TNxDateColumn;
-    NxTextColumn5: TNxTextColumn;
-    TabSheet1: TTabSheet;
-    JvLabel12: TJvLabel;
-    JvLabel20: TJvLabel;
-    JvLabel21: TJvLabel;
-    JvLabel22: TJvLabel;
-    JvLabel24: TJvLabel;
-    JvLabel34: TJvLabel;
-    JvLabel41: TJvLabel;
-    JvLabel44: TJvLabel;
-    JvLabel45: TJvLabel;
-    JvLabel47: TJvLabel;
-    JvLabel55: TJvLabel;
-    CustomerAddressMemo: TMemo;
-    CustCompanyCodeEdit: TEdit;
-    CustManagerEdit: TEdit;
-    CustEmailEdit: TEdit;
-    CustAgentMemo: TMemo;
-    CustCompanyTypeCB: TComboBox;
-    CustPhonNumEdit: TEdit;
-    CustFaxEdit: TEdit;
-    CustPositionEdit: TEdit;
-    NationEdit: TEdit;
-    Button1: TButton;
-    Button2: TButton;
-    CustomerNameCB: TComboBoxInc;
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
     CurvyPanel2: TCurvyPanel;
-    JvLabel15: TJvLabel;
-    JvLabel14: TJvLabel;
-    ServiceChargeCB: TComboBox;
-    SalesProcTypeCB: TComboBox;
     Panel4: TPanel;
     JvLabel1: TJvLabel;
     JvLabel7: TJvLabel;
@@ -149,65 +69,12 @@ type
     JvLabel31: TJvLabel;
     JvLabel49: TJvLabel;
     JvLabel30: TJvLabel;
-    JvLabel2: TJvLabel;
     JvLabel10: TJvLabel;
-    JvLabel50: TJvLabel;
-    JvLabel9: TJvLabel;
-    JvLabel8: TJvLabel;
-    JvLabel11: TJvLabel;
     ReportSubject: TEdit;
     ReportAuthorID: TEdit;
     ReportAuthorName: TEdit;
-    AttendSchedulePicker: TDateTimePicker;
     ReportMakeDate: TDateTimePicker;
-    ClaimInputPicker: TDateTimePicker;
-    ClaimReadyPicker: TDateTimePicker;
-    ClaimClosedPicker: TDateTimePicker;
-    ImportanceCB: TComboBox;
     ImageList16x16: TImageList;
-    PopupMenu1: TPopupMenu;
-    N1: TMenuItem;
-    Quotation1: TMenuItem;
-    oCustomer1: TMenuItem;
-    Korean1: TMenuItem;
-    PO1: TMenuItem;
-    English1: TMenuItem;
-    Korean2: TMenuItem;
-    ServiceOrder1: TMenuItem;
-    Invoice1: TMenuItem;
-    English2: TMenuItem;
-    Korean3: TMenuItem;
-    N14: TMenuItem;
-    Commercial1: TMenuItem;
-    N2: TMenuItem;
-    N23: TMenuItem;
-    N24: TMenuItem;
-    N3: TMenuItem;
-    N4: TMenuItem;
-    N5: TMenuItem;
-    N15: TMenuItem;
-    N6: TMenuItem;
-    N7: TMenuItem;
-    N8: TMenuItem;
-    N9: TMenuItem;
-    N10: TMenuItem;
-    N11: TMenuItem;
-    N12: TMenuItem;
-    N13: TMenuItem;
-    N16: TMenuItem;
-    MAPS1: TMenuItem;
-    INQInput1: TMenuItem;
-    Mail1: TMenuItem;
-    Reply1: TMenuItem;
-    N17: TMenuItem;
-    PO2: TMenuItem;
-    Invoice2: TMenuItem;
-    Create1: TMenuItem;
-    N18: TMenuItem;
-    N19: TMenuItem;
-    N20: TMenuItem;
-    N21: TMenuItem;
-    N22: TMenuItem;
     DropEmptyTarget1: TDropEmptyTarget;
     DataFormatAdapterTarget: TDataFormatAdapter;
     DataFormatAdapter1: TDataFormatAdapter;
@@ -215,54 +82,225 @@ type
     DataFormatAdapter2: TDataFormatAdapter;
     DropEmptySource1: TDropEmptySource;
     DataFormatAdapter3: TDataFormatAdapter;
-    PopupMenu2: TPopupMenu;
-    SaveCompanyinfoashgs1: TMenuItem;
     SaveDialog1: TSaveDialog;
-    PopupMenu3: TPopupMenu;
-    Saveas1: TMenuItem;
-    ClaimPopup: TPopupMenu;
-    Category1: TMenuItem;
-    Location1: TMenuItem;
-    CauseKind1: TMenuItem;
-    CauseHW1: TMenuItem;
-    CauseSW1: TMenuItem;
-    MaterialPopup: TPopupMenu;
-    DeleteMaterial1: TMenuItem;
     ClassSociety: TEdit;
     JvLabel5: TJvLabel;
     JvLabel19: TJvLabel;
-    ModifyItemGrp: TAdvOfficeCheckGroup;
+    ModifyItems: TAdvOfficeCheckGroup;
+    WorkDetail: TNxTextColumn;
+    WorkDetailRemark: TNxTextColumn;
+    WorkItemBeginTime: TNxDateColumn;
+    WorkItemEndTime: TNxDateColumn;
+    ReportKey: TEdit;
+    WorkCode: TNxNumberColumn;
+    WorkHours: TNxNumberColumn;
+    ReportKey4Item: TNxNumberColumn;
+    ModifyDate_Item: TNxDateColumn;
+    WorkItemKey: TNxNumberColumn;
+    JvLabel2: TJvLabel;
+    OwnerComment: TMemo;
+
     procedure AeroButton2Click(Sender: TObject);
     procedure WorkItemGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
+    procedure HullNoClickBtn(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure AeroButton3Click(Sender: TObject);
   private
     procedure ReportWorkItemEdit(const ARow: integer=-1);
     procedure LoadWorkItemVar2Grid(AVar: variant; ARow: integer=-1);
     procedure LoadWorkItemVarFromGrid(var AVar: variant; const ARow: integer=-1);
+
+    procedure InitEnum();
+
+    function CheckRequiredInput4Report(): TWinControl;
   public
-    { Public declarations }
+    function GetWorkItem2JsonFromGrid(): string;
+    procedure SetWorkItemGridFromJson(const AJson: string);
+    procedure AddModifyItemGrpValue2Json(var AJson: string);
+    procedure DeleteWorkItemByReportKey();
   end;
 
-  function DisplayHiRptEditForm(var AHiRptOrm: TOrmHiconReportList;
-      AJson: RawUtf8; AHiRptEditConfig: string): integer;
+  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8): integer;//; AHiRptEditConfig: string
 
 var
   HiConReportEditF: THiConReportEditF;
 
 implementation
 
-uses UnitNextGridUtil2, FrmHiReportWorkItemEdit;
+uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUtil,
+  UnitHiConReportMgrData, UnitCheckGrpAdvUtil, UnitComponentUtil,
+  FrmHiReportWorkItemEdit, FrmSearchVessel2;
 
 {$R *.dfm}
 
-function DisplayHiRptEditForm(var AHiRptOrm: TOrmHiconReportList;
-    AJson: RawUtf8; AHiRptEditConfig: string): integer;
+function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8): integer;//; AHiRptEditConfig: string
+var
+  LHiConReportEditF: THiConReportEditF;
+  LJson, LJson2: string;
+  LVar: variant;
+  LControl: TWinControl;
 begin
+  LHiConReportEditF := THiConReportEditF.Create(nil);
+  try
+    with LHiConReportEditF do
+    begin
+      LJson := Utf8ToString(AReportJson);
+      SetCompNameValueFromJson2FormByClassType(LHiConReportEditF, LJson);
+      LJson2 := Utf8ToString(AWorkItemJson);
+      SetWorkItemGridFromJson(LJson2);
 
+      while True do
+      begin
+        Result := ShowModal;
+
+        if Result = mrOK then
+        begin
+          //필수 입력 항목 중 입력 안된 필드가 있으면 계속 ShowModal
+          LControl := CheckRequiredInput4Report();
+
+          if Assigned(LControl) then
+          begin
+            ActiveControl := LControl;
+            Continue;
+          end;
+
+          LJson := GetCompNameValue2JsonFromFormByClassType(LHiConReportEditF);
+  //        AddModifyItemGrpValue2Json(LJson);
+          LVar := _Json(LJson);
+          AddHiconReportListFromVariant(LVar);
+
+          LJson2 := GetWorkItem2JsonFromGrid();
+
+          //기존 ReportKey->WorkItem 모두 지움
+          DeleteWorkItemByReportKey();
+
+          if LJson2 <> '[]' then
+          begin
+            LVar := _Json(LJson2);
+            AddHiconReportDetailFromVarAry(LVar, True);
+          end;
+
+          AReportJson := StringToUtf8(LJson);
+          AWorkItemJson := StringToUtf8(LJson2);
+        end;//if
+
+        Break;
+      end;//while
+    end;//with
+
+  finally
+    LHiConReportEditF.Free;
+  end;
+end;
+
+procedure THiConReportEditF.AddModifyItemGrpValue2Json(var AJson: string);
+var
+  LVar: variant;
+  LSet: integer;
+begin
+  LVar := _JSON(AJson);
+
+  LSet := GetSetsFromCheckGrp(ModifyItems);
+  TDocVariantData(LVar).AddOrUpdateValue('ModifyItems', LSet);
+
+  AJson := Utf8ToString(LVar);
 end;
 
 procedure THiConReportEditF.AeroButton2Click(Sender: TObject);
 begin
   ReportWorkItemEdit();
+end;
+
+procedure THiConReportEditF.AeroButton3Click(Sender: TObject);
+var
+  LRow: integer;
+begin
+  LRow := WorkItemGrid.SelectedRow;
+
+  if LRow = -1 then
+  begin
+    ShowMessage('Select Item');
+    exit;
+  end;
+
+  if MessageDlg('Aru you sure delete the selected item?.', mtConfirmation, [mbYes, mbNo],0) = mrYes then
+  begin
+    WorkItemGrid.BeginUpdate;
+    try
+      WorkItemGrid.Row[LRow].Visible := False;
+    finally
+      WorkItemGrid.EndUpdate;
+    end;
+  end;
+end;
+
+procedure THiConReportEditF.BitBtn1Click(Sender: TObject);
+begin
+  Content2Clipboard(HullNo.Text);
+end;
+
+function THiConReportEditF.CheckRequiredInput4Report: TWinControl;
+begin
+  //입력 안된 Component Value가 있으면 해당 Component 반환함
+  Result := CheckRequiredInputByTagOnForm(Self);
+
+  //True = 입력 안된 Component 존재
+  if Assigned(Result) then
+  begin
+    if Result.ClassName = 'TAdvOfficeCheckGroup' then
+      ChangeCompColorByPropertyName(Result, clRed, 'BorderColor')
+    else
+      //Component Color 변경
+      ChangeCompColorByPropertyName(Result, clYellow);
+      ShowMessage('필수 항목: [' + Result.Hint + '] 을 입력하세요' );
+  end
+  else //WorkItemGrid Check
+  begin
+
+  end;
+end;
+
+procedure THiConReportEditF.DeleteWorkItemByReportKey;
+var
+  LKey: TTimeLog;
+begin
+  LKey := StrToInt64Def(ReportKey.Text, 0);
+  DeleteHiconReportDetailByRptKey(LKey);
+end;
+
+procedure THiConReportEditF.FormCreate(Sender: TObject);
+begin
+  InitEnum();
+end;
+
+function THiConReportEditF.GetWorkItem2JsonFromGrid: string;
+var
+  LVar: variant;
+begin
+  //Grid Row.Visible = True인 Row만 Variant에 추가함
+  LVar := NextGrid2Variant(WorkItemGrid);
+  Result := Utf8ToString(LVar);
+end;
+
+procedure THiConReportEditF.HullNoClickBtn(Sender: TObject);
+var
+  LVesselSearchParamRec: TVesselSearchParamRec;
+begin
+  LVesselSearchParamRec.fHullNo := HullNo.Text;
+  LVesselSearchParamRec.fShipName := ShipName.Text;
+
+  if ShowSearchVesselForm(LVesselSearchParamRec) = mrOK then
+  begin
+    HullNo.Text := LVesselSearchParamRec.fHullNo;
+    ShipName.Text := LVesselSearchParamRec.fShipName;
+  end;
+end;
+
+procedure THiConReportEditF.InitEnum;
+begin
+  g_HiRptKind.SetType2Combo(ReportKind);
+  g_HiRptModifiedItem.SetType2List(ModifyItems.Items);
 end;
 
 procedure THiConReportEditF.LoadWorkItemVar2Grid(AVar: variant; ARow: integer);
@@ -295,6 +333,11 @@ begin
 
   if ARow = -1 then //Add
   begin
+    LVar.ReportKey4Item := StrToInt64Def(ReportKey.Text, 0);
+    LVar.WorkItemKey := TimeLogFromDateTime(now);
+    LVar.ModifyDate_Item := TimeLogFromDateTime(now);
+    LVar.WorkItemBeginTime := TimeLogFromDateTime(now);
+    LVar.WorkItemEndTime := TimeLogFromDateTime(now);
   end
   else
   begin
@@ -304,6 +347,16 @@ begin
   //"저장" 버튼을 누르면 True
   if DisplayRptWorkItemEditForm(LVar) = mrOK then
     LoadWorkItemVar2Grid(LVar, ARow);
+end;
+
+procedure THiConReportEditF.SetWorkItemGridFromJson(const AJson: string);
+var
+  LDocList: IDocList;
+  LAryUtf8: RawUtf8;
+  LVar: variant;
+begin
+  LAryUtf8 := StringToUtf8(AJson);
+  AddNextGridRowsFromJsonAry(WorkItemGrid, LAryUtf8);
 end;
 
 procedure THiConReportEditF.WorkItemGridCellDblClick(Sender: TObject; ACol,

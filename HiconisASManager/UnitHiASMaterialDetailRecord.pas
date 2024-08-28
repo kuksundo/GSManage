@@ -26,6 +26,7 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     fNeedCount: integer;//수량
     fLeadTime: integer;
 
+    FIsReclaim, //Re-Claim 자재인 경우 True
     FIsUpdate: Boolean;
   public
     //True : DB Update, False: DB Add
@@ -41,6 +42,8 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     property NeedDate: TTimeLog read fNeedDate write fNeedDate;
     property NeedCount: integer read fNeedCount write fNeedCount;
     property LeadTime: integer read fLeadTime write fLeadTime;
+
+    property IsReclaim: Boolean read FIsReclaim write FIsReclaim;
   end;
 
   function CreateModel_HiASMaterialDetail: TSQLModel;
@@ -48,7 +51,8 @@ uses SysUtils, Classes, Generics.Collections, Forms,
   procedure DestroyHiASMaterialDetailClient();
 
   function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
-  function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
+  function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+  function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
 
   procedure AddOrUpdateMaterialDetail(AOrm: TSQLMaterialDetail);
 
@@ -121,6 +125,30 @@ begin
     if LMaterial4Project.FillOne then
     begin
       Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'TaskID = ? and PORNo = ?', [ATask.ID, LMaterial4Project.PORNo]);
+
+      if Result.FillOne then
+        Result.IsUpdate := True
+      else
+        Result.IsUpdate := False;
+    end
+    else
+      Result := TSQLMaterialDetail.Create;
+  finally
+    LMaterial4Project.Free;
+  end;
+end;
+
+function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+var
+  LMaterial4Project: TSQLMaterial4Project;
+begin
+  LMaterial4Project := GetMaterial4ProjFromTask(ATask);
+  try
+    LMaterial4Project.FillRewind;
+
+    if LMaterial4Project.FillOne then
+    begin
+      Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'TaskID = ? and PORNo = ? and IsReclaim = ?', [ATask.ID, LMaterial4Project.PORNo, 1]);
 
       if Result.FillOne then
         Result.IsUpdate := True
