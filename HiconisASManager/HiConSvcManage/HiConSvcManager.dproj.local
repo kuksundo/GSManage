@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.967,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-09-01 08:46:32.037,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-09-01 08:48:43.917,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\FrmHiSvcManage.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2024-09-01 08:48:43.917,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\FrmHiSvcManage.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024-09-01 08:49:03.969,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\HiConSvcManager.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2024-09-01 08:52:37.716,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmWinServiceEdit.pas</Transaction>
+    <Transaction>2024-09-01 13:00:02.903,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmElapsedTime.pas</Transaction>
+    <Transaction>2024-09-01 13:37:55.923,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\New1.txt</Transaction>
+    <Transaction>2024-09-01 13:38:27.504,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\HiConSvcManager.txt=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConSvcManage\New1.txt</Transaction>
+  </Transactions>
+</BorlandProject>

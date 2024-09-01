@@ -181,6 +181,8 @@ type
     ImportDIModuleRecallData1: TMenuItem;
     ShowDIRecallStatus1: TMenuItem;
     BitBtn2: TBitBtn;
+    PopupMenu2: TPopupMenu;
+    ShowWarrantyExpireDate2: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -245,6 +247,7 @@ type
     procedure ImportDIModuleRecallData1Click(Sender: TObject);
     procedure ShowDIRecallStatus1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure ShowWarrantyExpireDate2Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -1852,6 +1855,20 @@ begin
   ShowMessage('Delivery Date: ' + DateTimeToStr(GetDeliveryDateBySelected()) + #13#10 +
    'Warranty Expire: ' + DateTimeToStr(GetWarrantyExpireDateBySelected()) + #13#10 +
    'Warranty Period: ' + GetWarrantyPeriodBySelected());
+end;
+
+procedure THiconisAsManageF.ShowWarrantyExpireDate2Click(Sender: TObject);
+var
+  LHullNo: string;
+begin
+  LHullNo := HullNoEdit.Text;
+
+  if LHullNo = '' then
+    exit;
+
+  ShowMessage('Delivery Date: ' + DateTimeToStr(TimelogToDatetime(GetDeliveryDateByHullNo(LHullNo))) + #13#10 +
+   'Warranty Expire: ' + DateTimeToStr(TimelogToDatetime(CalcWarrantyExpireDateByHullNo(LHullNo))) + #13#10 +
+   'Warranty Period: ' + GetWarrantyPeriodByHullNo(LHullNo));
 end;
 
 procedure THiconisAsManageF.StartOLControlWorker;
