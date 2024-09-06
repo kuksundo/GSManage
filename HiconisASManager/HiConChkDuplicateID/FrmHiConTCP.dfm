@@ -3,7 +3,7 @@ object HiconisTCPF: THiconisTCPF
   Top = 0
   Caption = 'HiconisTCPF'
   ClientHeight = 500
-  ClientWidth = 651
+  ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object HiconisTCPF: THiconisTCPF
   object Splitter1: TSplitter
     Left = 0
     Top = 338
-    Width = 651
+    Width = 772
     Height = 6
     Cursor = crVSplit
     Align = alBottom
@@ -36,10 +36,11 @@ object HiconisTCPF: THiconisTCPF
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 651
+    Width = 772
     Height = 41
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 651
     object PngBitBtn1: TPngBitBtn
       Left = 90
       Top = 1
@@ -114,7 +115,7 @@ object HiconisTCPF: THiconisTCPF
         49454E44AE426082}
     end
     object BitBtn1: TBitBtn
-      Left = 561
+      Left = 682
       Top = 1
       Width = 89
       Height = 39
@@ -149,44 +150,20 @@ object HiconisTCPF: THiconisTCPF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFF2D24ED5959F24844F0FFFFFF}
       TabOrder = 2
       OnClick = BitBtn1Click
+      ExplicitLeft = 561
     end
   end
   object Panel2: TPanel
     Left = 0
     Top = 461
-    Width = 651
+    Width = 772
     Height = 39
     Align = alBottom
     TabOrder = 1
-    object Kit1: TKit
-      Left = 320
-      Top = 6
-      Width = 200
-      Height = 4
-      Interval = 65
-      TimerEnable = False
-      LineSize = 10
-      KitColor = Green
-      KitStyle = Line
-      Direction = Left2Right
-      ColorBg = clBlack
-      ColorLine = clLime
-      ColorFont = clLime
-      ThreadActivity = True
-      CurrentProcessID = 5708
-      CurrentThreadID = 2348
-      Strings.Strings = (
-        #49892#54665#51473'...')
-      Steps = 4
-      StringReverse = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clLime
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
+    ExplicitLeft = -1
+    ExplicitTop = 467
     object BitBtn2: TBitBtn
-      Left = 561
+      Left = 682
       Top = 1
       Width = 89
       Height = 37
@@ -194,16 +171,18 @@ object HiconisTCPF: THiconisTCPF
       Kind = bkClose
       NumGlyphs = 2
       TabOrder = 0
+      ExplicitLeft = 561
     end
   end
   object ConsoleMemo: TMemo
     Left = 0
     Top = 344
-    Width = 651
+    Width = 772
     Height = 117
     Align = alBottom
     ScrollBars = ssVertical
     TabOrder = 2
+    ExplicitWidth = 651
   end
   object Panel3: TPanel
     Left = 0
@@ -389,15 +368,16 @@ object HiconisTCPF: THiconisTCPF
   object Panel5: TPanel
     Left = 191
     Top = 41
-    Width = 460
+    Width = 581
     Height = 297
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
+    ExplicitWidth = 460
     object TaskTab: TAdvOfficeTabSet
       Left = 1
       Top = 1
-      Width = 458
+      Width = 579
       Height = 27
       AdvOfficeTabs = <
         item
@@ -792,11 +772,12 @@ object HiconisTCPF: THiconisTCPF
       TabSettings.Alignment = taCenter
       TabSettings.Width = 110
       OnChange = TaskTabChange
+      ExplicitWidth = 458
     end
-    object TagAddrGrid: TNextGrid
+    object NextGrid1: TNextGrid
       Left = 1
       Top = 28
-      Width = 458
+      Width = 579
       Height = 268
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
@@ -804,86 +785,10 @@ object HiconisTCPF: THiconisTCPF
       Caption = ''
       TabOrder = 1
       TabStop = True
-      object NxIncrementColumn1: TNxIncrementColumn
-        Alignment = taCenter
-        DefaultWidth = 30
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Header.Caption = 'No'
-        Header.Alignment = taCenter
-        Header.Font.Charset = DEFAULT_CHARSET
-        Header.Font.Color = clWindowText
-        Header.Font.Height = -11
-        Header.Font.Name = 'Tahoma'
-        Header.Font.Style = []
-        ParentFont = False
-        Position = 0
-        SortType = stAlphabetic
-        Width = 30
-      end
-      object MMAddress: TNxTextColumn
-        Alignment = taCenter
-        DefaultWidth = 120
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Header.Caption = 'M/M Addr'
-        Header.Alignment = taCenter
-        Header.Font.Charset = DEFAULT_CHARSET
-        Header.Font.Color = clWindowText
-        Header.Font.Height = -11
-        Header.Font.Name = 'Tahoma'
-        Header.Font.Style = []
-        ParentFont = False
-        Position = 1
-        SortType = stAlphabetic
-        Width = 120
-      end
-      object TagId: TNxTextColumn
-        Alignment = taCenter
-        DefaultWidth = 150
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Header.Caption = 'Id'
-        Header.Alignment = taCenter
-        Header.Font.Charset = DEFAULT_CHARSET
-        Header.Font.Color = clWindowText
-        Header.Font.Height = -11
-        Header.Font.Name = 'Tahoma'
-        Header.Font.Style = []
-        ParentFont = False
-        Position = 2
-        SortType = stAlphabetic
-        Width = 150
-      end
-      object MPMName: TNxTextColumn
-        Alignment = taCenter
-        DefaultWidth = 150
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Header.Caption = 'Name'
-        Header.Alignment = taCenter
-        Header.Font.Charset = DEFAULT_CHARSET
-        Header.Font.Color = clWindowText
-        Header.Font.Height = -11
-        Header.Font.Name = 'Tahoma'
-        Header.Font.Style = []
-        ParentFont = False
-        Position = 3
-        SortType = stAlphabetic
-        Width = 150
-      end
+      ExplicitLeft = 24
+      ExplicitTop = 40
+      ExplicitWidth = 250
+      ExplicitHeight = 150
     end
   end
   object MainMenu1: TMainMenu
@@ -918,65 +823,92 @@ object HiconisTCPF: THiconisTCPF
   object IPGridPopup: TPopupMenu
     Left = 32
     Top = 185
-    object CheckDuplicatedID1: TMenuItem
-      Bitmap.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFB46822D09D74F0E2D9FFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0933CE8
-        A527AD570FBC7B4CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFCD903FEAAF30BD660EB56217FFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD09446E9
-        B23EC06B14BA671DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFD2994AECB849C6711BBE6B1FFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD59C4EEE
-        BF53CB7820C26F22FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFD8A253F1C45FCE7E24C77A27FFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDAA558F2
-        C866D1842ACB7F2CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFE2B88BEAC681EFC261DA983ACB7824E3BD8EFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFD6B9E9C588F3CF76EF
-        C264E7B358D17D26D58C33F1DBC0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFF5E5D2E5BB7CF8DB8FEEC463EFC76CF2C96CDC9337D5852CD9983CF6E7
-        D6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDF7F0E1AC5AF8DE91F1C55DF2C666F1
-        C363F4CB6AE8AF44D9851DDF9331E19F40FEFBF6FFFFFFFFFFFFFFFFFFFFFFFF
-        E5B46CFBEEC3FAE8B9F7E8C6F5EEE0F3F0EAF1EDE9EEE9DBDAA964D6A259E0AB
-        5DE4B061FFFFFFFFFFFFFBF3E7ECC990FEFEFAFFFFFFF6F4F3F2F3F4EEE9DFE7
-        D5AAE2CFA1E6E2D7D9C9A8CFB278CAB796D3C4ADEBC68EFCF3E7E5AF54E7B75B
-        E5B24EDB931ADC981EDD971EDD971EDC961ADD951BDF9920E09D29E19F2AE2A0
-        29E0AA43E2AF52E4B054F9ECD3F4DBACF0CC89F1CB7DEFC56DEFC56DF0C56CF4
-        CD7AF4CE7CF0C56EEFC56DEFC66DF1CA7EF2CE8BF5DBADFAECD3}
-      Caption = 'Check Duplicated ID From Selected IP'
-      OnClick = CheckDuplicatedID1Click
-    end
-    object CheckDuplicatedIDFromAll1: TMenuItem
-      Caption = 'Check Duplicated ID From All'
-      Visible = False
-    end
     object CheckConnection1: TMenuItem
       Caption = 'Check Connection Selected'
       OnClick = CheckConnection1Click
     end
-    object N3: TMenuItem
-      Caption = '-'
-    end
-    object LoadDupIdCheckResultFile1: TMenuItem
-      Caption = 'Load DupId Check Result File From Selected'
-      OnClick = LoadDupIdCheckResultFile1Click
-    end
     object N2: TMenuItem
       Caption = '-'
     end
-    object MPMBackup1: TMenuItem
-      Caption = 'MPM Backup From Selected'
-      OnClick = MPMBackup1Click
+    object MPM1: TMenuItem
+      Caption = 'MPM'
+      object CheckDuplicatedID1: TMenuItem
+        Bitmap.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFB46822D09D74F0E2D9FFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0933CE8
+          A527AD570FBC7B4CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFCD903FEAAF30BD660EB56217FFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD09446E9
+          B23EC06B14BA671DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFD2994AECB849C6711BBE6B1FFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD59C4EEE
+          BF53CB7820C26F22FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFD8A253F1C45FCE7E24C77A27FFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDAA558F2
+          C866D1842ACB7F2CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFE2B88BEAC681EFC261DA983ACB7824E3BD8EFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFD6B9E9C588F3CF76EF
+          C264E7B358D17D26D58C33F1DBC0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFF5E5D2E5BB7CF8DB8FEEC463EFC76CF2C96CDC9337D5852CD9983CF6E7
+          D6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDF7F0E1AC5AF8DE91F1C55DF2C666F1
+          C363F4CB6AE8AF44D9851DDF9331E19F40FEFBF6FFFFFFFFFFFFFFFFFFFFFFFF
+          E5B46CFBEEC3FAE8B9F7E8C6F5EEE0F3F0EAF1EDE9EEE9DBDAA964D6A259E0AB
+          5DE4B061FFFFFFFFFFFFFBF3E7ECC990FEFEFAFFFFFFF6F4F3F2F3F4EEE9DFE7
+          D5AAE2CFA1E6E2D7D9C9A8CFB278CAB796D3C4ADEBC68EFCF3E7E5AF54E7B75B
+          E5B24EDB931ADC981EDD971EDD971EDC961ADD951BDF9920E09D29E19F2AE2A0
+          29E0AA43E2AF52E4B054F9ECD3F4DBACF0CC89F1CB7DEFC56DEFC56DF0C56CF4
+          CD7AF4CE7CF0C56EEFC56DEFC66DF1CA7EF2CE8BF5DBADFAECD3}
+        Caption = 'Check Duplicated ID From Selected IP'
+        OnClick = CheckDuplicatedID1Click
+      end
+      object CheckDuplicatedIDFromAll1: TMenuItem
+        Caption = 'Check Duplicated ID From All'
+        Visible = False
+      end
+      object LoadDupIdCheckResultFile1: TMenuItem
+        Caption = 'Load DupId Check Result File From Selected'
+        OnClick = LoadDupIdCheckResultFile1Click
+      end
+      object N7: TMenuItem
+        Caption = '-'
+      end
+      object MPMBackup1: TMenuItem
+        Caption = 'MPM Backup From Selected'
+        OnClick = MPMBackup1Click
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object GetPortPrint1: TMenuItem
+        Caption = 'Get Port Print Debug'
+        OnClick = GetPortPrint1Click
+      end
     end
     object N4: TMenuItem
       Caption = '-'
     end
-    object GetPortPrint1: TMenuItem
-      Caption = 'Get Port Print Debug'
-      OnClick = GetPortPrint1Click
+    object InfluxDB1: TMenuItem
+      Caption = 'Influx DB'
+      object ShowRetentionPolicies1: TMenuItem
+        Caption = 'Show Retention Policies From Selected IP'
+        OnClick = ShowRetentionPolicies1Click
+      end
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object AlterRetentionPolicy4OWSFromSelectedIP1: TMenuItem
+        Caption = 'Alter Retention Policy 4 OWS From Selected IP'
+        OnClick = AlterRetentionPolicy4OWSFromSelectedIP1Click
+      end
+      object AlterRetentionPolicy4OWSFromSelectedIP2: TMenuItem
+        Caption = 'Alter Retention Policy 4 History From Selected IP'
+        OnClick = AlterRetentionPolicy4OWSFromSelectedIP2Click
+      end
+    end
+    object N5: TMenuItem
+      Caption = '-'
     end
     object ShowProgress1: TMenuItem
       Caption = 'Show Progress'

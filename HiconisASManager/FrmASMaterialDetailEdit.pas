@@ -96,7 +96,7 @@ var
   LJson: string;
 begin
   LJson :=  VariantToString(AVar);
-  SetCompNameValueFromJson2Form(Self, LJson);
+  SetCompNameValueFromJson2FormByClassType(Self, LJson);
 end;
 
 procedure TMaterialDetailF.LoadMaterialDetailVarFromForm(var AVar: variant);

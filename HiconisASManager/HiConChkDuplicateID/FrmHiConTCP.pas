@@ -51,10 +51,6 @@ type
     BitBtn4: TBitBtn;
     Panel5: TPanel;
     TaskTab: TAdvOfficeTabSet;
-    TagAddrGrid: TNextGrid;
-    NxIncrementColumn1: TNxIncrementColumn;
-    MMAddress: TNxTextColumn;
-    TagId: TNxTextColumn;
     IPGridPopup: TPopupMenu;
     CheckDuplicatedID1: TMenuItem;
     GetPortPrint1: TMenuItem;
@@ -63,14 +59,21 @@ type
     N2: TMenuItem;
     MPMBackup1: TMenuItem;
     BitBtn1: TBitBtn;
-    MPMName: TNxTextColumn;
     LoadDupIdCheckResultFile1: TMenuItem;
-    N3: TMenuItem;
     ShowProgress1: TMenuItem;
-    Kit1: TKit;
     CheckConnection1: TMenuItem;
     BitBtn3: TBitBtn;
     N4: TMenuItem;
+    N5: TMenuItem;
+    InfluxDB1: TMenuItem;
+    ShowRetentionPolicies1: TMenuItem;
+    NextGrid1: TNextGrid;
+    AlterRetentionPolicy4OWSFromSelectedIP1: TMenuItem;
+    AlterRetentionPolicy4OWSFromSelectedIP2: TMenuItem;
+    N6: TMenuItem;
+    MPM1: TMenuItem;
+    N7: TMenuItem;
+    N3: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -89,6 +92,9 @@ type
     procedure ShowProgress1Click(Sender: TObject);
     procedure CheckConnection1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure ShowRetentionPolicies1Click(Sender: TObject);
+    procedure AlterRetentionPolicy4OWSFromSelectedIP1Click(Sender: TObject);
+    procedure AlterRetentionPolicy4OWSFromSelectedIP2Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -110,6 +116,7 @@ type
     FIpList,
     FMPMBackupResultList: TStringList;
 
+    procedure SetNextGridColumn4DupTagId();
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
     procedure SaveIpListToFile(AFileName: string);
     procedure LoadIpListFromFile(AFileName: string);
@@ -125,6 +132,9 @@ type
     //AIpList: ';'·Î ±¸ºÐµÊ
     function DownloadBackupMPMForEach(AIpList: string): string;
     function GetMPMNameFromIpAddrDic(AIpAddr: string): string;
+
+    procedure GetRetentionPoliciesBySelectedIpList(AIpAddrList: string);
+    function AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
 
   public
     function GetIdFromMPM(ARec: TIpListRec): integer;
@@ -159,8 +169,9 @@ var
 implementation
 
 uses System.TimeSpan, System.Diagnostics,
-  UnitStringUtil, FrmIpList, UnitExcelUtil, UnitNextGridUtil2,
-  UnitAnimationThread, UnitCryptUtil3, pingsend, FrmElapsedTime
+  UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2,
+  UnitAnimationThread, UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil,
+  FrmIpList, FrmElapsedTime, FrmTwoInputEdit
   ;
 
 {$R *.dfm}
@@ -174,6 +185,72 @@ begin
   else
 //      ChangeRowColorByIndex(IPAddrGrid, AIdx, clGreen)
     ChangeRowFontColorByIndex(IPAddrGrid, AIdx, clBlack);
+end;
+
+function THiconisTCPF.AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
+var
+  LIpAddr, LIpAddrList, LIpAddrList2, LDuration, LShardDuration, LFailIpList: string;
+  LVar: variant;
+  LIsFirstRun: Boolean;
+  LRec: TInfluxQueryResult;
+begin
+  LIsFirstRun := False;
+
+  if AParam <> '' then
+  begin
+    //';'·Î ±¸ºÐµÊ
+    LIpAddrList := GetSelectedIpAddrList();
+    LIpAddrList2 := LIpAddrList;
+    //Duration;ShardDuration = ';'·Î ±¸ºÐµÊ
+    LDuration := StrToken(AParam, ';');
+    LShardDuration := StrToken(AParam, ';');
+  end;
+
+  LFailIpList := '';
+
+  while LIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(LIpAddrList, ';');
+    Result := SetRetentionPolicies4OWSFromInfluxDB(LIpAddr, LDuration, LShardDuration);
+
+    if Result <> '' then
+    begin
+      LRec := GetResultRecOfSetRetentPolicy(Result);
+
+      if LRec.statement_id <> 0 then
+        LFailIpList := LFailIpList + LIpAddr + #13#10;
+    end;
+  end;
+
+  if LFailIpList = '' then
+  begin
+    ShowMessage('Alter Retention Policies is successeful.');
+    GetRetentionPoliciesBySelectedIpList(LIpAddrList2);
+  end
+  else
+    ShowMessage('Alter Retention Policies is fail. The fail IP List is as below: ' + #13#10 + LFailIpList);
+end;
+
+procedure THiconisTCPF.AlterRetentionPolicy4OWSFromSelectedIP1Click(
+  Sender: TObject);
+var
+  LParam: string;
+begin
+  LParam := CreateTwoInputEdit('Alter Retention Policy for InfluxDB','Duration','30d','Shard Duration','1d');
+
+  if AlterRetentionPoliciesBySelectedIpList(LParam) <> '' then
+    ;
+end;
+
+procedure THiconisTCPF.AlterRetentionPolicy4OWSFromSelectedIP2Click(
+  Sender: TObject);
+var
+  LParam: string;
+begin
+  LParam := CreateTwoInputEdit('Alter Retention Policy for InfluxDB','Duration','365d','Shard Duration','7d');
+
+  if AlterRetentionPoliciesBySelectedIpList(LParam) <> '' then
+    ;
 end;
 
 function THiconisTCPF.BackupMPM(AIpAddrList: string): string;
@@ -199,11 +276,11 @@ end;
 
 procedure THiconisTCPF.BitBtn1Click(Sender: TObject);
 begin
-  TagAddrGrid.BeginUpdate;
+  NextGrid1.BeginUpdate;
   try
-    TagAddrGrid.ClearRows;
+    NextGrid1.ClearRows;
   finally
-    TagAddrGrid.EndUpdate();
+    NextGrid1.EndUpdate();
   end;
 end;
 
@@ -259,10 +336,10 @@ begin
 
   for LRec in LIDList do
   begin
-    for i := 0 to TagAddrGrid.RowCount - 1 do
+    for i := 0 to NextGrid1.RowCount - 1 do
     begin
-      if LRec.DupIdRec.MMAddress = TagAddrGrid.CellsByName['MMAddress', i] then
-        TagAddrGrid.Row[i].Visible := True;
+      if LRec.DupIdRec.MMAddress = NextGrid1.CellsByName['MMAddress', i] then
+        NextGrid1.Row[i].Visible := True;
     end;
   end;
 end;
@@ -543,7 +620,7 @@ var
   LIpListRec: TIpListRec;
   i: integer;
 begin
-  TagAddrGrid.ClearRows;
+  NextGrid1.ClearRows;
   FIpNIdList.Clear;
   FIpNDupIdList.Clear;
 
@@ -562,7 +639,7 @@ var
   LIp, LResName: string;
   LIpListRec: TIpListRec;
 begin
-  TagAddrGrid.ClearRows;
+//  NextGrid1.ClearRows;
   FIpNIdList.Clear;
   FIpNDupIdList.Clear;
 
@@ -665,6 +742,37 @@ begin
 //  ConsoleMemo.Lines.Text := LStrList.Text;
 //  LStrList.Free;
 //  ConsoleMemo.Lines.Text := TRegEx.Match(LStr, '(?si)<pre>.*?</pre>').Value;
+end;
+
+procedure THiconisTCPF.GetRetentionPoliciesBySelectedIpList(
+  AIpAddrList: string);
+var
+  LIpAddr: string;
+  LResult: string;
+  LVar: variant;
+  LIsFirstRun: Boolean;
+begin
+  LIsFirstRun := False;
+
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
+    LResult := GetRetentionPolicies2JsonFromInfluxDB(LIpAddr);
+
+    if LResult <> '' then
+    begin
+      LVar := _JSON(LResult);
+
+      if not LIsFirstRun then
+      begin
+        AddNextGridColumnFromVariant(NextGrid1, LVar, False, True, True);
+        LIsFirstRun := True;
+      end;
+
+      AddNextGridRowFromVariant(NextGrid1, LVar, True);
+      Log(LResult);
+    end;
+  end;
 end;
 
 function THiconisTCPF.GetSelectedIpAddrList(AIsMaster: Boolean): string;
@@ -791,14 +899,14 @@ end;
 
 procedure THiconisTCPF.PngBitBtn1Click(Sender: TObject);
 begin
-  NextGridToExcel(TagAddrGrid);
+  NextGridToExcel(NextGrid1);
 end;
 
 procedure THiconisTCPF.PngBitBtn2Click(Sender: TObject);
 begin
   if OpenDialog1.Execute then
   begin
-    NextGridToCsv(OpenDialog1.FileName, TagAddrGrid);
+    NextGridToCsv(OpenDialog1.FileName, NextGrid1);
   end;
 end;
 
@@ -887,8 +995,10 @@ var
 begin
   LStrList := TStringList.Create;
   LStrList.Text := ExtractTextInsideGivenTagEx('pre', ATagText);
-  TagAddrGrid.BeginUpdate;
+  NextGrid1.BeginUpdate;
   try
+    SetNextGridColumn4DupTagId();
+
     LDupList := Collections.NewList<TDupIDListRec>;
     LIdDic := Collections.NewKeyValue<string, TIDListRec>;
 
@@ -907,12 +1017,12 @@ begin
       end;
   //    FIDListDic.Add(AIpName, LStrList);
 
-      LRow := TagAddrGrid.AddRow();
-//      TagAddrGrid.CellsByName['RES_NAME', LRow] := AIpRec.RES_NAME;
-//      TagAddrGrid.CellsByName['PMPM_PIP', LRow] := AIpRec.PMPM_PIP;
-      TagAddrGrid.CellsByName['MMAddress', LRow] := LRec.MMAddress;
-      TagAddrGrid.CellsByName['TagId', LRow] := LRec.TagId;
-      TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(AIpAddr);
+      LRow := NextGrid1.AddRow();
+//      NextGrid1.CellsByName['RES_NAME', LRow] := AIpRec.RES_NAME;
+//      NextGrid1.CellsByName['PMPM_PIP', LRow] := AIpRec.PMPM_PIP;
+      NextGrid1.CellsByName['MMAddress', LRow] := LRec.MMAddress;
+      NextGrid1.CellsByName['TagId', LRow] := LRec.TagId;
+      NextGrid1.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(AIpAddr);
     end;//for
 
     FIpNIdList.Add(AIpAddr, LIdDic);
@@ -920,7 +1030,7 @@ begin
     if LDupList.Count > 0 then
       FIpNDupIdList.Add(AIpAddr, LDupList);
   finally
-    TagAddrGrid.EndUpdate();
+    NextGrid1.EndUpdate();
     LStrList.Free;
   end;
 end;
@@ -932,9 +1042,9 @@ var
   i, LRow: integer;
   LIpAddr: string;
 begin
-  TagAddrGrid.BeginUpdate;
+  NextGrid1.BeginUpdate;
   try
-    TagAddrGrid.ClearRows;
+    NextGrid1.ClearRows;
 
 
     while AIpAddr <> '' do
@@ -946,15 +1056,15 @@ begin
         begin
           LDupRec := LIDList.Items[i];
 
-          LRow := TagAddrGrid.AddRow();
-          TagAddrGrid.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
-          TagAddrGrid.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
-          TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+          LRow := NextGrid1.AddRow();
+          NextGrid1.CellsByName['MMAddress', LRow] := LDupRec.DupIdRec.MMAddress;
+          NextGrid1.CellsByName['TagId', LRow] := LDupRec.DupIdRec.TagId;
+          NextGrid1.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
         end;
       end;
     end;//while
   finally
-    TagAddrGrid.EndUpdate();
+    NextGrid1.EndUpdate();
   end;
 end;
 
@@ -965,9 +1075,9 @@ var
   i, LRow: integer;
   LIpAddr: string;
 begin
-  TagAddrGrid.BeginUpdate;
+  NextGrid1.BeginUpdate;
   try
-    TagAddrGrid.ClearRows;
+    NextGrid1.ClearRows;
 
     while AIpAddr <> '' do
     begin
@@ -979,27 +1089,40 @@ begin
       begin
         LRec := LIDDic.Value[i];
 
-        LRow := TagAddrGrid.AddRow();
-        TagAddrGrid.CellsByName['MMAddress', LRow] := LRec.MMAddress;
-        TagAddrGrid.CellsByName['TagId', LRow] := LRec.TagId;
-        TagAddrGrid.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
+        LRow := NextGrid1.AddRow();
+        NextGrid1.CellsByName['MMAddress', LRow] := LRec.MMAddress;
+        NextGrid1.CellsByName['TagId', LRow] := LRec.TagId;
+        NextGrid1.CellsByName['MPMName', LRow] := GetMPMNameFromIpAddrDic(LIpAddr);
       end;
     end;//while
   finally
-    TagAddrGrid.EndUpdate();
+    NextGrid1.EndUpdate();
   end;
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4DupTagId;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['MMAddress'] := 'M/M Addr';
+  TDocVariantData(LDoc).Value['TagId'] := 'Id';
+  TDocVariantData(LDoc).Value['MPMName'] := 'Name';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
 end;
 
 procedure THiconisTCPF.SetVisibleAllGridRow(AIsShow: Boolean);
 var
   i: integer;
 begin
-  TagAddrGrid.BeginUpdate;
+  NextGrid1.BeginUpdate;
   try
-    for i := 0 to TagAddrGrid.RowCount - 1 do
-      TagAddrGrid.Row[i].Visible := AIsShow;
+    for i := 0 to NextGrid1.RowCount - 1 do
+      NextGrid1.Row[i].Visible := AIsShow;
   finally
-    TagAddrGrid.EndUpdate();
+    NextGrid1.EndUpdate();
   end;
 end;
 
@@ -1021,6 +1144,15 @@ begin
   ShowModalElapsedTimeForm();
 end;
 
+
+procedure THiconisTCPF.ShowRetentionPolicies1Click(Sender: TObject);
+var
+  LIpAddrList: string;
+begin
+  //';'·Î ±¸ºÐµÊ
+  LIpAddrList := GetSelectedIpAddrList();
+  GetRetentionPoliciesBySelectedIpList(LIpAddrList);
+end;
 
 procedure THiconisTCPF.ShowTD(const ATDRec: TMsgBox);
 begin

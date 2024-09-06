@@ -485,7 +485,7 @@ uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
   DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
-  FrmToDoList2, UnitVesselMasterRecord2, UnitClipBoardUtil;
+  FrmToDoList2, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitAdvCompUtil;
 
 {$R *.dfm}
 
@@ -1251,12 +1251,14 @@ end;
 
 procedure TTaskEditF.BitBtn1Click(Sender: TObject);
 begin
-  Content2Clipboard(HullNoEdit.Text);
+//  Content2Clipboard(HullNoEdit.Text);
+  ClipboardCopyOrPaste2AdvEditBtn(HullNoEdit);
 end;
 
 procedure TTaskEditF.BitBtn2Click(Sender: TObject);
 begin
-  Content2Clipboard(OrderNoEdit.Text);
+//  Content2Clipboard(OrderNoEdit.Text);
+  ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);
@@ -1858,6 +1860,12 @@ begin
     cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, g_HiconisASState, CurWorkCB);
     cskOverDue: ;
   end;
+
+  if CurWorkCB.ItemIndex = -1 then
+  begin
+    CurWorkCB.ItemIndex := 1;
+    CurWorkCB.OnChange(nil);
+  end;
 end;
 
 procedure TTaskEditF.InitEnum;
@@ -1898,6 +1906,14 @@ begin
       TFSMHelper<THiconisASState,THiconisASTrigger>.GetTriggers2ComboByStateUsingEnumHelper(g_FSM_TechInfo, LState, g_HiconisASTrigger, NextWorkCB);
     end;
     cskOverDue: ;
+  end;
+
+  if NextWorkCB.ItemIndex = -1 then
+  begin
+    NextWorkCB.ItemIndex := 0;
+
+    if EtcContentMemo.Text = '' then
+      EtcContentMemo.Lines.Add('- 장주호 CI 검토');
   end;
 end;
 

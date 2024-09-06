@@ -2,8 +2,8 @@ object Form2: TForm2
   Left = 0
   Top = 0
   Caption = 'Form2'
-  ClientHeight = 513
-  ClientWidth = 635
+  ClientHeight = 395
+  ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object Form2: TForm2
   TextHeight = 13
   object Button1: TButton
     Left = 32
-    Top = 56
+    Top = 40
     Width = 161
     Height = 33
     Caption = 'Open Win Timer Svc'

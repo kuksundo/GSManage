@@ -1367,19 +1367,19 @@ begin
     LRange := LWorksheet.range['H11'];
     LRange.FormulaR1C1 := ARectAcceptRec.FQty;
 
-    LRange := LWorksheet.range['D15'];
+    LRange := LWorksheet.range['D16'];
     LRange.FormulaR1C1 := ARectAcceptRec.FShipName;
 
-    LRange := LWorksheet.range['D16'];
+    LRange := LWorksheet.range['D17'];
     LRange.FormulaR1C1 := ARectAcceptRec.FHullNo;
 
-    LRange := LWorksheet.range['H15'];
+    LRange := LWorksheet.range['H16'];
     LRange.FormulaR1C1 := ARectAcceptRec.FClaimNo;
 
-    LRange := LWorksheet.range['H16'];
+    LRange := LWorksheet.range['H17'];
     LRange.FormulaR1C1 := ARectAcceptRec.FQty;
 
-    LRange := LWorksheet.range['D17'];
+    LRange := LWorksheet.range['D18'];
     LRange.FormulaR1C1 := ARectAcceptRec.FMatDesc;
 
     LRange := LWorksheet.range['C19'];
@@ -1470,3 +1470,4 @@ begin
 end;
 
 end.
+

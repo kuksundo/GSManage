@@ -22,7 +22,7 @@ object TaskEditF: TTaskEditF
     Top = 277
     Width = 607
     Height = 386
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 0
     TabWidth = 120
@@ -1533,6 +1533,11 @@ object TaskEditF: TTaskEditF
         end
         object IsReclaim: TNxCheckBoxColumn
           Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Header.Caption = 'Reclaim'
           Header.Alignment = taCenter
           Header.Font.Charset = DEFAULT_CHARSET
@@ -1540,6 +1545,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Height = -11
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
+          ParentFont = False
           Position = 9
           SortType = stBoolean
         end
@@ -3323,7 +3329,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800B40510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800C00510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5230,7 +5236,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400880210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400940210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

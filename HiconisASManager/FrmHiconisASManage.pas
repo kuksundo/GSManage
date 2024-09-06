@@ -465,7 +465,8 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
-  UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2;
+  UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2,
+  UnitAdvCompUtil;
 
 {$R *.dfm}
 
@@ -1836,12 +1837,14 @@ end;
 
 procedure THiconisAsManageF.BitBtn1Click(Sender: TObject);
 begin
-  Content2Clipboard(HullNoEdit.Text);
+//  Content2Clipboard(HullNoEdit.Text);
+  ClipboardCopyOrPaste2AdvEditBtn(HullNoEdit);
 end;
 
 procedure THiconisAsManageF.BitBtn2Click(Sender: TObject);
 begin
-  Content2Clipboard(OrderNoEdit.Text);
+//  Content2Clipboard(OrderNoEdit.Text);
+  ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
 end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
@@ -3110,7 +3113,7 @@ begin
   LOLMailRec.Subject := GetEmailSubject(AMailType, FHiASIniConfig);
   LOLMailRec.Recipients := GetRecvEmailAddress(AMailType, FHiASIniConfig);
   LOLMailRec.To_ := GetRecvEmailAddress(AMailType, FHiASIniConfig);
-  LOLMailRec.CC := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LOLMailRec.CC := GetCCEmailAddress(AMailType, FHiASIniConfig);
   LMsg := GetEmailBody(AMailType, FHiASIniConfig);
   LOLMailRec.HTMLBody := LMsg;
 //  LOLMailRec.Body := GetEmailBody(AMailType, FHiASIniConfig);
