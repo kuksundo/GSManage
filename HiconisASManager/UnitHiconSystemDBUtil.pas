@@ -2,7 +2,7 @@ unit UnitHiconSystemDBUtil;
 
 interface
 
-uses System.SysUtils, Vcl.Forms, Vcl.Dialogs,
+uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows,
   mormot.db.sql.oledb, mormot.db.sql, mormot.core.base,
   UnitChkDupIdData;
 
@@ -12,11 +12,35 @@ type
     class function GetList2JsonFromDB(AQuery: string; ADBFileName: string=''): RawUtf8;
     class function GetResourceList2JsonFromDB(ADBFileName: string=''): RawUtf8;
     class function GetSVRList2JsonFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetIfAccessODBCDriverInstalled(): string;
   end;
 
 implementation
 
 { THiConSystemDB }
+
+class function THiConSystemDB.GetIfAccessODBCDriverInstalled: string;
+var
+  Reg: TRegistry;
+begin
+  Result := False;
+  Reg := TRegistry.Create(KEY_READ);
+  try
+    // Specify the path to the ODBC drivers in the registry
+    Reg.RootKey := HKEY_LOCAL_MACHINE;
+    if Reg.OpenKeyReadOnly('SOFTWARE\ODBC\ODBCINST.INI\ODBC Drivers') then
+    begin
+      // Check if the Microsoft Access Driver is listed
+      if Reg.ValueExists('Microsoft Access Driver (*.mdb, *.accdb)') then
+      begin
+        Result := True;
+      end;
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
 
 class function THiConSystemDB.GetList2JsonFromDB(AQuery, ADBFileName: string): RawUtf8;
 var

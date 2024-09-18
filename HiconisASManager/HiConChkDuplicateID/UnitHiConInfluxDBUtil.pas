@@ -2,7 +2,7 @@ unit UnitHiConInfluxDBUtil;
 
 interface
 
-uses  Classes,
+uses Classes,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
   OtlSync,
   mormot.core.base, mormot.core.os, mormot.core.text,

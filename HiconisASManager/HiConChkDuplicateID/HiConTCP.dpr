@@ -14,7 +14,9 @@ uses
   UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas',
   FrmElapsedTime in '..\..\..\..\Common\Form\FrmElapsedTime.pas' {ElapsedTimeF},
   UnitHiConInfluxDBUtil in 'UnitHiConInfluxDBUtil.pas',
-  FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas';
+  FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas',
+  UnitNICUtil in '..\..\..\..\Common\UnitNICUtil.pas',
+  UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas';
 
 {$R *.res}
 

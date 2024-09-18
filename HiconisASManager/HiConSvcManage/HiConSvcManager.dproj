@@ -7,7 +7,7 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <TargetedPlatforms>1</TargetedPlatforms>
+        <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -30,6 +30,12 @@
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
         <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
+        <Cfg_1_Win64>true</Cfg_1_Win64>
         <CfgParent>Cfg_1</CfgParent>
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
@@ -59,6 +65,11 @@
         <DCC_UsePackage>ggbar;JvGlobus;JvMM;JvManagedThreads;pjhTMSSmoothCompPkg;Spring.Data;FireDACPgDriver;NxCommonRun_dxe5;JvCrypt;tmswizdXE5;IndySystem190;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;KiwoomOpenAPI;GLScene_RunTime;JvNet;JvDotNetCtrls;DbxCommonDriver;DDuce.Components;vclimg;dbxcds;DatasnapConnectorsFreePascal;IndyCore190;JvXPCtrls;sdlbasepack_rt_105X5;sdlmathpack_rt_105X5;ggbutton;vcldb;WebView4DelphiVCLRTL;NxGrid6Dsgn_dxe5;NxStandard6Dsgn_dxe5;DCP_XE5;CustomIPTransport;SynEdit_RXE5;dsnap;NxInspectorRun_dxe5;CloudService;NxStandard6Run_dxe5;FireDACIBDriver;JvDB;JvRuntimeDesign;DragDropDXE5;TelegramBotComp;OmniThreadLibraryRuntime;JclDeveloperTools;FireDACDb2Driver;pjhTMSCompPkg;adxolBuildD19;NxGridDsgn_dxe5;dacfmx190;bindcompfmx;vcldbx;IocompDelphiXE5;FireDACODBCDriver;pjhIOCompPlotPkg;zControls_R;dbrtl;FireDACCommon;bindcomp;inetdb;JvPluginSystem;sdlchartpack_rt_105X5;DBXOdbcDriver;LabelPack;JvCmp;vclFireDAC;adxBuildD19;JvTimeFramework;xmlrtl;NxSheetRun_dxe5;FireDACCommonDriver;pjhIOCompStdPkg;soaprtl;bindengine;vclactnband;HListBox_XE5;A1_pjhCommonUnit4ExtLib;bindcompvcl;Jcl;vclie;sdlguipack_rt_105X5;NxDBGrid6Run_dxe5;UtilPkg;ExtLib_D_DXE5;sdlguipack_105X5;odacvcl190;IcsCommonDXE5Run;OLSecManD19;DBXInformixDriver;FireDACMSSQLDriver;xIOComp;NxCollectionDsgn_dxe5;dsnapcon;DBXFirebirdDriver;inet;JvPascalInterpreter;FireDACMySQLDriver;BCHexEditor.Package.Runtime;vclx;DBXSybaseASADriver;RESTComponents;NxCollection6Run_dxe5;CEF4DelphiFMXRTL;dbexpress;JvBDE;tmsdXE5;FireDACSqliteDriver;ZComponent;DBXSqliteDriver;fmx;NxInspector6Dsgn_dxe5;JvDlgs;sdlmathpack_105X5;pjhxIOCompPkg;dacvcl190;inetdbbde;DataSnapClient;NxCommonDsgn_dxe5;DataSnapProviderClient;DBXSybaseASEDriver;DDuce.Modules;MetropolisUILiveTile;pkCindyPackDXE5;vcldsnap;fmxFireDAC;IcsVclDXE5Run;DBXDb2Driver;DBXOracleDriver;JvCore;vclribbon;fmxase;vcl;ComponentPackExRun;Python_D;DBXMSSQLDriver;CodeSiteExpressPkg;odac190;DataSnapFireDAC;FireDACDBXDriver;JvAppFrm;inetdbxpress;BCEditor.Delphi.XE5.Runtime;A2_pjhCompSharedPkg;JvDocking;adortl;DelphiModbusXE5;JvWizards;NxDBGrid6Dsgn_dxe5;FireDACASADriver;JvHMI;NxLayout6Run_dxe5;JvBands;NxDBGridRun_dxe5;ZDbc;rtl;DbxClientDriver;ZPlain;cepack;JclContainers;ChromeTabs_R;NxCollection6Dsgn_dxe5;JvSystem;svnui;JvControls;DBXMySQLDriver;NLDArrows70;DDuce.Core;tmsxlsdXE5;sdlchartpack_105X5;bindcompdbx;IndyProtocols190;JvJans;JvPrintPreview;JvPageComps;dd_PJComponents;JvStdCtrls;JvCustom;FireDACADSDriver;vcltouch;ZCore;PngComponents;dac190;NxGridRun_dxe5;NxDBGridDsgn_dxe5;VclSmp;FireDAC;VCLRESTComponents;CEF4DelphiVCLRTL;DataSnapConnectors;FireDACDataSnapDriver;NLDSideBar70;NxInspectorDsgn_dxe5;fmxobj;JclVcl;NLDXPSelection70;ZParseSql;svn;tmsexdXE5;fmxdae;NxGrid6Run_dxe5;FireDACOracleDriver;bdertl;NxCollectionRun_dxe5;VirtualTreesR;FireDACMSAccDriver;DataSnapIndy10ServerTransport;NxInspector6Run_dxe5;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UsePackage>Spring.Data;FireDACPgDriver;NxCommonRun_dxe5;IndySystem190;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;DDuce.Components;vclimg;dbxcds;DatasnapConnectorsFreePascal;IndyCore190;sdlbasepack_rt_105X5;sdlmathpack_rt_105X5;vcldb;WebView4DelphiVCLRTL;NxGrid6Dsgn_dxe5;NxStandard6Dsgn_dxe5;CustomIPTransport;SynEdit_RXE5;dsnap;NxInspectorRun_dxe5;CloudService;NxStandard6Run_dxe5;FireDACIBDriver;DragDropDXE5;OmniThreadLibraryRuntime;FireDACDb2Driver;adxolBuildD19;NxGridDsgn_dxe5;bindcompfmx;FireDACODBCDriver;zControls_R;dbrtl;FireDACCommon;bindcomp;inetdb;sdlchartpack_rt_105X5;DBXOdbcDriver;vclFireDAC;adxBuildD19;xmlrtl;NxSheetRun_dxe5;FireDACCommonDriver;soaprtl;bindengine;vclactnband;bindcompvcl;vclie;sdlguipack_rt_105X5;NxDBGrid6Run_dxe5;sdlguipack_105X5;IcsCommonDXE5Run;OLSecManD19;DBXInformixDriver;FireDACMSSQLDriver;NxCollectionDsgn_dxe5;dsnapcon;DBXFirebirdDriver;inet;FireDACMySQLDriver;vclx;DBXSybaseASADriver;RESTComponents;NxCollection6Run_dxe5;CEF4DelphiFMXRTL;dbexpress;tmsdXE5;FireDACSqliteDriver;ZComponent;DBXSqliteDriver;fmx;NxInspector6Dsgn_dxe5;sdlmathpack_105X5;DataSnapClient;NxCommonDsgn_dxe5;DataSnapProviderClient;DBXSybaseASEDriver;DDuce.Modules;MetropolisUILiveTile;vcldsnap;fmxFireDAC;IcsVclDXE5Run;DBXDb2Driver;DBXOracleDriver;vclribbon;fmxase;vcl;DBXMSSQLDriver;DataSnapFireDAC;FireDACDBXDriver;inetdbxpress;BCEditor.Delphi.XE5.Runtime;adortl;DelphiModbusXE5;FireDACASADriver;NxLayout6Run_dxe5;NxDBGridRun_dxe5;ZDbc;rtl;DbxClientDriver;ZPlain;NxCollection6Dsgn_dxe5;DBXMySQLDriver;DDuce.Core;tmsxlsdXE5;sdlchartpack_105X5;bindcompdbx;FireDACADSDriver;vcltouch;ZCore;PngComponents;NxGridRun_dxe5;NxDBGridDsgn_dxe5;VclSmp;FireDAC;VCLRESTComponents;CEF4DelphiVCLRTL;DataSnapConnectors;FireDACDataSnapDriver;NxInspectorDsgn_dxe5;fmxobj;ZParseSql;tmsexdXE5;fmxdae;NxGrid6Run_dxe5;FireDACOracleDriver;NxCollectionRun_dxe5;VirtualTreesR;FireDACMSAccDriver;DataSnapIndy10ServerTransport;NxInspector6Run_dxe5;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
@@ -77,6 +88,13 @@
         <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <DCC_ExeOutput>.\</DCC_ExeOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_DcuOutput>Y:\pjh\Dcu\Win64\$(MSBuildProjectName)</DCC_DcuOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -182,7 +200,7 @@
             <Deployment/>
             <Platforms>
                 <Platform value="Win32">True</Platform>
-                <Platform value="Win64">False</Platform>
+                <Platform value="Win64">True</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

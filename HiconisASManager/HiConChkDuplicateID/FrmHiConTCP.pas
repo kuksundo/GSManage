@@ -13,11 +13,11 @@ uses
   OtlSync,
   mormot.core.base, mormot.core.os, mormot.core.text,
   mormot.core.collections, mormot.core.variants, mormot.core.json,
-  mormot.net.client, mormot.core.unicode, mormot.net.server,
+  mormot.net.client, mormot.core.unicode, mormot.net.server, mormot.db.sql,
 
   PngBitBtn, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdIOHandler,
   IdGlobal, IdHTTP, UnitTaskDialogMB,
-  UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit
+  UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit, UnitHiconMariaDBUtil
   ;
 
 type
@@ -74,6 +74,20 @@ type
     MPM1: TMenuItem;
     N7: TMenuItem;
     N3: TMenuItem;
+    Diagnostic1: TMenuItem;
+    NIC1: TMenuItem;
+    AdvancedConfiguration1: TMenuItem;
+    GetNetworkAdapterList1: TMenuItem;
+    Database1: TMenuItem;
+    MariaDBConnect1: TMenuItem;
+    ExecuteSQL1: TMenuItem;
+    Windows1: TMenuItem;
+    Straton1: TMenuItem;
+    Config1: TMenuItem;
+    Version1: TMenuItem;
+    NetTimeServiceStatus1: TMenuItem;
+    CheckStartup1: TMenuItem;
+    AutoLogonEnabled1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -95,6 +109,12 @@ type
     procedure ShowRetentionPolicies1Click(Sender: TObject);
     procedure AlterRetentionPolicy4OWSFromSelectedIP1Click(Sender: TObject);
     procedure AlterRetentionPolicy4OWSFromSelectedIP2Click(Sender: TObject);
+    procedure AdvancedConfiguration1Click(Sender: TObject);
+    procedure MariaDBConnect1Click(Sender: TObject);
+    procedure ExecuteSQL1Click(Sender: TObject);
+    procedure NetTimeServiceStatus1Click(Sender: TObject);
+    procedure CheckStartup1Click(Sender: TObject);
+    procedure AutoLogonEnabled1Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -115,6 +135,7 @@ type
     FWorker  : IOmniParallelLoop<integer>;
     FIpList,
     FMPMBackupResultList: TStringList;
+    FHiConMariaDB: THiConMariaDB;
 
     procedure SetNextGridColumn4DupTagId();
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
@@ -136,7 +157,21 @@ type
     procedure GetRetentionPoliciesBySelectedIpList(AIpAddrList: string);
     function AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
 
+    procedure GetNetTimeServiceStatus2Grid();
+
+    function CheckIfExistAcoAutoRunInStartup(var APath: string): Boolean;
+    function CheckIfExistAcoAutoRunInBIN(var APath: string): Boolean;
+    function CheckIfExistAcoAutoRun: Boolean;
+    function CompareAcoAutoRunInStartupNBIN: string;
+    function CheckAcoAutoRunIsCorrect: string;
+    function CheckIfExistInfluxdbConf: Boolean;
+    function CheckInfluxdbConfIsCorrect: string;
+
   public
+    procedure InitVar;
+    procedure DestroyVar;
+    procedure InitEnum;
+
     function GetIdFromMPM(ARec: TIpListRec): integer;
     procedure GetIdFromMPM_Async(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
@@ -168,10 +203,11 @@ var
 
 implementation
 
-uses System.TimeSpan, System.Diagnostics,
-  UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2,
-  UnitAnimationThread, UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil,
-  FrmIpList, FrmElapsedTime, FrmTwoInputEdit
+uses System.TimeSpan, System.Diagnostics, PJEnvVars,
+  UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
+  UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
+  UnitSystemUtil,
+  FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit
   ;
 
 {$R *.dfm}
@@ -185,6 +221,21 @@ begin
   else
 //      ChangeRowColorByIndex(IPAddrGrid, AIdx, clGreen)
     ChangeRowFontColorByIndex(IPAddrGrid, AIdx, clBlack);
+end;
+
+procedure THiconisTCPF.AdvancedConfiguration1Click(Sender: TObject);
+var
+  LList: TStringList;
+begin
+//  EnableNIC_WMI();
+//  LList := GetNICIndexList_WMI();
+
+//  LList := GetAdvPropertyListOfNIC();
+  LList := GetAdvPropertyListFromRegByIdx('0013');
+  ShowMessage(LList.Text);
+//  ShowMessage(GetNICAdvPropsJsonFromRegistryByIpAddr('', LList));
+
+  LList.Free;
 end;
 
 function THiconisTCPF.AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
@@ -253,6 +304,12 @@ begin
     ;
 end;
 
+procedure THiconisTCPF.AutoLogonEnabled1Click(Sender: TObject);
+begin
+  if not IsWindowsAutoLoginEnabled() then
+    ShowMessage('AutoLogon not enabled');
+end;
+
 function THiconisTCPF.BackupMPM(AIpAddrList: string): string;
 var
   LIpAddr: string;
@@ -307,6 +364,11 @@ begin
   end;
 end;
 
+function THiconisTCPF.CheckAcoAutoRunIsCorrect: string;
+begin
+
+end;
+
 procedure THiconisTCPF.CheckConnection1Click(Sender: TObject);
 begin
   if IpAddrGrid.SelectedRow = -1 then
@@ -322,6 +384,88 @@ procedure THiconisTCPF.CheckDuplicatedID1Click(Sender: TObject);
 begin
 //  GetIdsFromIpListDic();
   GetIdsFromIpSelected();
+end;
+
+function THiconisTCPF.CheckIfExistAcoAutoRun: Boolean;
+var
+  LPath, LStr, LMsg: string;
+begin
+  Result := CheckIfExistAcoAutoRunInBIN(LPath);
+
+  if Result then
+    LStr := 'AcoAutoRun-NX.bat file is exist in below path:'
+  else
+    LStr := 'AcoAutoRun-NX.bat file is NOT exist in below path:';
+
+  LMsg := LStr + #13#10 + LPath + #13#10#13#10;
+
+  Result := CheckIfExistAcoAutoRunInStartup(LPath);
+
+  LMsg := LMsg + LStr + #13#10 + LPath;
+
+  ShowMessage(LMsg);
+end;
+
+function THiconisTCPF.CheckIfExistAcoAutoRunInBIN(var APath: string): Boolean;
+begin
+  APath := 'D:\ACONIS-NX\BIN\AcoAutoRun-NX.bat';
+  Result := FileExists(APath);
+end;
+
+function THiconisTCPF.CheckIfExistAcoAutoRunInStartup(var APath: string): Boolean;
+begin
+  APath := GetEnvVarValue('APPDATA');
+  APath := APath + '\Microsoft\Windows\Start Menu\Programs\Startup\AcoAutoRun-NX.bat';
+  Result := FileExists(APath);
+end;
+
+function THiconisTCPF.CheckIfExistInfluxdbConf: Boolean;
+var
+  LPath, LStr, LMsg: string;
+begin
+  LPath := 'C:\Program Files\InfluxData\influxdb\influxdb-1.8.10-1\influxdb.conf';
+  Result := CheckIfExistAcoAutoRunInBIN(LPath);
+
+  if Result then
+    LStr := 'AcoAutoRun-NX.bat file is exist in below path:'
+  else
+    LStr := 'AcoAutoRun-NX.bat file is NOT exist in below path:';
+
+  LMsg := LStr + #13#10 + LPath + #13#10#13#10;
+
+  Result := CheckIfExistAcoAutoRunInStartup(LPath);
+
+  LMsg := LMsg + LStr + #13#10 + LPath;
+
+  ShowMessage(LMsg);
+end;
+
+function THiconisTCPF.CheckInfluxdbConfIsCorrect: string;
+begin
+
+end;
+
+procedure THiconisTCPF.CheckStartup1Click(Sender: TObject);
+begin
+  CheckIfExistAcoAutoRun();
+end;
+
+function THiconisTCPF.CompareAcoAutoRunInStartupNBIN: string;
+begin
+
+end;
+
+procedure THiconisTCPF.DestroyVar;
+begin
+  FHiConMariaDB.DestroyDB();
+  FHiConMariaDB.Free;
+  FTCPResponse.Free;
+
+  if Assigned(FIpList) then
+    FIpList.Free;
+
+  if Assigned(FMPMBackupResultList) then
+    FMPMBackupResultList.Free;
 end;
 
 procedure THiconisTCPF.DisplayDuplicatedAddr;
@@ -501,28 +645,44 @@ begin
     );
 end;
 
+procedure THiconisTCPF.ExecuteSQL1Click(Sender: TObject);
+var
+  LSQL: string;
+  LSQLDBRows: ISQLDBRows;
+  LNoResult: Boolean;
+  AutoRun, Conf: RawByteString;
+begin
+  AutoRun := StringFromFile('E:/pjh/Dev/Lang/Bat/AcoAutoRun-NX.bat');
+  Conf := StringFromFile('E:/pjh/Dev/Lang/Bat/influxdb.conf');
+//  LSQL := 'CREATE OR REPLACE TABLE HiconConfig (AcoAutoRun_NX_bat TEXT, Influxdb_conf TEXT)';
+//  LSQL := 'CREATE OR REPLACE TEMPORARY TABLE TempHiconConfig  LIKE HiconConfig';
+//  LSQL := 'INSERT INTO HiconConfig(AcoAutoRun_NX_bat, Influxdb_conf) VALUES("AcoAutoRun_NX_bat", "Influxdb_conf")';// + + ')';
+//  LSQL := 'UPDATE HiconConfig SET AcoAutoRun_NX_bat = "' + AutoRun + '", Influxdb_conf = "' + Conf + '"';// + + ')';
+//  LSQL := 'UPDATE HiconConfig SET AcoAutoRun_NX_bat = LOAD_FILE("E:/pjh/Dev/Lang/Bat/AcoAutoRun-NX.bat"), Influxdb_conf = LOAD_FILE("E:/pjh/Dev/Lang/Bat/influxdb.conf")';
+//  LSQL := 'UPDATE HiconConfig SET AcoAutoRun_NX_bat = LOAD_FILE("//10.8.2.100/d/AcoAutoRun-NX.bat"), Influxdb_conf = LOAD_FILE("//10.8.2.100/d/influxdb.conf")';
+//  LSQL := 'UPDATE HiconConfig SET AcoAutoRun_NX_bat = LOAD_FILE("c:/temp/AcoAutoRun-NX.bat"), Influxdb_conf = LOAD_FILE("c:/temp/influxdb.conf")';
+//  아래 SQL 실행시 => Permission error code 13 발생함
+//  LSQL := 'SELECT LOAD_FILE("C:/temp/AcoAutoRun-NX.bat") INTO OUTFILE "C:/Users/Administrator/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/AcoAutoRun-NX.bat"';
+//  아래 SQL 실행시 => 네트웤 드라이브 사용: 복사된 AcoAutoRun-NX.bat 내용이 비어있음
+//  LSQL := 'SELECT LOAD_FILE("//10.8.2.100/d/pjh/AcoAutoRun-NX.bat") INTO OUTFILE "C:/temp/333/AcoAutoRun-NX.bat"';
+//  아래 SQL 실행시 => 정상 작동함
+//  LSQL := 'SELECT LOAD_FILE("C:/temp/AcoAutoRun-NX.bat") INTO OUTFILE "C:/temp/333/AcoAutoRun-NX.bat"';
+
+  if TpjhStringsEditorDlg.Execute(LSQL) then
+  begin
+    LNoResult := FHiConMariaDB.GetResultStatFromSQL(LSQL);
+    FHiConMariaDB.ExecuteQuery(LSQL, LNoResult);
+  end;
+end;
+
 procedure THiconisTCPF.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  FTCPResponse.Free;
-
-  if Assigned(FIpList) then
-    FIpList.Free;
-
-  if Assigned(FMPMBackupResultList) then
-    FMPMBackupResultList.Free;
+  DestroyVar;
 end;
 
 procedure THiconisTCPF.FormCreate(Sender: TObject);
 begin
-  FIpAddrDic := Collections.NewKeyValue<string, TIpListRec>;
-//  FIpAddrDic := Collections.NewList<TIpListRec>;
-//  FAddrIdListDic := Collections.NewKeyValue<string, TIDListRec>;
-  FIDListDic := Collections.NewKeyValue<string, TStringList>;
-//  FDupIdList := Collections.NewList<TDupIDListRec>;
-  FIpNIdList := Collections.NewKeyValue<string, TIDDic>;
-  FIpNDupIdList := Collections.NewKeyValue<string, TIDList>;
-
-  FTCPResponse := TStringList.Create;
+  InitVar;
 end;
 
 function THiconisTCPF.GetFileNameFromIpAddr(AIpAddr: string): string;
@@ -689,6 +849,25 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.GetNetTimeServiceStatus2Grid;
+var
+  LJson: string;
+  LVar: variant;
+  LDocList: IDocList;
+  LStatus: integer;
+begin
+  LDocList := DocList('[]');
+  LJson := GetServiceInfo2JsonByName('W32Time');
+  LVar := _JSON(LJson);
+  LStatus := TDocVariantData(LVar).Value['Status'];
+  LJson := g_ServiceState.ToString(LStatus);
+  ShowMessage(LJson);
+  LDocList.Append(LVar);
+  LVar := LDocList.Json;
+  AddNextGridRowsFromVariant2(NextGrid1, LVar, True);
+//  AddNextGridRowFromVariant(NextGrid1, LVar, True);
+end;
+
 procedure THiconisTCPF.GetPortPrint1Click(Sender: TObject);
 var
   LIpAddrList: string;
@@ -820,6 +999,27 @@ begin
 
 end;
 
+procedure THiconisTCPF.InitEnum;
+begin
+  g_ServiceState.InitArrayRecord(R_ServiceState_Eng);
+end;
+
+procedure THiconisTCPF.InitVar;
+begin
+  FIpAddrDic := Collections.NewKeyValue<string, TIpListRec>;
+//  FIpAddrDic := Collections.NewList<TIpListRec>;
+//  FAddrIdListDic := Collections.NewKeyValue<string, TIDListRec>;
+  FIDListDic := Collections.NewKeyValue<string, TStringList>;
+//  FDupIdList := Collections.NewList<TDupIDListRec>;
+  FIpNIdList := Collections.NewKeyValue<string, TIDDic>;
+  FIpNDupIdList := Collections.NewKeyValue<string, TIDList>;
+
+  FTCPResponse := TStringList.Create;
+  FHiConMariaDB := THiConMariaDB.Create;
+
+  InitEnum();
+end;
+
 //procedure THiconisTCPF.IPAddrGridSelectCell(Sender: TObject; ACol,
 //  ARow: Integer);
 //var
@@ -887,6 +1087,12 @@ begin
   ConsoleMemo.Lines.Add(AMsg);
 end;
 
+procedure THiconisTCPF.MariaDBConnect1Click(Sender: TObject);
+begin
+  FHiConMariaDB.CreateDB('10.8.2.11', '3306', 'test', 'root', 'aconis');
+  FHiConMariaDB.ConnectDB
+end;
+
 procedure THiconisTCPF.MPMBackup1Click(Sender: TObject);
 var
   LIpAddr: string;
@@ -895,6 +1101,11 @@ begin
   LIpAddr := GetSelectedIpAddrList();
   DownloadBackupMPMForEach(LIpAddr);
 //  BackupMPM(LIpAddr);
+end;
+
+procedure THiconisTCPF.NetTimeServiceStatus1Click(Sender: TObject);
+begin
+  GetNetTimeServiceStatus2Grid();
 end;
 
 procedure THiconisTCPF.PngBitBtn1Click(Sender: TObject);

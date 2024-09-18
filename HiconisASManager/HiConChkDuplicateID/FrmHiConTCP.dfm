@@ -40,7 +40,6 @@ object HiconisTCPF: THiconisTCPF
     Height = 41
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 651
     object PngBitBtn1: TPngBitBtn
       Left = 90
       Top = 1
@@ -150,7 +149,6 @@ object HiconisTCPF: THiconisTCPF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFF2D24ED5959F24844F0FFFFFF}
       TabOrder = 2
       OnClick = BitBtn1Click
-      ExplicitLeft = 561
     end
   end
   object Panel2: TPanel
@@ -160,8 +158,6 @@ object HiconisTCPF: THiconisTCPF
     Height = 39
     Align = alBottom
     TabOrder = 1
-    ExplicitLeft = -1
-    ExplicitTop = 467
     object BitBtn2: TBitBtn
       Left = 682
       Top = 1
@@ -171,7 +167,6 @@ object HiconisTCPF: THiconisTCPF
       Kind = bkClose
       NumGlyphs = 2
       TabOrder = 0
-      ExplicitLeft = 561
     end
   end
   object ConsoleMemo: TMemo
@@ -182,7 +177,6 @@ object HiconisTCPF: THiconisTCPF
     Align = alBottom
     ScrollBars = ssVertical
     TabOrder = 2
-    ExplicitWidth = 651
   end
   object Panel3: TPanel
     Left = 0
@@ -373,7 +367,6 @@ object HiconisTCPF: THiconisTCPF
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
-    ExplicitWidth = 460
     object TaskTab: TAdvOfficeTabSet
       Left = 1
       Top = 1
@@ -772,7 +765,6 @@ object HiconisTCPF: THiconisTCPF
       TabSettings.Alignment = taCenter
       TabSettings.Width = 110
       OnChange = TaskTabChange
-      ExplicitWidth = 458
     end
     object NextGrid1: TNextGrid
       Left = 1
@@ -785,10 +777,6 @@ object HiconisTCPF: THiconisTCPF
       Caption = ''
       TabOrder = 1
       TabStop = True
-      ExplicitLeft = 24
-      ExplicitTop = 40
-      ExplicitWidth = 250
-      ExplicitHeight = 150
     end
   end
   object MainMenu1: TMainMenu
@@ -809,6 +797,54 @@ object HiconisTCPF: THiconisTCPF
       end
       object Close1: TMenuItem
         Caption = 'Close'
+      end
+    end
+    object Diagnostic1: TMenuItem
+      Caption = 'Diagnostic'
+      object NIC1: TMenuItem
+        Caption = 'NIC'
+        object AdvancedConfiguration1: TMenuItem
+          Caption = 'Advanced Configuration'
+          OnClick = AdvancedConfiguration1Click
+        end
+        object GetNetworkAdapterList1: TMenuItem
+          Caption = 'Get Network Adapter List'
+        end
+      end
+      object Database1: TMenuItem
+        Caption = 'Database'
+        object MariaDBConnect1: TMenuItem
+          Caption = 'MariaDB Connect'
+          OnClick = MariaDBConnect1Click
+        end
+        object ExecuteSQL1: TMenuItem
+          Caption = 'Execute SQL'
+          OnClick = ExecuteSQL1Click
+        end
+      end
+      object Windows1: TMenuItem
+        Caption = 'Windows'
+        object Config1: TMenuItem
+          Caption = 'Config'
+        end
+        object NetTimeServiceStatus1: TMenuItem
+          Caption = 'NetTime Service Status'
+          OnClick = NetTimeServiceStatus1Click
+        end
+        object CheckStartup1: TMenuItem
+          Caption = 'Check Startup'
+          OnClick = CheckStartup1Click
+        end
+        object AutoLogonEnabled1: TMenuItem
+          Caption = 'Auto Logon Enabled'
+          OnClick = AutoLogonEnabled1Click
+        end
+      end
+      object Straton1: TMenuItem
+        Caption = 'Straton'
+        object Version1: TMenuItem
+          Caption = 'Version'
+        end
       end
     end
   end

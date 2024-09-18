@@ -16,7 +16,7 @@ object AconisSysInfoF: TAconisSysInfoF
   object Button1: TButton
     Left = 424
     Top = 21
-    Width = 89
+    Width = 105
     Height = 41
     Caption = 'Load From ini'
     TabOrder = 0
@@ -46,7 +46,7 @@ object AconisSysInfoF: TAconisSysInfoF
   object Button3: TButton
     Left = 424
     Top = 68
-    Width = 89
+    Width = 105
     Height = 41
     Caption = 'Load Json From Xls'
     TabOrder = 3
