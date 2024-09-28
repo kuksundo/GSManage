@@ -17,7 +17,8 @@ uses
 
   PngBitBtn, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdIOHandler,
   IdGlobal, IdHTTP, UnitTaskDialogMB,
-  UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit, UnitHiconMariaDBUtil
+  UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit, UnitHiconMariaDBUtil,
+  UnitHiConJsonUtil
   ;
 
 type
@@ -88,6 +89,8 @@ type
     NetTimeServiceStatus1: TMenuItem;
     CheckStartup1: TMenuItem;
     AutoLogonEnabled1: TMenuItem;
+    GetTagFromSVG1: TMenuItem;
+    gzTest1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -115,6 +118,8 @@ type
     procedure NetTimeServiceStatus1Click(Sender: TObject);
     procedure CheckStartup1Click(Sender: TObject);
     procedure AutoLogonEnabled1Click(Sender: TObject);
+    procedure GetTagFromSVG1Click(Sender: TObject);
+    procedure gzTest1Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -206,7 +211,7 @@ implementation
 uses System.TimeSpan, System.Diagnostics, PJEnvVars,
   UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
-  UnitSystemUtil,
+  UnitSystemUtil, UnitXMLUtil,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit
   ;
 
@@ -226,16 +231,21 @@ end;
 procedure THiconisTCPF.AdvancedConfiguration1Click(Sender: TObject);
 var
   LList: TStringList;
+  LStr: string;
+  LVar: variant;
 begin
 //  EnableNIC_WMI();
 //  LList := GetNICIndexList_WMI();
 
 //  LList := GetAdvPropertyListOfNIC();
-  LList := GetAdvPropertyListFromRegByIdx('0013');
-  ShowMessage(LList.Text);
+//  LList := GetAdvPropertyListFromRegByIdx('0013');
+  LStr := GetAdvNICProp2JsonFromRegKeyByIpAddr('10.8.2.100');
+  LVar := _JSON(StringToUtf8(LStr));
+  AddNextGridRowsFromVariant2(NextGrid1, LVar, True);
+//  ShowMessage(LStr);
 //  ShowMessage(GetNICAdvPropsJsonFromRegistryByIpAddr('', LList));
 
-  LList.Free;
+//  LList.Free;
 end;
 
 function THiconisTCPF.AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
@@ -976,9 +986,32 @@ begin
   Result := LList;
 end;
 
+procedure THiconisTCPF.GetTagFromSVG1Click(Sender: TObject);
+var
+  LStr: string;
+begin
+  if OpenDialog1.Execute then
+  begin
+    LStr := ExtractSpecificXmlTag(OpenDialog1.FileName, 'drwtaginfo');
+    ShowMessage(LStr);
+  end;
+end;
+
 function THiconisTCPF.GetUrlFromIpRec(AIpAddr: string): string;
 begin
   Result := 'http://' + AIpAddr + '/channelstr';
+end;
+
+procedure THiconisTCPF.gzTest1Click(Sender: TObject);
+var
+  LStr: string;
+begin
+  if OpenDialog1.Execute then
+  begin
+//    LStr := CompareProfibusJsonFromTgz(OpenDialog1.FileName, 'E:\temp\system_bak.accdb');
+    LStr := CompareProfibusJsonFromTgzByAbbr(OpenDialog1.FileName, 'E:\temp\system_bak.accdb');
+    ShowMessage(LStr);
+  end;
 end;
 
 procedure THiconisTCPF.HtmlParseFunc;

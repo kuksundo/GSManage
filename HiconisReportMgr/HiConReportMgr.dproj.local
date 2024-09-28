@@ -13,19 +13,19 @@
     <Transaction>1899-12-30 00:00:00.000.967,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.596,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.922,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiReportWorkItemEdit.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit3.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.374,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.110,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.201,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.276,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiconReportEdit.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.209,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.374,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.215,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.399,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit3.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.757,E:\pjh\Dev\Lang\Delphi\Common\UnitCheckGrpUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.246,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\HiConReportMgr.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.209,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.215,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.201,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.922,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.529,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\UnitHiConReportWorkItemOrm.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.653,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\UnitHiConReportMgrData.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.980,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.653,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\UnitHiConReportMgrData.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.276,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiconReportEdit.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.529,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\UnitHiConReportWorkItemOrm.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="..\..\..\..\Delphi"/>

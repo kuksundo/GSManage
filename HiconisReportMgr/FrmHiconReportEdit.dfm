@@ -240,7 +240,6 @@ object HiConReportEditF: THiConReportEditF
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
-        ImeMode = imSHanguel
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 4
@@ -255,7 +254,6 @@ object HiConReportEditF: THiConReportEditF
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
-        ImeMode = imSHanguel
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 3
@@ -285,7 +283,6 @@ object HiConReportEditF: THiConReportEditF
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
-        ImeMode = imSHanguel
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 5
@@ -294,10 +291,6 @@ object HiConReportEditF: THiConReportEditF
     object SubConTS: TTabSheet
       Caption = #51089#50629#49884#44036#49345#49464
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -575,10 +568,6 @@ object HiConReportEditF: THiConReportEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -1388,7 +1377,6 @@ object HiConReportEditF: THiConReportEditF
       TabOrder = 1
     end
     object ReportAuthorName: TEdit
-      Tag = 9
       Left = 414
       Top = 38
       Width = 182
@@ -1416,7 +1404,7 @@ object HiConReportEditF: THiConReportEditF
     Left = 155
     Top = 608
     Bitmap = {
-      494C010130009800E80510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800F40510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3163,7 +3151,7 @@ object HiConReportEditF: THiConReportEditF
     Left = 192
     Top = 608
     Bitmap = {
-      494C010110001400BC0210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400C80210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

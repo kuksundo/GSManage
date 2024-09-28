@@ -845,6 +845,10 @@ object HiconisTCPF: THiconisTCPF
         object Version1: TMenuItem
           Caption = 'Version'
         end
+        object GetTagFromSVG1: TMenuItem
+          Caption = 'Get Tag From SVG'
+          OnClick = GetTagFromSVG1Click
+        end
       end
     end
   end
@@ -920,6 +924,10 @@ object HiconisTCPF: THiconisTCPF
       object GetPortPrint1: TMenuItem
         Caption = 'Get Port Print Debug'
         OnClick = GetPortPrint1Click
+      end
+      object gzTest1: TMenuItem
+        Caption = 'Tgz Test'
+        OnClick = gzTest1Click
       end
     end
     object N4: TMenuItem

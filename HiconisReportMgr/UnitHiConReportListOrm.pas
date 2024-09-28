@@ -67,7 +67,8 @@ type
   procedure InitHiconReportListClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiconReportListClient();
 
-  function GetHiconReportListByKeyID(const AKeyID: TTimeLog): TOrmHiconReportList;
+  function GetHiconReportListByKeyID(const AKeyID: string): TOrmHiconReportList; overload;
+  function GetHiconReportListByKeyID(const AKeyID: TTimeLog): TOrmHiconReportList; overload;
   function GetHiconReportListByProjectNo(const AProjNo: string): TOrmHiconReportList;
   function GetHiconReportListByHullNo(const AHullNo: string): TOrmHiconReportList;
   function GetHiReportListByHullNoNMakeDate(const AHullNo: string; AReportMakeDate: TTimeLog): TOrmHiconReportList;
@@ -75,6 +76,7 @@ type
 
   procedure AddHiconReportListFromVariant(AVar: variant);
   procedure AddOrUpdateHiconReportList(AOrm: TOrmHiconReportList);
+  function AddOrUpdateHiconReportListFromJsonByKeyId(const AJson: string; const ADoUpdate: Boolean): Boolean;
 
   procedure DeleteHiconReportListByKey(const AKeyID: TTimeLog);
 
@@ -143,6 +145,14 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetHiconReportListByKeyID(const AKeyID: string): TOrmHiconReportList;
+var
+  LKeyId: TTimeLog;
+begin
+  LKeyId := StrToInt64(AKeyID);
+  Result := GetHiconReportListByKeyID(LKeyId);
 end;
 
 function GetHiconReportListByProjectNo(const AProjNo: string): TOrmHiconReportList;
@@ -217,6 +227,34 @@ begin
   else
   begin
     g_HiconReportListDB.Add(AOrm, true);
+  end;
+end;
+
+function AddOrUpdateHiconReportListFromJsonByKeyId(const AJson: string; const ADoUpdate: Boolean): Boolean;
+var
+  LOrm: TOrmHiconReportList;
+  LKeyId: string;
+  LDict: IDocDict;
+  LVar: variant;
+begin
+  Result := False;
+  LDict := DocDict(AJson);
+  LKeyId := LDict.S['ReportKey'];
+
+  LOrm := GetHiconReportListByKeyID(LKeyId);
+  try
+    if LOrm.IsUpdate then
+    begin
+      if ADoUpdate then
+        AddOrUpdateHiconReportList(LOrm);
+    end
+    else
+    begin
+      LVar := _JSON(AJson);
+      AddHiconReportListFromVariant(LVar);
+    end;
+  finally
+    LOrm.Free;
   end;
 end;
 

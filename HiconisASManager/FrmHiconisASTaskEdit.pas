@@ -275,6 +275,8 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     IsReclaim: TNxCheckBoxColumn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -343,6 +345,8 @@ type
     procedure OrderNoEditClickBtn(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -656,12 +660,26 @@ begin
         begin
           LDoc := DocDict(AJson);
 
-          ClaimNoEdit.Text := LDoc['ClaimNo'];
-          HullNoEdit.Text := LDoc['HullNo'];
-          ShipNameEdit.Text := LDoc['ShipName'];
-          WorkSummaryEdit.Text := LDoc['Subject'];
-          ClaimReasonMemo.Text := LDoc['Cause'];
-          CustAgentMemo.Text := LDoc['AgentDetail'];
+          if LDoc.Exists('ClaimNo') then
+            ClaimNoEdit.Text := LDoc['ClaimNo'];
+
+          if LDoc.Exists('HullNo') then
+            HullNoEdit.Text := LDoc['HullNo'];
+
+          if LDoc.Exists('ShipName') then
+            ShipNameEdit.Text := LDoc['ShipName'];
+
+          if LDoc.Exists('OrderNo') then
+            OrderNoEdit.Text := LDoc['OrderNo'];
+
+          if LDoc.Exists('Subject') then
+            WorkSummaryEdit.Text := LDoc['Subject'];
+
+          if LDoc.Exists('Cause') then
+            ClaimReasonMemo.Text := LDoc['Cause'];
+
+          if LDoc.Exists('AgentDetail') then
+            CustAgentMemo.Text := LDoc['AgentDetail'];
         end;
 
         ClaimRecvPicker.Date := Date;
@@ -1259,6 +1277,16 @@ procedure TTaskEditF.BitBtn2Click(Sender: TObject);
 begin
 //  Content2Clipboard(OrderNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
+end;
+
+procedure TTaskEditF.BitBtn3Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(ClaimNoEdit);
+end;
+
+procedure TTaskEditF.BitBtn4Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(ShipNameEdit);
 end;
 
 procedure TTaskEditF.SalesProcTypeCBDropDown(Sender: TObject);

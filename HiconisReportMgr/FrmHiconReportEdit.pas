@@ -114,6 +114,8 @@ type
     procedure InitEnum();
 
     function CheckRequiredInput4Report(): TWinControl;
+    function CheckExistHangulInput4Report(): TWinControl;
+    function CheckInputLengthOver4Report(): TWinControl;
   public
     function GetWorkItem2JsonFromGrid(): string;
     procedure SetWorkItemGridFromJson(const AJson: string);
@@ -129,7 +131,7 @@ var
 implementation
 
 uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUtil,
-  UnitHiConReportMgrData, UnitCheckGrpAdvUtil, UnitComponentUtil,
+  UnitHiConReportMgrData, UnitCheckGrpAdvUtil, UnitComponentUtil, UnitTRegExUtil,
   FrmHiReportWorkItemEdit, FrmSearchVessel2;
 
 {$R *.dfm}
@@ -149,6 +151,7 @@ begin
       SetCompNameValueFromJson2FormByClassType(LHiConReportEditF, LJson);
       LJson2 := Utf8ToString(AWorkItemJson);
       SetWorkItemGridFromJson(LJson2);
+      PageControl1.ActivePageIndex := 0;
 
       while True do
       begin
@@ -161,6 +164,27 @@ begin
 
           if Assigned(LControl) then
           begin
+            PageControl1.ActivePageIndex := 0;
+            ActiveControl := LControl;
+            Continue;
+          end;
+
+          //한글 입력 된 필드가 있으면 계속 ShowModal
+          LControl := CheckExistHangulInput4Report();
+
+          if Assigned(LControl) then
+          begin
+            PageControl1.ActivePageIndex := 0;
+            ActiveControl := LControl;
+            Continue;
+          end;
+
+          //길이가 70자 이상인 필드가 있으면 계속 ShowModal
+          LControl := CheckInputLengthOver4Report();
+
+          if Assigned(LControl) then
+          begin
+            PageControl1.ActivePageIndex := 0;
             ActiveControl := LControl;
             Continue;
           end;
@@ -238,6 +262,34 @@ end;
 procedure THiConReportEditF.BitBtn1Click(Sender: TObject);
 begin
   Content2Clipboard(HullNo.Text);
+end;
+
+function THiConReportEditF.CheckExistHangulInput4Report: TWinControl;
+begin
+  //한글이 포함된 Component Value가 있으면 해당 Component 반환함
+  Result := CheckInputExistHangulByTagOnForm(Self);
+
+  //True = 입력값에 한글이 포함 된 Component 존재
+  if Assigned(Result) then
+  begin
+    //Component Color 변경
+    ChangeCompColorByPropertyName(Result, clYellow);
+    ShowMessage('한글 사용하면 안됨: [' + Result.Hint + ']' );
+  end
+end;
+
+function THiConReportEditF.CheckInputLengthOver4Report: TWinControl;
+begin
+  //Component Value가 70자 이상이면 해당 Component 반환함
+  Result := CheckInputLengthByTagOnForm(Self, 70);
+
+  //True = 입력값 길이가 70자 이상인 Component 존재
+  if Assigned(Result) then
+  begin
+    //Component Color 변경
+    ChangeCompColorByPropertyName(Result, clYellow);
+    ShowMessage('길이가 70자 이내여야 함: [' + Result.Hint + ']' );
+  end
 end;
 
 function THiConReportEditF.CheckRequiredInput4Report: TWinControl;
@@ -329,6 +381,12 @@ procedure THiConReportEditF.ReportWorkItemEdit(const ARow: integer);
 var
   LVar: variant;
 begin
+  if WorkItemGrid.RowCount >= MAX_REPORT_WORKITEM then
+  begin
+    ShowMessage('작업상세 건수는 ' + IntToStr(MAX_REPORT_WORKITEM) + '건을 넘을 수 없습니다.');
+    exit;
+  end;
+
   TDocVariant.New(LVar);
 
   if ARow = -1 then //Add

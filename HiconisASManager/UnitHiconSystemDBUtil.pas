@@ -23,7 +23,7 @@ class function THiConSystemDB.GetIfAccessODBCDriverInstalled: string;
 var
   Reg: TRegistry;
 begin
-  Result := False;
+  Result := '';
   Reg := TRegistry.Create(KEY_READ);
   try
     // Specify the path to the ODBC drivers in the registry
@@ -33,7 +33,7 @@ begin
       // Check if the Microsoft Access Driver is listed
       if Reg.ValueExists('Microsoft Access Driver (*.mdb, *.accdb)') then
       begin
-        Result := True;
+        Result := '';
       end;
       Reg.CloseKey;
     end;

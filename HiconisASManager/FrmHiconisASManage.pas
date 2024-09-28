@@ -183,6 +183,8 @@ type
     BitBtn2: TBitBtn;
     PopupMenu2: TPopupMenu;
     ShowWarrantyExpireDate2: TMenuItem;
+    CreateClaimBySelected1: TMenuItem;
+    N9: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -248,6 +250,7 @@ type
     procedure ShowDIRecallStatus1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure ShowWarrantyExpireDate2Click(Sender: TObject);
+    procedure CreateClaimBySelected1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -298,6 +301,7 @@ type
 
     function SaveCurrentTask2File(AFileName: string = '') : string;
     procedure CreateNewTask(AJson: RawUtf8='');
+    procedure CreateNewTaskBySelected();
 
     //Websocket-b
     procedure CreateHttpServer4WS(APort, ATransmissionKey: string;
@@ -2089,6 +2093,11 @@ begin
   StatusBarPro1.Panels[1].Text := 'IP = ' + FMyIPAddress;
 end;
 
+procedure THiconisAsManageF.CreateClaimBySelected1Click(Sender: TObject);
+begin
+  CreateNewTaskBySelected();
+end;
+
 procedure THiconisAsManageF.CreateHttpServer4WS(APort,
   ATransmissionKey: string; aClient: TInterfacedClass;
   const aInterfaces: array of TGUID);
@@ -2148,6 +2157,28 @@ end;
 procedure THiconisAsManageF.CreateNewTask1Click(Sender: TObject);
 begin
   CreateNewTask;
+end;
+
+procedure THiconisAsManageF.CreateNewTaskBySelected;
+var
+  LDoc: IDocDict;
+  LRow: integer;
+  LJson: RawUTF8;
+begin
+  LRow := grid_Req.SelectedRow;
+
+  if LRow <> -1 then
+  begin
+    LDoc := DocDict('{}');
+
+    LDoc.S['ShipName'] := grid_Req.CellsByName['ShipName', LRow];
+    LDoc.S['HullNo'] := grid_Req.CellsByName['HullNo', LRow];
+    LDoc.S['OrderNo'] := grid_Req.CellsByName['OrderNo', LRow];
+//    LDoc.S['ClaimNo'] := grid_Req.CellsByName['ClaimNo', LRow];
+
+    LJson := LDoc.Json;
+    CreateNewTask(LJson);
+  end;
 end;
 
 procedure THiconisAsManageF.DeleteTask1Click(Sender: TObject);

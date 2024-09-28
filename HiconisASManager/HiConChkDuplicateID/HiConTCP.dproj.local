@@ -1,44 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899-12-30 00:00:00.000.940,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.717,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitAnimationThread.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.240,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\UnitTRegExUtil.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.421,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.420,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\UnitNICUtil.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.406,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.240,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\UnitHtmlUtil.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.896,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.534,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitProgressThread.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.361,E:\pjh\Dev\Lang\Delphi\NoGitHub\Util\UnitCryptUtil3.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.323,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\UnitHiconMariaDBUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.542,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.762,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.674,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.878,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitHiConTCPWorker.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.653,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.800,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.542,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.455,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConTCP.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.937,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitHiConInfluxDBUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.625,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConTCP.dproj=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConChkDuplicateID.dproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.526,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmInputIpAddress.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.702,E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitProgressThread.pas=</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.100,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConChkDuplicateID.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.525,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\UnitHiconSystemDBUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.000,=E:\pjh\Dev\Lang\Delphi\NoGitHub\Util\UnitCryptUtil2.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.552,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.455,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConTCP.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.937,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitHiConInfluxDBUtil.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.871,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.495,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.327,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmTwoInputEdit.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.246,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmElapsedTime.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.323,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\UnitHiconMariaDBUtil.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.525,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\UnitHiconSystemDBUtil.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.406,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.361,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\Util\UnitCryptUtil3.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.653,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.674,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.421,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.420,E:\pjh\Dev\Lang\Delphi\Common\UnitNICUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.100,C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConChkDuplicateID.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Common\UnitHtmlUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.455,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConTCP.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.717,E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitAnimationThread.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.552,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.762,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.058,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitChkDupIdData.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.384,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitHiConJsonUtil.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.415,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.800,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.526,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmInputIpAddress.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.625,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConChkDuplicateID.dproj=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConTCP.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.000,=E:\pjh\Dev\Lang\Delphi\NoGitHub\Util\UnitCryptUtil2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.455,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConTCP.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.240,E:\pjh\Dev\Lang\Delphi\Common\UnitTRegExUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.702,E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitProgressThread.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.534,E:\pjh\Dev\Lang\Delphi\Common\Dom\UnitProgressThread.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.878,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitHiConTCPWorker.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.972,E:\pjh\Dev\Lang\Delphi\NoGitHub\Util\UnitCryptUtil2.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.327,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmTwoInputEdit.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.240,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.896,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.940,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.542,C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.495,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.246,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmElapsedTime.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.212,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.058,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitChkDupIdData.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.542,C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.pas</Transaction>
+    <Transaction>2024-09-26 07:38:25.118,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>2024-09-26 07:38:45.067,E:\pjh\Dev\Lang\Delphi\Common\UnitGZipUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="..\..\HiconisASManager"/>
@@ -56,6 +60,7 @@
     <File Path="..\..\..\..\Common\UnitHtmlUtil.pas"/>
     <File Path="..\..\..\..\Common\UnitNICUtil.pas"/>
     <File Path="..\..\..\..\Common\UnitTRegExUtil.pas"/>
+    <File Path="..\..\..\..\Common\UnitGZipUtil.pas"/>
     <File Path="..\..\..\..\NoGitHub"/>
     <File Path="..\..\..\..\NoGitHub\Util"/>
     <File Path="..\..\..\..\NoGitHub\Util\UnitCryptUtil3.pas"/>
@@ -66,5 +71,6 @@
     <File Path="UnitChkDupIdData.pas"/>
     <File Path="UnitHiConInfluxDBUtil.pas"/>
     <File Path="UnitHiConTCPWorker.pas"/>
+    <File Path="UnitHiConJsonUtil.pas"/>
   </ProjectSortOrder>
 </BorlandProject>

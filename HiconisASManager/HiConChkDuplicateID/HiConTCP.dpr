@@ -16,7 +16,9 @@ uses
   UnitHiConInfluxDBUtil in 'UnitHiConInfluxDBUtil.pas',
   FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas',
   UnitNICUtil in '..\..\..\..\Common\UnitNICUtil.pas',
-  UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas';
+  UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas',
+  UnitHiConJsonUtil in 'UnitHiConJsonUtil.pas',
+  UnitGZipUtil in '..\..\..\..\Common\UnitGZipUtil.pas';
 
 {$R *.res}
 

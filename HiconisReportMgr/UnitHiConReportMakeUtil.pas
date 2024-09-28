@@ -12,6 +12,8 @@ const
   COMMISSION_REPORT_WORKCODE_FILENAME = 'HiCONiS Commissioning Report.xlsx';
 
 procedure MakeCommissionReportTotal(ARec: THiconReportRec; AFileName: string='');
+procedure MakeCommissionReportSummary(ARec: THiconReportRec; AFileName: string='');
+procedure MakeCommissionReportWorkCode(ARec: THiconReportRec; AFileName: string='');
 
 var
   DOC_DIR: string;
@@ -126,6 +128,16 @@ begin
 {$ENDREGION}
 
   LExcel.Visible := true;
+end;
+
+procedure MakeCommissionReportSummary(ARec: THiconReportRec; AFileName: string='');
+begin
+
+end;
+
+procedure MakeCommissionReportWorkCode(ARec: THiconReportRec; AFileName: string='');
+begin
+
 end;
 
 end.

@@ -4,8 +4,16 @@ interface
 
 uses System.Classes, UnitEnumHelper, Vcl.StdCtrls;
 
+const
+  MAX_REPORT_WORKITEM = 14;
+  HIRPT_FILE_EXT = '.hirpt';
+  KN_REPORT = 'Report';//Json KeyName
+  KN_WORKITEM = 'WorkItem';
+
 type
   THiconReportRec = packed record
+    FReportKind: integer; //THiRptKind
+    FCommissionRptKind: integer; //THiCommissionRptKind
     FReportListJson,
     FReportDetailJsonAry //JsonAry Çü½ÄÀÓ
     : string;
@@ -35,6 +43,10 @@ type
   THiRptKind = (hrkNull,
     hrkCR, hrkSR,
     hrkFinal);
+
+  THiCommissionRptKind = (hcrkNull,
+    hcrkTotal, hcrkSummary, hcrkCode,
+    hcrkFinal);
 
   THiRptModifiedItem = (
     hrmiStraton, hrmiDB, hrmiHMI, hrmiSystem, hrmiIOList, hrmiDrawing, hrmiCnEChart,
