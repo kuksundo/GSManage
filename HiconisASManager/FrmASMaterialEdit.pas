@@ -76,6 +76,8 @@ type
     TaskID: TEdit;
     PngSpeedButton2: TPngSpeedButton;
     PngSpeedButton3: TPngSpeedButton;
+    JvLabel16: TJvLabel;
+    DirectInputReqNo: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure PngSpeedButton1Click(Sender: TObject);

@@ -965,6 +965,33 @@ object ASMaterialF: TASMaterialF
       FE2FE15F9D68224692EB5B98CB2F05008499FF97A3ECF651FF17CF26EA78B507
       38ED0000000049454E44AE426082}
   end
+  object JvLabel16: TJvLabel
+    AlignWithMargins = True
+    Left = 285
+    Top = 294
+    Width = 100
+    Height = 25
+    Alignment = taCenter
+    AutoSize = False
+    Caption = #51088#51116#51649#53804#51077#48264#54840
+    Color = 14671839
+    FrameColor = clGrayText
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = #47569#51008' '#44256#46357
+    Font.Style = [fsBold]
+    Layout = tlCenter
+    ParentColor = False
+    ParentFont = False
+    RoundedFrame = 3
+    Transparent = True
+    HotTrackFont.Charset = ANSI_CHARSET
+    HotTrackFont.Color = clWindowText
+    HotTrackFont.Height = -13
+    HotTrackFont.Name = #47569#51008' '#44256#46357
+    HotTrackFont.Style = []
+  end
   object PORNo: TEdit
     Left = 117
     Top = 16
@@ -978,7 +1005,7 @@ object ASMaterialF: TASMaterialF
   object AWB: TEdit
     Left = 114
     Top = 298
-    Width = 378
+    Width = 165
     Height = 21
     Hint = 'Text'
     Alignment = taCenter
@@ -1268,5 +1295,15 @@ object ASMaterialF: TASMaterialF
     Hint = 'Text'
     TabOrder = 25
     Visible = False
+  end
+  object DirectInputReqNo: TEdit
+    Left = 394
+    Top = 296
+    Width = 189
+    Height = 21
+    Hint = 'Text'
+    Alignment = taCenter
+    ImeName = 'Microsoft IME 2010'
+    TabOrder = 26
   end
 end

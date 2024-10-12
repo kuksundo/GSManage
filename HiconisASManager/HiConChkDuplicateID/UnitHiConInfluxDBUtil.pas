@@ -2,7 +2,7 @@ unit UnitHiConInfluxDBUtil;
 
 interface
 
-uses Classes,
+uses SysUtils, Classes, Inifiles,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
   OtlSync,
   mormot.core.base, mormot.core.os, mormot.core.text,
@@ -16,6 +16,7 @@ const
   INFLUX_LOG_DB_NAME = 'logging';
   INFLUX_PORTNO = '8086';
   INFLUX_POLICY_NAME = 'autogen';
+  DEFAULT_INFLUXDB_CONF_NAME = 'c:\Program Files\InfluxData\influxdb\influxdb-1.8.10-1\influxdb.conf';
 
 type
   TInfluxRetentionPolicyRec = packed record
@@ -41,7 +42,13 @@ function SetRetentionPolicies4OWSFromInfluxDB(AIpAddr, ADuration, AShardDuration
   ADbName: string=INFLUX_LOG_DB_NAME; APolicyName: string=INFLUX_POLICY_NAME): string;
 function GetResultRecOfSetRetentPolicy(AResult: string): TInfluxQueryResult;
 
+//OWS는 'D:\' Historian Computer는 'E:\' 인지 Check함
+function VerifyLogParamFromConf(AValue: string; AConfFileName: string=''): string;
+function ModifyLogParamFromConf(AOldValue, ANewValue: string; AConfFileName: string=''): string;
+
 implementation
+
+uses UnitStringUtil;
 
 function SendHttpGetRequest2InfluxDB(AUrlGet, AQuery: string): string;
 var
@@ -172,6 +179,124 @@ begin
   LList := DocList(LStr);
 
   Result.statement_id := LList[0].statement_id;
+end;
+
+function VerifyLogParamFromConf(AValue: string; AConfFileName: string): string;
+var
+  IniFile: TIniFile;
+  LValueText: string;
+begin
+  Result := '';
+
+  if AConfFileName = '' then
+  begin
+//    if FileExists(DEFAULT_INFLUXDB_CONF_NAME) then
+//      AConfFileName := DEFAULT_INFLUXDB_CONF_NAME
+//    else
+    if FileExists('c:\temp\influxdb.conf') then
+      AConfFileName := 'c:\temp\influxdb.conf';
+  end;
+
+  if AConfFileName = '' then
+    exit;
+
+  AValue := UpperCase(AValue);
+
+  IniFile := TIniFile.Create(AConfFileName);
+  try
+    LValueText := IniFile.ReadString('meta', 'dir', '');
+
+    if Pos(AValue, UpperCase(LValueText)) = 0 then//'D:\'
+      Result := Result + '[meta]->dir value has no "' + AValue + '"' + #13#10;
+
+    LValueText := IniFile.ReadString('data', 'dir', '');
+
+    if Pos(AValue, UpperCase(LValueText)) = 0 then //'D:\'
+      Result := Result + '[data]->dir value has no "' + AValue + '"' + #13#10;
+
+    LValueText := IniFile.ReadString('data', 'wal-dir', '');
+
+    if Pos(AValue, UpperCase(LValueText)) = 0 then //'D:\'
+      Result := Result + '[data]->wal-dir value has no "' + AValue + '"';
+
+    if Result = '' then
+      Result := AConfFileName + '(dir value) is ' + AValue;
+  finally
+    IniFile.Free;
+  end;
+end;
+
+function ModifyLogParamFromConf(AOldValue, ANewValue: string; AConfFileName: string=''): string;
+var
+  IniFile: TIniFile;
+  LValueText, LOldValue, LValue: string;
+begin
+  Result := '';
+
+  if AConfFileName = '' then
+  begin
+//    if FileExists(DEFAULT_INFLUXDB_CONF_NAME) then
+//      AConfFileName := DEFAULT_INFLUXDB_CONF_NAME
+//    else
+    if FileExists('c:\temp\influxdb.conf') then
+      AConfFileName := 'c:\temp\influxdb.conf';
+  end;
+
+  if AConfFileName = '' then
+    exit;
+
+  AOldValue := LowerCase(AOldValue);
+  ANewValue := UpperCase(ANewValue);
+
+  IniFile := TIniFile.Create(AConfFileName);
+  try
+    LValueText := LowerCase(IniFile.ReadString('meta', 'dir', ''));
+    LOldValue := AOldValue;
+
+    while LOldValue <> '' do
+    begin
+      LValue := StrToken(LOldValue, ';');
+
+      if Pos(LValue, LValueText) > 0 then//'D:'
+      begin
+        LValueText := StringReplace(LValueText, LValue, ANewValue, [rfReplaceAll]);
+        IniFile.WriteString('meta', 'dir', LValueText);
+        Result := Result + '[meta]->dir value (' + LValue + ') is modified to "' + ANewValue + '"' + #13#10;
+      end;
+    end;
+
+    LValueText := LowerCase(IniFile.ReadString('data', 'dir', ''));
+    LOldValue := AOldValue;
+
+    while LOldValue <> '' do
+    begin
+      LValue := StrToken(LOldValue, ';');
+
+      if Pos(LValue, LValueText) > 0 then
+      begin
+        LValueText := StringReplace(LValueText, LValue, ANewValue, [rfReplaceAll]);
+        IniFile.WriteString('data', 'dir', LValueText);
+        Result := Result + '[data]->dir value (' + LValue + ') is modified to "' + ANewValue + '"' + #13#10;
+      end;
+    end;
+
+    LValueText := LowerCase(IniFile.ReadString('data', 'wal-dir', ''));
+    LOldValue := AOldValue;
+
+    while LOldValue <> '' do
+    begin
+      LValue := StrToken(LOldValue, ';');
+
+      if Pos(LValue, LValueText) > 0 then
+      begin
+        LValueText := StringReplace(LValueText, LValue, ANewValue, [rfReplaceAll]);
+        IniFile.WriteString('data', 'wal-dir', LValueText);
+        Result := Result + '[data]->wal-dir value (' + LValue + ') is modified to "' + ANewValue + '"' + #13#10;
+      end;
+    end;
+  finally
+    IniFile.Free;
+  end;
 end;
 
 end.

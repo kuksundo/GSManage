@@ -6,16 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, DateUtils,
   JvExControls, JvLabel, AeroButtons, CurvyControls,
-  mormot.core.variants, mormot.core.unicode, Vcl.Buttons
+  mormot.core.variants, mormot.core.unicode, Vcl.Buttons, AdvDateTimePicker
   ;
 
 type
   TRptWorkItemF = class(TForm)
     JvLabel36: TJvLabel;
-    WorkItemBeginTime: TDateTimePicker;
     Label2: TLabel;
     JvLabel37: TJvLabel;
-    WorkItemEndTime: TDateTimePicker;
     JvLabel1: TJvLabel;
     JvLabel2: TJvLabel;
     WorkHours: TEdit;
@@ -30,6 +28,8 @@ type
     ReportKey4Item: TEdit;
     WorkItemKey: TEdit;
     BitBtn1: TBitBtn;
+    WorkItemBeginTime: TAdvDateTimePicker;
+    WorkItemEndTime: TAdvDateTimePicker;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
   private
@@ -130,7 +130,7 @@ procedure TRptWorkItemF.BitBtn1Click(Sender: TObject);
 var
   LMin: Int64;
 begin
-  LMin := MinutesBetween(WorkItemBeginTime.Time, WorkItemEndTime.Time);
+  LMin := MinutesBetween(WorkItemBeginTime.DateTime, WorkItemEndTime.DateTime);
 
   WorkHours.Text := GetHhCommannFromMinute(LMin);
 end;
@@ -154,9 +154,13 @@ begin
   //Component Value가 70자 이상이면 해당 Component 반환함
   Result := CheckInputLengthByTagOnForm(Self, 70);
 
-  //True = 입력값 길이가 70자 이상인 Component 존재
+    //True = 입력값 길이가 70자 이상인 Component 존재
   if Assigned(Result) then
   begin
+    //작업상세는 70자 제한 없음
+    if Result.Name = 'WorkDetailRemark' then
+      exit;
+
     //Component Color 변경
     ChangeCompColorByPropertyName(Result, clYellow);
     ShowMessage('길이가 70자 이내여야 함: [' + Result.Hint + ']' );

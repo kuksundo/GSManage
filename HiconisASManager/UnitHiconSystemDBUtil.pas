@@ -3,8 +3,8 @@ unit UnitHiconSystemDBUtil;
 interface
 
 uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows,
-  mormot.db.sql.oledb, mormot.db.sql, mormot.core.base,
-  UnitChkDupIdData;
+  mormot.db.sql.oledb, mormot.db.sql, mormot.core.base, mormot.core.variants,
+  UnitChkDupIdData, UnitHiconMPMData;
 
 type
   THiConSystemDB = class
@@ -12,12 +12,37 @@ type
     class function GetList2JsonFromDB(AQuery: string; ADBFileName: string=''): RawUtf8;
     class function GetResourceList2JsonFromDB(ADBFileName: string=''): RawUtf8;
     class function GetSVRList2JsonFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetHistoryStationInfo2JsonFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2JsonFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2RecFromINFTable(ATagName: string; ADBFileName: string=''): TTagInfoRec_INF;
+    //MPM Name으로 IP 주소 가져옴
+    class function GetIPAddr2JsonFromRESTable(AResName: string; ADBFileName: string=''): RawUtf8;
+
     class function GetIfAccessODBCDriverInstalled(): string;
   end;
 
 implementation
 
 { THiConSystemDB }
+
+class function THiConSystemDB.GetHistoryStationInfo2JsonFromDB(
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+begin
+  LQuery := 'select SVR_NAME as RES_NAME, PIP as PMPM_PIP, SIP as PMPM_SIP, DESCRIPTION from SERVER where DESCRIPTION = "HISTORY STATION"';
+  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+
+  LDocList := DocList(Result);
+
+  for LDocDict in LDocList do
+  begin
+    Result := LDocDict.Json;
+    exit;
+  end;
+end;
 
 class function THiConSystemDB.GetIfAccessODBCDriverInstalled: string;
 var
@@ -42,6 +67,25 @@ begin
   end;
 end;
 
+class function THiConSystemDB.GetIPAddr2JsonFromRESTable(AResName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+begin
+  LQuery := 'select RES_NAME, CAB_ID, DESCRIPTION, PMPM_PIP, PMPM_SIP, SMPM_PIP, SMPM_SIP, SUB_POS from RESOURCE where RES_NAME = "' + AResName + '"';
+  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+
+  LDocList := DocList(Result);
+
+  for LDocDict in LDocList do
+  begin
+    Result := LDocDict.Json;
+    exit;
+  end;
+end;
+
 class function THiConSystemDB.GetList2JsonFromDB(AQuery, ADBFileName: string): RawUtf8;
 var
   LProps: TOleDBConnectionProperties;
@@ -54,8 +98,13 @@ begin
     exit;
 
   if ADBFileName = '' then
-    ADBFileName := 'E:\temp\system_bak.accdb';
-//    ADBFileName := 'D:\ACONIS-NX\DB\system_bak.accdb';
+  begin
+    if FileExists('D:\ACONIS-NX\DB\system_bak.accdb') then
+      ADBFileName := 'D:\ACONIS-NX\DB\system_bak.accdb'
+    else
+    if FileExists('E:\temp\system_bak.accdb') then
+      ADBFileName := 'E:\temp\system_bak.accdb';
+  end;
 
   if not FileExists(ADBFileName) then
   begin
@@ -63,7 +112,7 @@ begin
     exit;
   end;
 
-  LProps := TSqlDBOleDBACEConnectionProperties.Create(ADBFileName,'', '','');//'e:\temp\system_bak.accdb'
+  LProps := TSqlDBOleDBACEConnectionProperties.Create(ADBFileName,'', '','');
   try
     LConn := LProps.NewConnection;
     try
@@ -98,8 +147,36 @@ class function THiConSystemDB.GetSVRList2JsonFromDB(
 var
   LQuery: string;
 begin
-  LQuery := 'select SVR_NAME as RES_NAME, PIP as PMPM_PIP, SIP as PMPM_SIP from SERVER';
+  LQuery := 'select SVR_NAME as RES_NAME, PIP as PMPM_PIP, SIP as PMPM_SIP, DESCRIPTION from SERVER';
   Result := GetList2JsonFromDB(LQuery);
+end;
+
+class function THiConSystemDB.GetTagInfo2JsonFromINFTable(ATagName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+begin
+  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME = "' + ATagName + '"';
+  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+
+  LDocList := DocList(Result);
+
+  for LDocDict in LDocList do
+  begin
+    Result := LDocDict.Json;
+    exit;
+  end;
+end;
+
+class function THiConSystemDB.GetTagInfo2RecFromINFTable(ATagName,
+  ADBFileName: string): TTagInfoRec_INF;
+var
+  LJson: RawUtf8;
+begin
+  LJson := GetTagInfo2JsonFromINFTable(ATagName);
+  Result := GetTagInfoRec_INFFromJson(Utf8ToString(LJson));
 end;
 
 end.

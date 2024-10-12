@@ -283,6 +283,25 @@ object IPListF: TIPListF
       Position = 3
       SortType = stAlphabetic
     end
+    object DESCRIPTION: TNxTextColumn
+      DefaultWidth = 150
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'DESCRIPTION'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      ParentFont = False
+      Position = 4
+      SortType = stAlphabetic
+      Width = 150
+    end
   end
   object AdvPopupMenu1: TAdvPopupMenu
     Version = '2.5.5.1'

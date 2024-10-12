@@ -3,7 +3,7 @@ object RptWorkItemF: TRptWorkItemF
   Top = 0
   Caption = 'RptWorkItemF'
   ClientHeight = 349
-  ClientWidth = 454
+  ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -43,22 +43,22 @@ object RptWorkItemF: TRptWorkItemF
     HotTrackFont.Style = []
   end
   object Label2: TLabel
-    Left = 129
-    Top = 55
-    Width = 8
-    Height = 13
+    Left = 210
+    Top = 51
+    Width = 11
+    Height = 16
     Caption = '~'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -13
     Font.Name = 'Tahoma'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
   end
   object JvLabel37: TJvLabel
     AlignWithMargins = True
-    Left = 143
-    Top = 17
+    Left = 227
+    Top = 16
     Width = 89
     Height = 25
     Alignment = taCenter
@@ -84,8 +84,8 @@ object RptWorkItemF: TRptWorkItemF
   end
   object JvLabel1: TJvLabel
     AlignWithMargins = True
-    Left = 247
-    Top = 17
+    Left = 29
+    Top = 78
     Width = 90
     Height = 25
     Alignment = taCenter
@@ -111,8 +111,8 @@ object RptWorkItemF: TRptWorkItemF
   end
   object JvLabel2: TJvLabel
     AlignWithMargins = True
-    Left = 351
-    Top = 17
+    Left = 244
+    Top = 78
     Width = 77
     Height = 25
     Alignment = taCenter
@@ -138,8 +138,8 @@ object RptWorkItemF: TRptWorkItemF
   end
   object JvLabel16: TJvLabel
     AlignWithMargins = True
-    Left = 30
-    Top = 89
+    Left = 29
+    Top = 114
     Width = 81
     Height = 25
     Alignment = taCenter
@@ -190,86 +190,70 @@ object RptWorkItemF: TRptWorkItemF
     HotTrackFont.Name = #47569#51008' '#44256#46357
     HotTrackFont.Style = []
   end
-  object WorkItemBeginTime: TDateTimePicker
-    Tag = 1
-    Left = 30
-    Top = 48
-    Width = 93
-    Height = 24
-    Date = 42843.827708518520000000
-    Time = 42843.827708518520000000
-    ImeName = 'Microsoft IME 2010'
-    Kind = dtkTime
-    TabOrder = 0
-  end
-  object WorkItemEndTime: TDateTimePicker
-    Tag = 2
-    Left = 143
-    Top = 48
-    Width = 98
-    Height = 24
-    Date = 42843.827708518520000000
-    Time = 42843.827708518520000000
-    ImeName = 'Microsoft IME 2010'
-    Kind = dtkTime
-    TabOrder = 1
-  end
   object WorkHours: TEdit
     Tag = 3
-    Left = 272
-    Top = 50
+    Left = 156
+    Top = 78
     Width = 65
-    Height = 21
+    Height = 24
     Hint = #51089#50629#49884#44036
     Alignment = taCenter
-    TabOrder = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
   end
   object WorkCode: TComboBox
     Tag = 4
-    Left = 351
-    Top = 48
+    Left = 327
+    Top = 81
     Width = 73
     Height = 21
     Hint = #51089#50629#53076#46300
-    TabOrder = 3
+    Style = csDropDownList
+    TabOrder = 1
   end
   object WorkDetailRemark: TMemo
     Tag = 6
     Left = 30
     Top = 201
-    Width = 394
+    Width = 443
     Height = 104
     Hint = #51089#50629#49345#49464
     BevelInner = bvNone
     BevelKind = bkFlat
     ImeName = 'Microsoft IME 2010'
     ScrollBars = ssVertical
-    TabOrder = 5
+    TabOrder = 3
   end
   object WorkDetail: TEdit
     Tag = 5
     Left = 30
-    Top = 120
-    Width = 398
+    Top = 145
+    Width = 443
     Height = 21
     Hint = #51089#50629#50836#50557
     Alignment = taCenter
-    TabOrder = 4
+    TabOrder = 2
   end
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
     Top = 310
-    Width = 454
+    Width = 488
     Height = 36
     Margins.Left = 0
     Margins.Right = 0
     Align = alBottom
     Rounding = 4
-    TabOrder = 6
+    TabOrder = 4
+    ExplicitWidth = 454
     object btn_Close: TAeroButton
       AlignWithMargins = True
-      Left = 387
+      Left = 421
       Top = 3
       Width = 64
       Height = 30
@@ -280,10 +264,11 @@ object RptWorkItemF: TRptWorkItemF
       Caption = #45803#44592
       ModalResult = 2
       TabOrder = 0
+      ExplicitLeft = 387
     end
     object AeroButton1: TAeroButton
       AlignWithMargins = True
-      Left = 306
+      Left = 340
       Top = 3
       Width = 75
       Height = 30
@@ -293,6 +278,7 @@ object RptWorkItemF: TRptWorkItemF
       Caption = #51201#50857
       ModalResult = 1
       TabOrder = 1
+      ExplicitLeft = 306
     end
     object ReportKey4Item: TEdit
       Left = 3
@@ -312,8 +298,8 @@ object RptWorkItemF: TRptWorkItemF
     end
   end
   object BitBtn1: TBitBtn
-    Left = 244
-    Top = 49
+    Left = 125
+    Top = 78
     Width = 25
     Height = 25
     Glyph.Data = {
@@ -343,7 +329,69 @@ object RptWorkItemF: TRptWorkItemF
       F5DDA5EAB951EAB84BE5AB39E3A42FDE981FDB9219D98D14D98D14D78A14D78A
       14DC972EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2D590EEC86FEEC76DEEC76DED
       C369ECC266EBBE60EABC5DE9B656ECBC64FFFFFFFFFFFFFFFFFF}
-    TabOrder = 7
+    TabOrder = 5
     OnClick = BitBtn1Click
+  end
+  object WorkItemBeginTime: TAdvDateTimePicker
+    Tag = 1
+    Left = 30
+    Top = 48
+    Width = 170
+    Height = 24
+    Date = 45566.481400462970000000
+    Format = ''
+    Time = 45566.481400462970000000
+    DoubleBuffered = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Kind = dkDateTime
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 6
+    TabStop = True
+    BorderStyle = bsSingle
+    Ctl3D = True
+    DateTime = 45566.481400462970000000
+    TimeFormat = 'HH:mm'
+    Version = '1.2.2.0'
+    LabelFont.Charset = DEFAULT_CHARSET
+    LabelFont.Color = clWindowText
+    LabelFont.Height = -11
+    LabelFont.Name = 'Tahoma'
+    LabelFont.Style = []
+  end
+  object WorkItemEndTime: TAdvDateTimePicker
+    Tag = 2
+    Left = 227
+    Top = 47
+    Width = 170
+    Height = 24
+    Date = 45566.481400462970000000
+    Format = ''
+    Time = 45566.481400462970000000
+    DoubleBuffered = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Kind = dkDateTime
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 7
+    TabStop = True
+    BorderStyle = bsSingle
+    Ctl3D = True
+    DateTime = 45566.481400462970000000
+    TimeFormat = 'HH:mm'
+    Version = '1.2.2.0'
+    LabelFont.Charset = DEFAULT_CHARSET
+    LabelFont.Color = clWindowText
+    LabelFont.Height = -11
+    LabelFont.Name = 'Tahoma'
+    LabelFont.Style = []
   end
 end

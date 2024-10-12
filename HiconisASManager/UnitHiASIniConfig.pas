@@ -15,6 +15,7 @@ type
     FMyCompanyName,
     FOLFolderListFileName,
     FReqBudgetIncreaseMailFN,//부품예산증액 요청 Mail원본
+    FReqPartsInputMailFN,//자재입고 요청 Mail원본
     FDIModuleRecallStatusFN, //DI 모듈 리콜 현황 리스트 파일(Json 형식)
 
     FPurchasePIC,     //구매담당자 이메일 주소
@@ -66,6 +67,8 @@ type
     property OLFolderListFileName : string read FOLFolderListFileName write FOLFolderListFileName;
     [JHPIni('File','ReqBudgetIncreaseMailFN','ReqBudgetIncreaseMailFN.txt','22', tkString)]
     property ReqBudgetIncreaseMailFN : string read FReqBudgetIncreaseMailFN write FReqBudgetIncreaseMailFN;
+    [JHPIni('File','ReqPartsInputMailFN','ReqPartsInputMailFN.txt','23', tkString)]
+    property ReqPartsInputMailFN : string read FReqPartsInputMailFN write FReqPartsInputMailFN;
     [JHPIni('File','DIModuleRecallStatusFN','DIModuleRecallStatusFN.txt','29', tkString)]
     property DIModuleRecallStatusFN : string read FDIModuleRecallStatusFN write FDIModuleRecallStatusFN;
   end;

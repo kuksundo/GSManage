@@ -29,6 +29,7 @@ type
     AdvPopupMenu1: TAdvPopupMenu;
     FromResourceDB1: TMenuItem;
     FromServerDB1: TMenuItem;
+    DESCRIPTION: TNxTextColumn;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);

@@ -251,6 +251,7 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure ShowWarrantyExpireDate2Click(Sender: TObject);
     procedure CreateClaimBySelected1Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -361,6 +362,10 @@ type
   protected
     procedure ShowTaskIDFromGrid;
     procedure ShowEmailIDFromGrid;
+
+    function GetTaskIdFromGridBySelected: TID;
+    function GetDirectInputReqNoFromBySeleced: string;//자재직투입요청 번호 반환
+    function GetEmailSubjectFromGridBySelected: string;//이메일 제목을 반환
 
     procedure ProcessPasteEvent(ATxt: string);
     function GetUserList: TStrings;
@@ -731,6 +736,11 @@ begin
   SendCmd4CreateMail(TMenuItem(Sender).Tag);
 end;
 
+procedure THiconisAsManageF.N8Click(Sender: TObject);
+begin
+  SendCmd4CreateMail(TMenuItem(Sender).Tag);
+end;
+
 procedure THiconisAsManageF.ToDOList1Click(Sender: TObject);
 begin
   if grid_Req.SelectedCount = 0 then
@@ -1054,6 +1064,18 @@ begin
     Result := TIDList(grid_Req.Row[ARow].Data).fTaskId
   else
     Result := -1;
+end;
+
+function THiconisAsManageF.GetTaskIdFromGridBySelected: TID;
+var
+  LIdList: TIDList;
+begin
+  Result := -1;
+  if grid_Req.Row[grid_Req.SelectedRow].Data <> nil then
+  begin
+    LIdList := TIDList(grid_Req.Row[grid_Req.SelectedRow].Data);
+    Result := LIdList.TaskId;
+  end;
 end;
 
 function THiconisAsManageF.GetUserList: TStrings;
@@ -1665,6 +1687,36 @@ begin
   Result := TimelogToDatetime(GetDeliveryDateByHullNo(LHullNo));
 end;
 
+function THiconisAsManageF.GetDirectInputReqNoFromBySeleced: string;
+var
+  LId: TID;
+  LMaterial4Project:TSQLMaterial4Project;
+begin
+  LId := GetTaskIdFromGridBySelected;
+
+  LMaterial4Project := GetMaterial4ProjFromTaskID(LId);
+  try
+    Result := LMaterial4Project.DirectInputReqNo;
+  finally
+    LMaterial4Project.Free;
+  end;
+end;
+
+function THiconisAsManageF.GetEmailSubjectFromGridBySelected: string;
+var
+  LId: TID;
+  LOLEmailMsg:TSQLOLEmailMsg;
+begin
+  LId := GetTaskIdFromGridBySelected;
+
+  LOLEmailMsg := GetSQLOLEmailMsgFromTaskID(LId);
+  try
+    Result := LOLEmailMsg.Subject;
+  finally
+    LOLEmailMsg.Free;
+  end;
+end;
+
 procedure THiconisAsManageF.GetHullNoToClipboard1Click(Sender: TObject);
 begin
   if grid_Req.SelectedRow = -1 then
@@ -1754,7 +1806,6 @@ begin
   AHiASIniConfig.FProjNo := grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
   AHiASIniConfig.FClaimNo := grid_Req.CellsByName['ClaimNo',grid_Req.SelectedRow];
   AHiASIniConfig.FSubject := grid_Req.CellsByName['Subject',grid_Req.SelectedRow];
-  AHiASIniConfig.FText := AHiASIniConfig.FClaimNo + '번 Claim 해결을 위한 자재 구입 목적의 예산 요청';
 end;
 
 procedure THiconisAsManageF.AsyncProcessCommandProc;
@@ -2913,17 +2964,11 @@ begin
 end;
 
 procedure THiconisAsManageF.ShowTaskIDFromGrid;
-var
-  LIdList: TIDList;
 begin
   if grid_Req.SelectedRow = -1 then
     exit;
 
-  if grid_Req.Row[grid_Req.SelectedRow].Data <> nil then
-  begin
-    LIdList := TIDList(grid_Req.Row[grid_Req.SelectedRow].Data);
-    ShowMessage(IntToStr(LIdList.TaskId));
-  end;
+  ShowMessage(IntToStr(GetTaskIdFromGridBySelected));//LIdList.TaskId
 end;
 
 procedure THiconisAsManageF.ShowTodoListFormFromData(ARow: integer);
@@ -3141,6 +3186,13 @@ var
   LMsg: string;
 begin
   AssignHull2RecFromForm(FHiASIniConfig);
+
+  if AMailType = 2 then //자재입고요청
+  begin
+    FHiASIniConfig.FText := GetDirectInputReqNoFromBySeleced();
+    FHiASIniConfig.FSubject := GetEmailSubjectFromGridBySelected();
+  end;
+
   LOLMailRec.Subject := GetEmailSubject(AMailType, FHiASIniConfig);
   LOLMailRec.Recipients := GetRecvEmailAddress(AMailType, FHiASIniConfig);
   LOLMailRec.To_ := GetRecvEmailAddress(AMailType, FHiASIniConfig);

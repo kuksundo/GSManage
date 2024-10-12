@@ -39,7 +39,8 @@ uses SysUtils, Classes, Generics.Collections,
     fGrossWeight, //총중량(Kg)
     fMeasurement, //Box치수(LxWxH/mm)
     fCBM, //Cubic Meter
-    fNumOfPkg //포장수량
+    fNumOfPkg, //포장수량
+    fDirectInputReqNo //자재직투입번호 : 공란이 아니면 직투입한 자재라는 의미
     : RawUTF8;
     FIsUpdate: Boolean;
   public
@@ -70,6 +71,7 @@ uses SysUtils, Classes, Generics.Collections,
     property Measurement: RawUTF8 read fMeasurement write fMeasurement;
     property CBM: RawUTF8 read fCBM write fCBM;
     property NumOfPkg: RawUTF8 read fNumOfPkg write fNumOfPkg;
+    property DirectInputReqNo: RawUTF8 read fDirectInputReqNo write fDirectInputReqNo;
   end;
 
   function CreateModel_HiASMaterial: TSQLModel;

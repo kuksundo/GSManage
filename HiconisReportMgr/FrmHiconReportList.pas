@@ -143,6 +143,19 @@ type
     ShowImportReportList1: TMenuItem;
     N14: TMenuItem;
     LoadFromReportFile1: TMenuItem;
+    ShipType: TNxTextColumn;
+    N15: TMenuItem;
+    N16: TMenuItem;
+    A1: TMenuItem;
+    A2: TMenuItem;
+    B11: TMenuItem;
+    B21: TMenuItem;
+    B31: TMenuItem;
+    B41: TMenuItem;
+    C11: TMenuItem;
+    C21: TMenuItem;
+    D1: TMenuItem;
+    N17: TMenuItem;
 
     procedure btn_SearchClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -168,7 +181,16 @@ type
     procedure Btn_ExportClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
-    procedure N13Click(Sender: TObject);
+    procedure N15Click(Sender: TObject);
+    procedure A1Click(Sender: TObject);
+    procedure A2Click(Sender: TObject);
+    procedure B11Click(Sender: TObject);
+    procedure B21Click(Sender: TObject);
+    procedure B31Click(Sender: TObject);
+    procedure B41Click(Sender: TObject);
+    procedure C11Click(Sender: TObject);
+    procedure C21Click(Sender: TObject);
+    procedure D1Click(Sender: TObject);
   private
     //보고서 리스트 내,외부 저장용
     FRptDocDict: IDocDict; //{Report: [], WorkItem: []}
@@ -213,9 +235,11 @@ type
     function GetWorkItemJsonFromOrmByRowIdx(const AIdx: integer): RawUtf8;
     function GetWorkItemJsonListFromOrmBySelectedRows(): RawUtf8;
     function GetWorkItemDocListFromOrmBySelectedRows(): IDocList;
+    procedure ReplaceWorkItemList2RptDocDict(const AKeyId: string; const AJsonAry: RawUtf8);
 
     function GetHiconReportRecFromDBByKeyId(const AKeyId: string): THiconReportRec;
 
+    procedure LoadReportList2GridFromFile();
     procedure MakeZipFileFromSelected();
     procedure MakeZipFileFromString(const AContent: string; AFileName: string='');
 
@@ -225,7 +249,7 @@ type
     procedure DeleteWorkItemByReportKey(const ARptKey: TTimeLog);
   public
     procedure DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
-    procedure MakeReportBySelected(const ACommissionRptKind: integer);
+    procedure MakeReportBySelected(const ACommissionRptKind: integer; AWorkCode: string='');
   end;
 
 var
@@ -239,6 +263,16 @@ uses UnitComboBoxUtil, UnitCheckGrpAdvUtil, JHP.Util.Bit32Helper, UnitNextGridUt
   FrmHiconReportEdit, FrmSearchVessel2, UnitDFMUtil, UnitHiConReportMakeUtil;
 
 {$R *.dfm}
+
+procedure THiConReportListF.A1Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.A2Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
 
 function THiConReportListF.AddOrUpdateRptDocDict2DB(
   const ADoUpdate: Boolean): integer;
@@ -267,8 +301,9 @@ begin
     for LDict in LList do
     begin
       LJson := LDict.Json;
-      AddOrUpdateHiconReportListFromJsonByKeyId(LJson, ADoUpdate);
-      Inc(Result);
+
+      if AddOrUpdateHiconReportListFromJsonByKeyId(LJson, ADoUpdate) then
+        Inc(Result);
     end;//for
   end;
 end;
@@ -279,7 +314,7 @@ var
   LJsonAry, LJsonAry2: string;
   LList, LList2: IDocList;
   LDict: IDocDict;
-  LVar: variant;
+  LCount: integer;
 begin
   Result := 0;
 
@@ -290,15 +325,17 @@ begin
 
     for LList2 in LList do
     begin
-      LVar := _JSON(LList2.Json);
-      AddHiconReportDetailFromVarAry(LVar);
+      LCount := 0;
+      LJsonAry2 := LList2.Json;
+      LCount := AddOrUpdateHiconReportDetailFromJsonAryByKeyId(LJsonAry2, ADoUpdate);
+      Result := Result + LCount;
     end;
   end;
 end;
 
 procedure THiConReportListF.Btn_ExportClick(Sender: TObject);
 begin
-  NextGridToExcel(HiRptListGrid);
+  NextGridToExcel(HiRptListGrid, '', '', True);
 end;
 
 procedure THiConReportListF.Btn_NewClick(Sender: TObject);
@@ -311,6 +348,26 @@ begin
   ClearFindCondForm();
   HiRptListGrid.ClearRows();
   ClearRptDocDict();
+end;
+
+procedure THiConReportListF.B11Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.B21Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.B31Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.B41Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
 end;
 
 procedure THiConReportListF.BitBtn1Click(Sender: TObject);
@@ -450,6 +507,16 @@ begin
   Result := GetWorkItemJsonAryFromDocDictByKeyId(LKeyId);
 end;
 
+procedure THiConReportListF.C11Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.C21Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
 function THiConReportListF.CheckRptDocDictExist: Boolean;
 begin
   if FRptDocDict.Len > 0 then
@@ -490,6 +557,11 @@ end;
 procedure THiConReportListF.CreateNewTask1Click(Sender: TObject);
 begin
   HiRptEdit();
+end;
+
+procedure THiConReportListF.D1Click(Sender: TObject);
+begin
+  MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
 end;
 
 procedure THiConReportListF.DeleteReportByReportKey(const ARptKey: TTimeLog);
@@ -823,7 +895,7 @@ var
 begin
   Result := DocList('[]');
 
-  for i := 0 to HiRptListGrid.SelectedCount - 1 do
+  for i := 0 to HiRptListGrid.RowCount - 1 do
   begin
     if HiRptListGrid.Row[i].Selected then
     begin
@@ -874,9 +946,11 @@ end;
 
 procedure THiConReportListF.HiRptEdit(const ARow: integer);
 var
+  LFromDocDict: Boolean;
   LVar: variant;
   LRptUtf8, LWorkItemUtf8: RawUtf8;
   LOrmHiconReportList: TOrmHiconReportList;
+  LKeyId: string;
 begin
   TDocVariant.New(LVar);
 
@@ -902,16 +976,25 @@ begin
 
     //WorkItem은 FRptDocDict를 먼저 탐색함
     LWorkItemUtf8 := GetWorkItemJsonAryFromDocDictBySelectedRow();
-
     //FRptDocDict에 WorkItem이 없으면
     //Grid의 ReportMakeDate를 KeyId로 사용하여 TOrmHiconReportDetail DB 에서 가져옴
     if LWorkItemUtf8 = '' then
       LWorkItemUtf8 := GetWorkItemJsonFromOrmBySelectedRow();
   end;
 
+  LFromDocDict := FRptDocDict.Len > 0;
+
   //"저장" 버튼을 누르면 True
-  if DisplayHiRptEditForm(LRptUtf8, LWorkItemUtf8) = mrOK then
+  if DisplayHiRptEditForm(LRptUtf8, LWorkItemUtf8, LFromDocDict) = mrOK then
+  begin
     LoadReportFromJson2Grid(LRptUtf8, ARow);
+
+    if LFromDocDict then
+    begin
+      LKeyId := HiRptListGrid.CellsByName['ReportKey', HiRptListGrid.SelectedRow];
+      ReplaceWorkItemList2RptDocDict(LKeyId, LWorkItemUtf8);
+    end;
+  end;
 end;
 
 procedure THiConReportListF.HiRptListGridCellDblClick(Sender: TObject; ACol,
@@ -959,6 +1042,20 @@ begin
 end;
 
 procedure THiConReportListF.LoadFromReportFile1Click(Sender: TObject);
+begin
+  LoadReportList2GridFromFile();
+end;
+
+procedure THiConReportListF.LoadReportFromJson2Grid(AJson: RawUtf8;
+  ARow: integer);
+var
+  LVar: variant;
+begin
+  LVar := _JSON(AJson);
+  LoadReportVar2Grid(LVar, ARow);
+end;
+
+procedure THiConReportListF.LoadReportList2GridFromFile;
 var
   LRaw: RawByteString;
 begin
@@ -972,17 +1069,11 @@ begin
   end;
 end;
 
-procedure THiConReportListF.LoadReportFromJson2Grid(AJson: RawUtf8;
-  ARow: integer);
-var
-  LVar: variant;
-begin
-  LVar := _JSON(AJson);
-  LoadReportVar2Grid(LVar, ARow);
-end;
-
 procedure THiConReportListF.LoadReportListFromDocDict2Grid;
 begin
+  if HiRptListGrid.RowCount > 0 then
+    HiRptListGrid.ClearRows;
+
   LoadReportListFromJsonAry2Grid(FRptDocDict.S[KN_REPORT]);
 end;
 
@@ -1042,7 +1133,8 @@ begin
     AVar := GetNxGridRow2Variant(HiRptListGrid, ARow);
 end;
 
-procedure THiConReportListF.MakeReportBySelected(const ACommissionRptKind: integer);
+procedure THiConReportListF.MakeReportBySelected(const ACommissionRptKind: integer;
+  AWorkCode: string);
 var
   LRptKey,
   LJson: string;
@@ -1061,8 +1153,9 @@ begin
 
   case THiCommissionRptKind(ACommissionRptKind) of
     hcrkTotal: MakeCommissionReportTotal(LHiconReportRec);
-    hcrkSummary: MakeCommissionReportSummary(LHiconReportRec);
-    hcrkCode: MakeCommissionReportWorkCode(LHiconReportRec);
+    hcrkSummary: MakeCommissionReportSummary(LHiconReportRec, COMMISSION_REPORT_TOTAL_FILENAME, '요약');
+    hcrkCode: MakeCommissionReportWorkCode(LHiconReportRec, COMMISSION_REPORT_TOTAL_FILENAME, 'CODE');
+    hcrkSummaryByCode: MakeCommissionReportSummaryOfWorkCode(LHiconReportRec, AWorkCode, COMMISSION_REPORT_TOTAL_FILENAME, 'CODE');
   end;
 end;
 
@@ -1106,7 +1199,7 @@ begin
   NextGridToExcel(HiRptListGrid);
 end;
 
-procedure THiConReportListF.N13Click(Sender: TObject);
+procedure THiConReportListF.N15Click(Sender: TObject);
 begin
   MakeReportBySelected(Ord(hcrkCode));
 end;
@@ -1119,6 +1212,35 @@ end;
 procedure THiConReportListF.N8Click(Sender: TObject);
 begin
   MakeReportBySelected(Ord(hcrkTotal));
+end;
+
+procedure THiConReportListF.ReplaceWorkItemList2RptDocDict(const AKeyId: string;
+  const AJsonAry: RawUtf8);
+var
+  LJsonAry: string;
+  LList, LList2, LList3: IDocList;
+  LDict: IDocDict;
+  LVar: variant;
+  i: integer;
+begin
+  LJsonAry := FRptDocDict.S[KN_WORKITEM];//array of array 임: [[],[]...]
+  LList := DocList(LJsonAry);
+
+  for i := 0 to LList.Len - 1 do
+  begin
+    LList2 := LList.L[i];
+
+    for LDict in LList2 do
+    begin
+      if LDict.S['ReportKey4Item'] = AKeyId then
+      begin
+        LList.Del(i);
+        LList.Append(_JSON(AJsonAry));
+        FRptDocDict.S[KN_WORKITEM] := LList.Json;
+        exit;
+      end;
+    end;
+  end;
 end;
 
 procedure THiConReportListF.SaveastoDFM1Click(Sender: TObject);

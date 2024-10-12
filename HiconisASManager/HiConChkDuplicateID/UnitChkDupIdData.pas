@@ -9,7 +9,8 @@ type
     RES_NAME,
     PMPM_PIP,
     PMPM_SIP,
-    Port
+    Port,
+    DESCRIPTION
     : string;
   end;
 

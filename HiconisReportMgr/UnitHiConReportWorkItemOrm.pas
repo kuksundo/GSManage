@@ -17,9 +17,11 @@ type
     fWorkDetailRemark//업무상세추가
     : RawUTF8;
 
-    fWorkCode, //WorkCode(g_HiRptWorkCode)
-    fWorkHours //업무시간
+    fWorkCode //WorkCode(g_HiRptWorkCode)
     : integer;
+
+    fWorkHours //업무시간
+    : Double;
 
     FIsUpdate: Boolean;
 
@@ -37,7 +39,7 @@ type
     property WorkDetailRemark: RawUTF8 read fWorkDetailRemark write fWorkDetailRemark;
 
     property WorkCode : integer read fWorkCode write fWorkCode;
-    property WorkHours: integer read fWorkHours write fWorkHours;
+    property WorkHours: Double read fWorkHours write fWorkHours;
 
     property WorkItemBeginTime: TTimeLog read fWorkItemBeginTime write fWorkItemBeginTime;
     property WorkItemEndTime: TTimeLog read fWorkItemEndTime write fWorkItemEndTime;
@@ -48,13 +50,17 @@ type
   procedure InitHiconReportDetailClient(AExeName: string; ADBFileName: string='');
   procedure DestroyHiconReportDetailClient();
 
-  function GetHiconReportDetailByReportKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
+  function GetHiconReportDetailByReportKey(const AKeyID: string): TOrmHiconReportDetail; overload;
+  function GetHiconReportDetailByReportKey(const AKeyID: TTimeLog): TOrmHiconReportDetail; overload;
   function GetHiconReportDetailByItemKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
+  function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: TTimeLog): TOrmHiconReportDetail; overload;
+  function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: string): TOrmHiconReportDetail; overload;
   function GetHiRptDetailJsonAryByReportKey(const AKeyID: TTimeLog): variant;
 
   procedure AddHiconReportDetailFromVariant(AVar: variant; AOnlyAdd: Boolean);
   procedure AddHiconReportDetailFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean=False);
   procedure AddOrUpdateHiconReportDetail(AOrm: TOrmHiconReportDetail; AOnlyAdd: Boolean=false);
+  function AddOrUpdateHiconReportDetailFromJsonAryByKeyId(const AJsonAry: string; const ADoUpdate: Boolean): Integer;
 
   procedure DeleteHiconReportDetailByRptKey(const AKeyID: TTimeLog);
   procedure DeleteHiconReportDetailByItemKey(const AKeyID: TTimeLog);
@@ -116,6 +122,14 @@ procedure DestroyHiconReportDetailClient();
     FreeAndNil(HiconReportDetailModel);
 end;
 
+function GetHiconReportDetailByReportKey(const AKeyID: string): TOrmHiconReportDetail;
+var
+  LKeyId: TTimeLog;
+begin
+  LKeyId := StrToInt64(AKeyID);
+  Result := GetHiconReportDetailByReportKey(LKeyId);
+end;
+
 function GetHiconReportDetailByReportKey(const AKeyID: TTimeLog): TOrmHiconReportDetail;
 begin
   Result := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'ReportKey4Item = ?', [AKeyID]);
@@ -134,6 +148,27 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: TTimeLog): TOrmHiconReportDetail;
+begin
+  Result := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm,
+    'ReportKey4Item = ? AND WorkItemKey = ?', [AReportKey, AItemKey]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: string): TOrmHiconReportDetail; overload;
+var
+  LRptKey, LItemKey: TTimeLog;
+begin
+  LRptKey := StrToInt64(AReportKey);
+  LItemKey := StrToInt64(AItemKey);
+
+  Result := GetHiconReportDetailByReportNItemKey(LRptKey, LItemKey);
 end;
 
 function GetHiRptDetailJsonAryByReportKey(const AKeyID: TTimeLog): variant;
@@ -201,6 +236,49 @@ begin
   begin
     g_HiconReportDetailDB.Add(AOrm, true);
   end;
+end;
+
+function AddOrUpdateHiconReportDetailFromJsonAryByKeyId(const AJsonAry: string;
+  const ADoUpdate: Boolean): Integer;
+var
+  LOrm: TOrmHiconReportDetail;
+  LRptKey, LItemKey: int64;
+  LDict: IDocDict;
+  LDocList: IDocList;
+  LAryUtf8: RawUtf8;
+  LVar: variant;
+begin
+  Result := 0;
+
+  TDocVariant.New(LVar);
+
+  LAryUtf8 := AJsonAry;
+  LDocList := DocList(LAryUtf8);
+
+  for LVar in LDocList do
+  begin
+    LRptKey := LVar.ReportKey4Item;
+    LItemKey := LVar.WorkItemKey;
+
+    LOrm := GetHiconReportDetailByReportNItemKey(LRptKey, LItemKey);
+    try
+      if LOrm.IsUpdate then
+      begin
+        if ADoUpdate then
+        begin
+          AddHiconReportDetailFromVariant(LVar, False);
+          Inc(Result);
+        end;
+      end
+      else
+      begin
+        AddHiconReportDetailFromVariant(LVar, True);
+        Inc(Result);
+      end;
+    finally
+      LOrm.Free;
+    end;
+  end;//for
 end;
 
 procedure DeleteHiconReportDetailByRptKey(const AKeyID: TTimeLog);

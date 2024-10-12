@@ -19,7 +19,7 @@ object HiASConfigF: THiASConfigF
     Top = 0
     Width = 448
     Height = 408
-    ActivePage = TabSheet3
+    ActivePage = EmailTS
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -524,6 +524,15 @@ object HiASConfigF: THiASConfigF
         ParentShowHint = False
         ShowHint = False
       end
+      object Label33: TLabel
+        Left = 36
+        Top = 112
+        Width = 97
+        Height = 16
+        Caption = #51088#51116#51077#44256' '#50836#52397' Mail'
+        ParentShowHint = False
+        ShowHint = False
+      end
       object OLFolderListFilenameEdit: TJvFilenameEdit
         Tag = 21
         Left = 36
@@ -547,6 +556,7 @@ object HiASConfigF: THiASConfigF
         Text = ''
       end
       object JvFilenameEdit2: TJvFilenameEdit
+        Tag = 23
         Left = 36
         Top = 134
         Width = 381

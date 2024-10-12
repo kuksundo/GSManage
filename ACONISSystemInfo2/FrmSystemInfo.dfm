@@ -29,6 +29,7 @@ object AconisSysInfoF: TAconisSysInfoF
     Height = 41
     Caption = 'Save To ini'
     TabOrder = 1
+    OnClick = Button2Click
   end
   inline IniTreeListFr1: TIniTreeListFr
     Left = 0
@@ -38,9 +39,16 @@ object AconisSysInfoF: TAconisSysInfoF
     Align = alLeft
     TabOrder = 2
     ExplicitHeight = 570
+    inherited Panel2: TPanel
+      inherited Panel3: TPanel
+        ExplicitTop = -5
+      end
+    end
     inherited TreeList1: TTreeList
       Height = 509
-      ExplicitHeight = 509
+      ExplicitLeft = -1
+      ExplicitTop = 77
+      ExplicitHeight = 493
     end
   end
   object Button3: TButton

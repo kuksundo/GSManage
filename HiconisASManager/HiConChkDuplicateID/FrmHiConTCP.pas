@@ -91,6 +91,14 @@ type
     AutoLogonEnabled1: TMenuItem;
     GetTagFromSVG1: TMenuItem;
     gzTest1: TMenuItem;
+    DESCRIPTION: TNxTextColumn;
+    MariaDB1: TMenuItem;
+    InfluxDB2: TMenuItem;
+    AccessDB1: TMenuItem;
+    VerifyLogParam2: TMenuItem;
+    ModifyLogParam2: TMenuItem;
+    GetJsonFile1: TMenuItem;
+    GetTagInfoFromSystemBak1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -120,6 +128,10 @@ type
     procedure AutoLogonEnabled1Click(Sender: TObject);
     procedure GetTagFromSVG1Click(Sender: TObject);
     procedure gzTest1Click(Sender: TObject);
+    procedure VerifyLogParam2Click(Sender: TObject);
+    procedure ModifyLogParam2Click(Sender: TObject);
+    procedure GetJsonFile1Click(Sender: TObject);
+    procedure GetTagInfoFromSystemBak1Click(Sender: TObject);
   private
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
@@ -141,6 +153,8 @@ type
     FIpList,
     FMPMBackupResultList: TStringList;
     FHiConMariaDB: THiConMariaDB;
+    FMyIpAddr: string; //This Computer Ip Address
+    FIpAddrList4ThisComputer: TStringList;
 
     procedure SetNextGridColumn4DupTagId();
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
@@ -171,11 +185,39 @@ type
     function CheckAcoAutoRunIsCorrect: string;
     function CheckIfExistInfluxdbConf: Boolean;
     function CheckInfluxdbConfIsCorrect: string;
+    //현재 컴퓨터가 History Station = "E:\" OWS = "D:\" 반환
+    function GetLogDrive(var AIsHistoryStation: Boolean): string;
 
+    function GetExtractJsonFromCatOutput(ACatOutput: string): string;
+    //이 함수는 MPMxx.tgz파일을 검색 후 데이터 없으면 COMxx.tgz 파일을 검색함
+    //AInfTagName: INF_로 시작하는 Tag Name
+    //Result: {"Resource":"COM011110.tgz"/"MPM11.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
+    //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
+    //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
+    function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string): string;
+    //이 함수는 COMxx.tgz 파일만 검색함
+    //AInfTagName: INF_로 시작하는 Tag Name
+    //Result: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
+    //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
+    function GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName: string): string;
+    //AInfTagName: INF_로 시작하는 Tag Name
+    //Result: Tag 값을 통신하는 ptcxx.json 파일 전체 내용 반환
+    function GetPtcJsonContentsFromTgzByInfTag(AInfTagName: string): string;
+    //AInfTagName: INF_로 시작하는 Tag Name
+    //Result: Tag 값을 통신하는 interface.json->Portx 값을 반환
+    function GetPortJsonContentsFromTgzByInfTag(AInfTagName: string): string;
+    //AInfTagName: INF_로 시작하는 Tag Name
+    //Result: Tag 값을 통신하는 ptcxx.json->Query 내용 중에 InBlk 값이 일치하는 Query Json만 반환
+    function GetQueryJsonFromTgzByInfTag(AInfTagName: string): string;
   public
     procedure InitVar;
     procedure DestroyVar;
     procedure InitEnum;
+
+    procedure GetIpList4ThisComputer();
+    function GetHiconisIp4ThisComputer(): string;
+    function GetHiconisPrimaryIP4ThisComputer(): string;
+    function GetHiconisSecondaryIP4ThisComputer(): string;
 
     function GetIdFromMPM(ARec: TIpListRec): integer;
     procedure GetIdFromMPM_Async(ARec: TIpListRec);
@@ -199,6 +241,7 @@ type
     procedure SetVisibleAllGridRow(AIsShow: Boolean);
 
     function GetPortPrintDebug(AIpAddr, AMode: string): string;
+    function GetJsonFromMPMByFileName(AIpAddrList, AJsonFileName: string): string;
     procedure Log(const AMsg: string);
     procedure ShowTD(const ATDRec: TMsgBox);
   end;
@@ -211,7 +254,9 @@ implementation
 uses System.TimeSpan, System.Diagnostics, PJEnvVars,
   UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
-  UnitSystemUtil, UnitXMLUtil,
+  UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
+  UnitHiconMPMData,
+  UnitJsonUtil, sevenzip,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit
   ;
 
@@ -467,6 +512,7 @@ end;
 
 procedure THiconisTCPF.DestroyVar;
 begin
+  FIpAddrList4ThisComputer.Free;
   FHiConMariaDB.DestroyDB();
   FHiConMariaDB.Free;
   FTCPResponse.Free;
@@ -695,10 +741,75 @@ begin
   InitVar;
 end;
 
+function THiconisTCPF.GetCOMTgzNPortNameFromTgzByInfTag(
+  AInfTagName: string): string;
+var
+  LStr, LBaseDir: string;
+begin
+  //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
+  SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
+  LBaseDir := DOWNLOAD_FULL_PATH;
+
+  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
+  Result := GetCOMTgzNPortNameByMPMNameWithSlotNo(LStr, LBaseDir);
+end;
+
+function THiconisTCPF.GetExtractJsonFromCatOutput(ACatOutput: string): string;
+var
+  LStr: string;
+begin
+  LStr := StrToken(ACatOutput, '{');
+  LStr := StrToken(ACatOutput, '@');
+  LStr := StringReplace(LStr, '[root', '', [rfReplaceAll]);
+  LStr := StringReplace(LStr, #13, '', [rfReplaceAll]);
+  LStr := StringReplace(LStr, #10, '', [rfReplaceAll]);
+  Result := '{' + LStr;
+end;
+
 function THiconisTCPF.GetFileNameFromIpAddr(AIpAddr: string): string;
 begin
   EnsureDirectoryExists('c:\temp\');
   Result := 'c:\temp\' + replaceString(AIpAddr, '.', '_') + '.pjh';
+end;
+
+function THiconisTCPF.GetHiconisIp4ThisComputer: string;
+begin
+  Result := GetHiconisPrimaryIP4ThisComputer();
+
+  if Result = '' then
+    Result := GetHiconisSecondaryIP4ThisComputer();
+end;
+
+function THiconisTCPF.GetHiconisPrimaryIP4ThisComputer: string;
+var
+  LStr: string;
+begin
+  Result := '';
+
+  for LStr in FIpAddrList4ThisComputer do
+  begin
+    if Pos('10.', LStr) > 0 then
+    begin
+      Result := LStr;
+      exit;
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetHiconisSecondaryIP4ThisComputer: string;
+var
+  LStr: string;
+begin
+  Result := '';
+
+    for LStr in FIpAddrList4ThisComputer do
+    begin
+      if Pos('11.', LStr) > 0 then
+      begin
+        Result := LStr;
+        exit;
+      end;
+    end;
 end;
 
 function THiconisTCPF.GetIdFromMPM(ARec: TIpListRec): integer;
@@ -829,6 +940,11 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.GetIpList4ThisComputer;
+begin
+  FIpAddrList4ThisComputer := GetLocalIPList();
+end;
+
 function THiconisTCPF.GetIpListRecByIp(AIpAddr: string): TIpListRec;
 begin
   if not FIpAddrDic.TryGetValue(AIpAddr, Result) then
@@ -839,6 +955,104 @@ function THiconisTCPF.GetIpListRecByResName(AResName: string): TIpListRec;
 begin
   if not FIpAddrDic.TryGetValue(AResName, Result) then
     Result := Default(TIpListRec);
+end;
+
+procedure THiconisTCPF.GetJsonFile1Click(Sender: TObject);
+var
+  LIpAddrList, LStr: string;
+begin
+  //';'로 구분됨
+  LIpAddrList := GetSelectedIpAddrList();
+
+  LStr := GetJsonFromMPMByFileName(LIpAddrList, 'interface.json');
+  FileFromString(LStr, 'c:\temp\interface.json');
+  LStr := GetJsonFromMPMByFileName(LIpAddrList, 'channel.json');
+  FileFromString(LStr, 'c:\temp\channel.json');
+end;
+
+function THiconisTCPF.GetJsonFromMPMByFileName(AIpAddrList,
+  AJsonFileName: string): string;
+var
+  LIOHandler: TIdIOHandler;
+  LIpAddr, LOutput: string;
+  LBytesRead: integer;
+  LBuffer: TIdBytes;
+begin
+  Result := '';
+  FTCPResponse.Clear;
+
+//  if IdTCPClient1.Connected then
+//    IdTCPClient1.Disconnect;
+
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
+
+    IdTCPClient1.Host := LIpAddr;
+    IdTCPClient1.Port := 23;
+
+    if not IdTCPClient1.Connected then
+      IdTCPClient1.Connect;
+
+    LIOHandler := IdTCPClient1.IOHandler;
+
+    LIOHandler.WaitFor('login:');
+    LIOHandler.WriteLn('root');
+    LIOHandler.WaitFor('$');
+    LIOHandler.WriteLn('cat /home/db/' + AJsonFileName);
+
+//    if LIOHandler.InputBufferIsEmpty then
+//      LIOHandler.CheckForDataOnSource(1000);
+
+    while LIOHandler.CheckForDataOnSource(1000) do
+    begin
+      LBytesRead := LIOHandler.InputBuffer.Size;
+
+      if LBytesRead > 0 then
+      begin
+        SetLength(LBuffer, LBytesRead);
+
+        LIOHandler.ReadBytes(LBuffer, LBytesRead, False);
+        LOutput := TEncoding.ASCII.GetString(TArray<Byte>(LBuffer));
+        FTCPResponse.Add(LOutput);
+      end;
+    end;
+
+//    ConsoleMemo.Lines.Assign(FTCPResponse);
+    Result := GetExtractJsonFromCatOutput(FTCPResponse.Text);
+    ConsoleMemo.Lines.Add(Result);
+  end;
+
+  IdTCPClient1.Disconnect;
+end;
+
+function THiconisTCPF.GetLogDrive(var AIsHistoryStation: Boolean): string;
+var
+  LJson: RawUtf8;
+  LDocDict: IDocDict;
+begin
+  Result := '';
+  AIsHistoryStation := False;
+
+  LJson := THiConSystemDB.GetHistoryStationInfo2JsonFromDB();
+
+  if LJson <> '' then
+  begin
+    LDocDict := DocDict(LJson);
+
+    //본 프로그램이 실행되는 컴퓨터가 History Station임
+    if LDocDict.S['PMPM_PIP'] = FMyIpAddr then
+    begin
+      AIsHistoryStation := True;
+      Result := 'E:';
+
+      //E Drive가 없을 경우
+      if not DirectoryExists(Result + '\') then
+        Result := 'D:';
+    end
+    else
+      Result := 'D:';
+  end;
 end;
 
 function THiconisTCPF.GetMPMNameFromIpAddrDic(AIpAddr: string): string;
@@ -876,6 +1090,15 @@ begin
   LVar := LDocList.Json;
   AddNextGridRowsFromVariant2(NextGrid1, LVar, True);
 //  AddNextGridRowFromVariant(NextGrid1, LVar, True);
+end;
+
+function THiconisTCPF.GetPortJsonContentsFromTgzByInfTag(
+  AInfTagName: string): string;
+var
+  LStr, LBaseDir: string;
+begin
+  LStr := GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
+  Result := GetPortValueJsonFromCOMNPortJson(LStr);
 end;
 
 procedure THiconisTCPF.GetPortPrint1Click(Sender: TObject);
@@ -931,6 +1154,37 @@ begin
 //  ConsoleMemo.Lines.Text := LStrList.Text;
 //  LStrList.Free;
 //  ConsoleMemo.Lines.Text := TRegEx.Match(LStr, '(?si)<pre>.*?</pre>').Value;
+end;
+
+function THiconisTCPF.GetPtcJsonContentsFromTgzByInfTag(
+  AInfTagName: string): string;
+var
+  LStr, LBaseDir: string;
+begin
+  LStr := GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName);//GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
+
+  if LStr <> '' then
+    Result := GetPtcJsonContentsFromCOMNPortJson(LStr);
+end;
+
+function THiconisTCPF.GetQueryJsonFromTgzByInfTag(AInfTagName: string): string;
+var
+  LStr, LTagInfoJson, LPtcJson, LPortIntfJson: string;
+  LBaseDir: string;
+begin
+  //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
+  SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
+  LBaseDir := DOWNLOAD_FULL_PATH;
+
+  LTagInfoJson := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
+
+  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LTagInfoJson, LBaseDir);
+
+  //LStr: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
+//  LStr := GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
+  LPortIntfJson := GetPortValueJsonFromCOMNPortJson(LStr);
+  LPtcJson := GetPtcJsonContentsFromCOMNPortJson(LStr);
+  GetQueryJsonFromPortNPtcJson(LTagInfoJson, LPortIntfJson, LPtcJson);
 end;
 
 procedure THiconisTCPF.GetRetentionPoliciesBySelectedIpList(
@@ -997,6 +1251,47 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.GetTagInfoFromSystemBak1Click(Sender: TObject);
+var
+  LStr, LBaseDir, LMPMName, LSlotNo: string;
+begin
+  //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
+//  SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
+//  LBaseDir := 'E:\pjh\Doc\HiCONIS\project\HMD8310\ACONIS-NX\DB\DOWNLOAD\';
+//
+//  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable('INF_VT_AC_3358');
+//  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LStr, LBaseDir);
+//  //MPM11 가져옴
+//  LMPMName := GetValueFromJsonDictByKeyName(LStr, 'RESOURCE');
+//  LSlotNo := GetValueFromJsonDictByKeyName(LStr, 'SLOT');
+//  LStr := LBaseDir + LStr + '.tgz';
+  //MPM11.tgz 파일에서 "interface.json" 파일을 c:\temp\home\db에 Extract
+//  LStr := ExtractFromTgz2DirByPackedName(LStr, '', 'home\db\interface.json');
+//  LStr := GetPtcFileNameListFromMPMIntfJson(LStr);
+//  LStr := GetPortListFromMPMIntfJson(LStr);
+
+//  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LMPMName, LSlotNo, LBaseDir);
+//  LStr := GetPtcJsonContentsFromCOMNPortJson(LStr);
+
+//  LStr := GetPtcJsonContentsFromTgzByInfTag('INF_VT_AC_3358');
+  LStr := GetQueryJsonFromTgzByInfTag('INF_VT_AC_3358');
+
+  ShowMessage(LStr);
+end;
+
+function THiconisTCPF.GetTgzNPtcJsonNameFromTgzByInfTag(
+  AInfTagName: string): string;
+var
+  LStr, LBaseDir: string;
+begin
+  //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
+  SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
+  LBaseDir := DOWNLOAD_FULL_PATH;
+
+  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
+  Result := GetMPMTgzNPtcJsonNameByMPMNameWithSlotNo(LStr, LBaseDir);
+end;
+
 function THiconisTCPF.GetUrlFromIpRec(AIpAddr: string): string;
 begin
   Result := 'http://' + AIpAddr + '/channelstr';
@@ -1049,6 +1344,11 @@ begin
 
   FTCPResponse := TStringList.Create;
   FHiConMariaDB := THiConMariaDB.Create;
+
+  GetIpList4ThisComputer();
+
+  FMyIpAddr := GetHiconisIp4ThisComputer();
+  Caption := Caption + '(' + FMyIpAddr + ')';
 
   InitEnum();
 end;
@@ -1124,6 +1424,28 @@ procedure THiconisTCPF.MariaDBConnect1Click(Sender: TObject);
 begin
   FHiConMariaDB.CreateDB('10.8.2.11', '3306', 'test', 'root', 'aconis');
   FHiConMariaDB.ConnectDB
+end;
+
+procedure THiconisTCPF.ModifyLogParam2Click(Sender: TObject);
+var
+  LResult, LLogDriveOld, LogDriveNew: string;
+  LThisComIsHistoryStation: Boolean;
+begin
+  LogDriveNew := GetLogDrive(LThisComIsHistoryStation);
+
+  if LThisComIsHistoryStation then
+  begin
+    LLogDriveOld := 'C:;D:';
+    LogDriveNew := 'E:';
+  end
+  else
+  begin
+    LLogDriveOld := 'C:;E:';
+    LogDriveNew := 'D:';
+  end;
+
+  LResult := ModifyLogParamFromConf(LLogDriveOld, LogDriveNew);//DEFAULT_INFLUXDB_CONF_NAME
+  ShowMessage(LResult);
 end;
 
 procedure THiconisTCPF.MPMBackup1Click(Sender: TObject);
@@ -1409,6 +1731,17 @@ var
 begin
   LIpAddr := GetSelectedIpAddrList();
   SetIdList2Grid(LIpAddr);
+end;
+
+procedure THiconisTCPF.VerifyLogParam2Click(Sender: TObject);
+var
+  LResult, LLogDrive: string;
+  LThisComIsHistoryStation: Boolean;
+begin
+  LLogDrive := GetLogDrive(LThisComIsHistoryStation);
+
+  LResult := VerifyLogParamFromConf(LLogDrive); //DEFAULT_INFLUXDB_CONF_NAME
+  ShowMessage(LResult);
 end;
 
 end.

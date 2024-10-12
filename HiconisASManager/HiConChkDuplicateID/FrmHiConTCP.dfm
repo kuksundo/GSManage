@@ -2,7 +2,7 @@ object HiconisTCPF: THiconisTCPF
   Left = 0
   Top = 0
   Caption = 'HiconisTCPF'
-  ClientHeight = 500
+  ClientHeight = 540
   ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object HiconisTCPF: THiconisTCPF
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 338
+    Top = 378
     Width = 772
     Height = 6
     Cursor = crVSplit
@@ -30,8 +30,9 @@ object HiconisTCPF: THiconisTCPF
     Left = 185
     Top = 41
     Width = 6
-    Height = 297
+    Height = 337
     ExplicitLeft = 216
+    ExplicitHeight = 297
   end
   object Panel1: TPanel
     Left = 0
@@ -153,7 +154,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object Panel2: TPanel
     Left = 0
-    Top = 461
+    Top = 501
     Width = 772
     Height = 39
     Align = alBottom
@@ -171,7 +172,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object ConsoleMemo: TMemo
     Left = 0
-    Top = 344
+    Top = 384
     Width = 772
     Height = 117
     Align = alBottom
@@ -182,7 +183,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 0
     Top = 41
     Width = 185
-    Height = 297
+    Height = 337
     Align = alLeft
     Caption = 'Panel3'
     TabOrder = 3
@@ -272,7 +273,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 42
       Width = 183
-      Height = 254
+      Height = 294
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -357,13 +358,30 @@ object HiconisTCPF: THiconisTCPF
         Position = 3
         SortType = stAlphabetic
       end
+      object DESCRIPTION: TNxTextColumn
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Header.Caption = 'DESCRIPTION'
+        Header.Alignment = taCenter
+        Header.Font.Charset = DEFAULT_CHARSET
+        Header.Font.Color = clWindowText
+        Header.Font.Height = -11
+        Header.Font.Name = 'Tahoma'
+        Header.Font.Style = []
+        ParentFont = False
+        Position = 4
+        SortType = stAlphabetic
+      end
     end
   end
   object Panel5: TPanel
     Left = 191
     Top = 41
     Width = 581
-    Height = 297
+    Height = 337
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
@@ -770,7 +788,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 28
       Width = 579
-      Height = 268
+      Height = 308
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -813,13 +831,30 @@ object HiconisTCPF: THiconisTCPF
       end
       object Database1: TMenuItem
         Caption = 'Database'
-        object MariaDBConnect1: TMenuItem
-          Caption = 'MariaDB Connect'
-          OnClick = MariaDBConnect1Click
+        object MariaDB1: TMenuItem
+          Caption = 'Maria DB'
+          object MariaDBConnect1: TMenuItem
+            Caption = 'MariaDB Connect'
+            OnClick = MariaDBConnect1Click
+          end
+          object ExecuteSQL1: TMenuItem
+            Caption = 'Execute SQL'
+            OnClick = ExecuteSQL1Click
+          end
         end
-        object ExecuteSQL1: TMenuItem
-          Caption = 'Execute SQL'
-          OnClick = ExecuteSQL1Click
+        object InfluxDB2: TMenuItem
+          Caption = 'Influx DB'
+          object VerifyLogParam2: TMenuItem
+            Caption = 'Verify Conf Log Param'
+            OnClick = VerifyLogParam2Click
+          end
+          object ModifyLogParam2: TMenuItem
+            Caption = 'Modify Conf Log Param'
+            OnClick = ModifyLogParam2Click
+          end
+        end
+        object AccessDB1: TMenuItem
+          Caption = 'Access DB'
         end
       end
       object Windows1: TMenuItem
@@ -848,6 +883,10 @@ object HiconisTCPF: THiconisTCPF
         object GetTagFromSVG1: TMenuItem
           Caption = 'Get Tag From SVG'
           OnClick = GetTagFromSVG1Click
+        end
+        object GetTagInfoFromSystemBak1: TMenuItem
+          Caption = 'Get Tag Info From System_Bak'
+          OnClick = GetTagInfoFromSystemBak1Click
         end
       end
     end
@@ -928,6 +967,10 @@ object HiconisTCPF: THiconisTCPF
       object gzTest1: TMenuItem
         Caption = 'Tgz Test'
         OnClick = gzTest1Click
+      end
+      object GetJsonFile1: TMenuItem
+        Caption = 'Get Json File'
+        OnClick = GetJsonFile1Click
       end
     end
     object N4: TMenuItem

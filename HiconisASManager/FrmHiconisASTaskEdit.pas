@@ -2737,10 +2737,6 @@ var
 begin
   with AForm do
   begin
-//    for i := 0 to SubConGrid.RowCount - 1 do
-//    begin
-//
-//    end;
     AVar.HullNo := HullNoEdit.Text;
     AVar.ShipName := ShipNameEdit.Text;
 //    AVar.ReqCustomer := CustomerNameEdit.Text;

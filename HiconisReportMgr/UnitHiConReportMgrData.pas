@@ -45,7 +45,7 @@ type
     hrkFinal);
 
   THiCommissionRptKind = (hcrkNull,
-    hcrkTotal, hcrkSummary, hcrkCode,
+    hcrkTotal, hcrkSummary, hcrkCode, hcrkSummaryByCode,
     hcrkFinal);
 
   THiRptModifiedItem = (

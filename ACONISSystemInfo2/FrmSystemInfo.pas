@@ -26,6 +26,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     FSysInfoIniJson: RawUtf8;
     function GetSysInfoIniJsonFromXls(AXlsFileName: string): RawUtf8;
@@ -47,6 +48,14 @@ begin
   if OpenDialog1.Execute then
   begin
     LoadTreeListFromIni(IniTreeListFr1.TreeList1, OpenDialog1.FileName);
+  end;
+end;
+
+procedure TAconisSysInfoF.Button2Click(Sender: TObject);
+begin
+  if SaveDialog1.Execute then
+  begin
+    SaveTreeListToIni(IniTreeListFr1.TreeList1, SaveDialog1.FileName);
   end;
 end;
 

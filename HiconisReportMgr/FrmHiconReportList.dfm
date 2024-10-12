@@ -834,7 +834,6 @@ object HiConReportListF: THiConReportListF
           Caption = 'Clear'
           TabOrder = 1
           OnClick = Btn_ClearClick
-          ExplicitTop = 2
         end
         object btn_Save2DB: TAeroButton
           AlignWithMargins = True
@@ -1692,6 +1691,25 @@ object HiConReportListF: THiConReportListF
       Position = 19
       SortType = stAlphabetic
     end
+    object ShipType: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #49440#51333
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 20
+      SortType = stAlphabetic
+    end
   end
   object StatusBarPro1: TStatusBarPro
     Left = 0
@@ -1724,7 +1742,7 @@ object HiConReportListF: THiConReportListF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000A00418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000C00418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2034,7 +2052,7 @@ object HiConReportListF: THiConReportListF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402B00410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402D00410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2196,7 +2214,60 @@ object HiConReportListF: THiConReportListF
       end
       object N13: TMenuItem
         Caption = #53076#46300' '#48372#44256#49436
-        OnClick = N13Click
+        object N15: TMenuItem
+          Caption = #53076#46300#48324' '#49884#44036#50836#50557
+          OnClick = N15Click
+        end
+        object N16: TMenuItem
+          Caption = #53076#46300#48324' '#50836#50557
+          object A1: TMenuItem
+            Caption = 'All'
+            Hint = 'All'
+            OnClick = A1Click
+          end
+          object N17: TMenuItem
+            Caption = '-'
+          end
+          object A2: TMenuItem
+            Caption = 'A'
+            OnClick = A2Click
+          end
+          object B11: TMenuItem
+            Caption = 'B-1'
+            Hint = 'B-1'
+            OnClick = B11Click
+          end
+          object B21: TMenuItem
+            Caption = 'B-2'
+            Hint = 'B-2'
+            OnClick = B21Click
+          end
+          object B31: TMenuItem
+            Caption = 'B-3'
+            Hint = 'B-3'
+            OnClick = B31Click
+          end
+          object B41: TMenuItem
+            Caption = 'B-4'
+            Hint = 'B-4'
+            OnClick = B41Click
+          end
+          object C11: TMenuItem
+            Caption = 'C-1'
+            Hint = 'C-1'
+            OnClick = C11Click
+          end
+          object C21: TMenuItem
+            Caption = 'C-2'
+            Hint = 'C-2'
+            OnClick = C21Click
+          end
+          object D1: TMenuItem
+            Caption = 'D'
+            Hint = 'D'
+            OnClick = D1Click
+          end
+        end
       end
       object N12: TMenuItem
         Caption = '-'
@@ -2207,7 +2278,7 @@ object HiConReportListF: THiConReportListF
       end
     end
     object ExportSelectedToZip1: TMenuItem
-      Caption = 'Export Selected To Zip'
+      Caption = 'Export Selected To hirpt'
       OnClick = ExportSelectedToZip1Click
     end
     object N22: TMenuItem
@@ -2330,7 +2401,7 @@ object HiConReportListF: THiConReportListF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010700C800080620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010700C800280620002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       000000000000000000000000000000000000000000D7000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

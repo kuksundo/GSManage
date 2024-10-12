@@ -91,7 +91,7 @@
             <Form>SetACONISF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\..\..\project\common\UnitIniFileUtil.pas"/>
+        <DCCReference Include="..\..\..\Common\UnitIniFileUtil.pas"/>
         <DCCReference Include="FrmSystemInfo.pas">
             <Form>AconisSysInfoF</Form>
             <FormType>dfm</FormType>
@@ -104,6 +104,10 @@
         </DCCReference>
         <DCCReference Include="..\..\..\..\..\..\project\common\Forms\FrmInputEdit.pas">
             <Form>InputEditF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FrmInfluxDBConf.pas">
+            <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

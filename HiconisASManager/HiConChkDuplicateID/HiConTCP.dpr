@@ -18,7 +18,7 @@ uses
   UnitNICUtil in '..\..\..\..\Common\UnitNICUtil.pas',
   UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas',
   UnitHiConJsonUtil in 'UnitHiConJsonUtil.pas',
-  UnitGZipUtil in '..\..\..\..\Common\UnitGZipUtil.pas';
+  UnitHiconMPMData in '..\UnitHiconMPMData.pas';
 
 {$R *.res}
 

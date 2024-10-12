@@ -15,7 +15,7 @@ type
     fProjectNo, //공사번호
     fHullNo, //호선번호
     fShipName, //호선명
-    fVesselType, //선종
+    fShipType, //선종
     fShipOwner, //선주
     fClassSociety, //선급
     fReportSubject,
@@ -46,6 +46,7 @@ type
     property HullNo: RawUTF8 read fHullNo write fHullNo;
     property ShipName: RawUTF8 read fShipName write fShipName;
     property ShipOwner: RawUTF8 read fShipOwner write fShipOwner;
+    property ShipType: RawUTF8 read fShipType write fShipType;
     property ClassSociety: RawUTF8 read fClassSociety write fClassSociety;
     property ReportSubject: RawUTF8 read fReportSubject write fReportSubject;
     property ReportAuthorID: RawUTF8 read fReportAuthorID write fReportAuthorID;
@@ -246,12 +247,17 @@ begin
     if LOrm.IsUpdate then
     begin
       if ADoUpdate then
-        AddOrUpdateHiconReportList(LOrm);
+      begin
+        LVar := _JSON(AJson);
+        AddHiconReportListFromVariant(LVar);
+        Result := True;
+      end;
     end
     else
     begin
       LVar := _JSON(AJson);
       AddHiconReportListFromVariant(LVar);
+      Result := True;
     end;
   finally
     LOrm.Free;

@@ -10,7 +10,8 @@ uses
   UnitHiConReportMgrData in 'UnitHiConReportMgrData.pas',
   FrmHiconReportEdit in 'FrmHiconReportEdit.pas' {HiConReportEditF},
   FrmHiReportWorkItemEdit in 'FrmHiReportWorkItemEdit.pas' {RptWorkItemF},
-  UnitHiConReportMakeUtil in 'UnitHiConReportMakeUtil.pas';
+  UnitHiConReportMakeUtil in 'UnitHiConReportMakeUtil.pas',
+  UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas' {JHPFileListFrame: TFrame};
 
 {$R *.res}
 

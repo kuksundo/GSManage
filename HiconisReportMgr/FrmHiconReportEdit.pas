@@ -15,7 +15,7 @@ uses
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
-  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm
+  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2
   ;
 
 type
@@ -32,17 +32,6 @@ type
     NextWorkDesc: TMemo;
     CurrentWorkDesc: TMemo;
     TabSheet3: TTabSheet;
-    JvLabel13: TJvLabel;
-    Panel3: TPanel;
-    Panel2: TPanel;
-    AdvGlowButton6: TAdvGlowButton;
-    AdvGlowButton5: TAdvGlowButton;
-    fileGrid: TNextGrid;
-    NxIncrementColumn3: TNxIncrementColumn;
-    FileName: TNxTextColumn;
-    FileSize: TNxTextColumn;
-    FilePath: TNxTextColumn;
-    DocType: TNxTextColumn;
     SubConTS: TTabSheet;
     Panel1: TPanel;
     AeroButton2: TAeroButton;
@@ -54,12 +43,10 @@ type
     AeroButton1: TAeroButton;
     CurvyPanel2: TCurvyPanel;
     Panel4: TPanel;
-    JvLabel1: TJvLabel;
     JvLabel7: TJvLabel;
     JvLabel6: TJvLabel;
     JvLabel3: TJvLabel;
     JvLabel4: TJvLabel;
-    ReportKind: TComboBox;
     ShipOwner: TEdit;
     HullNo: TAdvEditBtn;
     ShipName: TEdit;
@@ -99,6 +86,11 @@ type
     WorkItemKey: TNxNumberColumn;
     JvLabel2: TJvLabel;
     OwnerComment: TMemo;
+    TJHPFileListFrame1: TJHPFileListFrame;
+    JvLabel1: TJvLabel;
+    ReportKind: TComboBox;
+    JvLabel8: TJvLabel;
+    ShipType: TEdit;
 
     procedure AeroButton2Click(Sender: TObject);
     procedure WorkItemGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
@@ -123,7 +115,8 @@ type
     procedure DeleteWorkItemByReportKey();
   end;
 
-  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8): integer;//; AHiRptEditConfig: string
+  //AFromDocDict : True = DB에 저장하지 않음
+  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8; AFromDocDict: Boolean): integer;//; AHiRptEditConfig: string
 
 var
   HiConReportEditF: THiConReportEditF;
@@ -136,7 +129,8 @@ uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUti
 
 {$R *.dfm}
 
-function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8): integer;//; AHiRptEditConfig: string
+function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8;
+  AFromDocDict: Boolean): integer;//; AHiRptEditConfig: string
 var
   LHiConReportEditF: THiConReportEditF;
   LJson, LJson2: string;
@@ -190,19 +184,21 @@ begin
           end;
 
           LJson := GetCompNameValue2JsonFromFormByClassType(LHiConReportEditF);
-  //        AddModifyItemGrpValue2Json(LJson);
-          LVar := _Json(LJson);
-          AddHiconReportListFromVariant(LVar);
-
           LJson2 := GetWorkItem2JsonFromGrid();
 
-          //기존 ReportKey->WorkItem 모두 지움
-          DeleteWorkItemByReportKey();
-
-          if LJson2 <> '[]' then
+          if not AFromDocDict then
           begin
-            LVar := _Json(LJson2);
-            AddHiconReportDetailFromVarAry(LVar, True);
+            LVar := _Json(LJson);
+            AddHiconReportListFromVariant(LVar);
+
+            //기존 ReportKey->WorkItem 모두 지움
+            DeleteWorkItemByReportKey();
+
+            if LJson2 <> '[]' then
+            begin
+              LVar := _Json(LJson2);
+              AddHiconReportDetailFromVarAry(LVar, True);
+            end;
           end;
 
           AReportJson := StringToUtf8(LJson);
@@ -346,6 +342,7 @@ begin
   begin
     HullNo.Text := LVesselSearchParamRec.fHullNo;
     ShipName.Text := LVesselSearchParamRec.fShipName;
+    ShipType.Text := LVesselSearchParamRec.fShipType;
   end;
 end;
 
@@ -394,8 +391,8 @@ begin
     LVar.ReportKey4Item := StrToInt64Def(ReportKey.Text, 0);
     LVar.WorkItemKey := TimeLogFromDateTime(now);
     LVar.ModifyDate_Item := TimeLogFromDateTime(now);
-    LVar.WorkItemBeginTime := TimeLogFromDateTime(now);
-    LVar.WorkItemEndTime := TimeLogFromDateTime(now);
+    LVar.WorkItemBeginTime := TimeLogFromDateTime(WorkBeginTime.Date + time);
+    LVar.WorkItemEndTime := TimeLogFromDateTime(WorkBeginTime.Date + time);
   end
   else
   begin
