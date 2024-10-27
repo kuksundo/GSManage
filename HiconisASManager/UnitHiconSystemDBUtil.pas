@@ -15,6 +15,8 @@ type
     class function GetHistoryStationInfo2JsonFromDB(ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2JsonFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2RecFromINFTable(ATagName: string; ADBFileName: string=''): TTagInfoRec_INF;
+    class function GetChInfo2JsonFromChannelTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+
     //MPM Name으로 IP 주소 가져옴
     class function GetIPAddr2JsonFromRESTable(AResName: string; ADBFileName: string=''): RawUtf8;
 
@@ -24,6 +26,27 @@ type
 implementation
 
 { THiConSystemDB }
+
+class function THiConSystemDB.GetChInfo2JsonFromChannelTable(ATagName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+begin
+  Result := '';
+
+  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, CARD, POINT, TYPE, FUNC_NAME from INF where TAG_NAME = "' + ATagName + '"';
+  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+
+  LDocList := DocList(Result);
+
+  for LDocDict in LDocList do
+  begin
+    Result := LDocDict.Json;
+    exit;
+  end;
+end;
 
 class function THiConSystemDB.GetHistoryStationInfo2JsonFromDB(
   ADBFileName: string): RawUtf8;

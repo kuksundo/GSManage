@@ -4,17 +4,19 @@ interface
 
 uses Sysutils, Dialogs, Classes, System.Variants,
   mormot.core.variants, mormot.core.unicode, mormot.core.datetime,
+  mormot.core.os, mormot.core.json, mormot.core.base,
   UnitHiConReportMgrData;
 
 const
   COMMISSION_REPORT_TOTAL_FILENAME = 'HiCONiS Commissioning Report.xlsx';
-  COMMISSION_REPORT_SUMMARY_FILENAME = 'HiCONiS Commissioning Report.xlsx';
+  COMMISSION_REPORT_SUMMARY_FILENAME = 'HiCONiS Commissioning Report-Summary.xlsx';
   COMMISSION_REPORT_WORKCODE_FILENAME = 'HiCONiS Commissioning Report.xlsx';
 
-procedure MakeCommissionReportTotal(ARec: THiconReportRec; AFileName: string=''; ASheetName: string='');
-procedure MakeCommissionReportSummary(ARec: THiconReportRec; AFileName: string=''; ASheetName: string='');
-procedure MakeCommissionReportWorkCode(ARec: THiconReportRec; AFileName: string=''; ASheetName: string='');
-procedure MakeCommissionReportSummaryOfWorkCode(ARec: THiconReportRec; AWorkCode: string;  AFileName: string=''; ASheetName: string='');
+procedure MakeCommissionReportByReportKind(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
+procedure MakeCommissionReportTotal(AJsonAry: string; AFileName: string='');//Rec: THiconReportRec;
+procedure MakeCommissionReportSummary(AJsonAry: string; AFileName: string='');
+procedure MakeCommissionReportWorkCode(AJsonAry: string; AFileName: string='');
+procedure MakeCommissionReportSummaryOfWorkCode(AJsonAry: string; AWorkCode: string;  AFileName: string=''; ASheetName: string='');
 
 procedure SetCommissionReportHeaderBySheet(AHeaderJson: variant; ASheet: OleVariant);
 
@@ -31,7 +33,108 @@ implementation
 
 uses UnitExcelUtil, JHP.Util.Bit32Helper;
 
-procedure MakeCommissionReportTotal(ARec: THiconReportRec; AFileName, ASheetName: string);
+procedure MakeCommissionReportByReportKind(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LSrcWorksheet, LDestWorksheet: OleVariant;
+  LFileName, LTempFileName, LSheetName, LFileExt, LOriginSheetName: string;
+  LVar: variant;
+  LHiconReportRec: THiconReportRec;
+  LDocList: IDocList;
+  LDocDict: IDocDict;
+  LJson, LDictStr: RawUtf8;
+  i: integer;
+begin
+  case THiCommissionRptKind(AHiCommissionRptKind) of
+    hcrkTotal:begin
+      LOriginSheetName := 'Total';
+    end;
+    hcrkSummary:begin
+      LOriginSheetName := '요약';
+    end;
+    hcrkCode:begin
+    end;
+    hcrkSummaryByCode:begin
+    end;
+  end;
+
+  LFileName := DOC_DIR + AXlsFileName;
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LFileExt := FormatDateTime('-yyyymmddhhnnss', now) + '.xlsx';
+  LTempFileName := 'c:\temp\' + ChangeFileExt(ExtractFileName(LFileName), LFileExt);
+
+  if not CopyFile(LFileName, LTempFileName, False) then
+  begin
+    ShowMessage('File Copy Fail to ' + LTempFileName);
+    exit;
+  end;
+
+  LExcel := GetActiveExcelOleObject(True);
+  LExcel.DisplayAlerts := False; // Suppress confirmation dialogs
+
+  LWorkBook := LExcel.Workbooks.Open(LTempFileName);
+
+  LDocList := DocList(StringToUtf8(AJsonAry));
+
+//  for LDocDict in LDocList.Objects do
+  for i := 0 to LDocList.Len - 1 do
+  begin
+    LDictStr := LDocList.Item[i];
+    LDocDict := DocDict(LDictStr);
+
+    LJson := LDocDict.S['HiconReportRec'];
+    RecordLoadJson(LHiconReportRec, LJson, TypeInfo(THiconReportRec));
+
+    LSheetName := LDocDict.S['SheetName'];
+
+    if LSheetName = '' then
+      LDestWorksheet := LWorkBook.ActiveSheet
+    else
+    begin
+      if CheckWorksheetExistByName(LWorkBook, LSheetName) then
+      begin
+        LDestWorksheet := LExcel.WorkSheets.Item[LSheetName];
+        LDestWorksheet.Activate;
+      end
+      else
+      begin
+        LDestWorksheet := CopySheet2WorkBookByName(LWorkBook, LOriginSheetName, LSheetName);
+      end;
+    end;
+
+    LVar := _JSON(StringToUtf8(LHiconReportRec.FReportListJson));
+
+    case THiCommissionRptKind(AHiCommissionRptKind) of
+      hcrkTotal:begin
+        SetCommissionReportHeaderBySheet(LVar, LDestWorksheet);
+        SetCommissionReportSummaryBySheet(LVar, LDestWorksheet);
+      end;
+      hcrkSummary:begin
+        SetCommissionReportHeaderBySheet(LVar, LDestWorksheet);
+        SetCommissionReportSummaryBySheet(LVar, LDestWorksheet);
+        SetCommissionReportSummaryDetailBySheet(LHiconReportRec.FReportDetailJsonAry, LDestWorksheet);
+      end;
+      hcrkCode:begin
+      end;
+      hcrkSummaryByCode:begin
+      end;
+    end;
+  end;//for
+
+  DeleteSheetFromWorkBookByName(LWorkBook, LOriginSheetName);
+
+  LExcel.DisplayAlerts := True;
+  LExcel.Visible := true;
+end;
+
+procedure MakeCommissionReportTotal(AJsonAry: string; AFileName: string);//ARec: THiconReportRec
 var
   LExcel: OleVariant;
   LWorkBook: OleVariant;
@@ -45,91 +148,101 @@ var
 begin
 end;
 
-procedure MakeCommissionReportSummary(ARec: THiconReportRec; AFileName, ASheetName: string);
+procedure MakeCommissionReportSummary(AJsonAry: string; AFileName: string);//ARec: THiconReportRec
 var
   LExcel: OleVariant;
   LWorkBook: OleVariant;
-  LWorksheet: OleVariant;
-  LFileName: string;
+  LSrcWorksheet, LDestWorksheet: OleVariant;
+  LFileName, LTempFileName, LSheetName, LFileExt: string;
   LVar: variant;
+  LHiconReportRec: THiconReportRec;
+  LDocList: IDocList;
+  LDocDict: IDocDict;
+  LJson, LDictStr: RawUtf8;
+  i: integer;
 begin
 {$REGION 'FReportListJson'}
   if AFileName = '' then
-    AFileName := COMMISSION_REPORT_TOTAL_FILENAME;
+    AFileName := COMMISSION_REPORT_SUMMARY_FILENAME;
 
-  LFileName := DOC_DIR + AFileName;
-
-  if not FileExists(LFileName) then
-  begin
-    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
-    exit;
-  end;
-
-  LExcel := GetActiveExcelOleObject(True);
-  LWorkBook := LExcel.Workbooks.Open(LFileName);
-
-  if ASheetName = '' then
-    LWorksheet := LWorkBook.ActiveSheet
-  else
-  begin
-    if CheckWorksheetExistByName(LWorkBook, ASheetName) then
-    begin
-      LWorkSheet := LExcel.WorkSheets.Item[ASheetName];
-      LWorkSheet.Activate;
-    end;
-  end;
-
-  LVar := _JSON(StringToUtf8(ARec.FReportListJson));
-
-  SetCommissionReportHeaderBySheet(LVar, LWorkSheet);
-  SetCommissionReportSummaryBySheet(LVar, LWorkSheet);
-  SetCommissionReportSummaryDetailBySheet(ARec.FReportDetailJsonAry, LWorkSheet);
-
-  LExcel.Visible := true;
-end;
-
-procedure MakeCommissionReportWorkCode(ARec: THiconReportRec; AFileName, ASheetName: string);
-var
-  LExcel: OleVariant;
-  LWorkBook: OleVariant;
-  LWorksheet: OleVariant;
-  LFileName: string;
-  LVar: variant;
-begin
-{$REGION 'FReportListJson'}
-  if AFileName = '' then
-    AFileName := COMMISSION_REPORT_TOTAL_FILENAME;
-
-  LFileName := DOC_DIR + AFileName;
-
-  if not FileExists(LFileName) then
-  begin
-    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
-    exit;
-  end;
-
-  LExcel := GetActiveExcelOleObject(True);
-  LWorkBook := LExcel.Workbooks.Open(LFileName);
-
-  if ASheetName = '' then
-    LWorksheet := LExcel.ActiveSheet
-  else
-  begin
-    if CheckWorksheetExistByName(LWorkBook, ASheetName) then
-    begin
-      LWorkSheet := LExcel.WorkSheets.Item[ASheetName];
-      LWorkSheet.Activate;
-    end;
-  end;
-
-  LVar := _JSON(StringToUtf8(ARec.FReportListJson));
-
-  SetCommissionReportHeaderBySheet(LVar, LWorkSheet);
-  SetCommissionReportWorkCodeBySheet(ARec.FReportDetailJsonAry, LWorkSheet);
+  MakeCommissionReportByReportKind(AJsonAry, Ord(hcrkSummary), AFileName);
 {$ENDREGION}
 end;
 
-procedure MakeCommissionReportSummaryOfWorkCode(ARec: THiconReportRec; AWorkCode, AFileName, ASheetName: string);
+procedure MakeCommissionReportWorkCode(AJsonAry: string; AFileName: string);//ARec: THiconReportRec
+var
+  LExcel: OleVariant;
+  LWorkBook: OleVariant;
+  LWorksheet: OleVariant;
+  LSrcWorksheet, LDestWorksheet: OleVariant;
+  LFileName, LTempFileName, LSheetName: string;
+  LVar: variant;
+  LHiconReportRec: THiconReportRec;
+  LDocList: IDocList;
+  LDocDict: IDocDict;
+  LJson: RawUtf8;
+begin
+{$REGION 'FReportListJson'}
+  if AFileName = '' then
+    AFileName := COMMISSION_REPORT_WORKCODE_FILENAME;
+
+  LFileName := DOC_DIR + AFileName;
+
+  if not FileExists(LFileName) then
+  begin
+    ShowMessage('File(' + LFileName + ')이 존재하지 않습니다');
+    exit;
+  end;
+
+  LTempFileName := 'c:\temp\' + ExtractFileName(LFileName);
+
+  if not CopyFile(LFileName, LTempFileName, False) then
+  begin
+    ShowMessage('File Copy Fail to ' + LTempFileName);
+    exit;
+  end;
+
+  LExcel := GetActiveExcelOleObject(True);
+  LWorkBook := LExcel.Workbooks.Open(LTempFileName);
+
+  LDocList := DocList(AJsonAry);
+
+  for LDocDict in LDocList do
+  begin
+    LJson := LDocDict.S['HiconReportRec'];
+    RecordLoadJson(LHiconReportRec, LJson, TypeInfo(THiconReportRec));
+
+    LSheetName := LDocDict.S['SheetName'];
+
+    if LSheetName = '' then
+      LDestWorksheet := LWorkBook.ActiveSheet
+    else
+    begin
+      if CheckWorksheetExistByName(LWorkBook, LSheetName) then
+      begin
+        LDestWorksheet := LExcel.WorkSheets.Item[LSheetName];
+        LDestWorksheet.Activate;
+      end
+      else
+      begin
+  //      LWorkSheet := LWorkBook.Sheets['요약'].Copy(LWorkBook.Sheets(LWorkBook.Sheets.Count));
+  //      LSrcWorksheet := LWorkBook.ActiveSheet;
+        CopySheet2WorkBookByName(LWorkBook, '요약', LSheetName);
+      end;
+    end;
+
+    LVar := _JSON(StringToUtf8(LHiconReportRec.FReportListJson));
+
+    SetCommissionReportHeaderBySheet(LVar, LDestWorksheet);
+    SetCommissionReportWorkCodeBySheet(LHiconReportRec.FReportDetailJsonAry, LDestWorksheet);
+  end;
+
+  LExcel.Visible := true;
+
+{$ENDREGION}
+end;
+
+procedure MakeCommissionReportSummaryOfWorkCode(AJsonAry: string; AWorkCode, AFileName, ASheetName: string);//ARec: THiconReportRec
 var
   LExcel: OleVariant;
   LWorkBook: OleVariant;
@@ -167,10 +280,10 @@ begin
     end;
   end;
 
-  LVar := _JSON(StringToUtf8(ARec.FReportListJson));
-
-  SetCommissionReportHeaderBySheet(LVar, LWorkSheet);
-  SetCommissionReportSummaryDetailOfWorkCodeBySheet(ARec.FReportDetailJsonAry, AWorkCode, LWorkSheet);
+//  LVar := _JSON(StringToUtf8(ARec.FReportListJson));
+//
+//  SetCommissionReportHeaderBySheet(LVar, LWorkSheet);
+//  SetCommissionReportSummaryDetailOfWorkCodeBySheet(ARec.FReportDetailJsonAry, AWorkCode, LWorkSheet);
 
   LExcel.Visible := true;
 {$ENDREGION}

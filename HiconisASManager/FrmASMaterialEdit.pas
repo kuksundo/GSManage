@@ -78,6 +78,8 @@ type
     PngSpeedButton3: TPngSpeedButton;
     JvLabel16: TJvLabel;
     DirectInputReqNo: TEdit;
+    BitBtn3: TBitBtn;
+    BitBtn1: TBitBtn;
 
     procedure FormCreate(Sender: TObject);
     procedure PngSpeedButton1Click(Sender: TObject);
@@ -85,6 +87,8 @@ type
     procedure Button1Click(Sender: TObject);
     procedure PngSpeedButton2Click(Sender: TObject);
     procedure PngSpeedButton3Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     procedure InitEnum;
     procedure InitCombo;
@@ -105,7 +109,7 @@ var
 implementation
 
 uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit, UnitMakeReport2,
-  UnitMiscUtil, UnitStringUtil;
+  UnitMiscUtil, UnitStringUtil, UnitAdvCompUtil;
 
 {$R *.dfm}
 
@@ -172,6 +176,16 @@ begin
     exit;
 
   CBM.Text := FormatFloat('#0.000', CalculateCBM(LW, LH, LL));
+end;
+
+procedure TASMaterialF.BitBtn1Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(PORNo);
+end;
+
+procedure TASMaterialF.BitBtn3Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MaterialName);
 end;
 
 procedure TASMaterialF.Button1Click(Sender: TObject);

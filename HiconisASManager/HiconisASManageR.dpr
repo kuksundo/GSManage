@@ -56,7 +56,8 @@ uses
   UnitHiASOLUtil in 'UnitHiASOLUtil.pas',
   UnitHiASProjectRecord in 'UnitHiASProjectRecord.pas',
   UnitHiconisDI16RecallRec in 'UnitHiconisDI16RecallRec.pas',
-  UnitAdvCompUtil in '..\..\..\Common\UnitAdvCompUtil.pas';
+  UnitAdvCompUtil in '..\..\..\Common\UnitAdvCompUtil.pas',
+  UnitHiASUtil in 'UnitHiASUtil.pas';
 
 {$R *.res}
 

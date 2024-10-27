@@ -5,13 +5,15 @@ interface
 uses SysUtils, Classes, Generics.Collections, Forms,
   mormot.core.base, mormot.orm.core, mormot.rest.client, mormot.core.os,
   mormot.rest.sqlite3, mormot.orm.base, mormot.core.data, mormot.core.variants,
-  mormot.core.datetime, mormot.core.json;
+  mormot.core.datetime, mormot.core.json,
+  VarRecUtils;
 
 type
   TOrmHiconReportList = class(TOrm)
   private
     fReportKey: TTimeLog;
 
+    fComissionRptNo,
     fProjectNo, //공사번호
     fHullNo, //호선번호
     fShipName, //호선명
@@ -42,6 +44,7 @@ type
     property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
   published
     property ReportKey : TTimeLog read fReportKey write fReportKey;
+    property ComissionRptNo : RawUTF8 read fComissionRptNo write fComissionRptNo;
     property ProjectNo : RawUTF8 read fProjectNo write fProjectNo;
     property HullNo: RawUTF8 read fHullNo write fHullNo;
     property ShipName: RawUTF8 read fShipName write fShipName;

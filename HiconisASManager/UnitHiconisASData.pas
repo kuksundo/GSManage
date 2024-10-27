@@ -8,10 +8,13 @@ type
   TQueryDateType = (qdtNull,
     qdtMaterialOrder, qdtClaimRecvDate, qdtClaimInputDate, qdtClaimReadyDate,
     qdtClaimClosedDate, qdtAttendScheduled, qdtWorkBeginDate, qdtWorkEndDate,
+    qdtModifyDate,
     qdtFinal);
 
   THiASFindCondition = (hfcNull,
     hfcInputToday,//오늘 입력한 Claim
+    hfcInputReview,//하루 전 오후 ~ 현재 까지 입력한 Claim (장CI과 검토하기 위한 검색-10:30 ~ 11:30)
+    hfcUpdateToday,//오늘 수정한 Claim
     hfcFinal);
 
   TSearchCondRec = record
@@ -180,11 +183,13 @@ const
   R_QueryDateType : array[Low(TQueryDateType)..High(TQueryDateType)] of string =
     ('',
       '자재발주일', '클레임접수일', '클레임등록일', '클레임조치일',
-      '클레임완료일', '방선예정일', '작업시작일', '작업완료일', '');
+      '클레임완료일', '방선예정일', '작업시작일', '작업완료일', '클레임수정일', '');
 
   R_HiASFindCondType : array[Low(THiASFindCondition)..High(THiASFindCondition)] of string =
     ('',
-      '오늘입력한클레임',
+      '오늘 입력한 Claim',
+      '일일 검토 Claim',
+      '오늘 수정한 Claim',
     '');
 
   R_GSDocType : array[Low(THiASDocType)..High(THiASDocType)] of string =

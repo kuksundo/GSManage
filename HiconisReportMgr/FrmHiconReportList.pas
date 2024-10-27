@@ -19,7 +19,9 @@ uses
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
   mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
 
-  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportListOrm, UnitHiConReportWorkItemOrm;
+  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR,
+  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitHiConChgRegItemOrm,
+  UnitHiConRptDM;
 
 type
   THiConReportListF = class(TForm)
@@ -54,8 +56,6 @@ type
     HiRptListGrid: TNextGrid;
     NxIncrementColumn1: TNxIncrementColumn;
     StatusBarPro1: TStatusBarPro;
-    imagelist24x24: TImageList;
-    ImageList16x16: TImageList;
     PopupMenu1: TPopupMenu;
     N23: TMenuItem;
     ToDOList1: TMenuItem;
@@ -82,7 +82,6 @@ type
     ariff1: TMenuItem;
     ViewTariff1: TMenuItem;
     EditTariff1: TMenuItem;
-    ImageList32x32: TImageList;
     DropEmptyTarget1: TDropEmptyTarget;
     DropEmptySource1: TDropEmptySource;
     DataFormatAdapter2: TDataFormatAdapter;
@@ -156,6 +155,8 @@ type
     C21: TMenuItem;
     D1: TMenuItem;
     N17: TMenuItem;
+    ShowChangeRegisterList1: TMenuItem;
+    N18: TMenuItem;
 
     procedure btn_SearchClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -191,6 +192,7 @@ type
     procedure C11Click(Sender: TObject);
     procedure C21Click(Sender: TObject);
     procedure D1Click(Sender: TObject);
+    procedure ShowChangeRegisterList1Click(Sender: TObject);
   private
     //보고서 리스트 내,외부 저장용
     FRptDocDict: IDocDict; //{Report: [], WorkItem: []}
@@ -260,7 +262,8 @@ implementation
 uses UnitComboBoxUtil, UnitCheckGrpAdvUtil, JHP.Util.Bit32Helper, UnitNextGridUtil2,
   UnitStringUtil, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitExcelUtil,
   UnitDragUtil, UnitBase64Util2, //UnitSynZip2, //UnitCompressUtil,
-  FrmHiconReportEdit, FrmSearchVessel2, UnitDFMUtil, UnitHiConReportMakeUtil;
+  FrmHiconReportEdit, FrmSearchVessel2, FrmHiChgRegList,
+  UnitDFMUtil, UnitHiConReportMakeUtil;
 
 {$R *.dfm}
 
@@ -388,8 +391,6 @@ end;
 procedure THiConReportListF.btn_SearchClick(Sender: TObject);
 var
   LSearchCondRec: THiRptMgrSearchCondRec;
-  LIsRemote: Boolean;
-  LUtf8, LResult: RawUTF8;
 begin
   if CheckRptDocDictExist() then
     exit;
@@ -532,8 +533,6 @@ begin
   ShipNameEdit.Text := '';
   ProjNoEdit.Text := '';
   AuthorNameEdit.Text := '';
-  HullNoEdit.Text := '';
-  ShipNameEdit.Text := '';
   ClassSocietyEdit.Text := '';
   ReportAuthorIDEdit.Text := '';
 
@@ -1032,6 +1031,7 @@ procedure THiConReportListF.InitVar;
 begin
   InitHiconReportListClient('');
   InitHiconReportDetailClient('');
+  InitHiChgRegItemClient('');
 
   InitEnum();
 
@@ -1137,9 +1137,11 @@ procedure THiConReportListF.MakeReportBySelected(const ACommissionRptKind: integ
   AWorkCode: string);
 var
   LRptKey,
-  LJson: string;
+  LJson, LSheetName: string;
   LHiconReportRec: THiconReportRec;
-  LDocList: IList<TOrmHiconReportDetail>;
+  LDocList: IDocList;
+  LDocDict: IDocDict;
+  i: integer;
 begin
   if HiRptListGrid.SelectedRow = -1 then
   begin
@@ -1147,15 +1149,34 @@ begin
     exit;
   end;
 
-  LRptKey := HiRptListGrid.CellsByName['ReportKey', HiRptListGrid.SelectedRow];
-  LHiconReportRec := GetHiconReportRecFromDBByKeyId(LRptKey);
-  LHiconReportRec.FCommissionRptKind := ACommissionRptKind;
+  LDocList := DocList('[]');
+  LDocDict := DocDict('{}');
+
+  for i := HiRptListGrid.RowCount - 1 downto 0 do
+  begin
+    if HiRptListGrid.Row[i].Selected then
+    begin
+      LRptKey := HiRptListGrid.CellsByName['ReportKey', i];
+      LSheetName := HiRptListGrid.CellsByName['WorkBeginTime', i];
+      LSheetName := FormatDateTime('yyyy-mm-dd', TimeLogToDateTime(StrToInt64(LSheetName))) + '(' + IntToStr(i) + ')';
+      LHiconReportRec := GetHiconReportRecFromDBByKeyId(LRptKey);
+      LHiconReportRec.FCommissionRptKind := ACommissionRptKind;
+
+//      LDocDict.S['RptKey'] := LRptKey;
+      LDocDict.S['SheetName'] := LSheetName;
+      LDocDict.S['HiconReportRec'] := RecordSaveJson(LHiconReportRec, TypeInfo(THiconReportRec));
+
+      LDocList.Append(LDocDict.Json);
+    end;//if
+  end;//for
+
+  LJson := LDocList.Json;
 
   case THiCommissionRptKind(ACommissionRptKind) of
-    hcrkTotal: MakeCommissionReportTotal(LHiconReportRec);
-    hcrkSummary: MakeCommissionReportSummary(LHiconReportRec, COMMISSION_REPORT_TOTAL_FILENAME, '요약');
-    hcrkCode: MakeCommissionReportWorkCode(LHiconReportRec, COMMISSION_REPORT_TOTAL_FILENAME, 'CODE');
-    hcrkSummaryByCode: MakeCommissionReportSummaryOfWorkCode(LHiconReportRec, AWorkCode, COMMISSION_REPORT_TOTAL_FILENAME, 'CODE');
+    hcrkTotal: MakeCommissionReportTotal(LJson);
+    hcrkSummary: MakeCommissionReportSummary(LJson, COMMISSION_REPORT_SUMMARY_FILENAME);
+    hcrkCode: MakeCommissionReportWorkCode(LJson, COMMISSION_REPORT_WORKCODE_FILENAME);
+    hcrkSummaryByCode: MakeCommissionReportSummaryOfWorkCode(LJson, AWorkCode, COMMISSION_REPORT_TOTAL_FILENAME, 'CODE');
   end;
 end;
 
@@ -1257,6 +1278,17 @@ end;
 procedure THiConReportListF.SetEnable4SaveDBBtn;
 begin
   btn_Save2DB.Enabled := FRptDocDict.Len > 0;
+end;
+
+procedure THiConReportListF.ShowChangeRegisterList1Click(Sender: TObject);
+var
+  LJson: string;
+begin
+  if HiRptListGrid.SelectedRow = -1 then
+    exit;
+
+  LJson := GetJsonFromSelectedRow(HiRptListGrid);
+  DisplayHiChgRegListForm(LJson, False);
 end;
 
 procedure THiConReportListF.ShowImportReportList1Click(Sender: TObject);

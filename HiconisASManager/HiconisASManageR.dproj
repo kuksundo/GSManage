@@ -190,6 +190,7 @@
         <DCCReference Include="UnitHiASProjectRecord.pas"/>
         <DCCReference Include="UnitHiconisDI16RecallRec.pas"/>
         <DCCReference Include="..\..\..\Common\UnitAdvCompUtil.pas"/>
+        <DCCReference Include="UnitHiASUtil.pas"/>
         <None Include="HiconisASManageR.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

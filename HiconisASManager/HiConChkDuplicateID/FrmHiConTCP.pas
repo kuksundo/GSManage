@@ -99,6 +99,7 @@ type
     ModifyLogParam2: TMenuItem;
     GetJsonFile1: TMenuItem;
     GetTagInfoFromSystemBak1: TMenuItem;
+    GetModuleNamebyTagName1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -194,7 +195,7 @@ type
     //Result: {"Resource":"COM011110.tgz"/"MPM11.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
     //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
     //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
-    function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string): string;
+    function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
     //이 함수는 COMxx.tgz 파일만 검색함
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
@@ -202,13 +203,16 @@ type
     function GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName: string): string;
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: Tag 값을 통신하는 ptcxx.json 파일 전체 내용 반환
-    function GetPtcJsonContentsFromTgzByInfTag(AInfTagName: string): string;
+    function GetPtcJsonContentsFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: Tag 값을 통신하는 interface.json->Portx 값을 반환
     function GetPortJsonContentsFromTgzByInfTag(AInfTagName: string): string;
     //AInfTagName: INF_로 시작하는 Tag Name
+    //AIsOnline: True = interface.json 파일을 TCP 통신 연결하여 MPM에서 Download하여 c:\temp에 저장 후 읽음
+    //           False= Disk에 백업된 .tgz로부터 interface.json 파일을 읽음
     //Result: Tag 값을 통신하는 ptcxx.json->Query 내용 중에 InBlk 값이 일치하는 Query Json만 반환
-    function GetQueryJsonFromTgzByInfTag(AInfTagName: string): string;
+    function GetQueryJsonFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
+    function GetModuleTypeFromDBByTagName(ATagName: string): string;
   public
     procedure InitVar;
     procedure DestroyVar;
@@ -1055,6 +1059,23 @@ begin
   end;
 end;
 
+function THiconisTCPF.GetModuleTypeFromDBByTagName(ATagName: string): string;
+var
+  LChannelInfoJson: string;
+  LDocDict: IDocDict;
+begin
+  Result := '';
+  LChannelInfoJson := THiConSystemDB.GetChInfo2JsonFromChannelTable(ATagName);
+
+  if LChannelInfoJson <> '' then
+  begin
+    LDocDict := DocDict(LChannelInfoJson);
+
+    if LDocDict.Exists('FUNC_NAME') then
+      Result := LDocDict.S['FUNC_NAME'];
+  end;
+end;
+
 function THiconisTCPF.GetMPMNameFromIpAddrDic(AIpAddr: string): string;
 var
   i: Integer;
@@ -1157,20 +1178,21 @@ begin
 end;
 
 function THiconisTCPF.GetPtcJsonContentsFromTgzByInfTag(
-  AInfTagName: string): string;
+  AInfTagName: string; AIsOnlne: Boolean): string;
 var
   LStr, LBaseDir: string;
 begin
-  LStr := GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName);//GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
+  LStr := GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName, AIsOnlne);//GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
 
   if LStr <> '' then
     Result := GetPtcJsonContentsFromCOMNPortJson(LStr);
 end;
 
-function THiconisTCPF.GetQueryJsonFromTgzByInfTag(AInfTagName: string): string;
+function THiconisTCPF.GetQueryJsonFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
 var
-  LStr, LTagInfoJson, LPtcJson, LPortIntfJson: string;
+  LResNPortJson, LTagInfoJson, LPtcJson, LPortIntfJson: string;
   LBaseDir: string;
+  LDataSrc: TTagDataSrcRec;
 begin
   //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
   SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
@@ -1178,13 +1200,18 @@ begin
 
   LTagInfoJson := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
 
-  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LTagInfoJson, LBaseDir);
+//  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LTagInfoJson, LBaseDir);
+  //{"Resource":"COM011110"/"MPM11"/"FBM11", "Port":"ptc04", "PortValueInf":{...},"PtcValue":{...}, "BaseDir": "full path"}
+//  LResNPortJson := GetReourceNPortName2JsonByTagInfo(LTagInfoJson, LBaseDir, AIsOnlne);
+  LDataSrc := GetTagDataSrcRecByTagInfo(LTagInfoJson, LBaseDir, AIsOnlne);
 
   //LStr: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
 //  LStr := GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
-  LPortIntfJson := GetPortValueJsonFromCOMNPortJson(LStr);
-  LPtcJson := GetPtcJsonContentsFromCOMNPortJson(LStr);
-  GetQueryJsonFromPortNPtcJson(LTagInfoJson, LPortIntfJson, LPtcJson);
+  //PortValueInf Value 반환
+//  LPortIntfJson := GetPortValueJsonFromCOMNPortJson(LStr);
+//  LPtcJson := GetPtcJsonContentsFromCOMNPortJson(LStr);
+//  Result := GetQueryJsonFromPortNPtcJson(LTagInfoJson, LPortIntfJson, LPtcJson);
+//  Result := GetQueryJsonFromResourceNPortNameByTagInfo(LTagInfoJson, LResNPortJson);
 end;
 
 procedure THiconisTCPF.GetRetentionPoliciesBySelectedIpList(
@@ -1274,13 +1301,13 @@ begin
 //  LStr := GetPtcJsonContentsFromCOMNPortJson(LStr);
 
 //  LStr := GetPtcJsonContentsFromTgzByInfTag('INF_VT_AC_3358');
-  LStr := GetQueryJsonFromTgzByInfTag('INF_VT_AC_3358');
+  LStr := GetQueryJsonFromTgzByInfTag('INF_VT_AC_3358', False);
 
   ShowMessage(LStr);
 end;
 
 function THiconisTCPF.GetTgzNPtcJsonNameFromTgzByInfTag(
-  AInfTagName: string): string;
+  AInfTagName: string; AIsOnlne: Boolean): string;
 var
   LStr, LBaseDir: string;
 begin
@@ -1289,7 +1316,7 @@ begin
   LBaseDir := DOWNLOAD_FULL_PATH;
 
   LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
-  Result := GetMPMTgzNPtcJsonNameByMPMNameWithSlotNo(LStr, LBaseDir);
+  Result := GetTgzNPtcJsonNameByTagInfo(LStr, LBaseDir);
 end;
 
 function THiconisTCPF.GetUrlFromIpRec(AIpAddr: string): string;

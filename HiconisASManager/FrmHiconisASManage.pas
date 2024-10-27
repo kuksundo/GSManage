@@ -185,6 +185,9 @@ type
     ShowWarrantyExpireDate2: TMenuItem;
     CreateClaimBySelected1: TMenuItem;
     N9: TMenuItem;
+    BitBtn3: TBitBtn;
+    PopupMenu3: TPopupMenu;
+    Claim1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -252,6 +255,8 @@ type
     procedure ShowWarrantyExpireDate2Click(Sender: TObject);
     procedure CreateClaimBySelected1Click(Sender: TObject);
     procedure N8Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure Claim1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -357,6 +362,8 @@ type
     procedure SetDefaultFindCond;
     procedure ClearFindCond;
     procedure SetInputTodayCond;
+    procedure SetInputReviewCond;
+    procedure SetUpdateTodayCond;
 
     procedure LoadHiASDIRecallDataFromFile();
   protected
@@ -475,7 +482,7 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
   UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2,
-  UnitAdvCompUtil;
+  UnitAdvCompUtil, UnitHiASUtil;
 
 {$R *.dfm}
 
@@ -861,6 +868,11 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.Claim1Click(Sender: TObject);
+begin
+  ExecMacro_QryClaimMonitoringByHullNo(HullNoEdit);
+end;
+
 procedure THiconisAsManageF.ClaimServiceKindCBDropDown(Sender: TObject);
 begin
 //  g_ClaimServiceKind.SetType2Combo(ClaimServiceKindCB);
@@ -1047,6 +1059,7 @@ begin
     qdtAttendScheduled: Result := 'AttendScheduled >= ? and AttendScheduled <= ? ';
     qdtWorkBeginDate: Result := 'WorkBeginDate >= ? and WorkBeginDate <= ? ';
     qdtWorkEndDate: Result := 'WorkEndDate >= ? and WorkEndDate <= ? ';
+    qdtModifyDate: Result := 'ModifyDate >= ? and ModifyDate <= ? ';
   end;
 end;
 
@@ -1900,6 +1913,11 @@ procedure THiconisAsManageF.BitBtn2Click(Sender: TObject);
 begin
 //  Content2Clipboard(OrderNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
+end;
+
+procedure THiconisAsManageF.BitBtn3Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(ClaimNoEdit);
 end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
@@ -3302,15 +3320,25 @@ begin
   case THiASFindCondition(FindCondCB.ItemIndex) of
     hfcNull: SetDefaultFindCond;
     hfcInputToday: SetInputTodayCond;
+    hfcInputReview: SetInputReviewCond;
+    hfcUpdateToday: SetUpdateTodayCond;
   end;
+end;
+
+procedure THiconisAsManageF.SetInputReviewCond;
+begin
+  ComboBox1.ItemIndex := Ord(qdtClaimInputDate);
+  rg_period.ItemIndex := 3;
+  dt_begin.DateTime := GetNoonTimeOfTheDay(now-1);
+  dt_end.DateTime := GetNoonTimeOfTheDay(now);
 end;
 
 procedure THiconisAsManageF.SetInputTodayCond;
 begin
   ComboBox1.ItemIndex := Ord(qdtClaimInputDate);
   rg_period.ItemIndex := 3;
-  dt_begin.Date := GetBeginTimeOfTheDay(now);
-  dt_end.Date := GetEndTimeOfTheDay(now);
+  dt_begin.DateTime := GetBeginTimeOfTheDay(now);
+  dt_end.DateTime := GetEndTimeOfTheDay(now);
 end;
 
 procedure THiconisAsManageF.SetNetworkInfo(ARootName, APortName, AKeyName: string);
@@ -3318,6 +3346,14 @@ begin
   FRootName := ARootName;
   FPortName := APortName;
   FTransmissionKey := AkeyName;
+end;
+
+procedure THiconisAsManageF.SetUpdateTodayCond;
+begin
+  ComboBox1.ItemIndex := Ord(qdtModifyDate);
+  rg_period.ItemIndex := 3;
+  dt_begin.DateTime := GetBeginTimeOfTheDay(now);
+  dt_end.DateTime := GetEndTimeOfTheDay(now);
 end;
 
 procedure THiconisAsManageF.SetUserNameNIPAddressFromRegServer;

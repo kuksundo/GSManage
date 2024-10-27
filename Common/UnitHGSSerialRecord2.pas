@@ -26,6 +26,22 @@ type
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
   end;
 
+  TOrmHMSSignature = class(TOrm)
+  private
+    fSigKey,
+    fSignature
+    : RawUtf8;
+
+    fUpdateDate: TTimeLog;
+  public
+    FIsUpdate: Boolean;
+    property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
+  published
+    property SigKey: RawUtf8 read fSigKey write fSigKey;
+    property Signature: RawUtf8 read fSignature write fSignature;
+    property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
+  end;
+
 procedure InitHGSSerialClient(AHGSCertSerialDBName: string = '');
 function CreateHGSSerialModel: TSQLModel;
 procedure DestroyHGSSerial;
@@ -34,6 +50,10 @@ function GetHGSSerialFromProductType(const AIssuedYear, AProductType: integer; A
 function GetNextHGSSerialFromProductType(const AIssuedYear, AProductType: integer; ACategory : integer = 0): integer;
 procedure AddOrUpdateHGSSerial(ASQLHGSSerialRecord: TSQLHGSSerialRecord);
 procedure AddOrUpdateNextHGSSerial(const AIssuedYear, AProductType, ACategory : integer; ALastSerialNo: integer);
+
+function GetHMSSignatureBySigKey(const ASigKey: RawUtf8): TOrmHMSSignature;
+procedure AddOrUpdateHMSSignatureBySigKey(AOrm: TOrmHMSSignature);
+procedure AddOrUpdateHMSSignature(AOrm: TOrmHMSSignature);
 
 var
   g_HGSSerialDB: TRestClientDB;
@@ -61,7 +81,7 @@ end;
 
 function CreateHGSSerialModel: TSQLModel;
 begin
-  result := TSQLModel.Create([TSQLHGSSerialRecord]);
+  result := TSQLModel.Create([TSQLHGSSerialRecord, TOrmHMSSignature]);
 end;
 
 procedure DestroyHGSSerial;
@@ -155,6 +175,21 @@ begin
   finally
     LSQLHGSSerialRecord.Free;
   end;
+end;
+
+function GetHMSSignatureBySigKey(const ASigKey: RawUtf8): TOrmHMSSignature;
+begin
+
+end;
+
+procedure AddOrUpdateHMSSignatureBySigKey(AOrm: TOrmHMSSignature);
+begin
+
+end;
+
+procedure AddOrUpdateHMSSignature(AOrm: TOrmHMSSignature);
+begin
+
 end;
 
 initialization

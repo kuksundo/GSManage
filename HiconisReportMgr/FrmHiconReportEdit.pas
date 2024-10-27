@@ -15,7 +15,8 @@ uses
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
-  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2
+  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2,
+  UnitHiConRptDM, UnitHGSSerialRecord2, NxEdit
   ;
 
 type
@@ -61,11 +62,9 @@ type
     ReportAuthorID: TEdit;
     ReportAuthorName: TEdit;
     ReportMakeDate: TDateTimePicker;
-    ImageList16x16: TImageList;
     DropEmptyTarget1: TDropEmptyTarget;
     DataFormatAdapterTarget: TDataFormatAdapter;
     DataFormatAdapter1: TDataFormatAdapter;
-    Imglist16x16: TImageList;
     DataFormatAdapter2: TDataFormatAdapter;
     DropEmptySource1: TDropEmptySource;
     DataFormatAdapter3: TDataFormatAdapter;
@@ -91,6 +90,7 @@ type
     ReportKind: TComboBox;
     JvLabel8: TJvLabel;
     ShipType: TEdit;
+    ComissionRptNo: TNxButtonEdit;
 
     procedure AeroButton2Click(Sender: TObject);
     procedure WorkItemGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
@@ -116,7 +116,7 @@ type
   end;
 
   //AFromDocDict : True = DB에 저장하지 않음
-  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8; AFromDocDict: Boolean): integer;//; AHiRptEditConfig: string
+  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8; AFromDocDict: Boolean): integer;
 
 var
   HiConReportEditF: THiConReportEditF;
@@ -130,7 +130,7 @@ uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUti
 {$R *.dfm}
 
 function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8;
-  AFromDocDict: Boolean): integer;//; AHiRptEditConfig: string
+  AFromDocDict: Boolean): integer;
 var
   LHiConReportEditF: THiConReportEditF;
   LJson, LJson2: string;

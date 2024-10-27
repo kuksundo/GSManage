@@ -22,20 +22,6 @@ type
   THiRptMgrQueryDateType = (hrmqdtNull,
     hrmqdtFinal);
 
-  THiRptMgrSearchCondRec = record
-    FFrom, FTo
-    : TDateTime;
-    FQueryDate
-    : THiRptMgrQueryDateType;
-    FHullNo, FShipName, FShipOwner, FProjNo, FSubject,
-    FClassSociety, FReportAuthorID, FReportAuthorName
-    : string;
-    FReportKind, FModifyItems, FWorkCode
-    : integer;
-    FIncludeClosed //Closed 된 Task도 포함하여 표시함
-    : Boolean;
-  end;
-
   THiRptWorkCode = (hrwcNull,
     hrwcA, hrwcB_1, hrwcB_2, hrwcB_3, hrwcB_4, hrwcC_1, hrwcC_2, hrwcD,
     hrwcFinal);

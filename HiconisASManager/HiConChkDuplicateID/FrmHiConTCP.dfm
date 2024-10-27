@@ -855,6 +855,9 @@ object HiconisTCPF: THiconisTCPF
         end
         object AccessDB1: TMenuItem
           Caption = 'Access DB'
+          object GetModuleNamebyTagName1: TMenuItem
+            Caption = 'Get Module Name by TagName'
+          end
         end
       end
       object Windows1: TMenuItem

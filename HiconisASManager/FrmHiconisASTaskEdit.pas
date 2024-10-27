@@ -277,6 +277,10 @@ type
     IsReclaim: TNxCheckBoxColumn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    PopupMenu4: TPopupMenu;
+    Claim1: TMenuItem;
+    N25: TMenuItem;
+    HullNoClaimNo1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -336,7 +340,6 @@ type
     procedure CauseSW1Click(Sender: TObject);
     procedure DeleteMaterial1Click(Sender: TObject);
     procedure AeroButton8Click(Sender: TObject);
-    procedure AeroButton6Click(Sender: TObject);
     procedure AeroButton8MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
@@ -347,6 +350,8 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure Claim1Click(Sender: TObject);
+    procedure HullNoClaimNo1Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -394,6 +399,7 @@ type
     procedure LoadMaterialDetailOrmFromForm(AMaterialDetail: TSQLMaterialDetail);
 
     function GetPorNoFromJson(const AJson: string): string;
+    procedure ExecMacro_ClaimRegister();
   public
     FTask,
     FEmailDisplayTask: TOrmHiconisASTask;
@@ -489,6 +495,7 @@ uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
   DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
+  UnitKeyBdUtil, UnitHiASUtil,
   FrmToDoList2, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitAdvCompUtil;
 
 {$R *.dfm}
@@ -1107,58 +1114,10 @@ begin
   MaterialDetailEdit();
 end;
 
-procedure TTaskEditF.AeroButton6Click(Sender: TObject);
-var
-  LRoot: TMacroManagements;
-  LMacroM: TMacroManagement;
-  LPath, LMacroName: string;
-  LIdx: integer;
-begin
-  SetCurrentDir(ExtractFilePath(Application.ExeName));
-  LPath := '.\mcr\';
-  LRoot := TMacroManagements.Create;
-  try
-    case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
-      cskPartSupply: LMacroName := 'Select-Claim관리-Service-부품공급.mcr';
-      cskPartSupplyNSE: LMacroName := 'Select-Claim관리-Service-부품공급_SE.mcr';
-      cskSEOnboard: LMacroName := 'Select-Claim관리-Service-SE방선.mcr';
-      cskTechInfo: LMacroName := 'Select-Claim관리-Service-기술정보제공.mcr';
-    end;
-
-    if LMacroName = '' then
-    begin
-      ShowMessage('SERVICE를 선택하세요.');
-      exit;
-    end;
-
-    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + LMacroName);
-    LMacroM := LRoot.FMacroManageList.Items[LIdx];
-    LMacroM.ExecuteActItemList();
-    LMacroM.AddWaitMacro2ActItemList(2000);
-
-    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Select-Claim관리-책임처.mcr');
-    LMacroM := LRoot.FMacroManageList.Items[LIdx];
-    LMacroM.ExecuteActItemList();
-    LMacroM.AddWaitMacro2ActItemList(2000);
-
-    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim관리-조치결과.mcr');
-    LMacroM := LRoot.FMacroManageList.Items[LIdx];
-
-    if EtcContentMemo.Text <> '' then
-      LMacroM.AddTypeMsgMacro2ActItemList(EtcContentMemo.Text);
-
-    LMacroM.AddWaitMacro2ActItemList(2000);
-    LMacroM.ExecuteActItemList();
-  finally
-    ShowMessage('Claim 관리 입력 완료!');
-    LRoot.Free;
-  end;
-end;
-
 procedure TTaskEditF.AeroButton6MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  AeroButton6Click(nil);
+  ExecMacro_ClaimRegister();
 end;
 
 procedure TTaskEditF.DeleteMaterial1Click(Sender: TObject);
@@ -1443,6 +1402,11 @@ begin
   Result := (ClaimNoEdit.Text <> '') and (OrderNoEdit.Text <> '') and (HullNoEdit.Text <> '');
 end;
 
+procedure TTaskEditF.Claim1Click(Sender: TObject);
+begin
+  ExecMacro_QryClaimMonitoringByHullNo(HullNoEdit);
+end;
+
 procedure TTaskEditF.ClaimServiceKindCBChange(Sender: TObject);
 begin
   InitCurWorkCB();
@@ -1538,6 +1502,54 @@ var
 begin
   LRec := Get_Doc_Inv_Rec;
   MakeDocInvoice(LRec);
+end;
+
+procedure TTaskEditF.ExecMacro_ClaimRegister;
+var
+  LRoot: TMacroManagements;
+  LMacroM: TMacroManagement;
+  LPath, LMacroName: string;
+  LIdx: integer;
+begin
+  SetCurrentDir(ExtractFilePath(Application.ExeName));
+  LPath := '.\mcr\';
+  LRoot := TMacroManagements.Create;
+  try
+    case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
+      cskPartSupply: LMacroName := 'Select-Claim관리-Service-부품공급.mcr';
+      cskPartSupplyNSE: LMacroName := 'Select-Claim관리-Service-부품공급_SE.mcr';
+      cskSEOnboard: LMacroName := 'Select-Claim관리-Service-SE방선.mcr';
+      cskTechInfo: LMacroName := 'Select-Claim관리-Service-기술정보제공.mcr';
+    end;
+
+    if LMacroName = '' then
+    begin
+      ShowMessage('SERVICE를 선택하세요.');
+      exit;
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + LMacroName);
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+    LMacroM.AddWaitMacro2ActItemList(2000);
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Select-Claim관리-책임처.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.ExecuteActItemList();
+    LMacroM.AddWaitMacro2ActItemList(2000);
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + 'Mouse-Move-Claim관리-조치결과.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if EtcContentMemo.Text <> '' then
+      LMacroM.AddTypeMsgMacro2ActItemList(EtcContentMemo.Text);
+
+    LMacroM.AddWaitMacro2ActItemList(2000);
+    LMacroM.ExecuteActItemList();
+  finally
+    ShowMessage('Claim 관리 입력 완료!');
+    LRoot.Free;
+  end;
 end;
 
 procedure TTaskEditF.btn_CloseClick(Sender: TObject);
@@ -1852,11 +1864,16 @@ begin
   Result.FManagerDepartment := ManagerDepartmentEdit.Text;
 end;
 
+procedure TTaskEditF.HullNoClaimNo1Click(Sender: TObject);
+begin
+  Clipboard.AsText := HullNoEdit.Text + '-' + ClaimNoEdit.Text;
+end;
+
 procedure TTaskEditF.HullNoEditClickBtn(Sender: TObject);
 var
   LVesselSearchParamRec: TVesselSearchParamRec;
 begin
-  LVesselSearchParamRec.fHullNo := HullNoEdit.Text;
+  LVesselSearchParamRec.fHullNo := RemoveSpaceBetweenStrings(HullNoEdit.Text);
   LVesselSearchParamRec.fShipName := ShipNameEdit.Text;
 
   if ShowSearchVesselForm(LVesselSearchParamRec) = mrOK then
@@ -2794,6 +2811,8 @@ begin
     Avar.ClaimInputDate := TimeLogFromDateTime(ClaimInputPicker.Date);
     Avar.ClaimReadyDate := TimeLogFromDateTime(ClaimReadyPicker.Date);
     Avar.ClaimClosedDate := TimeLogFromDateTime(ClaimClosedPicker.Date);
+
+    AVar.ModifyDate := TimeLogFromDateTime(now);
   end;
 end;
 

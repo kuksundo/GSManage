@@ -11,7 +11,14 @@ uses
   FrmHiconReportEdit in 'FrmHiconReportEdit.pas' {HiConReportEditF},
   FrmHiReportWorkItemEdit in 'FrmHiReportWorkItemEdit.pas' {RptWorkItemF},
   UnitHiConReportMakeUtil in 'UnitHiConReportMakeUtil.pas',
-  UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas' {JHPFileListFrame: TFrame};
+  UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas' {JHPFileListFrame: TFrame},
+  FrmHiChangeRegisterEdit in 'FrmHiChangeRegisterEdit.pas' {HiChgRegItemF},
+  FrameVesselInfo in '..\Common\FrameVesselInfo.pas' {VesselInfoFr: TFrame},
+  FrameHiReportInfo in '..\Common\FrameHiReportInfo.pas' {HiRptInfoFr: TFrame},
+  UnitHiConChgRegItemOrm in 'UnitHiConChgRegItemOrm.pas',
+  FrmHiChgRegList in 'FrmHiChgRegList.pas' {ChgRegListF},
+  UnitHiConRptDM in 'UnitHiConRptDM.pas' {DataModule1: TDataModule},
+  UnitHiConReportMgR in '..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR.pas';
 
 {$R *.res}
 
@@ -20,7 +27,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiConReportListF, HiConReportListF);
-  Application.CreateForm(THiConReportEditF, HiConReportEditF);
-  Application.CreateForm(TRptWorkItemF, RptWorkItemF);
+  Application.CreateForm(TDataModule1, DataModule1);
   Application.Run;
 end.

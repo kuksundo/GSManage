@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   JvExControls, JvLabel, AeroButtons, CurvyControls,
-  mormot.core.variants, mormot.core.unicode, AdvEdit, AdvEdBtn
+  mormot.core.variants, mormot.core.unicode, AdvEdit, AdvEdBtn, Vcl.Buttons
   ;
 
 type
@@ -29,7 +29,11 @@ type
     CreateDate: TDateTimePicker;
     MaterialCode: TAdvEditBtn;
     IsReclaim: TCheckBox;
+    BitBtn3: TBitBtn;
+    BitBtn1: TBitBtn;
     procedure MaterialCodeClickBtn(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,7 +48,7 @@ var
 
 implementation
 
-uses UnitRttiUtil2, FrmSearchMaterialCode;
+uses UnitRttiUtil2, FrmSearchMaterialCode, UnitAdvCompUtil;
 
 {$R *.dfm}
 
@@ -61,6 +65,8 @@ begin
       if ADoc.PorNo = '' then
       begin
         Caption := Caption + ' (New)';
+        CreateDate.Date := Now;
+        NeedDate.Date := Now;
       end
       else
       begin
@@ -90,6 +96,16 @@ begin
 end;
 
 { TMaterialDetailF }
+
+procedure TMaterialDetailF.BitBtn1Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MaterialName);
+end;
+
+procedure TMaterialDetailF.BitBtn3Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MaterialCode);
+end;
 
 procedure TMaterialDetailF.LoadMaterialDetailVar2Form(AVar: variant);
 var
