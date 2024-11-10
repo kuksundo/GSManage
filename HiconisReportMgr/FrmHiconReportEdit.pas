@@ -262,51 +262,17 @@ end;
 
 function THiConReportEditF.CheckExistHangulInput4Report: TWinControl;
 begin
-  //한글이 포함된 Component Value가 있으면 해당 Component 반환함
-  Result := CheckInputExistHangulByTagOnForm(Self);
-
-  //True = 입력값에 한글이 포함 된 Component 존재
-  if Assigned(Result) then
-  begin
-    //Component Color 변경
-    ChangeCompColorByPropertyName(Result, clYellow);
-    ShowMessage('한글 사용하면 안됨: [' + Result.Hint + ']' );
-  end
+  Result := CheckExistHangulInput(Self);
 end;
 
 function THiConReportEditF.CheckInputLengthOver4Report: TWinControl;
 begin
-  //Component Value가 70자 이상이면 해당 Component 반환함
-  Result := CheckInputLengthByTagOnForm(Self, 70);
-
-  //True = 입력값 길이가 70자 이상인 Component 존재
-  if Assigned(Result) then
-  begin
-    //Component Color 변경
-    ChangeCompColorByPropertyName(Result, clYellow);
-    ShowMessage('길이가 70자 이내여야 함: [' + Result.Hint + ']' );
-  end
+  Result := CheckInputLengthOver(Self, 70);
 end;
 
 function THiConReportEditF.CheckRequiredInput4Report: TWinControl;
 begin
-  //입력 안된 Component Value가 있으면 해당 Component 반환함
-  Result := CheckRequiredInputByTagOnForm(Self);
-
-  //True = 입력 안된 Component 존재
-  if Assigned(Result) then
-  begin
-    if Result.ClassName = 'TAdvOfficeCheckGroup' then
-      ChangeCompColorByPropertyName(Result, clRed, 'BorderColor')
-    else
-      //Component Color 변경
-      ChangeCompColorByPropertyName(Result, clYellow);
-      ShowMessage('필수 항목: [' + Result.Hint + '] 을 입력하세요' );
-  end
-  else //WorkItemGrid Check
-  begin
-
-  end;
+  Result := CheckRequiredInput(Self);
 end;
 
 procedure THiConReportEditF.DeleteWorkItemByReportKey;

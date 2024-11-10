@@ -12,6 +12,7 @@ object HiConReportListF: THiConReportListF
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -1270,6 +1271,8 @@ object HiConReportListF: THiConReportListF
     TabOrder = 2
     TabStop = True
     OnCellDblClick = HiRptListGridCellDblClick
+    ExplicitLeft = -1
+    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30

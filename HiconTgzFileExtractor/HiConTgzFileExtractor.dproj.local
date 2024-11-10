@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.632,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconTgzFileExtractor\FrmHiConTgzFileExtract.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.814,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconTgzFileExtractor\HiConTgzFileExtractor.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.618,=E:\pjh\Dev\Lang\Delphi\Common\Frame\UnitFrameFileList2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.065,E:\pjh\Dev\Lang\Delphi\Common\UnitGZipWin7zUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconTgzFileExtractor\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.967,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.632,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconTgzFileExtractor\FrmHiConTgzFileExtract.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.560,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconTgzFileExtractor\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.053,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -19,9 +19,11 @@ uses
   mormot.rest.http.client, mormot.core.json, mormot.core.unicode, mormot.core.variants,
   mormot.core.data, mormot.orm.base, mormot.core.collections, mormot.rest.sqlite3,
 
+  GpCommandLineParser,
+
   VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR,
-  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitHiConChgRegItemOrm,
-  UnitHiConRptDM;
+  UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitHiConChgRegItemOrm, UnitHMSSignatureOrm,
+  UnitHiConRptDM, UnitHiRptMgrCLO, UnitRegAppUtil;
 
 type
   THiConReportListF = class(TForm)
@@ -158,12 +160,13 @@ type
     ShowChangeRegisterList1: TMenuItem;
     N18: TMenuItem;
 
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btn_SearchClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
     procedure Btn_NewClick(Sender: TObject);
     procedure HiRptListGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
-    procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure HullNoEditClickBtn(Sender: TObject);
     procedure SaveastoDFM1Click(Sender: TObject);
@@ -194,15 +197,21 @@ type
     procedure D1Click(Sender: TObject);
     procedure ShowChangeRegisterList1Click(Sender: TObject);
   private
+    FAppSigInfoJson: string;
+    FCLO4HiRptMgr: TCLO4HiRptMgr;
+
     //보고서 리스트 내,외부 저장용
     FRptDocDict: IDocDict; //{Report: [], WorkItem: []}
 
     procedure InitVar();
+    procedure DestroyVar();
     procedure InitEnum();
 
     procedure ClearRptDocDict();
     procedure SetEnable4SaveDBBtn();
 
+    function CommandLineParse(var AErrMsg: string): boolean;
+    procedure InitCLO();
 //    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
 //      Index: integer; out AStream: IStream);
 
@@ -263,7 +272,7 @@ uses UnitComboBoxUtil, UnitCheckGrpAdvUtil, JHP.Util.Bit32Helper, UnitNextGridUt
   UnitStringUtil, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitExcelUtil,
   UnitDragUtil, UnitBase64Util2, //UnitSynZip2, //UnitCompressUtil,
   FrmHiconReportEdit, FrmSearchVessel2, FrmHiChgRegList,
-  UnitDFMUtil, UnitHiConReportMakeUtil;
+  UnitDFMUtil, UnitHiConReportMakeUtil, UnitHGSSerialRecord2, UnitFileInfoUtil;
 
 {$R *.dfm}
 
@@ -553,6 +562,37 @@ begin
   Close;
 end;
 
+function THiConReportListF.CommandLineParse(var AErrMsg: string): boolean;
+var
+  LStr: string;
+begin
+  AErrMsg := '';
+  FCLO4HiRptMgr := TCLO4HiRptMgr.Create();
+  try
+//      CommandLineParser.Options := [opIgnoreUnknownSwitches];
+    Result := CommandLineParser.Parse(FCLO4HiRptMgr);
+  except
+    on E: ECLPConfigurationError do begin
+      AErrMsg := '*** Configuration error ***' + #13#10 +
+        Format('%s, position = %d, name = %s',
+          [E.ErrorInfo.Text, E.ErrorInfo.Position, E.ErrorInfo.SwitchName]);
+      Exit;
+    end;
+  end;
+
+  if not Result then
+  begin
+    AErrMsg := Format('%s, position = %d, name = %s',
+      [CommandLineParser.ErrorInfo.Text, CommandLineParser.ErrorInfo.Position,
+       CommandLineParser.ErrorInfo.SwitchName]) + #13#10;
+    for LStr in CommandLineParser.Usage do
+      AErrMsg := AErrMSg + LStr + #13#10;
+  end
+  else
+  begin
+  end;
+end;
+
 procedure THiConReportListF.CreateNewTask1Click(Sender: TObject);
 begin
   HiRptEdit();
@@ -602,6 +642,11 @@ end;
 procedure THiConReportListF.DeleteWorkItemByReportKey(const ARptKey: TTimeLog);
 begin
   DeleteHiconReportDetailByRptKey(ARptKey);
+end;
+
+procedure THiConReportListF.DestroyVar;
+begin
+  FCLO4HiRptMgr.Free;
 end;
 
 procedure THiConReportListF.DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
@@ -843,6 +888,12 @@ begin
   MakeZipFileFromSelected();
 end;
 
+procedure THiConReportListF.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  DestroyVar();
+end;
+
 procedure THiConReportListF.FormCreate(Sender: TObject);
 begin
   InitVar();
@@ -1016,11 +1067,21 @@ begin
   end;
 end;
 
+procedure THiConReportListF.InitCLO;
+begin
+  FCLO4HiRptMgr.BuildDate := TimeLogFromDateTime(now);
+  FCLO4HiRptMgr.ExpireDate := TimeLogFromDateTime(now+1);
+  FCLO4HiRptMgr.BuildExpireDays := 1;
+  FCLO4HiRptMgr.ExpireExecCount := 1;
+end;
+
 procedure THiConReportListF.InitEnum;
 begin
   g_HiRptMgrQueryDateType.InitArrayRecord(R_HiRptMgrQueryDateType);
   g_HiRptWorkCode.InitArrayRecord(R_HiRptWorkCode);
   g_HiRptKind.InitArrayRecord(R_HiRptKind);
+  g_HiRptKind2.InitArrayRecord(R_HiRptKind2);
+  g_HiRptSystemKind.InitArrayRecord(R_HiRptSystemKind);
   g_HiRptModifiedItem.InitArrayRecord(R_HiRptModifiedItem);
 
   g_HiRptKind.SetType2Combo(ReportKindCombo);
@@ -1028,10 +1089,16 @@ begin
 end;
 
 procedure THiConReportListF.InitVar;
+var
+  LStr: string;
 begin
+  CommandLineParse(LStr);
+  InitCLO();
+
   InitHiconReportListClient('');
   InitHiconReportDetailClient('');
   InitHiChgRegItemClient('');
+  //UnitHiConReportMgR.CheckRegByAppSigUsingOrm()에서 InitHMSSerialOrm() 실행함
 
   InitEnum();
 

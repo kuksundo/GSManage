@@ -19,33 +19,27 @@ type
     : string;
   end;
 
-  THiRptMgrQueryDateType = (hrmqdtNull,
-    hrmqdtFinal);
-
-  THiRptWorkCode = (hrwcNull,
-    hrwcA, hrwcB_1, hrwcB_2, hrwcB_3, hrwcB_4, hrwcC_1, hrwcC_2, hrwcD,
-    hrwcFinal);
-
-  THiRptKind = (hrkNull,
-    hrkCR, hrkSR,
-    hrkFinal);
-
+type
   THiCommissionRptKind = (hcrkNull,
     hcrkTotal, hcrkSummary, hcrkCode, hcrkSummaryByCode,
     hcrkFinal);
 
-  THiRptModifiedItem = (
-    hrmiStraton, hrmiDB, hrmiHMI, hrmiSystem, hrmiIOList, hrmiDrawing, hrmiCnEChart,
-    hrmiFinal);
-
-const
 {$REGION 'R_HiRptMgrQueryDateType'}
+type
+  THiRptMgrQueryDateType = (hrmqdtNull,
+    hrmqdtFinal);
+const
   R_HiRptMgrQueryDateType : array[Low(THiRptMgrQueryDateType)..High(THiRptMgrQueryDateType)] of string =
     ('',
      '');
 {$ENDREGION}
 
 {$REGION 'R_HiRptWorkCode'}
+type
+  THiRptWorkCode = (hrwcNull,
+    hrwcA, hrwcB_1, hrwcB_2, hrwcB_3, hrwcB_4, hrwcC_1, hrwcC_2, hrwcD,
+    hrwcFinal);
+const
   R_HiRptWorkCode : array[Low(THiRptWorkCode)..High(THiRptWorkCode)] of string =
     ('',
      'A',
@@ -69,21 +63,82 @@ const
      'C-2: External Modification(Request by yard/Owner side) - All the change request against IO list, FDS, Master DW with cost',
      'D: Waiting time(by yard/other venders) - Standby on board or in office based on yard or other vender issue',
      '');
-
 {$ENDREGION}
 
 {$REGION 'R_HiRptKind'}
+type
+  THiRptKind = (hrkNull,
+    hrkCOM, hrkSVR, hrkCHR,
+    hrkFinal);
+
+const
   R_HiRptKind : array[Low(THiRptKind)..High(THiRptKind)] of string =
     ('',
      'Commissioning Report',
      'Service Report',
+     'Change Register Report',
+     '');
+
+  R_HiRptKind2 : array[Low(THiRptKind)..High(THiRptKind)] of string =
+    ('',
+     'COM',
+     'SVR',
+     'CHR',
+     '');
+{$ENDREGION}
+
+{$REGION 'R_HiRptSystemKind'}
+type
+  THiRptSystemKind = (hrcNull,
+    hrcIAS, hrcFGSS, hrcLFSS, hrcSCR, hrcALS,
+    hrcFinal);
+
+const
+  R_HiRptSystemKind : array[Low(THiRptSystemKind)..High(THiRptSystemKind)] of string =
+    ('',
+     'IAS',
+     'FGSS',
+     'LFSS',
+     'SCR',
+     'ALS',
      '');
 {$ENDREGION}
 
 {$REGION 'R_HiRptModifiedItem'}
+type
+  THiRptModifiedItem = (
+    hrmiStraton, hrmiDB, hrmiHMI, hrmiSystem, hrmiIOList, hrmiDrawing, hrmiCnEChart,
+    hrmiFinal);
+
+const
   R_HiRptModifiedItem : array[Low(THiRptModifiedItem)..High(THiRptModifiedItem)] of string =
     (
       'Straton', 'DB', 'HMI(HiView)', 'System(HiCONIS)', 'I/O List', 'Drawing', 'C & E Chart',
+     '');
+{$ENDREGION}
+
+{$REGION 'R_HiRptModifyReqSrc'}
+type
+  THiRptModifyReqSrc = (
+    hrmrsYard, hrmrsOwner, hrmrsClass, hrmrsHMS, hrmrsOther,
+    hrmrsFinal);
+
+const
+  R_HiRptModifyReqSrc : array[Low(THiRptModifyReqSrc)..High(THiRptModifyReqSrc)] of string =
+    (
+      'Yard', 'Owner', 'Class', 'HMS', 'Other',
+     '');
+{$ENDREGION}
+
+{$REGION 'R_HiRptModifyReqSrc'}
+type
+  THiRptImportance = (
+    hriMinorChg, hriMajorChg, hriLowPriority, hriHighPriority,
+    hriFinal);
+const
+  R_HiRptImportance : array[Low(THiRptImportance)..High(THiRptImportance)] of string =
+    (
+      'Minor Change', 'Major Change', 'Low Priority', 'High Priority',
      '');
 {$ENDREGION}
 
@@ -92,7 +147,11 @@ var
   g_HiRptWorkCode: TLabelledEnum<THiRptWorkCode>;
   g_HiRptWorkCodeDesc: TLabelledEnum<THiRptWorkCode>;
   g_HiRptKind: TLabelledEnum<THiRptKind>;
+  g_HiRptKind2: TLabelledEnum<THiRptKind>;
+  g_HiRptSystemKind: TLabelledEnum<THiRptSystemKind>;
   g_HiRptModifiedItem: TLabelledEnum<THiRptModifiedItem>;
+  g_HiRptModifyReqSrc: TLabelledEnum<THiRptModifyReqSrc>;
+  g_HiRptImportance: TLabelledEnum<THiRptImportance>;
 
 implementation
 
@@ -101,6 +160,10 @@ initialization
 //  g_HiRptWorkCode.InitArrayRecord(R_HiRptWorkCode);
 //  g_HiRptWorkCodeDesc.InitArrayRecord(R_HiRptWorkCodeDesc);
 //  g_HiRptKind.InitArrayRecord(R_HiRptKind);
+//  g_HiRptKind2.InitArrayRecord(R_HiRptKind2);
+//  g_HiRptSystemKind.InitArrayRecord(R_HiRptSystemKind);
 //  g_HiRptModifiedItem.InitArrayRecord(R_HiRptModifiedItem);
+//  g_HiRptModifyReqSrc.InitArrayRecord(R_HiRptModifyReqSrc);
+//  g_HiRptImportance.InitArrayRecord(R_HiRptImportance);
 
 end.

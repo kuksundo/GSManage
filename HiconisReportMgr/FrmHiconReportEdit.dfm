@@ -27,6 +27,8 @@ object HiConReportEditF: THiConReportEditF
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
+      ExplicitLeft = 3
+      ExplicitTop = 25
       object JvLabel36: TJvLabel
         AlignWithMargins = True
         Left = 17
@@ -613,7 +615,7 @@ object HiConReportEditF: THiConReportEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C0101300098006C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800740410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2389,8 +2391,6 @@ object HiConReportEditF: THiConReportEditF
     Align = alTop
     Rounding = 4
     TabOrder = 4
-    ExplicitLeft = -5
-    ExplicitTop = 0
     object ReportKey: TEdit
       Left = 438
       Top = 12

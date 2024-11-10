@@ -14,11 +14,13 @@ uses
   UnitFrameFileList2 in '..\..\..\Common\Frame\UnitFrameFileList2.pas' {JHPFileListFrame: TFrame},
   FrmHiChangeRegisterEdit in 'FrmHiChangeRegisterEdit.pas' {HiChgRegItemF},
   FrameVesselInfo in '..\Common\FrameVesselInfo.pas' {VesselInfoFr: TFrame},
-  FrameHiReportInfo in '..\Common\FrameHiReportInfo.pas' {HiRptInfoFr: TFrame},
   UnitHiConChgRegItemOrm in 'UnitHiConChgRegItemOrm.pas',
   FrmHiChgRegList in 'FrmHiChgRegList.pas' {ChgRegListF},
   UnitHiConRptDM in 'UnitHiConRptDM.pas' {DataModule1: TDataModule},
-  UnitHiConReportMgR in '..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR.pas';
+  UnitHiConReportMgR in '..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR.pas',
+  UnitRegAppUtil in '..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
+  UnitHMSSignatureOrm in '..\Common\UnitHMSSignatureOrm.pas',
+  UnitFileInfoUtil in '..\..\..\Common\UnitFileInfoUtil.pas';
 
 {$R *.res}
 

@@ -8,7 +8,7 @@ uses
   NxCustomGridControl, NxCustomGrid, NxGrid, AdvOfficeTabSet, AeroButtons,
   Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit, JvCombobox, Vcl.Buttons,
   AdvEdit, AdvEdBtn, Vcl.StdCtrls, Vcl.ComCtrls, AdvGroupBox, AdvOfficeButtons,
-  JvExControls, JvLabel, CurvyControls, Vcl.Menus,
+  JvExControls, JvLabel, CurvyControls, Vcl.Menus, NxColumnClasses, NxColumns,
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
@@ -66,12 +66,46 @@ type
     PopupMenu1: TPopupMenu;
     SaveastoDFM1: TMenuItem;
     ReportKey: TEdit;
+
+    NxIncrementColumn1: TNxIncrementColumn;
+    RowID:TnxNumberColumn;
+    ReportKey4ChgReg:TnxNumberColumn;
+    ChgRegRptNo:TnxTextColumn;
+    ChgRegRptAuthorID:TnxTextColumn;
+    ChgRegRptAuthorName:TnxTextColumn;
+    ChgRegSubject:TnxTextColumn;
+    SystemName:TnxTextColumn;
+    DocRef:TnxTextColumn;
+    Chapter:TnxTextColumn;
+    InitiaedDuring:TnxTextColumn;
+    ReqSrc:TnxTextColumn;
+    Modification:TnxTextColumn;
+    ModDetail:TnxTextColumn;
+    Plan_Engineer:TnxTextColumn;
+    Plan_ClosePIC:TnxTextColumn;
+    Plan_Finish:TnxTextColumn;
+    EstimatedWorkHour:TnxTextColumn;
+    Importance:TnxTextColumn;
+    Open_PIC:TnxTextColumn;
+    Test_PIC:TnxTextColumn;
+    Close_PIC:TnxTextColumn;
+    ChgRegDate:TnxNumberColumn;
+    ChgRegOpenDate:TnxNumberColumn;
+    ChgRegTestDate:TnxNumberColumn;
+    ChgRegCloseDate:TnxNumberColumn;
+    ChgRegModifyDate:TnxNumberColumn;
+    SetColCaptionFromList1: TMenuItem;
+    Involves: TNxTextColumn;
+
     procedure SaveastoDFM1Click(Sender: TObject);
     procedure btn_SearchClick(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
     procedure Btn_ExportClick(Sender: TObject);
     procedure Btn_NewClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure SetColCaptionFromList1Click(Sender: TObject);
+    procedure HiChgRegListGridCellDblClick(Sender: TObject; ACol,
+      ARow: Integer);
   private
     FReportKey4ChgReg: TTimeLog;
 
@@ -87,6 +121,8 @@ type
 
     procedure HiChgRegItemEdit(const ARow: integer=-1);
     procedure LoadChgRegJson2Grid(AJson: string; ARow: integer=-1);
+
+    function GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
   public
     { Public declarations }
   end;
@@ -100,7 +136,7 @@ var
 implementation
 
 uses UnitDFMUtil, UnitNextGridUtil2, UnitComboBoxUtil, JHP.Util.Bit32Helper,
-  UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm,
+  UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHGSSerialRecord2,
   FrmHiChangeRegisterEdit;
 
 {$R *.dfm}
@@ -127,7 +163,7 @@ begin
 
       if Result = mrOK then
       begin
-
+        AddNextGridRowsFromJsonAry(HiChgRegListGrid, LJson, HiChgRegListGrid.Columns.Count = 0);
       end;
     end;//with
   finally
@@ -358,6 +394,11 @@ begin
   end;
 end;
 
+function TChgRegListF.GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
+begin
+  Result := 'HMS-' + g_HiRptKind2.ToString(hrkCHR) + '-' + IntToStr(AYear) + '-' + IntToStr(ASerialNo);// + '-' + g_HiRptCategory.ToString(hrcIAS)
+end;
+
 procedure TChgRegListF.GetSearchCondRec(var ARec: THiRptMgrSearchCondRec);
 var
   LQueryDateType: THiRptMgrQueryDateType;
@@ -399,15 +440,19 @@ var
   LOrmHiChgRegItem: TOrmHiChgRegItem;
   LUtf8: RawUtf8;
   LFromDocDict: Boolean;
-  LKeyId: string;
+  LYear, LSerial: integer;
 begin
   if ARow = -1 then //Add
   begin
     LOrmHiChgRegItem := TOrmHiChgRegItem.Create;
     try
+      LYear := CurrentYear();
+      LSerial := GetNextHGSSerialFromProductType(LYear, Ord(hrkCHR));
+
       LOrmHiChgRegItem.ReportKey4ChgReg := FReportKey4ChgReg;
-      LOrmHiChgRegItem.RegDate := TimeLogFromDateTime(now);
-      LOrmHiChgRegItem.ModifyDate_ChgReg := TimeLogFromDateTime(now);
+      LOrmHiChgRegItem.ChgRegRptNo := GetNewChgRegRptNoBySerial(LYear, LSerial);
+      LOrmHiChgRegItem.ChgRegDate := TimeLogFromDateTime(now);
+      LOrmHiChgRegItem.ChgRegModifyDate := TimeLogFromDateTime(now);
 
       LUtf8 := LOrmHiChgRegItem.GetJsonValues(true, true, soSelect);
     finally
@@ -420,8 +465,15 @@ begin
   end;
 
   //"저장" 버튼을 누르면 True
-  if DisplayHiChgRegEditForm(LUtf8, LFromDocDict) = mrOK then
+  if DisplayHiChgRegEditForm(FReportKey4ChgReg, LUtf8, LFromDocDict) = mrOK then
   begin
+    //신규 추가한 경우 Report No가 새로 생성됨
+    //Current Serial No를 DB에 저장 해야함
+    if ARow = -1 then //Add
+    begin
+      AddOrUpdateNextHGSSerial(LYear, Ord(hrkCHR), 0, LSerial);
+    end;
+
     LoadChgRegJson2Grid(LUtf8, ARow);
 
 //    if LFromDocDict then
@@ -429,6 +481,13 @@ begin
 //      LKeyId := HiChgRegListGrid.CellsByName['ReportKey', HiChgRegListGrid.SelectedRow];
 //    end;
   end;
+end;
+
+procedure TChgRegListF.HiChgRegListGridCellDblClick(Sender: TObject; ACol,
+  ARow: Integer);
+begin
+  if HiChgRegListGrid.SelectedRow <> -1 then
+    HiChgRegItemEdit(HiChgRegListGrid.SelectedRow);
 end;
 
 procedure TChgRegListF.LoadChgRegJson2Grid(AJson: string; ARow: integer);
@@ -451,6 +510,22 @@ end;
 procedure TChgRegListF.SaveastoDFM1Click(Sender: TObject);
 begin
   SaveToDFM2('c:\temp\'+ ChangeFileExt(ExtractFileName(Application.ExeName), '.txt'), Self);
+end;
+
+procedure TChgRegListF.SetColCaptionFromList1Click(Sender: TObject);
+var
+  LStrList: TStringList;
+begin
+  LStrList := TStringList.Create;
+  try
+    if FileExists('c:\temp\NameNHintList.txt') then
+    begin
+      LStrList.LoadFromFile('c:\temp\NameNHintList.txt');
+      SetColumnCaptionFromListOnlyColumnExist(HiChgRegListGrid, LStrList);
+    end;
+  finally
+    LStrList.Free;
+  end;
 end;
 
 procedure TChgRegListF.SetSrchCondHdrFromDict(ADict: IDocDict);

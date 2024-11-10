@@ -12,12 +12,16 @@ type
   private
     fReportKey: TTimeLog;
     fChgRegRptNo,
+    fReportAuthorID,
+    fReportAuthorName,
     fTitle,
     fSystemName,
     fDocRef,
     fChapter,
-    fInitiaedDuring,
+    fInitiatedDuring,
+    fRegisteredBy,
     fReqSrc,
+    fInvolves,
     fModification,
     fModDetail,
     fPlan_Engineer,
@@ -45,12 +49,16 @@ type
   published
     property ReportKey4ChgReg : TTimeLog read fReportKey write fReportKey;
     property ChgRegRptNo: RawUTF8 read fChgRegRptNo write fChgRegRptNo;
-    property Title: RawUTF8 read fTitle write fTitle;
+    property ChgRegRptAuthorID: RawUTF8 read fReportAuthorID write fReportAuthorID;
+    property ChgRegRptAuthorName: RawUTF8 read fReportAuthorName write fReportAuthorName;
+    property ChgRegSubject: RawUTF8 read fTitle write fTitle;
     property SystemName: RawUTF8 read fSystemName write fSystemName;
     property DocRef: RawUTF8 read fDocRef write fDocRef;
     property Chapter: RawUTF8 read fChapter write fChapter;
-    property InitiaedDuring: RawUTF8 read fInitiaedDuring write fInitiaedDuring;
+    property InitiaedDuring: RawUTF8 read fInitiatedDuring write fInitiatedDuring;
+    property RegisteredBy: RawUTF8 read fRegisteredBy write fRegisteredBy;
     property ReqSrc: RawUTF8 read fReqSrc write fReqSrc;
+    property Involves: RawUTF8 read fInvolves write fInvolves;
     property Modification: RawUTF8 read fModification write fModification;
     property ModDetail: RawUTF8 read fModDetail write fModDetail;
     property Plan_Engineer: RawUTF8 read fPlan_Engineer write fPlan_Engineer;
@@ -62,11 +70,11 @@ type
     property Test_PIC: RawUTF8 read fTest_PIC write fTest_PIC;
     property Close_PIC: RawUTF8 read fClose_PIC write fClose_PIC;
 
-    property RegDate: TTimeLog read fRegDate write fRegDate;
-    property Open_Date: TTimeLog read fOpen_Date write fOpen_Date;
-    property Test_Date: TTimeLog read fTest_Date write fTest_Date;
-    property CLose_Date: TTimeLog read fCLose_Date write fCLose_Date;
-    property ModifyDate_ChgReg: TTimeLog read fModifyDate write fModifyDate;
+    property ChgRegDate: TTimeLog read fRegDate write fRegDate;
+    property ChgRegOpenDate: TTimeLog read fOpen_Date write fOpen_Date;
+    property ChgRegTestDate: TTimeLog read fTest_Date write fTest_Date;
+    property ChgRegCloseDate: TTimeLog read fCLose_Date write fCLose_Date;
+    property ChgRegModifyDate: TTimeLog read fModifyDate write fModifyDate;
   end;
 
   function CreateModelHiChgRegItem: TOrmModel;
@@ -165,7 +173,7 @@ end;
 
 function GetHiChgRegItemByHcrNo(const AHcrNo: string): TOrmHiChgRegItem;
 begin
-  Result := TOrmHiChgRegItem.CreateAndFillPrepare(g_HiChgRegItemDB.orm, 'HcrNo = ?', [AHcrNo]);
+  Result := TOrmHiChgRegItem.CreateAndFillPrepare(g_HiChgRegItemDB.orm, 'ChgRegRptNo = ?', [AHcrNo]);
 
   if Result.FillOne then
     Result.IsUpdate := True
@@ -176,7 +184,7 @@ end;
 function GetHiChgRegItemByReportNHcrNo(const AReportKey: TTimeLog; AHcrNo: string): TOrmHiChgRegItem; overload;
 begin
   Result := TOrmHiChgRegItem.CreateAndFillPrepare(g_HiChgRegItemDB.orm,
-    'ReportKey4ChgReg = ? AND HcrNo = ?', [AReportKey, AHcrNo]);
+    'ReportKey4ChgReg = ? AND ChgRegRptNo = ?', [AReportKey, AHcrNo]);
 
   if Result.FillOne then
     Result.IsUpdate := True
@@ -218,7 +226,7 @@ begin
     LOrmHiChgRegItem := TOrmHiChgRegItem.Create
   else
   begin
-    LHcrNo := AVar.HcrNo;
+    LHcrNo := AVar.ChgRegRptNo;
     LOrmHiChgRegItem := GetHiChgRegItemByHcrNo(LHcrNo);
   end;
 
@@ -280,7 +288,7 @@ begin
   for LVar in LDocList do
   begin
     LRptKey := LVar.ReportKey4ChgReg;
-    LHcrNo := LVar.HcrNo;
+    LHcrNo := LVar.ChgRegRptNo;
 
     LOrm := GetHiChgRegItemByReportNHcrNo(LRptKey, LHcrNo);
     try
@@ -310,10 +318,11 @@ end;
 
 procedure DeleteHiChgRegItemByHcrNo(const AHcrNo: string);
 begin
-  g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'HcrNo = ?', [AHcrNo]);
+  g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ChgRegRptNo = ?', [AHcrNo]);
 end;
 
 initialization
+
 finalization
   DestroyHiChgRegItemlClient();
 

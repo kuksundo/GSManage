@@ -2,7 +2,7 @@ object HiChgRegItemF: THiChgRegItemF
   Left = 0
   Top = 0
   Caption = 'HiChgRegItemF'
-  ClientHeight = 602
+  ClientHeight = 634
   ClientWidth = 609
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,8 @@ object HiChgRegItemF: THiChgRegItemF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object CurvyPanel2: TCurvyPanel
@@ -18,7 +20,7 @@ object HiChgRegItemF: THiChgRegItemF
     Left = 0
     Top = 3
     Width = 609
-    Height = 36
+    Height = 64
     Margins.Left = 0
     Margins.Right = 0
     Align = alTop
@@ -26,11 +28,93 @@ object HiChgRegItemF: THiChgRegItemF
     TabOrder = 0
     ExplicitLeft = -5
     ExplicitTop = 0
-    object ReportKey: TEdit
-      Left = 435
-      Top = 12
-      Width = 159
+    object JvLabel15: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 8
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #47928#49436#48264#54840
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel13: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 36
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #48372#44256#49436#51089#49457#51068
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel14: TJvLabel
+      AlignWithMargins = True
+      Left = 308
+      Top = 9
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #48372#44256#49436#51333#47448
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object ReportKey4ChgReg: TEdit
+      Left = 242
+      Top = 40
+      Width = 23
       Height = 21
+      Hint = #48372#44256#49436' '#53412
       Alignment = taCenter
       ImeName = 'Microsoft IME 2010'
       TabOrder = 0
@@ -38,11 +122,11 @@ object HiChgRegItemF: THiChgRegItemF
     end
     object ChgRegRptNo: TNxButtonEdit
       Tag = 6
-      Left = 3
+      Left = 116
       Top = 9
-      Width = 312
+      Width = 186
       Height = 24
-      Enabled = False
+      Hint = #48372#44256#49436#48264#54840
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -80,23 +164,49 @@ object HiChgRegItemF: THiChgRegItemF
       ButtonWidth = 30
       TransparentColor = clNone
     end
+    object ChgRegDate: TDateTimePicker
+      Tag = 111
+      Left = 116
+      Top = 37
+      Width = 89
+      Height = 24
+      Hint = #48372#44256#49436#51089#49457#51068
+      Date = 42843.827708518520000000
+      Time = 42843.827708518520000000
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 2
+    end
+    object ReportKind: TComboBox
+      Tag = 112
+      Left = 414
+      Top = 8
+      Width = 185
+      Height = 21
+      Hint = #48372#44256#49436#51333#47448
+      Style = csDropDownList
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 3
+    end
   end
   object PageControl1: TPageControl
     Left = 0
-    Top = 244
+    Top = 253
     Width = 609
-    Height = 316
+    Height = 339
     ActivePage = TabSheet5
     Align = alClient
     TabOrder = 1
     TabWidth = 120
+    ExplicitTop = 225
+    ExplicitHeight = 356
     object TabSheet5: TTabSheet
       Caption = #51068#48152#49324#54637
       ImageIndex = 4
+      ExplicitHeight = 328
       object JvLabel38: TJvLabel
         AlignWithMargins = True
         Left = 16
-        Top = 200
+        Top = 219
         Width = 100
         Height = 25
         Alignment = taCenter
@@ -123,7 +233,7 @@ object HiChgRegItemF: THiChgRegItemF
       object JvLabel16: TJvLabel
         AlignWithMargins = True
         Left = 17
-        Top = 116
+        Top = 135
         Width = 100
         Height = 25
         Alignment = taCenter
@@ -150,7 +260,7 @@ object HiChgRegItemF: THiChgRegItemF
       object JvLabel19: TJvLabel
         AlignWithMargins = True
         Left = 16
-        Top = 48
+        Top = 67
         Width = 100
         Height = 25
         Alignment = taCenter
@@ -204,36 +314,36 @@ object HiChgRegItemF: THiChgRegItemF
       object ModDetail: TMemo
         Tag = 15
         Left = 122
-        Top = 200
+        Top = 219
         Width = 468
         Height = 60
-        Hint = #45796#51020' '#51652#54665' '#50629#47924
+        Hint = #48320#44221#49345#49464
         BevelInner = bvNone
         BevelKind = bkFlat
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
-        TabOrder = 2
+        TabOrder = 3
       end
       object Modification: TMemo
         Tag = 14
         Left = 123
-        Top = 118
+        Top = 137
         Width = 467
         Height = 76
-        Hint = #54788#51116' '#51652#54665' '#50629#47924
+        Hint = #48320#44221#45236#50857
         BevelInner = bvNone
         BevelKind = bkFlat
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 1
       end
-      object ModifyItems: TAdvOfficeCheckGroup
+      object Involves: TAdvOfficeCheckGroup
         Tag = 13
         Left = 122
-        Top = 50
+        Top = 75
         Width = 468
         Height = 54
-        Hint = #48320#44221#49324#54637
+        Hint = #48320#44221#54637#47785
         Version = '1.3.8.5'
         Color = clBtnFace
         ParentBackground = False
@@ -245,27 +355,28 @@ object HiChgRegItemF: THiChgRegItemF
       object ReqSrc: TAdvOfficeCheckGroup
         Tag = 13
         Left = 123
-        Top = 5
+        Top = 6
         Width = 468
-        Height = 31
-        Hint = #48320#44221#49324#54637
+        Height = 35
+        Hint = #48320#44221#50836#44396#52376
         Version = '1.3.8.5'
         Color = clBtnFace
         ParentBackground = False
         ParentColor = False
-        TabOrder = 3
-        Columns = 4
+        TabOrder = 2
+        Columns = 5
         Ellipsis = False
       end
     end
     object SubConTS: TTabSheet
       Caption = #45812#45817#51088' '#51221#48372
       ImageIndex = 6
+      ExplicitHeight = 328
       object NxHeaderPanel1: TNxHeaderPanel
         Left = 3
         Top = 16
         Width = 341
-        Height = 209
+        Height = 233
         Caption = #51089#50629#44228#54925
         HeaderFont.Charset = DEFAULT_CHARSET
         HeaderFont.Color = clWindowText
@@ -413,7 +524,7 @@ object HiChgRegItemF: THiChgRegItemF
         object Plan_Engineer: TEdit
           Tag = 20
           Left = 133
-          Top = 32
+          Top = 36
           Width = 182
           Height = 21
           Hint = #51089#49457#51088#51060#47492
@@ -427,7 +538,7 @@ object HiChgRegItemF: THiChgRegItemF
           Top = 63
           Width = 182
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #54869#51064#45812#45817
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 1
@@ -438,24 +549,24 @@ object HiChgRegItemF: THiChgRegItemF
           Top = 128
           Width = 182
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #50696#49345#51089#50629#49884#44036
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 2
         end
         object Importance: TAdvOfficeCheckGroup
           Tag = 23
-          Left = 130
-          Top = 157
+          Left = 133
+          Top = 155
           Width = 185
-          Height = 31
-          Hint = #48320#44221#49324#54637
+          Height = 62
+          Hint = #51473#50836#46020
           Version = '1.3.8.5'
           Color = clBtnFace
           ParentBackground = False
           ParentColor = False
           TabOrder = 3
-          Columns = 4
+          Columns = 2
           Ellipsis = False
         end
         object Plan_Finish: TEdit
@@ -464,7 +575,7 @@ object HiChgRegItemF: THiChgRegItemF
           Top = 94
           Width = 182
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #51333#47308#44228#54925
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 4
@@ -540,22 +651,22 @@ object HiChgRegItemF: THiChgRegItemF
         end
         object Open_PIC: TEdit
           Tag = 24
-          Left = 80
-          Top = 34
+          Left = 79
+          Top = 36
           Width = 150
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #51217#49688#45812#45817#51088#51060#47492
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
         object Open_Date: TDateTimePicker
           Tag = 25
-          Left = 83
+          Left = 79
           Top = 63
           Width = 89
           Height = 24
-          Hint = #48372#44256#49436#51089#49457#51068
+          Hint = #51217#49688#51068#51088
           Date = 42843.827708518520000000
           Time = 42843.827708518520000000
           ImeName = 'Microsoft IME 2010'
@@ -636,18 +747,18 @@ object HiChgRegItemF: THiChgRegItemF
           Top = 34
           Width = 150
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #53580#49828#53944#45812#45817#51088#51060#47492
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
         object Test_Date: TDateTimePicker
           Tag = 27
-          Left = 80
+          Left = 79
           Top = 61
           Width = 89
           Height = 24
-          Hint = #48372#44256#49436#51089#49457#51068
+          Hint = #53580#49828#53944#51068#51088
           Date = 42843.827708518520000000
           Time = 42843.827708518520000000
           ImeName = 'Microsoft IME 2010'
@@ -728,18 +839,18 @@ object HiChgRegItemF: THiChgRegItemF
           Top = 34
           Width = 150
           Height = 21
-          Hint = #51089#49457#51088#51060#47492
+          Hint = #50756#47308#45812#45817#51088#51060#47492
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
         object CLose_Date: TDateTimePicker
           Tag = 29
-          Left = 83
-          Top = 63
+          Left = 79
+          Top = 61
           Width = 89
           Height = 24
-          Hint = #48372#44256#49436#51089#49457#51068
+          Hint = #50756#47308#51068#51088
           Date = 42843.827708518520000000
           Time = 42843.827708518520000000
           ImeName = 'Microsoft IME 2010'
@@ -750,33 +861,34 @@ object HiChgRegItemF: THiChgRegItemF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
+      ExplicitHeight = 328
       inline TJHPFileListFrame1: TJHPFileListFrame
         Left = 0
         Top = 0
         Width = 601
-        Height = 288
+        Height = 311
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 601
-        ExplicitHeight = 288
+        ExplicitHeight = 328
         inherited JvLabel13: TJvLabel
-          Height = 244
+          Height = 267
           ExplicitHeight = 302
         end
         inherited fileGrid: TNextGrid
           Width = 503
-          Height = 250
+          Height = 273
           ExplicitWidth = 503
-          ExplicitHeight = 250
+          ExplicitHeight = 290
           inherited FileName: TNxTextColumn
             DefaultWidth = 389
             Width = 389
           end
         end
         inherited Panel2: TPanel
-          Top = 250
+          Top = 273
           Width = 601
-          ExplicitTop = 250
+          ExplicitTop = 290
           ExplicitWidth = 601
           inherited CloseButton: TAdvGlowButton
             Left = 472
@@ -789,7 +901,7 @@ object HiChgRegItemF: THiChgRegItemF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800780410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C0101300098009C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2515,47 +2627,18 @@ object HiChgRegItemF: THiChgRegItemF
       end
     end
   end
-  inline TVesselInfoFr1: TVesselInfoFr
-    Left = 0
-    Top = 42
-    Width = 609
-    Height = 98
-    Align = alTop
-    TabOrder = 2
-    ExplicitTop = 42
-    ExplicitWidth = 609
-    inherited Panel4: TPanel
-      Width = 609
-      Enabled = False
-      ExplicitWidth = 609
-    end
-  end
-  inline THiRptInfoFr1: THiRptInfoFr
-    Left = 0
-    Top = 140
-    Width = 609
-    Height = 104
-    Align = alTop
-    TabOrder = 3
-    ExplicitTop = 140
-    ExplicitWidth = 609
-    inherited Panel5: TPanel
-      Width = 609
-      Enabled = False
-      ExplicitWidth = 609
-    end
-  end
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 563
+    Top = 595
     Width = 609
     Height = 36
     Margins.Left = 0
     Margins.Right = 0
     Align = alBottom
     Rounding = 4
-    TabOrder = 4
+    TabOrder = 2
+    ExplicitTop = 584
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 542
@@ -2582,6 +2665,402 @@ object HiChgRegItemF: THiChgRegItemF
       Caption = #51200#51109
       ModalResult = 1
       TabOrder = 1
+    end
+    object Button1: TButton
+      Left = 0
+      Top = 0
+      Width = 75
+      Height = 36
+      Align = alLeft
+      Caption = 'test '#51077#47141
+      TabOrder = 2
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 75
+      Top = 0
+      Width = 75
+      Height = 36
+      Align = alLeft
+      Caption = 'Get Hint List'
+      TabOrder = 3
+      OnClick = Button2Click
+    end
+  end
+  object Panel5: TPanel
+    Left = 0
+    Top = 88
+    Width = 609
+    Height = 165
+    Align = alTop
+    ParentBackground = False
+    TabOrder = 3
+    ExplicitTop = 82
+    object JvLabel31: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 39
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #48372#44256#49436' '#51228#47785
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel49: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 8
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51089#49457#51088'ID'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel30: TJvLabel
+      AlignWithMargins = True
+      Left = 310
+      Top = 7
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51089#49457#51088#51060#47492
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel17: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 70
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'System'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel18: TJvLabel
+      AlignWithMargins = True
+      Left = 310
+      Top = 73
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Doc. Ref'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel20: TJvLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 101
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Chapter'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel21: TJvLabel
+      AlignWithMargins = True
+      Left = 309
+      Top = 103
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Initiated During'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel24: TJvLabel
+      AlignWithMargins = True
+      Left = 309
+      Top = 132
+      Width = 100
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Registerd By'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object ChgRegSubject: TEdit
+      Tag = 115
+      Left = 116
+      Top = 40
+      Width = 484
+      Height = 21
+      Hint = #48372#44256#49436' '#51228#47785
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 2
+    end
+    object ChgRegRptAuthorID: TEdit
+      Tag = 113
+      Left = 116
+      Top = 10
+      Width = 188
+      Height = 21
+      Hint = #51089#49457#51088' ID'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 0
+    end
+    object ChgRegRptAuthorName: TEdit
+      Tag = 114
+      Left = 416
+      Top = 7
+      Width = 182
+      Height = 21
+      Hint = #51089#49457#51088#51060#47492
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 1
+    end
+    object SystemName: TEdit
+      Tag = 113
+      Left = 116
+      Top = 72
+      Width = 188
+      Height = 21
+      Hint = 'SystemName'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 3
+    end
+    object DocRef: TEdit
+      Tag = 113
+      Left = 416
+      Top = 73
+      Width = 188
+      Height = 21
+      Hint = 'DocRef'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 4
+    end
+    object Chapter: TEdit
+      Tag = 113
+      Left = 116
+      Top = 103
+      Width = 188
+      Height = 21
+      Hint = 'Chapter'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 5
+    end
+    object InitiaedDuring: TEdit
+      Tag = 113
+      Left = 415
+      Top = 105
+      Width = 188
+      Height = 21
+      Hint = 'InitiaedDuring'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 6
+    end
+    object RegisteredBy: TEdit
+      Tag = 113
+      Left = 413
+      Top = 135
+      Width = 188
+      Height = 21
+      Hint = 'RegisteredBy'
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 7
+    end
+  end
+  object NxFlipPanel1: TNxFlipPanel
+    Left = 0
+    Top = 70
+    Width = 609
+    Height = 18
+    Align = alTop
+    Caption = #54840#49440#51221#48372
+    CaptionCollapsed = #54840#49440#51221#48372
+    CollapseGlyph.Data = {
+      7A010000424D7A01000000000000360000002800000009000000090000000100
+      2000000000004401000000000000000000000000000000000000604830406048
+      30FF604830FF604830FF604830FF604830FF604830FF604830FF60483040C0A8
+      90FFFFF0E0FFE0D0C0FFE0C8B0FFE0C0B0FFD0B8A0FFD0B8A0FFD0B8A0FF6048
+      30FFC0A890FFFFF8F0FFFFF0E0FFF0E0E0FFF0D8D0FFF0D8C0FFF0D0C0FFD0B8
+      A0FF604830FFC0A890FFFFF8FFFFFFF8F0FFFFF0E0FFF0E0E0FFF0D8D0FFF0D0
+      C0FFD0B8A0FF604830FFC0A8A0FFFFFFFFFF604830FF604830FF604830FF6048
+      30FF604830FFE0C0B0FF604830FFC0A8A0FFFFFFFFFFFFFFFFFFFFF8FFFFFFF0
+      F0FFFFF0E0FFF0E8E0FFE0C0B0FF604830FFC0B0A0FFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFF8FFFFFFF0F0FFFFF0E0FFE0D0C0FF604830FFC0B0A0FFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFF8FFFFFFF0F0FFF0F0E0FF604830FFC0B0A040C0B0
+      A0FFC0B0A0FFC0A8A0FFC0A8A0FFC0A8A0FFC0A890FFC0A090FF60483040}
+    Expanded = False
+    ExpandGlyph.Data = {
+      7A010000424D7A01000000000000360000002800000009000000090000000100
+      2000000000004401000000000000000000000000000000000000604830406048
+      30FF604830FF604830FF604830FF604830FF604830FF604830FF60483040C0A8
+      90FFFFF0E0FFE0D0C0FFE0C8B0FFE0C0B0FFD0B8A0FFD0B8A0FFD0B8A0FF6048
+      30FFC0A890FFFFF8F0FFFFF0E0FFF0E0E0FF604830FFF0D8C0FFF0D0C0FFD0B8
+      A0FF604830FFC0A890FFFFF8FFFFFFF8F0FFFFF0E0FF604830FFF0D8D0FFF0D0
+      C0FFD0B8A0FF604830FFC0A8A0FFFFFFFFFF604830FF604830FF604830FF6048
+      30FF604830FFE0C0B0FF604830FFC0A8A0FFFFFFFFFFFFFFFFFFFFF8FFFF6048
+      30FFFFF0E0FFF0E8E0FFE0C0B0FF604830FFC0B0A0FFFFFFFFFFFFFFFFFFFFFF
+      FFFF604830FFFFF0F0FFFFF0E0FFE0D0C0FF604830FFC0B0A0FFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFF8FFFFFFF0F0FFF0F0E0FF604830FFC0B0A040C0B0
+      A0FFC0B0A0FFC0A8A0FFC0A8A0FFC0A8A0FFC0A890FFC0A090FF60483040}
+    HeaderFont.Charset = DEFAULT_CHARSET
+    HeaderFont.Color = clWindowText
+    HeaderFont.Height = -11
+    HeaderFont.Name = 'Tahoma'
+    HeaderFont.Style = []
+    ExplicitTop = 42
+    FullHeight = 130
+    inline VesselInfoFr: TVesselInfoFr
+      Left = 0
+      Top = 18
+      Width = 609
+      Height = 0
+      Align = alClient
+      TabOrder = 0
+      ExplicitTop = 18
+      ExplicitWidth = 609
+      ExplicitHeight = 0
+      inherited Panel4: TPanel
+        Width = 609
+        ExplicitWidth = 609
+        inherited HullNo: TAdvEditBtn
+          Top = 13
+          ExplicitTop = 13
+        end
+      end
     end
   end
 end

@@ -3,7 +3,9 @@ unit UnitHGSSerialRecord2;
 interface
 
 uses Classes,
-  mormot.orm.core, mormot.core.datetime, mormot.core.base, mormot.rest.sqlite3;
+  mormot.orm.core, mormot.core.datetime, mormot.core.base, mormot.core.os,
+  mormot.rest.sqlite3,
+  UnitRegAppUtil, UnitHMSSignatureOrm;
 
 type
   TSQLHGSSerialRecord = class(TSQLRecord)
@@ -26,23 +28,8 @@ type
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
   end;
 
-  TOrmHMSSignature = class(TOrm)
-  private
-    fSigKey,
-    fSignature
-    : RawUtf8;
-
-    fUpdateDate: TTimeLog;
-  public
-    FIsUpdate: Boolean;
-    property IsUpdate: Boolean read FIsUpdate write FIsUpdate;
-  published
-    property SigKey: RawUtf8 read fSigKey write fSigKey;
-    property Signature: RawUtf8 read fSignature write fSignature;
-    property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
-  end;
-
 procedure InitHGSSerialClient(AHGSCertSerialDBName: string = '');
+procedure InitHMSSerialOrm(AExeName: string; ADBFileName: string='');
 function CreateHGSSerialModel: TSQLModel;
 procedure DestroyHGSSerial;
 
@@ -50,10 +37,6 @@ function GetHGSSerialFromProductType(const AIssuedYear, AProductType: integer; A
 function GetNextHGSSerialFromProductType(const AIssuedYear, AProductType: integer; ACategory : integer = 0): integer;
 procedure AddOrUpdateHGSSerial(ASQLHGSSerialRecord: TSQLHGSSerialRecord);
 procedure AddOrUpdateNextHGSSerial(const AIssuedYear, AProductType, ACategory : integer; ALastSerialNo: integer);
-
-function GetHMSSignatureBySigKey(const ASigKey: RawUtf8): TOrmHMSSignature;
-procedure AddOrUpdateHMSSignatureBySigKey(AOrm: TOrmHMSSignature);
-procedure AddOrUpdateHMSSignature(AOrm: TOrmHMSSignature);
 
 var
   g_HGSSerialDB: TRestClientDB;
@@ -74,6 +57,41 @@ begin
   LStr := GetSubFolderPath(ExtractFilePath(Application.ExeName), 'db');
   LStr := LStr + AHGSCertSerialDBName;
   HGSSerialModel:= CreateHGSSerialModel;
+  g_HGSSerialDB:= TSQLRestClientDB.Create(HGSSerialModel, CreateHGSSerialModel,
+    LStr, TSQLRestServerDB);
+  TSQLRestClientDB(g_HGSSerialDB).Server.CreateMissingTables;
+end;
+
+procedure InitHMSSerialOrm(AExeName: string; ADBFileName: string);
+var
+  LStr, LFileName, LFilePath: string;
+begin
+  if Assigned(g_HGSSerialDB) then
+    exit;
+
+  if AExeName = '' then
+    AExeName := Application.ExeName;
+
+  LStr := ExtractFileExt(AExeName);
+  LFileName := ExtractFileName(AExeName);
+  LFilePath := ExtractFilePath(AExeName);
+
+  if LStr = '.exe' then
+  begin
+    LFileName := ChangeFileExt(ExtractFileName(AExeName),'.sqlite');
+    LFileName := LFileName.Replace('.sqlite', '_SerialNo.sqlite');
+    LFilePath := GetSubFolderPath(LFilePath, 'db');
+  end;
+
+  LFilePath := EnsureDirectoryExists(LFilePath);
+
+  if ADBFileName = '' then
+    LStr := LFilePath + LFileName
+  else
+    LStr := ADBFileName;
+
+  HGSSerialModel:= CreateHGSSerialModel;
+
   g_HGSSerialDB:= TSQLRestClientDB.Create(HGSSerialModel, CreateHGSSerialModel,
     LStr, TSQLRestServerDB);
   TSQLRestClientDB(g_HGSSerialDB).Server.CreateMissingTables;
@@ -175,21 +193,6 @@ begin
   finally
     LSQLHGSSerialRecord.Free;
   end;
-end;
-
-function GetHMSSignatureBySigKey(const ASigKey: RawUtf8): TOrmHMSSignature;
-begin
-
-end;
-
-procedure AddOrUpdateHMSSignatureBySigKey(AOrm: TOrmHMSSignature);
-begin
-
-end;
-
-procedure AddOrUpdateHMSSignature(AOrm: TOrmHMSSignature);
-begin
-
 end;
 
 initialization
