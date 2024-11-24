@@ -10,6 +10,15 @@ const
   DOWNLOAD_FULL_PATH = 'E:\pjh\Doc\HiCONIS\project\HMD8310\ACONIS-NX\DB\DOWNLOAD\';
 
 type
+  TTagSearchRec = packed record
+    FTagName,
+    FBaseDir,
+    FIPAddr
+    : string;
+    FSrcKind //0:From Backup, 1:From Tgz Backup, 2: From Online
+    : integer;
+  end;
+
   TCheckMemRange = packed record
     FFnCode: string;
     FStAddr, FCount, FInBlkAddr, FTagInBlkAddr, FTagSubPos: word;
@@ -32,6 +41,29 @@ type
     FChannelNo2,//MPM/COM card secondary channel no
     FTerminalNo,
     FValue
+    : string;
+  end;
+
+  //\COM01110\home\sysconfig\ifcfg-eth0 내용 저장용 Record
+  TResEtherInfoRec = packed record
+    DEVICE,
+    BOOTPROTO,
+    IPADDR,
+    NETMASK,
+    BROADCAST,
+    NETWORK,
+    ONBOOT,
+    GATEWAY,
+    GATEWAYDEV,
+    MACADDR
+    : string;
+  end;
+
+  TResPortInfoRec = packed record
+    Resource,
+    Port,
+    IPAddr1,
+    IPAddr2
     : string;
   end;
 
@@ -267,6 +299,21 @@ type
    end;
 {$ENDREGION}
 
+//AMPMName: MPM11/FBM11
+//Result: '11;
+function GetMPMNoFromResName(AMPMName: string): string;
+//AMPMName: MPM11/FBM11
+//ADirName: 검샐할 폴더 full path
+//Result: COM011* list
+function GetCOMCardNameListFromDirByMPMName(AMPMName, ADirName: string): TStringList;
+//ABaseDir: 호선No별 Folder Name(F:\Hiconis_Backup\HMD8310_ICMS\)
+function GetIntfJsonContentsBySlotNo(AMPMName, ASlotNo, ABaseDir: string; out APortName: string): string;
+//Result: Port4
+function GetPortNameFromIntfJsonBySlotNo(AJson, ASlotNo: string): string;
+//AFileName: Interface.json full path name
+function GetPortNameFromIntfJsonFNBySlotNo(AFileName, ASlotNo: string): string;
+//function GetPtcJsonContentsByResName(AResName: string): string;
+
 function GetTagInfoRec_INFFromJson(AJson: string): TTagInfoRec_INF;
 //AJson: MPM or COM->home\db\interface.josn 파일 내용
 //Result: Portxx List = {"Port1":{...}, "Port2":{...}, ...}
@@ -310,7 +357,7 @@ function GetPortJsonValueFromPortListJsonBySlotNo(AJson, ASlotNo: string): strin
 function GetPtcJsonNameByPortName(APortName: string): string;
 //AJson: GetCOMTgzNPortNameByMPMNameWithSlotNo()의 결과값
 //Result: Port json file contents = ptc04.json 내용
-function GetPtcJsonContentsFromCOMNPortJson(AJson: string): string;
+function GetPtcJsonContentsFromTgzByCOMNPortJson(AJson: string): string;
 //AJson: GetCOMTgzNPortNameByMPMNameWithSlotNo()의 결과값
 //Result: Portx Value = interface.json 내용에서 선택된 "Portx" key 값의 Value를 반환함
 //    "Port4": {
@@ -350,20 +397,39 @@ function GetTerminalNoByChType(AChType, AChNo: string): string;
 
 //ATagInfoJson: INF Table에서 Tag 관련 정보 가져옴
 //AResNPortJson:
-function GetTagDataSrcRecByTagInfo(ATagInfoJson, ABaseDir: string; AIsOnline: Boolean): TTagDataSrcRec;
+function GetTagDataSrcRecByTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): TTagDataSrcRec;
 //ATagInfoJson: INF Table에서 Tag 관련 정보 가져옴
-//ABaseDir: AIsOnline이 False인 경우 호선별 .tgz 파일이 저장된 folder path
-//AIsOnline: True = interface.json 파일을 TCP 통신 연결하여 MPM에서 Download하여 c:\temp에 저장 후 읽음
-//           False= Disk에 백업된 .tgz로부터 interface.json 파일을 읽음
+//ARec.FBaseDir: ASrcKind이 0 또는 1인 경우 호선별 파일이 저장된 folder path
+//ARec.FIPAddr: ASrcKind이 2인 경우 Card IP Address
+//ARec.FSrcKind: 0 = Disk에 백업된 interface.json 파일을 읽음
+//               1 = Disk에 백업된 .tgz로부터 interface.json 파일을 읽음
+//               2 = interface.json 파일을 TCP 통신 연결하여 MPM에서 Download하여 c:\temp에 저장 후 읽음
 //Result: TagName에 연결된 통신Card 및 Port 이름을 Json으로 반환함
-//{"Resource":"COM011110"/"MPM11"/"FBM11", "Port":"ptc04", "PortValueInf":{...},"PtcValue":{...}, "BaseDir": "full path"}
+//{"Resource":"COM011110"/"MPM11"/"FBM11", "Port":"port4", "PortValueInf":{...},"PtcValue":{...}, "BaseDir": "full path"}
 //"PortValueInf": interface.json->Port Value
 //"PtcValue": ptcxx.json->"Query" Value = modbus master의 경우
 //                        "Sentence" Value = nmea의 경우
-function GetReourceNPortName2JsonByTagInfo(ATagInfoJson, ABaseDir: string; AIsOnline: Boolean=False): string;
-function GetResNPortName2JsonByTagInfoFromBackup(ATagInfoJson, ABaseDir: string): string;
-function GetResNPortName2JsonByTagInfoFromOnline(ATagInfoJson, ABaseDir: string): string;
+function GetResNPortName2JsonByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+function GetResNPortName2JsonByTagInfoFromBackup(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
+function GetResNPortName2JsonByTagInfoFromTgzBackup(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
+function GetResNPortName2JsonByTagInfoFromOnline(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
 function GetTgzNPtcJsonNameByTagInfo(AJson, ABaseDir: string): string;
+
+function GetResNPortNameByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+//Result: COM01110;10.8.1.11;Port4
+function GetResPortIPAddrByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+
+//AResName: COM01110
+//ABaseDir: 호선별 자료 저장 폴더명
+//Result:
+function GetEtherInfoByResNameFromBackup(AResName, ABaseDir: string): string;
+function GetResEtherInfoList2JsonFromBackup(AResName, ABaseDir: string): string;
+function GetResEtherInfoRecFromFN(AFileName: string; var ARec: TResEtherInfoRec): Boolean;
+function GetResEtherInfo2JsonFromFN(AFileName: string): string;
+
+//Result: "10.8.1.11;110.8.1.12"
+function GetIpAddrByResNameFromBackup(AResName, ABaseDir: string): string;
+function GetIpAddrByResNameFromOnline(AResName, AIpAddr: string): string;
 
 //Result: {"Query":{...}, "ModbusAddr": "3000", "CheckMemRange":{...}}
 function GetQuery4ModbusMasterFromPtcJson(ATagInfoRec: TTagInfoRec_INF; APtcJson: string): string;
@@ -378,9 +444,109 @@ function GetModbusAddrByInBlkAddr(ACheckMemRange: TCheckMemRange): string;
 function CheckIfAddrInRange4ModbusByInBlkAddr(AFnCode, AStAddr, ACount, AInBlkAddr, ATagInBlkAddr, ATagSubPos: string): Boolean;
 function GetCheckMemRangeRec(AFnCode, AStAddr, ACount, AInBlkAddr, ATagInBlkAddr, ATagSubPos: string): TCheckMemRange;
 
+function GetTagSearchRecFromTagInfoEditForm(AIpAddr: string=''): TTagSearchRec;
+
 implementation
 
-uses UnitFileSearchUtil, UnitStringUtil, UnitGZipJclUtil, UnitJsonUtil;
+uses UnitFileSearchUtil, UnitStringUtil, UnitGZipJclUtil, UnitJsonUtil,
+  UnitFolderUtil2, UnitFileUtil,
+  FrmTagInputEdit;
+
+function GetMPMNoFromResName(AMPMName: string): string;
+begin
+  Result := RemoveNonDigitsBetweenString(AMPMName);
+
+//  if Pos('MPM', AMPMName) <> 0 then
+//    Result := StringReplace(AMPMName, 'MPM', '', [rfReplaceAll])
+//  else
+//  if Pos('FBM', AMPMName) <> 0 then
+//    Result := StringReplace(AMPMName, 'FBM', '', [rfReplaceAll])
+//  else
+//    Result := '';
+end;
+
+function GetCOMCardNameListFromDirByMPMName(AMPMName, ADirName: string): TStringList;
+var
+  LCOMCardName: string;
+begin
+  LCOMCardName := 'COM0' + GetMPMNoFromResName(AMPMName) + '*';
+  Result := GetFileListFromFolder(ADirName, LCOMCardName, False, faDirectory);
+end;
+
+function GetIntfJsonContentsBySlotNo(AMPMName, ASlotNo, ABaseDir: string; out APortName: string): string;
+var
+  LFullPathIntfJsonFN, LJson, LPortName, LCOMCardName: string;
+  LComList: TStringList;
+  i: integer;
+begin
+  Result := '';
+
+  if ABaseDir = '' then
+    ABaseDir := 'C:\temp\';
+
+  ABaseDir := IncludeTrailingPathDelimiter(ABaseDir) + 'MPM_FBM_COM\';
+
+  LFullPathIntfJsonFN := ABaseDir + AMPMName + '\home\db\interface.json';
+
+  if FileExists(LFullPathIntfJsonFN) then
+  begin
+    LJson := StringFromFile(LFullPathIntfJsonFN);
+
+    //일치하는 SlotNo = InfAddr port가 MPM의 Interface.json에 없으면
+    if LPortName = '' then
+    begin
+      //COM Card List에서 검색함
+      LComList := GetCOMCardNameListFromDirByMPMName(AMPMName, ABaseDir);
+      try
+        for i := 0 to LComList.Count - 1 do
+        begin
+          LFullPathIntfJsonFN := IncludeTrailingPathDelimiter(LComList.Strings[i]) + 'home\db\interface.json';
+
+          LJson := StringFromFile(LFullPathIntfJsonFN);
+          LPortName := GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
+
+          if LPortName <> '' then
+          begin
+            LCOMCardName := ExtractFileName(LComList.Strings[i]);
+            Result := LJson;
+            APortName := LCOMCardName + ';' + LPortName;
+          end;
+        end;
+      finally
+        LComList.Free
+      end;
+    end
+    else
+    begin
+      Result := LJson;
+      LPortName := AMPMName + ';' + GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
+      APortName := LPortName;
+    end;
+  end;
+end;
+
+function GetPortNameFromIntfJsonBySlotNo(AJson, ASlotNo: string): string;
+var
+  LJson: string;
+begin
+  //AJson에서 Port List {"Port1":{...}, "Port2":{...}, ...} 가져옴
+  LJson := GetPortListFromMPMIntfJson(AJson);
+  //'Port2' = "InfADDR"
+  Result := GetPortNameFromPortListJsonBySlotNo(LJson, ASlotNo);
+end;
+
+function GetPortNameFromIntfJsonFNBySlotNo(AFileName, ASlotNo: string): string;
+var
+  LJson: string;
+begin
+  Result := '';
+
+  if FileExists(AFileName) then
+  begin
+    LJson := StringFromFile(AFileName);
+    Result := GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
+  end;
+end;
 
 function GetPortListFromMPMIntfJson(AJson: string): string;
 var
@@ -623,7 +789,7 @@ begin
 end;
 
 //AJson: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
-function GetPtcJsonContentsFromCOMNPortJson(AJson: string): string;
+function GetPtcJsonContentsFromTgzByCOMNPortJson(AJson: string): string;
 var
   LDict: IDocDict;
   LPtcJsonName, LCOMTgzName, LBaseDir: string;
@@ -671,6 +837,11 @@ begin
     if LStr = 'modbus_master' then
     begin
       Result := GetQuery4ModbusMasterFromPtcJson(LTagInfo_INF, APtcJson);
+    end
+    else
+    if LStr = 'nmea' then
+    begin
+      Result := GetQuery4NmeaFromPtcJson(LTagInfo_INF, APtcJson);
     end;
   end;
 end;
@@ -769,7 +940,7 @@ begin
   ATagDataSrcRec.FSystemName := LDict.S['SystemName'];
 end;
 
-function GetTagDataSrcRecByTagInfo(ATagInfoJson, ABaseDir: string; AIsOnline: Boolean): TTagDataSrcRec;
+function GetTagDataSrcRecByTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): TTagDataSrcRec;
 var
   LResNPortJson, LPtcJson, LChannelJson: string;
   LDict, LTagDict: IDocDict;
@@ -778,7 +949,7 @@ begin
   Result := Default(TTagDataSrcRec);
   Result.FTagInfoJson := ATagInfoJson;
   //{"Resource":"COM011110"/"MPM11"/"FBM11", "Port":"ptc04.json", "PortValueInf":{...}, "BaseDir": "full path"}
-  LResNPortJson := GetReourceNPortName2JsonByTagInfo(ATagInfoJson, ABaseDir, AIsOnline);
+  LResNPortJson := GetResNPortName2JsonByInfTagInfo(ATagInfoJson, ARec);
 
   if LResNPortJson <> '' then
   begin
@@ -792,7 +963,7 @@ begin
     //Result.FChannelProt, Result.FSystemName, Result.FChannelNo1, Result.FChannelNo2 를 갱신함
     SetChannelInfoFromInterfaceJsonByRec(Result);
 
-    LCOMTgzName := ABaseDir + LDict['Resource'] + '.tgz';
+    LCOMTgzName := ARec.FBaseDir + LDict['Resource'] + '.tgz';
 
     if FileExists(LCOMTgzName) then
     begin
@@ -815,6 +986,9 @@ function GetTagInfoRec_INFFromJson(AJson: string): TTagInfoRec_INF;
 var
   LTagInfoDict: IDocDict;
 begin
+  if AJson = '' then
+    exit;
+
   Result := Default(TTagInfoRec_INF);
 
   LTagInfoDict := DocDict(AJson);
@@ -829,27 +1003,75 @@ begin
   Result.SUB_POS := LTagInfoDict['SUB_POS'];
 end;
 
-function GetReourceNPortName2JsonByTagInfo(ATagInfoJson, ABaseDir: string; AIsOnline: Boolean): string;
+function GetResNPortName2JsonByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+var
+  LTagInfoRec_INF: TTagInfoRec_INF;
 begin
-  if AIsOnline then
-  begin
-    Result := GetResNPortName2JsonByTagInfoFromOnline(ATagInfoJson, ABaseDir);
-  end
-  else
-  begin
-    Result := GetResNPortName2JsonByTagInfoFromBackup(ATagInfoJson, ABaseDir);
+  if ATagInfoJson = '' then
+    exit;
+
+  LTagInfoRec_INF := GetTagInfoRec_INFFromJson(ATagInfoJson);
+
+  case ARec.FSrcKind of
+    0: Result := GetResNPortName2JsonByTagInfoFromBackup(LTagInfoRec_INF, ARec);
+    1: Result := GetResNPortName2JsonByTagInfoFromTgzBackup(LTagInfoRec_INF, ARec);
+    2: Result := GetResNPortName2JsonByTagInfoFromOnline(LTagInfoRec_INF, ARec);
   end;
 end;
 
-function GetResNPortName2JsonByTagInfoFromBackup(ATagInfoJson, ABaseDir: string): string;
+function GetResNPortName2JsonByTagInfoFromBackup(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
+var
+  LIntfJsonContents, LPortListJson, LPortName: string;
+  LDict: IDocDict;
+begin
+  Result := '';
+
+  LDict := DocDict('{}');
+
+  //SlotNo 가 InfAddr과 일치하는 interface.json을 가져옴- LPortName에 "COMCardName;Portname" 반환함
+  LIntfJsonContents := GetIntfJsonContentsBySlotNo(AInfRec.RESOURCE,
+                                                   AInfRec.SLOT,
+                                                   ARec.FBaseDir,
+                                                   LPortName);
+
+  if LIntfJsonContents = '' then
+    exit;
+
+  //AJson에서 Port List {"Port1":{...}, "Port2":{...}, ...} 가져옴
+  LPortListJson := GetPortListFromMPMIntfJson(LIntfJsonContents);
+
+  LDict.S['Resource'] := StrToken(LPortName, ';'); //MPM11
+  LDict.S['Port'] := LPortName; //COM01110;Port4
+  //interface.json의 Portx(=LPortName) Value
+  LDict.S['PortValueInf'] := GetPortJsonValueFromPortListJsonBySlotNo(LPortListJson,AInfRec.SLOT);
+  LDict.S['PtcFileName'] := GetPtcJsonNameByPortName(LPortName);//"ptc04.json"
+  Result := LDict.Json;
+
+  //'Port2' = "InfADDR"
+//  LPortName := GetPortNameFromPortListJsonBySlotNo(LJson2, ASlotNo);
+//  LJson2 := GetPortJsonValueFromPortListJsonBySlotNo(LJson2, ASlotNo);
+//
+//  if LPortName <> '' then
+//  begin
+//    AFileName := ExtractFileName(AFileName);
+//    LDict.S['Resource'] := AFileName; //MPM11
+//    LDict.S['Port'] := GetPtcJsonNameByPortName(LPortName);//"ptc04.json"
+//    //interface.json의 Portx Value
+//    LDict.S['PortValueInf'] := LJson2;
+//    LDict.S['BaseDir'] := ABaseDir;
+//    Result := LDict.Json;
+//  end;
+end;
+
+function GetResNPortName2JsonByTagInfoFromTgzBackup(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
 var
   LJson: string;
 begin
-  LJson := GetTgzNPtcJsonNameByTagInfo(ATagInfoJson, ABaseDir);
+//  LJson := GetTgzNPtcJsonNameByTagInfo(AInfRec, ARec.FBaseDir);
   Result := LJson;
 end;
 
-function GetResNPortName2JsonByTagInfoFromOnline(ATagInfoJson, ABaseDir: string): string;
+function GetResNPortName2JsonByTagInfoFromOnline(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
 var
   LJson: string;
 begin
@@ -870,6 +1092,143 @@ begin
   //COM011xx.tgz에서 검색
   if Result = '' then
     Result := GetCOMTgzNPortNameByMPMNameWithSlotNo(LMPMName, LSlotNo, ABaseDir);
+end;
+
+function GetResNPortNameByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+var
+  LJson: string;
+  LDict: IDocDict;
+  LTagInfoRec_INF: TTagInfoRec_INF;
+begin
+  if ATagInfoJson = '' then
+    exit;
+
+  LTagInfoRec_INF := GetTagInfoRec_INFFromJson(ATagInfoJson);
+
+  case ARec.FSrcKind of
+    0: begin
+      LJson := GetResNPortName2JsonByInfTagInfo(ATagInfoJson, ARec);
+      LDict := DocDict(LJson);
+      Result := LDict.S['Resource'];
+      Result := Result + ';' + LDict.S['Port'];
+    end;
+    1: ;
+    2: ;
+  end;
+end;
+
+function GetResPortIPAddrByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
+var
+  LStr, LPortName, LResName, LIPAddr: string;
+begin
+  LPortName := GetResNPortNameByInfTagInfo(ATagInfoJson, ARec);//GetResNPortName2JsonByInfTagInfo(LStr, ARec);
+  LResName := StrToken(LPortName, ';');
+
+  LIPAddr := GetIpAddrByResNameFromBackup(LResName, ARec.FBaseDir);
+
+  Result := LResName + ';' + LPortName + ';' + LIPAddr;
+end;
+
+function GetEtherInfoByResNameFromBackup(AResName, ABaseDir: string): string;
+begin
+  Result := GetResEtherInfoList2JsonFromBackup(AResName, ABaseDir);
+end;
+
+function GetResEtherInfoList2JsonFromBackup(AResName, ABaseDir: string): string;
+var
+  LFullPathConfigFN, LJson, LPortName, LCOMCardName: string;
+  LList: IDocList;
+begin
+  Result := '';
+
+  if ABaseDir = '' then
+    ABaseDir := 'C:\temp\';
+
+  LList := DocList('[]');
+
+  ABaseDir := IncludeTrailingPathDelimiter(ABaseDir) + 'MPM_FBM_COM\';
+
+  LFullPathConfigFN := ABaseDir + AResName + '\home\sysconfig\ifcfg-eth0';
+  LJson := GetResEtherInfo2JsonFromFN(LFullPathConfigFN);
+
+  if LJson <> '' then
+    LList.Append(StringToUtf8(LJson));
+
+  LFullPathConfigFN := ABaseDir + AResName + '\home\sysconfig\ifcfg-eth1';
+  LJson := GetResEtherInfo2JsonFromFN(LFullPathConfigFN);
+
+  if LJson <> '' then
+    LList.Append(StringToUtf8(LJson));
+
+  Result := Utf8ToString(LList.Json);
+end;
+
+function GetResEtherInfoRecFromFN(AFileName: string; var ARec: TResEtherInfoRec): Boolean;
+var
+  LStrList: TStringList;
+begin
+  Result := False;
+
+  if FileExists(AFileName) then
+  begin
+    LStrList := TStringList.Create;
+    try
+      LStrList.LoadFromFile(AFileName);
+
+      ARec.DEVICE := LStrList.Values['DEVICE'];
+      ARec.BOOTPROTO := LStrList.Values['BOOTPROTO'];
+      ARec.IPADDR := LStrList.Values['IPADDR'];
+      ARec.NETMASK := LStrList.Values['NETMASK'];
+      ARec.BROADCAST := LStrList.Values['BROADCAST'];
+      ARec.NETWORK := LStrList.Values['NETWORK'];
+      ARec.ONBOOT := LStrList.Values['ONBOOT'];
+      ARec.GATEWAY := LStrList.Values['GATEWAY'];
+      ARec.GATEWAYDEV := LStrList.Values['GATEWAYDEV'];
+      ARec.MACADDR := LStrList.Values['MACADDR'];
+
+      Result := True;
+    finally
+      LStrList.Free;
+    end;
+  end;
+end;
+
+function GetResEtherInfo2JsonFromFN(AFileName: string): string;
+var
+  LResEtherInfoRec: TResEtherInfoRec;
+begin
+  if GetResEtherInfoRecFromFN(AFileName,LResEtherInfoRec) then
+  begin
+    Result := RecordSaveJson(LResEtherInfoRec, TypeInfo(TResEtherInfoRec));
+  end;
+end;
+
+function GetIpAddrByResNameFromBackup(AResName, ABaseDir: string): string;
+var
+  LResEtherInfoRec: TResEtherInfoRec;
+  LFullPathConfigFN: string;
+begin
+  Result := '';
+
+  if ABaseDir = '' then
+    ABaseDir := 'C:\temp\';
+
+  ABaseDir := IncludeTrailingPathDelimiter(ABaseDir) + 'MPM_FBM_COM\';
+
+  LFullPathConfigFN := ABaseDir + AResName + '\home\sysconfig\ifcfg-eth0';
+
+  if GetResEtherInfoRecFromFN(LFullPathConfigFN, LResEtherInfoRec) then
+    Result := LResEtherInfoRec.IPADDR;
+
+  LFullPathConfigFN := ABaseDir + AResName + '\home\sysconfig\ifcfg-eth1';
+
+  if GetResEtherInfoRecFromFN(LFullPathConfigFN, LResEtherInfoRec) then
+    Result := Result + ';' + LResEtherInfoRec.IPADDR;
+end;
+
+function GetIpAddrByResNameFromOnline(AResName, AIpAddr: string): string;
+begin
+
 end;
 
 function GetQuery4ModbusMasterFromPtcJson(ATagInfoRec: TTagInfoRec_INF; APtcJson: string): string;
@@ -1025,6 +1384,23 @@ begin
     FInBlkAddr := StrToIntDef(AInBlkAddr, 0);
     FTagInBlkAddr := StrToIntDef(ATagInBlkAddr, 0);
     FTagSubPos := StrToIntDef(ATagSubPos, 0);
+  end;
+end;
+
+function GetTagSearchRecFromTagInfoEditForm(AIpAddr: string): TTagSearchRec;
+var
+  LStr: string;
+begin
+  Result := Default(TTagSearchRec);
+
+  LStr := CreateTagInputEdit('','','','',AIpAddr);
+
+  Result.FTagName := strToken(LStr, ';');
+  Result.FSrcKind := StrTointDef(strToken(LStr, ';'), 0);
+
+  case Result.FSrcKind of
+    0,1: Result.FBaseDir := strToken(LStr, ';');
+    2: Result.FIPAddr := strToken(LStr, ';');
   end;
 end;
 

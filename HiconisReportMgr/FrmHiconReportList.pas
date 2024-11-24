@@ -159,6 +159,7 @@ type
     N17: TMenuItem;
     ShowChangeRegisterList1: TMenuItem;
     N18: TMenuItem;
+    ShipBuilder: TNxTextColumn;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -632,6 +633,12 @@ procedure THiConReportListF.DeleteReportListByReportKey(
   const ARptKey: TTimeLog);
 begin
   DeleteHiconReportListByKey(ARptKey);
+
+  if MessageDlg('선택한 Report와 연결된 Change Register Report도 삭제 할까요?.' + #13#10 +
+    '삭제 후에는 복원이 안 됩니다..' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
+    exit;
+
+  TChgRegListF.DeleteHCRReportByReportKey(ARptKey);
 end;
 
 procedure THiConReportListF.DeleteTask1Click(Sender: TObject);

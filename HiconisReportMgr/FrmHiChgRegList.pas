@@ -11,7 +11,7 @@ uses
   JvExControls, JvLabel, CurvyControls, Vcl.Menus, NxColumnClasses, NxColumns,
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
-  mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
+  mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text, mormot.core.json,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
   VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR
@@ -96,6 +96,10 @@ type
     ChgRegModifyDate:TnxNumberColumn;
     SetColCaptionFromList1: TMenuItem;
     Involves: TNxTextColumn;
+    DeleteHCRReport1: TMenuItem;
+    N1: TMenuItem;
+    ExportSelectedToExcel1: TMenuItem;
+    N2: TMenuItem;
 
     procedure SaveastoDFM1Click(Sender: TObject);
     procedure btn_SearchClick(Sender: TObject);
@@ -106,6 +110,8 @@ type
     procedure SetColCaptionFromList1Click(Sender: TObject);
     procedure HiChgRegListGridCellDblClick(Sender: TObject; ACol,
       ARow: Integer);
+    procedure DeleteHCRReport1Click(Sender: TObject);
+    procedure ExportSelectedToExcel1Click(Sender: TObject);
   private
     FReportKey4ChgReg: TTimeLog;
 
@@ -120,11 +126,17 @@ type
     procedure DisplayChgRegList2Grid(const ARec: THiRptMgrSearchCondRec);
 
     procedure HiChgRegItemEdit(const ARow: integer=-1);
-    procedure LoadChgRegJson2Grid(AJson: string; ARow: integer=-1);
+    procedure LoadChgRegJson2Grid(AVar: Variant; ARow: integer=-1);
 
     function GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
+
+    procedure DeleteHCRReportFromSelectedGrid();
+    procedure DeleteHCRReportByChgRegRptNo(const AChgRegRptNo: RawUTF8);
+    procedure MakeHCRReportBySelected();
+
+    function GetHiconReportRecByHcrNo(const AHcrNo: string): THiconReportRec;
   public
-    { Public declarations }
+    Class procedure DeleteHCRReportByReportKey(const ARptKey: TTimeLog);
   end;
 
   //AFromDocDict : True = DB에 저장하지 않음
@@ -137,6 +149,7 @@ implementation
 
 uses UnitDFMUtil, UnitNextGridUtil2, UnitComboBoxUtil, JHP.Util.Bit32Helper,
   UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHGSSerialRecord2,
+  UnitHiConReportMakeUtil,
   FrmHiChangeRegisterEdit;
 
 {$R *.dfm}
@@ -212,6 +225,41 @@ begin
   WorkCodeCB.ItemIndex := -1;
 
   ModifyItemCheckCombo.SetUnCheckedAll();// := -1;
+end;
+
+procedure TChgRegListF.DeleteHCRReport1Click(Sender: TObject);
+begin
+  DeleteHCRReportFromSelectedGrid();
+end;
+
+procedure TChgRegListF.DeleteHCRReportByChgRegRptNo(
+  const AChgRegRptNo: RawUTF8);
+begin
+  DeleteHiChgRegItemByChgRegRptNo(AChgRegRptNo);
+end;
+
+class procedure TChgRegListF.DeleteHCRReportByReportKey(const ARptKey: TTimeLog);
+begin
+  DeleteHiChgRegItemByRptKey(ARptKey);
+end;
+
+procedure TChgRegListF.DeleteHCRReportFromSelectedGrid;
+var
+  LRptKey: TTimeLog;
+begin
+  if HiChgRegListGrid.SelectedRow = -1 then
+    exit;
+
+  if MessageDlg('선택한 Change Register Report를 삭제 할까요?.' + #13#10 +
+    '삭제 후에는 복원이 안 됩니다..' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
+    exit;
+
+  LRptKey := StrToInt64Def(HiChgRegListGrid.CellsByName['ReportKey4ChgReg', HiChgRegListGrid.SelectedRow],0);
+  DeleteHCRReportByReportKey(LRptKey);
+
+  ShowMessage('Reoprt 삭제가 완료 되었습니다.');
+
+  btn_SearchClick(nil);
 end;
 
 procedure TChgRegListF.DisplayChgRegList2Grid(
@@ -394,6 +442,27 @@ begin
   end;
 end;
 
+procedure TChgRegListF.ExportSelectedToExcel1Click(Sender: TObject);
+begin
+  MakeHCRReportBySelected();
+end;
+
+function TChgRegListF.GetHiconReportRecByHcrNo(
+  const AHcrNo: string): THiconReportRec;
+var
+  LOrmHiChgRegItem: TOrmHiChgRegItem;
+  LVar: variant;
+begin
+  Result := Default(THiconReportRec);
+
+  LOrmHiChgRegItem := GetHiChgRegItemByHcrNo(AHcrNo);
+  try
+    Result.FReportDetailJsonAry := LOrmHiChgRegItem.GetJsonValues(true, false, soSelect);
+  finally
+    LOrmHiChgRegItem.Free;
+  end;
+end;
+
 function TChgRegListF.GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
 begin
   Result := 'HMS-' + g_HiRptKind2.ToString(hrkCHR) + '-' + IntToStr(AYear) + '-' + IntToStr(ASerialNo);// + '-' + g_HiRptCategory.ToString(hrcIAS)
@@ -441,6 +510,7 @@ var
   LUtf8: RawUtf8;
   LFromDocDict: Boolean;
   LYear, LSerial: integer;
+  LVar: Variant;
 begin
   if ARow = -1 then //Add
   begin
@@ -474,7 +544,12 @@ begin
       AddOrUpdateNextHGSSerial(LYear, Ord(hrkCHR), 0, LSerial);
     end;
 
-    LoadChgRegJson2Grid(LUtf8, ARow);
+    //DB에 저장함
+    LVar := _JSON(LUtf8);
+
+    AddHiChgRegItemFromVariant(LVar, False);
+
+    LoadChgRegJson2Grid(LVar, ARow);
 
 //    if LFromDocDict then
 //    begin
@@ -490,21 +565,55 @@ begin
     HiChgRegItemEdit(HiChgRegListGrid.SelectedRow);
 end;
 
-procedure TChgRegListF.LoadChgRegJson2Grid(AJson: string; ARow: integer);
-var
-  LVar: variant;
+procedure TChgRegListF.LoadChgRegJson2Grid(AVar: Variant; ARow: integer);
 begin
-  LVar := _JSON(AJson);
-
   if ARow = -1 then
   begin
-    if TDocVariantData(LVar).IsArray then
-      AddNextGridRowsFromVariant2(HiChgRegListGrid, LVar)
+    if TDocVariantData(AVar).IsArray then
+      AddNextGridRowsFromVariant2(HiChgRegListGrid, AVar)
     else
-      AddNextGridRowFromVariant(HiChgRegListGrid, LVar, True);
+      AddNextGridRowFromVariant(HiChgRegListGrid, AVar, True);
   end
   else
-    SetNxGridRowFromVar(HiChgRegListGrid, ARow, LVar);
+    SetNxGridRowFromVar(HiChgRegListGrid, ARow, AVar);
+end;
+
+procedure TChgRegListF.MakeHCRReportBySelected;
+var
+  LRptKey, LCRKey,
+  LJsonAry, LSheetName: string;
+  LHiconReportRec: THiconReportRec;
+  LDocList: IDocList;
+//  LDocDict: IDocDict;
+  i: integer;
+begin
+  if HiChgRegListGrid.SelectedRow = -1 then
+  begin
+    ShowMessage('출력 할 Reoprt 를 선택하세요.');
+    exit;
+  end;
+
+  LDocList := DocList('[]');
+//  LDocDict := DocDict('{}');
+
+  for i := HiChgRegListGrid.RowCount - 1 downto 0 do
+  begin
+    if HiChgRegListGrid.Row[i].Selected then
+    begin
+      LCRKey := HiChgRegListGrid.CellsByName['ChgRegRptNo', i];
+      //LHiconReportRec.FReportDetailJsonAry에 HCR Json을 저장함
+      LHiconReportRec := GetHiconReportRecByHcrNo(LCRKey);
+      LRptKey := HiChgRegListGrid.CellsByName['ReportKey4ChgReg', i];
+      LHiconReportRec.FReportListJson := Utf8ToString(GetHiConReportJsonByKeyID(LRptKey));
+      LHiconReportRec.FReportKind := Ord(hrkCHR);
+      LJsonAry := RecordSaveJson(LHiconReportRec, TypeInfo(THiconReportRec));
+      LDocList.Append(LJsonAry);
+    end;//if
+  end;//for
+
+  LJsonAry := LDocList.Json;
+
+  MakeChangeRegisterReport(LJsonAry);
 end;
 
 procedure TChgRegListF.SaveastoDFM1Click(Sender: TObject);

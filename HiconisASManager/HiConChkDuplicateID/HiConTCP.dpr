@@ -14,11 +14,14 @@ uses
   UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas',
   FrmElapsedTime in '..\..\..\..\Common\Form\FrmElapsedTime.pas' {ElapsedTimeF},
   UnitHiConInfluxDBUtil in 'UnitHiConInfluxDBUtil.pas',
-  FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas',
+  FrmTagInputEdit in '..\..\Common\FrmTagInputEdit.pas' {TagEditF},
   UnitNICUtil in '..\..\..\..\Common\UnitNICUtil.pas',
   UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas',
   UnitHiConJsonUtil in 'UnitHiConJsonUtil.pas',
-  UnitHiconMPMData in '..\UnitHiconMPMData.pas';
+  UnitHiconMPMData in '..\UnitHiconMPMData.pas',
+  FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas' {TwoInputEditF},
+  FrmHiConTCPConfig in 'FrmHiConTCPConfig.pas' {HiConTCPConfigF},
+  FrmResPortInfo4INFTag in 'FrmResPortInfo4INFTag.pas' {ResPortInfo4INFTagF};
 
 {$R *.res}
 
@@ -27,5 +30,8 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisTCPF, HiconisTCPF);
+  Application.CreateForm(TTwoInputEditF, TwoInputEditF);
+  Application.CreateForm(THiConTCPConfigF, HiConTCPConfigF);
+  Application.CreateForm(TResPortInfo4INFTagF, ResPortInfo4INFTagF);
   Application.Run;
 end.

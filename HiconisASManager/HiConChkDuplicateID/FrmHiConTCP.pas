@@ -18,7 +18,8 @@ uses
   PngBitBtn, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdIOHandler,
   IdGlobal, IdHTTP, UnitTaskDialogMB,
   UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit, UnitHiconMariaDBUtil,
-  UnitHiConJsonUtil
+  UnitHiConJsonUtil, UnitHiconMPMData, UnitHiconTCPIniConfig,
+  FrmHiConTCPConfig
   ;
 
 type
@@ -100,6 +101,10 @@ type
     GetJsonFile1: TMenuItem;
     GetTagInfoFromSystemBak1: TMenuItem;
     GetModuleNamebyTagName1: TMenuItem;
+    SearchINTTag1: TMenuItem;
+    Options1: TMenuItem;
+    SetConfig1: TMenuItem;
+    Button1: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -133,7 +138,12 @@ type
     procedure ModifyLogParam2Click(Sender: TObject);
     procedure GetJsonFile1Click(Sender: TObject);
     procedure GetTagInfoFromSystemBak1Click(Sender: TObject);
+    procedure SearchINTTag1Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure SetConfig1Click(Sender: TObject);
   private
+    FHiconTCPIniConfig: THiconTCPIniConfig;
+    FHiconTCPIniFileName: string;
     //Key: IPName
     FIpAddrDic: IKeyValue<string, TIpListRec>;
     //Key: IPName
@@ -195,7 +205,11 @@ type
     //Result: {"Resource":"COM011110.tgz"/"MPM11.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
     //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
     //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
-    function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
+    function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string): string;
+    //Result: {"Resource":"COM011110"/"MPM11", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
+    //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
+    //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
+    function GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
     //이 함수는 COMxx.tgz 파일만 검색함
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
@@ -203,20 +217,27 @@ type
     function GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName: string): string;
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: Tag 값을 통신하는 ptcxx.json 파일 전체 내용 반환
-    function GetPtcJsonContentsFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
+    function GetPtcJsonContentsFromSrcByInfTag(AInfTagName: string; ASrcKind: TTagSearchRec): string;
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: Tag 값을 통신하는 interface.json->Portx 값을 반환
-    function GetPortJsonContentsFromTgzByInfTag(AInfTagName: string): string;
+    function GetPortJsonContentsFromSrcByInfTag(AInfTagName: string; ASrcKind: TTagSearchRec): string;
     //AInfTagName: INF_로 시작하는 Tag Name
-    //AIsOnline: True = interface.json 파일을 TCP 통신 연결하여 MPM에서 Download하여 c:\temp에 저장 후 읽음
-    //           False= Disk에 백업된 .tgz로부터 interface.json 파일을 읽음
+    //ASrcKind: 0 = Disk에 백업된 interface.json 파일을 읽음
+    //          1 = Disk에 백업된 .tgz로부터 interface.json 파일을 읽음
+    //          2 = interface.json 파일을 TCP 통신 연결하여 MPM에서 Download하여 c:\temp에 저장 후 읽음
     //Result: Tag 값을 통신하는 ptcxx.json->Query 내용 중에 InBlk 값이 일치하는 Query Json만 반환
-    function GetQueryJsonFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
+    function GetQueryJsonFromSrcByInfTag(ARec: TTagSearchRec): string;
     function GetModuleTypeFromDBByTagName(ATagName: string): string;
   public
     procedure InitVar;
     procedure DestroyVar;
     procedure InitEnum;
+
+    procedure SetConfig;
+    procedure LoadConfigFromFile(AFileName: string = '');
+    procedure LoadConfig2Form(AForm: THiConTCPConfigF);
+    procedure LoadConfigForm2Object(AForm: THiConTCPConfigF);
+    procedure ApplyConfigChanged;
 
     procedure GetIpList4ThisComputer();
     function GetHiconisIp4ThisComputer(): string;
@@ -259,9 +280,9 @@ uses System.TimeSpan, System.Diagnostics, PJEnvVars,
   UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
-  UnitHiconMPMData,
   UnitJsonUtil, sevenzip,
-  FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit
+  FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
+  FrmResPortInfo4INFTag
   ;
 
 {$R *.dfm}
@@ -363,6 +384,11 @@ begin
     ;
 end;
 
+procedure THiconisTCPF.ApplyConfigChanged;
+begin
+  LoadConfigFromFile;
+end;
+
 procedure THiconisTCPF.AutoLogonEnabled1Click(Sender: TObject);
 begin
   if not IsWindowsAutoLoginEnabled() then
@@ -421,6 +447,15 @@ begin
     IPAddrGrid.ClearRows;
     SetIpListFromJson2Grid(LJson, IPAddrGrid);
   end;
+end;
+
+procedure THiconisTCPF.Button1Click(Sender: TObject);
+//var
+//  LStrList: TStringList;
+begin
+//  LStrList := GetCOMCardNameListFromDirByMPMName('MPM21', 'E:\temp\HiCONIS\DB\DOWNLOAD');
+//  ShowMessage(LStrList.Text);
+//  LStrList.Free;
 end;
 
 function THiconisTCPF.CheckAcoAutoRunIsCorrect: string;
@@ -520,6 +555,7 @@ begin
   FHiConMariaDB.DestroyDB();
   FHiConMariaDB.Free;
   FTCPResponse.Free;
+  FHiconTCPIniConfig.Free;
 
   if Assigned(FIpList) then
     FIpList.Free;
@@ -1113,8 +1149,8 @@ begin
 //  AddNextGridRowFromVariant(NextGrid1, LVar, True);
 end;
 
-function THiconisTCPF.GetPortJsonContentsFromTgzByInfTag(
-  AInfTagName: string): string;
+function THiconisTCPF.GetPortJsonContentsFromSrcByInfTag(
+  AInfTagName: string; ASrcKind: TTagSearchRec): string;
 var
   LStr, LBaseDir: string;
 begin
@@ -1177,18 +1213,18 @@ begin
 //  ConsoleMemo.Lines.Text := TRegEx.Match(LStr, '(?si)<pre>.*?</pre>').Value;
 end;
 
-function THiconisTCPF.GetPtcJsonContentsFromTgzByInfTag(
-  AInfTagName: string; AIsOnlne: Boolean): string;
+function THiconisTCPF.GetPtcJsonContentsFromSrcByInfTag(
+  AInfTagName: string; ASrcKind: TTagSearchRec): string;
 var
   LStr, LBaseDir: string;
 begin
-  LStr := GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName, AIsOnlne);//GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
+  LStr := GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName);//GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
 
   if LStr <> '' then
-    Result := GetPtcJsonContentsFromCOMNPortJson(LStr);
+    Result := GetPtcJsonContentsFromTgzByCOMNPortJson(LStr);
 end;
 
-function THiconisTCPF.GetQueryJsonFromTgzByInfTag(AInfTagName: string; AIsOnlne: Boolean): string;
+function THiconisTCPF.GetQueryJsonFromSrcByInfTag(ARec: TTagSearchRec): string;
 var
   LResNPortJson, LTagInfoJson, LPtcJson, LPortIntfJson: string;
   LBaseDir: string;
@@ -1198,20 +1234,50 @@ begin
   SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
   LBaseDir := DOWNLOAD_FULL_PATH;
 
-  LTagInfoJson := THiConSystemDB.GetTagInfo2JsonFromINFTable(AInfTagName);
+  LTagInfoJson := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName);
 
 //  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LTagInfoJson, LBaseDir);
   //{"Resource":"COM011110"/"MPM11"/"FBM11", "Port":"ptc04", "PortValueInf":{...},"PtcValue":{...}, "BaseDir": "full path"}
 //  LResNPortJson := GetReourceNPortName2JsonByTagInfo(LTagInfoJson, LBaseDir, AIsOnlne);
-  LDataSrc := GetTagDataSrcRecByTagInfo(LTagInfoJson, LBaseDir, AIsOnlne);
+  LDataSrc := GetTagDataSrcRecByTagInfo(LTagInfoJson, ARec);
 
   //LStr: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
 //  LStr := GetCOMTgzNPortNameFromTgzByInfTag(AInfTagName);
   //PortValueInf Value 반환
 //  LPortIntfJson := GetPortValueJsonFromCOMNPortJson(LStr);
-//  LPtcJson := GetPtcJsonContentsFromCOMNPortJson(LStr);
+//  LPtcJson := GetPtcJsonContentsFromTgzByCOMNPortJson(LStr);
 //  Result := GetQueryJsonFromPortNPtcJson(LTagInfoJson, LPortIntfJson, LPtcJson);
 //  Result := GetQueryJsonFromResourceNPortNameByTagInfo(LTagInfoJson, LResNPortJson);
+end;
+
+function THiconisTCPF.GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
+var
+  LStr, LPortName, LResName, LIPAddr: string;
+  LDict: IDocDict;
+begin
+//  LBaseDir := DOWNLOAD_FULL_PATH;
+
+  Result := '';
+
+  if ARec.FTagName = '' then
+    exit;
+
+  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName);
+  LPortName := GetResNPortNameByInfTagInfo(LStr, ARec);//GetResNPortName2JsonByInfTagInfo(LStr, ARec);
+  LResName := StrToken(LPortName, ';');
+  LIPAddr := GetIpAddrByResNameFromBackup(LResName, ARec.FBaseDir);
+
+  LDict := DocDict(LStr);
+  LDict.S['FTYPE'] := LDict.S['TYPE'];
+
+  LDict.S['Resource'] := LResName;
+  LDict.S['Port'] := LPortName;
+  LDict.S['IPAddr1'] := StrToken(LIPAddr, ';');
+  LDict.S['IPAddr2'] := LIPAddr;
+
+  Result := LDict.Json;
+
+  CreateNShowDateSeletForm(Result);
 end;
 
 procedure THiconisTCPF.GetRetentionPoliciesBySelectedIpList(
@@ -1281,6 +1347,7 @@ end;
 procedure THiconisTCPF.GetTagInfoFromSystemBak1Click(Sender: TObject);
 var
   LStr, LBaseDir, LMPMName, LSlotNo: string;
+  LRec: TTagSearchRec;
 begin
   //UnitGZipJclUtil 유닛을 사용하기 위해서 SevenzipLibraryDir에 7z.dll 경로를 지정함
 //  SevenzipLibraryDir := ExtractFilePath(Application.ExeName) + 'lib\';
@@ -1298,16 +1365,19 @@ begin
 //  LStr := GetPortListFromMPMIntfJson(LStr);
 
 //  LStr := GetCOMTgzNPortNameByMPMNameWithSlotNo(LMPMName, LSlotNo, LBaseDir);
-//  LStr := GetPtcJsonContentsFromCOMNPortJson(LStr);
+//  LStr := GetPtcJsonContentsFromTgzByCOMNPortJson(LStr);
 
-//  LStr := GetPtcJsonContentsFromTgzByInfTag('INF_VT_AC_3358');
-  LStr := GetQueryJsonFromTgzByInfTag('INF_VT_AC_3358', False);
+//  LStr := GetPtcJsonContentsFromSrcByInfTag('INF_VT_AC_3358');
+  LRec.FSrcKind := 1;
+  LRec.FTagName := 'INF_VT_AC_3358';
+
+  LStr := GetQueryJsonFromSrcByInfTag(LRec);
 
   ShowMessage(LStr);
 end;
 
 function THiconisTCPF.GetTgzNPtcJsonNameFromTgzByInfTag(
-  AInfTagName: string; AIsOnlne: Boolean): string;
+  AInfTagName: string): string;
 var
   LStr, LBaseDir: string;
 begin
@@ -1361,6 +1431,9 @@ end;
 
 procedure THiconisTCPF.InitVar;
 begin
+  FHiconTCPIniFileName := ChangeFileExt(ExtractFileName(Application.ExeName), '.ini');
+  FHiconTCPIniConfig := THiconTCPIniConfig.Create(FHiconTCPIniFileName);
+
   FIpAddrDic := Collections.NewKeyValue<string, TIpListRec>;
 //  FIpAddrDic := Collections.NewList<TIpListRec>;
 //  FAddrIdListDic := Collections.NewKeyValue<string, TIDListRec>;
@@ -1388,6 +1461,24 @@ end;
 //  LIpAddr := IPAddrGrid.CellsByName['PMPM_PIP', ARow];
 //  SetIdList2Grid(LIpAddr);
 //end;
+
+procedure THiconisTCPF.LoadConfig2Form(AForm: THiConTCPConfigF);
+begin
+  FHiConTCPIniConfig.LoadConfig2Form(AForm, FHiConTCPIniConfig);
+end;
+
+procedure THiconisTCPF.LoadConfigForm2Object(AForm: THiConTCPConfigF);
+begin
+  FHiConTCPIniConfig.LoadConfigForm2Object(AForm, FHiConTCPIniConfig);
+end;
+
+procedure THiconisTCPF.LoadConfigFromFile(AFileName: string);
+begin
+  if AFileName = '' then
+    AFileName := FHiconTCPIniFileName;
+
+  FHiConTCPIniConfig.Load(AFileName);
+end;
 
 procedure THiconisTCPF.LoadDupIdCheckResultFile1Click(Sender: TObject);
 var
@@ -1542,6 +1633,46 @@ begin
   begin
     SaveIpListToFile(SaveDialog1.FileName);
   end;
+end;
+
+procedure THiconisTCPF.SearchINTTag1Click(Sender: TObject);
+var
+  LStr: string;
+  LTagSearchRec: TTagSearchRec;
+begin
+  if IPAddrGrid.SelectedRow = -1 then
+    LStr := ''
+  else
+    LStr := IPAddrGrid.CellsByName['PMPM_PIP', IPAddrGrid.SelectedRow];
+
+  LTagSearchRec := GetTagSearchRecFromTagInfoEditForm(LStr);
+
+  LStr := GetResNPtcJsonNameFromSrcByInfTag(LTagSearchRec);
+end;
+
+procedure THiconisTCPF.SetConfig;
+var
+  LConfigF: THiConTCPConfigF;
+begin
+  LConfigF := THiConTCPConfigF.Create(Self);
+
+  try
+    LoadConfig2Form(LConfigF);
+
+    if LConfigF.ShowModal = mrOK then
+    begin
+      LoadConfigForm2Object(LConfigF);
+      FHiConTCPIniConfig.Save();
+      ApplyConfigChanged;
+    end;
+  finally
+    LConfigF.Free;
+  end;
+end;
+
+procedure THiconisTCPF.SetConfig1Click(Sender: TObject);
+begin
+  SetConfig;
 end;
 
 procedure THiconisTCPF.SetConnectStatus2IpAddrGridBySelected(AIdx: integer;

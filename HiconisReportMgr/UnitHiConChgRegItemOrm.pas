@@ -21,18 +21,20 @@ type
     fInitiatedDuring,
     fRegisteredBy,
     fReqSrc,
-    fInvolves,
-    fModification,
     fModDetail,
     fPlan_Engineer,
     fPlan_ClosePIC,
     fPlan_Finish,
     fEstimatedWorkHour,
-    fImportance,
     fOpen_PIC,
     fTest_PIC,
     fClose_PIC
     : RawUTF8;
+
+    fImportance,
+    fInvolves,
+    fModification
+    : integer;
 
     fRegDate,
     fOpen_Date,
@@ -57,18 +59,19 @@ type
     property Chapter: RawUTF8 read fChapter write fChapter;
     property InitiaedDuring: RawUTF8 read fInitiatedDuring write fInitiatedDuring;
     property RegisteredBy: RawUTF8 read fRegisteredBy write fRegisteredBy;
-    property ReqSrc: RawUTF8 read fReqSrc write fReqSrc;
-    property Involves: RawUTF8 read fInvolves write fInvolves;
-    property Modification: RawUTF8 read fModification write fModification;
+    property Modification: RawUTF8 read fReqSrc write fReqSrc;
     property ModDetail: RawUTF8 read fModDetail write fModDetail;
     property Plan_Engineer: RawUTF8 read fPlan_Engineer write fPlan_Engineer;
     property Plan_ClosePIC: RawUTF8 read fPlan_ClosePIC write fPlan_ClosePIC;
     property Plan_Finish: RawUTF8 read fPlan_Finish write fPlan_Finish;
     property EstimatedWorkHour: RawUTF8 read fEstimatedWorkHour write fEstimatedWorkHour;
-    property Importance: RawUTF8 read fImportance write fImportance;
     property Open_PIC: RawUTF8 read fOpen_PIC write fOpen_PIC;
     property Test_PIC: RawUTF8 read fTest_PIC write fTest_PIC;
     property Close_PIC: RawUTF8 read fClose_PIC write fClose_PIC;
+
+    property Involves: integer read fInvolves write fInvolves;
+    property ReqSrc: integer read fModification write fModification;
+    property Importance: integer read fImportance write fImportance;
 
     property ChgRegDate: TTimeLog read fRegDate write fRegDate;
     property ChgRegOpenDate: TTimeLog read fOpen_Date write fOpen_Date;
@@ -94,7 +97,7 @@ type
   function AddOrUpdateHiChgRegItemFromJsonAryByKeyId(const AJsonAry: string; const ADoUpdate: Boolean): Integer;
 
   procedure DeleteHiChgRegItemByRptKey(const AKeyID: TTimeLog);
-  procedure DeleteHiChgRegItemByHcrNo(const AHcrNo: string);
+  procedure DeleteHiChgRegItemByChgRegRptNo(const AHcrNo: string);
 
 var
   g_HiChgRegItemDB: TRestClientURI;
@@ -316,7 +319,7 @@ begin
   g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ReportKey4ChgReg = ?', [AKeyID]);
 end;
 
-procedure DeleteHiChgRegItemByHcrNo(const AHcrNo: string);
+procedure DeleteHiChgRegItemByChgRegRptNo(const AHcrNo: string);
 begin
   g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ChgRegRptNo = ?', [AHcrNo]);
 end;

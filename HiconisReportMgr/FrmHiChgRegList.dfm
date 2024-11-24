@@ -1275,8 +1275,6 @@ object ChgRegListF: TChgRegListF
     TabOrder = 2
     TabStop = True
     OnCellDblClick = HiChgRegListGridCellDblClick
-    ExplicitLeft = -1
-    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1858,13 +1856,29 @@ object ChgRegListF: TChgRegListF
   object PopupMenu1: TPopupMenu
     Left = 64
     Top = 232
+    object DeleteHCRReport1: TMenuItem
+      Caption = 'Delete HCR Report'
+      OnClick = DeleteHCRReport1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object ExportSelectedToExcel1: TMenuItem
+      Caption = 'Export Selected To Excel'
+      OnClick = ExportSelectedToExcel1Click
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
     object SaveastoDFM1: TMenuItem
       Caption = 'Save as to DFM'
+      Visible = False
       OnClick = SaveastoDFM1Click
     end
     object SetColCaptionFromList1: TMenuItem
       Caption = 'Set Col Caption From List'
       Hint = 'c:\temp\NameNHintList.txt'#50640#49436' Grid Column Caption '#49444#51221
+      Visible = False
       OnClick = SetColCaptionFromList1Click
     end
   end

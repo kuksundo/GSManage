@@ -91,6 +91,7 @@ begin
         AVesselSearchParamRec.fHullNo := LSearchVesselF.VesselListGrid.CellsByName['HullNo',LSearchVesselF.VesselListGrid.SelectedRow];
         AVesselSearchParamRec.fShipName := LSearchVesselF.VesselListGrid.CellsByName['ShipName',LSearchVesselF.VesselListGrid.SelectedRow];
         AVesselSearchParamRec.fShipType := LSearchVesselF.VesselListGrid.CellsByName['ShipType',LSearchVesselF.VesselListGrid.SelectedRow];
+        AVesselSearchParamRec.fShipBuilderName := LSearchVesselF.VesselListGrid.CellsByName['ShipBuilderName',LSearchVesselF.VesselListGrid.SelectedRow];
       end;
     end;
   finally

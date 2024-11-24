@@ -70,7 +70,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=Xvg5PgBe+Dk+cDZmMVVjY3laL0dIQ0JpcXdXZ2hHdUpMbTNtajZibkNVS3hnTTJFY21rMllZR3YyVzBidlNEeHU5TlB3dFVsUEozdXp4QWZkY3ZyeGJUTHladlVZeHJUMHJzc1ZoYUJhRWFneXdOdk1nL1IwUm9LT0lLbmFCV3pEb1hqM244ZmxBbnozRW1ZaHRCRWhQZktZZU5IWjJTSlppay9jVjNXUk9kOWIrNXFHeHZRPQ==</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=FqSiGwAWpKIbcDZmMVVjY3laL0dIQ0JpcXdXZ2hHdUpMbTMrajdiL0NXS3hnTTJFY21rMlJ2cFJVVGY5Z1loWjQ5QVpYb21JUFlYclI4SXF1dzNQU29BZXVLblFML3Z6VXlFL1NQTVpINjJpOGRPWUFKZEp3SEZ0ai8xMDdHR0l1Z05LTnNCY1BSdVdTYk82K3U2SiswWFp1ZXIzVDFVaUcwUkE4KzBhbTFMYlZQQk9Qcm5jPQ==</VerInfo_Keys>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <DCC_Define>DEF_CRYPT_ALL;USE_REGCODE;$(DCC_Define)</DCC_Define>

@@ -77,7 +77,6 @@
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
-        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_Define>DEF_CRYPT_ALL;$(DCC_Define)</DCC_Define>
@@ -89,6 +88,7 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <DCC_Define>DEF_CRYPT_ALL;$(DCC_Define)</DCC_Define>
         <DCC_DcuOutput>Y:\pjh\Dcu\Win64\$(MSBuildProjectName)</DCC_DcuOutput>
@@ -130,13 +130,26 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="UnitHiConInfluxDBUtil.pas"/>
-        <DCCReference Include="..\..\..\..\Common\Form\FrmTwoInputEdit.pas">
+        <DCCReference Include="..\..\Common\FrmTagInputEdit.pas">
+            <Form>TagEditF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitNICUtil.pas"/>
         <DCCReference Include="..\UnitHiconMariaDBUtil.pas"/>
         <DCCReference Include="UnitHiConJsonUtil.pas"/>
         <DCCReference Include="..\UnitHiconMPMData.pas"/>
+        <DCCReference Include="..\..\..\..\Common\Form\FrmTwoInputEdit.pas">
+            <Form>TwoInputEditF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FrmHiConTCPConfig.pas">
+            <Form>HiConTCPConfigF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FrmResPortInfo4INFTag.pas">
+            <Form>ResPortInfo4INFTagF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -209,8 +222,6 @@
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhIOCompProPkg.bpl">(untitled)</Excluded_Packages>
-                    <Excluded_Packages Name="E:\pjh\project\util\VisualComm\Component\bpl\pjhDelphiStandardPkg.bpl">(untitled)</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k190.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp190.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

@@ -145,6 +145,10 @@ begin
       try
         LQuery.Execute(AQuery, True);
         Result := LQuery.FetchAllAsJson(True);
+
+        if LQuery.TotalRowsRetrieved = 0 then
+          Result := '';
+
       finally
         LQuery.Free;
       end;
@@ -183,6 +187,9 @@ var
 begin
   LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME = "' + ATagName + '"';
   Result := GetList2JsonFromDB(LQuery, ADBFileName);
+
+  if Result = '' then
+    exit;
 
   LDocList := DocList(Result);
 

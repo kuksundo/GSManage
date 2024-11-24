@@ -119,7 +119,8 @@ type
     fBareOwnerName,
     fBareOwnerCountry,
 
-    fVesselStatus
+    fVesselStatus,
+    fNote
     : RawUTF8;
 
     fInstalledProductTypes: TShipProductTypes;
@@ -184,8 +185,9 @@ type
     property InstalledProductTypes: TShipProductTypes read fInstalledProductTypes write fInstalledProductTypes;
 
     property DeliveryDate: TTimeLog read fDeliveryDate write fDeliveryDate;
+    property Note: RawUTF8 read fNote write fNote;
     property SClass1: RawUTF8 read fSocietyClass1 write fSocietyClass1;
-    property LastDryDockDate: TTimeLog read fLastDryDockDate write fLastDryDockDate;
+    property LastDryDockDate: TTimeLog read fLastDryDockDate write fLastDryDockDate;
     property SpecialSurveyDueDate: TTimeLog read fSpecialSurveyDue1 write fSpecialSurveyDue1;
     property DockingSurveyDueDate: TTimeLog read fDockingSurveyDue1 write fDockingSurveyDue1;
     property SClass2: RawUTF8 read fSocietyClass2 write fSocietyClass2;

@@ -9,14 +9,14 @@ uses
   pjhComboBox, NxColumnClasses, Vcl.StdCtrls, AeroButtons, Vcl.ExtCtrls,
   NxColumns, NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid,
   AdvGlowButton, Vcl.ComCtrls, AdvToolBtn, JvExControls, JvLabel, AdvGroupBox,
-  AdvOfficeButtons,
+  AdvOfficeButtons, NxEdit,
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
   UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2,
-  UnitHiConRptDM, UnitHGSSerialRecord2, NxEdit
+  UnitHiConRptDM, UnitHGSSerialRecord2
   ;
 
 type
@@ -51,7 +51,6 @@ type
     ShipOwner: TEdit;
     HullNo: TAdvEditBtn;
     ShipName: TEdit;
-    ProjectNo: TAdvEditBtn;
     BitBtn1: TBitBtn;
     Panel5: TPanel;
     JvLabel31: TJvLabel;
@@ -91,6 +90,7 @@ type
     JvLabel8: TJvLabel;
     ShipType: TEdit;
     ComissionRptNo: TNxButtonEdit;
+    ShipBuilder: TEdit;
 
     procedure AeroButton2Click(Sender: TObject);
     procedure WorkItemGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
@@ -309,6 +309,7 @@ begin
     HullNo.Text := LVesselSearchParamRec.fHullNo;
     ShipName.Text := LVesselSearchParamRec.fShipName;
     ShipType.Text := LVesselSearchParamRec.fShipType;
+//    ShipBuilder.Text := LVesselSearchParamRec.fShipBuilderName;
   end;
 end;
 

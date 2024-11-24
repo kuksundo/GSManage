@@ -2,7 +2,7 @@ object HiconisTCPF: THiconisTCPF
   Left = 0
   Top = 0
   Caption = 'HiconisTCPF'
-  ClientHeight = 540
+  ClientHeight = 560
   ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object HiconisTCPF: THiconisTCPF
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 378
+    Top = 398
     Width = 772
     Height = 6
     Cursor = crVSplit
@@ -30,7 +30,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 185
     Top = 41
     Width = 6
-    Height = 337
+    Height = 357
     ExplicitLeft = 216
     ExplicitHeight = 297
   end
@@ -151,10 +151,19 @@ object HiconisTCPF: THiconisTCPF
       TabOrder = 2
       OnClick = BitBtn1Click
     end
+    object Button1: TButton
+      Left = 224
+      Top = 10
+      Width = 75
+      Height = 25
+      Caption = 'Test'
+      TabOrder = 3
+      OnClick = Button1Click
+    end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 501
+    Top = 521
     Width = 772
     Height = 39
     Align = alBottom
@@ -172,7 +181,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object ConsoleMemo: TMemo
     Left = 0
-    Top = 384
+    Top = 404
     Width = 772
     Height = 117
     Align = alBottom
@@ -183,7 +192,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 0
     Top = 41
     Width = 185
-    Height = 337
+    Height = 357
     Align = alLeft
     Caption = 'Panel3'
     TabOrder = 3
@@ -273,7 +282,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 42
       Width = 183
-      Height = 294
+      Height = 314
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -381,7 +390,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 191
     Top = 41
     Width = 581
-    Height = 337
+    Height = 357
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
@@ -788,7 +797,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 28
       Width = 579
-      Height = 308
+      Height = 328
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -893,6 +902,13 @@ object HiconisTCPF: THiconisTCPF
         end
       end
     end
+    object Options1: TMenuItem
+      Caption = 'Options'
+      object SetConfig1: TMenuItem
+        Caption = 'Set Config'
+        OnClick = SetConfig1Click
+      end
+    end
   end
   object SaveDialog1: TSaveDialog
     Left = 72
@@ -974,6 +990,10 @@ object HiconisTCPF: THiconisTCPF
       object GetJsonFile1: TMenuItem
         Caption = 'Get Json File'
         OnClick = GetJsonFile1Click
+      end
+      object SearchINTTag1: TMenuItem
+        Caption = 'Search INF Tag'
+        OnClick = SearchINTTag1Click
       end
     end
     object N4: TMenuItem

@@ -27,8 +27,6 @@ object HiConReportEditF: THiConReportEditF
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
-      ExplicitLeft = 3
-      ExplicitTop = 25
       object JvLabel36: TJvLabel
         AlignWithMargins = True
         Left = 17
@@ -615,7 +613,7 @@ object HiConReportEditF: THiConReportEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800740410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C0101300098007C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2461,7 +2459,7 @@ object HiConReportEditF: THiConReportEditF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #44277#49324#48264#54840
+      Caption = #51312#49440#49548#47749
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2624,7 +2622,7 @@ object HiConReportEditF: THiConReportEditF
       Hint = 'Ship Owner'
       Alignment = taCenter
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 3
+      TabOrder = 2
     end
     object HullNo: TAdvEditBtn
       Tag = 3
@@ -2633,77 +2631,6 @@ object HiConReportEditF: THiConReportEditF
       Width = 157
       Height = 21
       Hint = #54840#49440#48264#54840
-      EditAlign = eaCenter
-      EmptyTextStyle = []
-      Flat = False
-      LabelFont.Charset = DEFAULT_CHARSET
-      LabelFont.Color = clWindowText
-      LabelFont.Height = -11
-      LabelFont.Name = 'Tahoma'
-      LabelFont.Style = []
-      Lookup.Font.Charset = DEFAULT_CHARSET
-      Lookup.Font.Color = clWindowText
-      Lookup.Font.Height = -11
-      Lookup.Font.Name = 'Arial'
-      Lookup.Font.Style = []
-      Lookup.Separator = ';'
-      Color = clWindow
-      ImeName = 'Microsoft IME 2010'
-      ReadOnly = False
-      TabOrder = 1
-      Text = ''
-      Visible = True
-      Version = '1.3.5.0'
-      ButtonStyle = bsButton
-      ButtonWidth = 20
-      Etched = False
-      Glyph.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF4D74AB234179C5ABA7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFF4173AF008EEC009AF41F4B80FFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF2F6EB22BA7
-        F516C0FF00A0F3568BC3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFEFFFF2974BB68C4F86BD4FF279CE66696C8FFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF3D8FD5A4E3FEB5EEFF4CAA
-        E7669DD2FFFFFFFFFFFFFFFFFFFFFFFFFEFEFEA188898A6A6A93736E866567B0
-        9595BAA8B1359EE8BDF5FF77C4EF63A1DAFFFFFFFFFFFFFFFFFFFFFFFFD7CDCD
-        7E5857DFD3CBFFFFF7FFFFE7FFFEDBD6BB9E90584D817B8E1794E46BB5E9FFFF
-        FFFFFFFFFFFFFFFFFFFFEDE9E9886565FFFFFFFFFFFFFDF8E8FAF2DCF8EDCFFF
-        F1CFF6DEBA9F5945C0C7D5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA38889F6EFEA
-        FFFFFFFEFBF5FBF7E8F9F4DAF5EBCCE6CEACF3DAB8E2BD99AB8B8EFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFF937674FFFFFFFDFBF1FCF8EEFAF3E1FCF5E3F7F0D7F0
-        DFC1E7C9A9F0D1ABA87E75F8F6F6FFFFFFFFFFFFFFFFFFFFFFFF997D7AFFFFFC
-        F9F2E1FAF3DEFAF7E5FAF1DCF1DFC0EDD9BAECD8B9EDCAA5AF8679EDE8E9FFFF
-        FFFFFFFFFFFFFFFFFFFF9C807BFFFFEBF9EED5FAF1D7F9F2DAF2E3C6FEFBF9FF
-        FFF0EFDFC0E9C69EB0857BF5F2F3FFFFFFFFFFFFFFFFFFFFFFFFAF9596F7EAC8
-        F9EBCCEFDCBEF4E4C7F0E1C5FDFCECFAF5DDEFDCBCDFB087B59A9AFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFDED4D7BA998CFDECC4EDD4B0E5CAA8EFDBBFF2E3C4F2
-        DEBCEABF93BB8E7DE7DFE2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCEBFC5
-        BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
-        B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      OnClickBtn = HullNoClickBtn
-    end
-    object ShipName: TEdit
-      Tag = 4
-      Left = 116
-      Top = 40
-      Width = 185
-      Height = 21
-      Hint = #49440#48149#51060#47492
-      Alignment = taCenter
-      ImeName = 'Microsoft IME 2010'
-      TabOrder = 2
-    end
-    object ProjectNo: TAdvEditBtn
-      Tag = 2
-      Left = 412
-      Top = 8
-      Width = 182
-      Height = 21
-      Hint = #44277#49324#48264#54840
       EditAlign = eaCenter
       EmptyTextStyle = []
       Flat = False
@@ -2755,6 +2682,18 @@ object HiConReportEditF: THiConReportEditF
         BE9A8DE6C7A5EFCBA3ECC8A2E8BE94DCAA86BE9585DFD6D7FFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9E4E6C9B3B4B99C93C3A097BF9F96CC
         B9B7F1EEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      OnClickBtn = HullNoClickBtn
+    end
+    object ShipName: TEdit
+      Tag = 4
+      Left = 116
+      Top = 40
+      Width = 185
+      Height = 21
+      Hint = #49440#48149#51060#47492
+      Alignment = taCenter
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 1
     end
     object BitBtn1: TBitBtn
       Left = 116
@@ -2788,7 +2727,7 @@ object HiConReportEditF: THiConReportEditF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 5
+      TabOrder = 4
       OnClick = BitBtn1Click
     end
     object ClassSociety: TEdit
@@ -2800,12 +2739,21 @@ object HiConReportEditF: THiConReportEditF
       Hint = #49440#44553
       Alignment = taCenter
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 4
+      TabOrder = 3
     end
     object ShipType: TEdit
       Tag = 20
       Left = 412
       Top = 43
+      Width = 181
+      Height = 21
+      Alignment = taCenter
+      TabOrder = 5
+    end
+    object ShipBuilder: TEdit
+      Tag = 20
+      Left = 412
+      Top = 9
       Width = 181
       Height = 21
       Alignment = taCenter
@@ -2922,6 +2870,7 @@ object HiConReportEditF: THiConReportEditF
       ParentFont = False
       RoundedFrame = 3
       Transparent = True
+      Visible = False
       HotTrackFont.Charset = ANSI_CHARSET
       HotTrackFont.Color = clWindowText
       HotTrackFont.Height = -13
@@ -2998,6 +2947,7 @@ object HiConReportEditF: THiConReportEditF
       Time = 42843.827708518520000000
       ImeName = 'Microsoft IME 2010'
       TabOrder = 3
+      Visible = False
     end
     object ReportKind: TComboBox
       Tag = 1

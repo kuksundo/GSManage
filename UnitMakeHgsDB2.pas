@@ -196,7 +196,7 @@ end;
 
 procedure ImportVesselMasterFromMapsExportedXlsFile(AFileName: string; AIsOnlyAdd: Boolean);
 const
-  VesselListDBColumnAry : array[0..49] of string =
+  VesselListDBColumnAry : array[0..50] of string =
     ('VesselSanction', 'InstalledLocation', 'HullNo', 'ShipName', 'IMONo', 'ShipType', 'CargoSize',
      'GroupOwnerSanction', 'GroupOwnerCountry', 'GroupOwnerID',
      'GroupOwnerName', 'TechManagerSanction', 'TechManagerCountry', 'TechManagerID', 'TechManagerName',
@@ -208,10 +208,10 @@ const
      'RegOwnerSanction', 'RegOwnerCountry','RegOwnerID', 'RegOwnerName',
      'BareOwnerSanction', 'BareOwnerCountry','BareOwnerID', 'BareOwnerName',
      'ShipBuilderID',
-     'ShipBuilderName', 'VesselStatus', 'DeliveryDate', 'SClass1', 'SpecialSurveyDueDate',
+     'ShipBuilderName', 'VesselStatus', 'DeliveryDate', 'Note', 'SClass1', 'SpecialSurveyDueDate',
      'DockingSurveyDueDate', 'SClass2', 'SpecialSurveyDueDate2', 'DockingSurveyDueDate2', 'UpdatedDate');
 
-  VesselListExcelColumnAry : array[0..49] of string =
+  VesselListExcelColumnAry : array[0..50] of string =
     ('Vessel Sanction', '설치위치', '호선번호', '호선명', 'IMO No.', '선종', '선형',
      'Group Owner Sacntion', 'Group Owner Country', 'Group Owner ID',
      'Group Owner', 'Tech. Manager Sanction', 'Tech. Manager Country', 'Tech. Manager ID', 'Tech. Manager',
@@ -223,7 +223,7 @@ const
      'Reg. Owner Sanction', 'Reg. Owner Country','Reg. Owner ID', 'Reg. Owner',
      'Bare. Owner Sanction', 'Bare. Owner Country','Bare. Owner ID', 'Bare. Owner',
      '조선소 ID',
-     '조선소명', '상태', '선박인도일', '선급1', 'Special Survey Due 1',
+     '조선소명', '상태', '선박인도일', '특이사항', '선급1', 'Special Survey Due 1',
      'Docking Survey Due 1', '선급2', 'Special Survey Due 2', 'Docking Survey Due 2', 'UpdatedDate');
 var
   LExcel: OleVariant;

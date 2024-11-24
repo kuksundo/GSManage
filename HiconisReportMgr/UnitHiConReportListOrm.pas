@@ -17,6 +17,7 @@ type
     fProjectNo, //공사번호
     fHullNo, //호선번호
     fShipName, //호선명
+    fShipBuilder,//조선소명
     fShipType, //선종
     fShipOwner, //선주
     fClassSociety, //선급
@@ -48,6 +49,7 @@ type
     property ProjectNo : RawUTF8 read fProjectNo write fProjectNo;
     property HullNo: RawUTF8 read fHullNo write fHullNo;
     property ShipName: RawUTF8 read fShipName write fShipName;
+    property ShipBuilder: RawUTF8 read fShipBuilder write fShipBuilder;
     property ShipOwner: RawUTF8 read fShipOwner write fShipOwner;
     property ShipType: RawUTF8 read fShipType write fShipType;
     property ClassSociety: RawUTF8 read fClassSociety write fClassSociety;
@@ -77,6 +79,7 @@ type
   function GetHiconReportListByHullNo(const AHullNo: string): TOrmHiconReportList;
   function GetHiReportListByHullNoNMakeDate(const AHullNo: string; AReportMakeDate: TTimeLog): TOrmHiconReportList;
   function GetHiconReportListByReportKind(AReportKind: integer; AHullNo: string=''): TOrmHiconReportList;
+  function GetHiConReportJsonByKeyID(const AKeyID: string): RawUtf8;
 
   procedure AddHiconReportListFromVariant(AVar: variant);
   procedure AddOrUpdateHiconReportList(AOrm: TOrmHiconReportList);
@@ -204,6 +207,21 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetHiConReportJsonByKeyID(const AKeyID: string): RawUtf8;
+var
+  LOrmHiconReportList: TOrmHiconReportList;
+begin
+  Result := '';
+
+  LOrmHiconReportList := GetHiconReportListByKeyID(AKeyID);
+  try
+    if LOrmHiconReportList.IsUpdate then
+      Result := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
+  finally
+    LOrmHiconReportList.Free;
+  end;
 end;
 
 procedure AddHiconReportListFromVariant(AVar: variant);

@@ -1271,8 +1271,6 @@ object HiConReportListF: THiConReportListF
     TabOrder = 2
     TabStop = True
     OnCellDblClick = HiRptListGridCellDblClick
-    ExplicitLeft = -1
-    ExplicitTop = 161
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1711,6 +1709,25 @@ object HiConReportListF: THiConReportListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 20
+      SortType = stAlphabetic
+    end
+    object ShipBuilder: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51312#49440#49548#47749
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 21
       SortType = stAlphabetic
     end
   end

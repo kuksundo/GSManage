@@ -142,6 +142,8 @@ const
      '');
 {$ENDREGION}
 
+function GetYardNameByHullNo(AHullNo: string): string;
+
 var
   g_HiRptMgrQueryDateType: TLabelledEnum<THiRptMgrQueryDateType>;
   g_HiRptWorkCode: TLabelledEnum<THiRptWorkCode>;
@@ -154,6 +156,23 @@ var
   g_HiRptImportance: TLabelledEnum<THiRptImportance>;
 
 implementation
+
+function GetYardNameByHullNo(AHullNo: string): string;
+begin
+  if Pos('HHI', AHullNo) > 0 then
+    Result := 'HHI'
+  else
+  if Pos('SHI', AHullNo) > 0 then
+    Result := 'SHI'
+  else
+  if Pos('HMD', AHullNo) > 0 then
+    Result := 'HMD'
+  else
+  if Pos('DW', AHullNo) > 0 then
+    Result := 'Hanwa'
+  else
+    Result := '';
+end;
 
 initialization
 //  g_HiRptMgrQueryDateType.InitArrayRecord(R_HiRptMgrQueryDateType);
