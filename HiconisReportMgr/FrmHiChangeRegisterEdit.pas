@@ -42,22 +42,21 @@ type
     JvLabel7: TJvLabel;
     EstimatedWorkHour: TEdit;
     JvLabel8: TJvLabel;
-    Importance: TAdvOfficeCheckGroup;
     NxHeaderPanel2: TNxHeaderPanel;
     NxHeaderPanel3: TNxHeaderPanel;
     NxHeaderPanel4: TNxHeaderPanel;
     JvLabel3: TJvLabel;
     Open_PIC: TEdit;
     JvLabel4: TJvLabel;
-    Open_Date: TDateTimePicker;
+    ChgRegOpenDate: TDateTimePicker;
     JvLabel5: TJvLabel;
     Test_PIC: TEdit;
     JvLabel6: TJvLabel;
-    Test_Date: TDateTimePicker;
+    ChgRegTestDate: TDateTimePicker;
     JvLabel11: TJvLabel;
     Close_PIC: TEdit;
     JvLabel12: TJvLabel;
-    CLose_Date: TDateTimePicker;
+    ChgRegCloseDate: TDateTimePicker;
     CurvyPanel1: TCurvyPanel;
     btn_Close: TAeroButton;
     AeroButton1: TAeroButton;
@@ -90,6 +89,8 @@ type
     ReportKind: TComboBox;
     JvLabel24: TJvLabel;
     RegisteredBy: TEdit;
+    Importance: TRadioGroup;
+    Priority: TRadioGroup;
 
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -258,10 +259,12 @@ procedure THiChgRegItemF.InitEnum;
 begin
   g_HiRptModifyReqSrc.InitArrayRecord(R_HiRptModifyReqSrc);
   g_HiRptImportance.InitArrayRecord(R_HiRptImportance);
+  g_HiRptPriority.InitArrayRecord(R_HiRptPriority);
 
   g_HiRptModifyReqSrc.SetType2List(ReqSrc.Items);
   g_HiRptModifiedItem.SetType2List(Involves.Items);
   g_HiRptImportance.SetType2List(Importance.Items);
+  g_HiRptPriority.SetType2List(Priority.Items);
 
   g_HiRptKind.SetType2List(ReportKind.Items);
   ReportKind.ItemIndex:= Ord(hrkCHR);

@@ -21,7 +21,7 @@ uses
 
   GpCommandLineParser,
 
-  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR,
+  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR, UnitJHPFileRecord,
   UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitHiConChgRegItemOrm, UnitHMSSignatureOrm,
   UnitHiConRptDM, UnitHiRptMgrCLO, UnitRegAppUtil;
 
@@ -608,6 +608,7 @@ procedure THiConReportListF.DeleteReportByReportKey(const ARptKey: TTimeLog);
 begin
   DeleteReportListByReportKey(ARptKey);
   DeleteWorkItemByReportKey(ARptKey);
+  DeleteJHPFilesFromDBByTaskID(ARptKey);
 end;
 
 procedure THiConReportListF.DeleteReportFromSelectedGrid;
@@ -632,7 +633,7 @@ end;
 procedure THiConReportListF.DeleteReportListByReportKey(
   const ARptKey: TTimeLog);
 begin
-  DeleteHiconReportListByKey(ARptKey);
+  DeleteHiconReportListFromDBByKey(ARptKey);
 
   if MessageDlg('선택한 Report와 연결된 Change Register Report도 삭제 할까요?.' + #13#10 +
     '삭제 후에는 복원이 안 됩니다..' , mtConfirmation, [mbYes, mbNo],0) = mrNo then
@@ -663,6 +664,10 @@ var
   LFrom, LTo: TTimeLog;
   LpjhBit32: TpjhBit32;
   i: integer;
+  LVar: variant;
+  LList: IDocList;
+  LDict: IDocDict;
+  LJson: RawUtf8;
 begin
   LWhere := '';
   LWhere2 := '';
@@ -747,19 +752,19 @@ begin
 
     if ARec.FModifyItems > 0 then
     begin
-      LpjhBit32 := ARec.FModifyItems;
+//      LpjhBit32 := ARec.FModifyItems;
 
-      for i := 0 to 31 do
-      begin
-        if LpjhBit32.Bit[i] then
-        begin
-          AddConstArray(ConstArray, [i]);//g_HiRptModifiedItem
+//      for i := 0 to 31 do
+//      begin
+//        if LpjhBit32.Bit[i] then
+//        begin
+          AddConstArray(ConstArray, [ARec.FModifyItems]);//g_HiRptModifiedItem
 
           if LWhere2 <> '' then
             LWhere2 := LWhere2 + ' or ';
-          LWhere2 := LWhere2 + ' ModifyItems = ?';
-        end;
-      end;//for
+          LWhere2 := LWhere2 + ' ModifyItems & ' + IntToStr(ARec.FModifyItems) + ' = ?';
+//        end;
+//      end;//for
 
       if LWhere2 <> '' then
         LWhere2 := '(' + LWhere2 + ')';
@@ -769,29 +774,38 @@ begin
       LWhere := LWhere + LWhere2;
     end;
 
-//    if ARec.FWorkCode > 0 then
-//    begin
-//      LpjhBit32 := ARec.FWorkCode;
-//
-//      for i := 0 to 31 do
-//      begin
-//        if LpjhBit32.Bit[i] then
-//        begin
-//          AddConstArray(ConstArray, [i]);//g_HiRptWorkCode
-//
-//          if LWhere2 <> '' then
-//            LWhere2 := LWhere2 + ' or ';
-//          LWhere2 := LWhere2 + ' WorkCode = ?';
-//        end;
-//      end;//for
-//
-//      if LWhere2 <> '' then
-//        LWhere2 := '(' + LWhere2 + ')';
-//
-//      if LWhere <> '' then
-//        LWhere := LWhere + ' and ';
-//      LWhere := LWhere + LWhere2;
-//    end;
+    if ARec.FWorkCode > 0 then
+    begin
+      LWhere2 := '';
+
+      LVar := GetRptKeyJsonAryByWorkCode(ARec.FWorkCode);
+      LJson := LVar;
+
+      if LJson = '[]' then
+      begin
+        LWhere2 := ' ReportKey = 1';
+      end
+      else
+      begin
+        LList := DocList(LJson);
+
+        for LDict in LList do
+        begin
+          AddConstArray(ConstArray, [LDict.I['ReportKey4Item']]);
+
+          if LWhere2 <> '' then
+            LWhere2 := LWhere2 + ' or ';
+          LWhere2 := LWhere2 + ' ReportKey = ?';
+        end;
+
+        if LWhere2 <> '' then
+          LWhere2 := '(' + LWhere2 + ')';
+      end;
+
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + LWhere2;
+    end;
 
   if LWhere = '' then
   begin
@@ -924,6 +938,7 @@ begin
     FShipName := ShipNameEdit.Text;
     FShipOwner := ShipOwnerCombo.Text;
     FProjNo := ProjNoEdit.Text;
+    FClassSociety := ClassSocietyEdit.Text;
 
     FReportAuthorID := ReportAuthorIDEdit.Text;
     FReportAuthorName := AuthorNameEdit.Text;
@@ -1092,6 +1107,7 @@ begin
   g_HiRptModifiedItem.InitArrayRecord(R_HiRptModifiedItem);
 
   g_HiRptKind.SetType2Combo(ReportKindCombo);
+  g_HiRptWorkCode.SetType2Combo(WorkCodeCB);
   g_HiRptModifiedItem.SetType2List(ModifyItemCheckCombo.Items);
 end;
 
@@ -1105,6 +1121,7 @@ begin
   InitHiconReportListClient('');
   InitHiconReportDetailClient('');
   InitHiChgRegItemClient('');
+  InitJHPFileClient('');
   //UnitHiConReportMgR.CheckRegByAppSigUsingOrm()에서 InitHMSSerialOrm() 실행함
 
   InitEnum();
@@ -1112,7 +1129,7 @@ begin
   FRptDocDict := DocDict('{}');
 
   DOC_DIR := ExtractFilePath(Application.ExeName) + 'db\files\';
-//  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+  //  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
 end;
 
 procedure THiConReportListF.LoadFromReportFile1Click(Sender: TObject);

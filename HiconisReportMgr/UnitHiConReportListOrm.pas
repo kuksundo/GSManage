@@ -85,7 +85,7 @@ type
   procedure AddOrUpdateHiconReportList(AOrm: TOrmHiconReportList);
   function AddOrUpdateHiconReportListFromJsonByKeyId(const AJson: string; const ADoUpdate: Boolean): Boolean;
 
-  procedure DeleteHiconReportListByKey(const AKeyID: TTimeLog);
+  procedure DeleteHiconReportListFromDBByKey(const AKeyID: TTimeLog);
 
 var
   g_HiconReportListDB: TRestClientURI;
@@ -285,7 +285,7 @@ begin
   end;
 end;
 
-procedure DeleteHiconReportListByKey(const AKeyID: TTimeLog);
+procedure DeleteHiconReportListFromDBByKey(const AKeyID: TTimeLog);
 begin
   g_HiconReportListDB.Delete(TOrmHiconReportList, 'ReportKey = ?', [AKeyID]);
 end;

@@ -574,7 +574,7 @@ object HiConReportEditF: THiConReportEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      inline TJHPFileListFrame1: TJHPFileListFrame
+      inline JHPFileFr: TJHPFileListFrame
         Left = 0
         Top = 0
         Width = 613
@@ -585,6 +585,8 @@ object HiConReportEditF: THiConReportEditF
         ExplicitHeight = 346
         inherited JvLabel13: TJvLabel
           Height = 302
+          ExplicitLeft = 4
+          ExplicitTop = 4
           ExplicitHeight = 302
         end
         inherited fileGrid: TNextGrid
@@ -593,8 +595,8 @@ object HiConReportEditF: THiConReportEditF
           ExplicitWidth = 515
           ExplicitHeight = 308
           inherited FileName: TNxTextColumn
-            DefaultWidth = 401
-            Width = 401
+            DefaultWidth = 281
+            Width = 281
           end
         end
         inherited Panel2: TPanel
@@ -613,7 +615,7 @@ object HiConReportEditF: THiConReportEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C0101300098007C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800940410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

@@ -67,6 +67,15 @@ type
     : string;
   end;
 
+  THiConSWVersionRec = packed record
+    FHirs,
+    FLogic,
+    FHirs_Wdt,
+    FHiscm_Im,
+    FInterface_a
+    : string;
+  end;
+
 {$REGION 'TTAGINFO'}
   //System_bak.accdb->INF table¿¡¼­ °¡Á®¿È
   TTagInfoRec_INF = packed record

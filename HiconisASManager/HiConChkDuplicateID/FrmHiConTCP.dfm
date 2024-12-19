@@ -804,6 +804,7 @@ object HiconisTCPF: THiconisTCPF
       Caption = ''
       TabOrder = 1
       TabStop = True
+      OnCellDblClick = NextGrid1CellDblClick
     end
   end
   object MainMenu1: TMainMenu
@@ -972,9 +973,29 @@ object HiconisTCPF: THiconisTCPF
       object N7: TMenuItem
         Caption = '-'
       end
-      object MPMBackup1: TMenuItem
-        Caption = 'MPM Backup From Selected'
-        OnClick = MPMBackup1Click
+      object GetVersions1: TMenuItem
+        Caption = 'Get Versions'
+        object hirs1: TMenuItem
+          Caption = 'hirs'
+        end
+        object hirswdt1: TMenuItem
+          Caption = 'hirs_wdt'
+        end
+        object logic1: TMenuItem
+          Caption = 'logic'
+        end
+        object interfacea1: TMenuItem
+          Caption = 'interface-a'
+        end
+        object hiscmim1: TMenuItem
+          Caption = 'hiscm_im'
+        end
+        object N8: TMenuItem
+          Caption = '-'
+        end
+        object All1: TMenuItem
+          Caption = 'All'
+        end
       end
       object N3: TMenuItem
         Caption = '-'
@@ -994,6 +1015,79 @@ object HiconisTCPF: THiconisTCPF
       object SearchINTTag1: TMenuItem
         Caption = 'Search INF Tag'
         OnClick = SearchINTTag1Click
+      end
+      object Web1: TMenuItem
+        Caption = 'Web'
+        object DBInfo1: TMenuItem
+          Caption = 'DB Info'
+          object lres1: TMenuItem
+            Caption = 'lres'
+            OnClick = lres1Click
+          end
+          object lmpm1: TMenuItem
+            Caption = 'lmpm'
+            OnClick = lmpm1Click
+          end
+          object lver1: TMenuItem
+            Caption = 'lver'
+            OnClick = lver1Click
+          end
+          object fbver1: TMenuItem
+            Caption = 'fbver'
+            OnClick = fbver1Click
+          end
+          object version2: TMenuItem
+            Caption = 'version'
+            OnClick = version2Click
+          end
+          object resource1: TMenuItem
+            Caption = 'resource'
+          end
+          object linkmap1: TMenuItem
+            Caption = 'linkmap'
+          end
+          object pointmapo1: TMenuItem
+            Caption = 'pointmap'
+          end
+          object retainmap1: TMenuItem
+            Caption = 'retainmap'
+          end
+        end
+        object MPMInfo1: TMenuItem
+          Caption = 'NX Info'
+        end
+        object RunState1: TMenuItem
+          Caption = 'Run State'
+        end
+        object RunInfo1: TMenuItem
+          Caption = 'Run Info'
+        end
+        object ViewLog1: TMenuItem
+          Caption = 'View Log'
+        end
+        object Utilities1: TMenuItem
+          Caption = 'Utilities'
+          object Backup1: TMenuItem
+            Caption = 'Backup'
+          end
+          object MPMBackup1: TMenuItem
+            Caption = 'MPM Backup From Selected'
+            OnClick = MPMBackup1Click
+          end
+        end
+        object Other1: TMenuItem
+          Caption = 'Others'
+        end
+        object Maintenance1: TMenuItem
+          Caption = 'Maintenance'
+        end
+        object Interfaces1: TMenuItem
+          Caption = 'Interfaces'
+          object version3: TMenuItem
+            Caption = 'version'
+            OnClick = version3Click
+          end
+        end
       end
     end
     object N4: TMenuItem

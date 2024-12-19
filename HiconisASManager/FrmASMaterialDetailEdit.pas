@@ -48,7 +48,7 @@ var
 
 implementation
 
-uses UnitRttiUtil2, FrmSearchMaterialCode, UnitAdvCompUtil;
+uses UnitRttiUtil2, FrmSearchMaterialCode, UnitAdvCompUtil, UnitHiASMaterialCodeRecord;
 
 {$R *.dfm}
 
@@ -62,11 +62,12 @@ begin
   try
     with LASMaterialF do
     begin
-      if ADoc.PorNo = '' then
+      if ADoc.MaterialCode = '' then
       begin
         Caption := Caption + ' (New)';
         CreateDate.Date := Now;
         NeedDate.Date := Now;
+        PORNo.Text := ADoc.PORNo;
       end
       else
       begin
@@ -131,6 +132,7 @@ begin
   begin
     MaterialCode.Text := LMatCode;
     MaterialName.Text := LMatName;
+    UnitPrice.Text := GetOrderPriceByCode(LMatCode, LMatName);
   end;
 end;
 

@@ -338,14 +338,17 @@ var
 begin
   LRange := ASheet.range['A12']; //당일진행업무
   LStr := AVar.CurrentWorkDesc;
+  LStr := StringReplace(LStr, #13#10, #10, [rfReplaceAll]);
   LRange.FormulaR1C1 := LStr;
 
   LRange := ASheet.range['G12'];//명일진행업무
   LStr := AVar.NextWorkDesc;
+  LStr := StringReplace(LStr, #13#10, #10, [rfReplaceAll]);
   LRange.FormulaR1C1 := LStr;
 
   LRange := ASheet.range['A57'];//선주/선급 Comment
   LStr := AVar.OwnerComment;
+  LStr := StringReplace(LStr, #13#10, #10, [rfReplaceAll]);
   LRange.FormulaR1C1 := LStr;
 
   LpjhBit32 := AVar.ModifyItems;
@@ -394,7 +397,8 @@ begin
     LRange.FormulaR1C1 := FormatDateTime('HH:mm', LDate);
 
     LRange := ASheet.range['J'+IntToStr(LIdx)]; //WorkHours
-    LRange.FormulaR1C1 := LVar.WorkHours;
+    LStr := LVar.WorkHours;
+    LRange.Value := LStr;
 
     LRange := ASheet.range['K'+IntToStr(LIdx)]; //WorkCode
     LRange.FormulaR1C1 := g_HiRptWorkCode.ToString(LVar.WorkCode);
@@ -443,7 +447,8 @@ begin
       LRange.FormulaR1C1 := FormatDateTime('HH:mm', LDate);
 
       LRange := ASheet.range['J'+IntToStr(LIdx)]; //WorkHours
-      LRange.FormulaR1C1 := LVar.WorkHours;
+      LStr := LVar.WorkHours;
+      LRange.Value := LStr;
 
       LRange := ASheet.range['K'+IntToStr(LIdx)]; //WorkCode
       LRange.FormulaR1C1 := g_HiRptWorkCode.ToString(LVar.WorkCode);
@@ -516,7 +521,8 @@ begin
       LRange.FormulaR1C1 := FormatDateTime('HH:mm', LDate);
 
       LRange := ASheet.range['J'+IntToStr(LIdx)]; //WorkHours
-      LRange.FormulaR1C1 := LVar.WorkHours;
+      LStr := LVar.WorkHours;
+      LRange.Value := LStr;
 
       LRange := ASheet.range['K'+IntToStr(LIdx)]; //WorkCode
       LRange.FormulaR1C1 := g_HiRptWorkCode.ToString(LVar.WorkCode);
@@ -677,9 +683,9 @@ begin
   LRange := ASheet.range['G5'];//선주
   LRange.FormulaR1C1 := LStr;
 
-  LStr := AHeaderJson.ProjectNo;
-  LRange := ASheet.range['J4'];//공사번호
-  LRange.FormulaR1C1 := LStr;
+  LStr := AHeaderJson.HullNo;
+  LRange := ASheet.range['J4'];//Yard
+  LRange.FormulaR1C1 := GetYardNameByHullNo(LStr);
 
   LStr := AHeaderJson.HullNo;
   LRange := ASheet.range['J5'];//Hull No
@@ -739,10 +745,12 @@ begin
   LRange.FormulaR1C1 := LStr;
 
   LStr := AHCRJson.Modification;
+  LStr := StringReplace(LStr, #13#10, #10, [rfReplaceAll]);
   LRange := ASheet.range['A25']; //Modification
   LRange.FormulaR1C1 := LStr;
 
   LStr := AHCRJson.ModDetail;
+  LStr := StringReplace(LStr, #13#10, #10, [rfReplaceAll]);
   LRange := ASheet.range['A33']; //Modification Details
   LRange.FormulaR1C1 := LStr;
 
@@ -812,15 +820,23 @@ begin
   SetValueCheckBoxByTextOnWorkSheet(ASheet, 'C&E CHART', LpjhBit32.Bit[6]);
 //  end;
 
-  LpjhBit32 := AHCRJson.Importance;
+  LStr := g_HiRptImportance.ToString(AHCRJson.Importance);
+  SetValueCheckBoxByTextOnWorkSheet(ASheet, LStr, True);
+
+  LStr := g_HiRptPriority.ToString(AHCRJson.Priority);
+  SetValueCheckBoxByTextOnWorkSheet(ASheet, LStr, True);
+
+
+//  LpjhBit32 := AHCRJson.Importance;
 
 //  for LIdx := 0 to 3 do //Importance의 Check Box 가 4개임
 //  begin
-  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Minor Change', LpjhBit32.Bit[0]);
-  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Major Change', LpjhBit32.Bit[1]);
-  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Low Priority', LpjhBit32.Bit[2]);
-  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'High Priority', LpjhBit32.Bit[3]);
+//  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Minor Change', LpjhBit32.Bit[0]);
+//  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Major Change', LpjhBit32.Bit[1]);
+//  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Low Priority', LpjhBit32.Bit[2]);
+//  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'High Priority', LpjhBit32.Bit[3]);
 //  end;
+
 
 end;
 

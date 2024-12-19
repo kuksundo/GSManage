@@ -100,6 +100,8 @@ type
     N1: TMenuItem;
     ExportSelectedToExcel1: TMenuItem;
     N2: TMenuItem;
+    RegisteredBy: TNxTextColumn;
+    Priority: TNxTextColumn;
 
     procedure SaveastoDFM1Click(Sender: TObject);
     procedure btn_SearchClick(Sender: TObject);

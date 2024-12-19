@@ -1185,7 +1185,9 @@ begin
 
 //    LWorkBook.Close;
 //    LExcel.Quit;
-  end;
+  end
+  else
+    ShowMessage('File Copy Fail to c:\temp\: ' + LTempFileName);
 end;
 
 procedure MakeShippingMark(AShipMarkRec: DOC_SHIPMARK_Rec);

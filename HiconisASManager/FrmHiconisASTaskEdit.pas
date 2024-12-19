@@ -2985,6 +2985,7 @@ begin
   if ARow = -1 then //Add
   begin
     TDocVariant.New(LVar);
+    LVar.MaterialCode := '';
   end
   else
   begin

@@ -188,6 +188,9 @@ type
     BitBtn3: TBitBtn;
     PopupMenu3: TPopupMenu;
     Claim1: TMenuItem;
+    JvLabel10: TJvLabel;
+    BitBtn4: TBitBtn;
+    ShippingNoEdit: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -1569,6 +1572,7 @@ begin
   g_ClaimTypeKind.InitArrayRecord(R_ClaimTypeKind);
   g_ClaimStatus.InitArrayRecord(R_ClaimStatus);
   g_HiASFindCondition.InitArrayRecord(R_HiASFindCondType);
+  g_SalesProcess.InitArrayRecord(R_SalesProcess);
 
   g_HiASFindCondition.SetType2Combo(FindCondCB);
 
@@ -1813,12 +1817,17 @@ begin
 end;
 
 procedure THiconisAsManageF.AssignHull2RecFromForm(AHiASIniConfig: THiASIniConfig);
+var
+  LTaskID: TID;
 begin
   AHiASIniConfig.FHullNo := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
   AHiASIniConfig.FShipName := grid_Req.CellsByName['ShipName',grid_Req.SelectedRow];
   AHiASIniConfig.FProjNo := grid_Req.CellsByName['OrderNo',grid_Req.SelectedRow];
   AHiASIniConfig.FClaimNo := grid_Req.CellsByName['ClaimNo',grid_Req.SelectedRow];
   AHiASIniConfig.FSubject := grid_Req.CellsByName['Subject',grid_Req.SelectedRow];
+
+//  LTaskID := TIDList(grid_Req.Row[grid_Req.SelectedRow].Data).TaskId;
+//  AHiASIniConfig.FPrice := GetPriceFromDBByTaskID(LTaskID);
 end;
 
 procedure THiconisAsManageF.AsyncProcessCommandProc;

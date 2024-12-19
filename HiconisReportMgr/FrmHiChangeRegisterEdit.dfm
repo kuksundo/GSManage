@@ -26,8 +26,6 @@ object HiChgRegItemF: THiChgRegItemF
     Align = alTop
     Rounding = 4
     TabOrder = 0
-    ExplicitLeft = -5
-    ExplicitTop = 0
     object JvLabel15: TJvLabel
       AlignWithMargins = True
       Left = 10
@@ -197,12 +195,9 @@ object HiChgRegItemF: THiChgRegItemF
     Align = alClient
     TabOrder = 1
     TabWidth = 120
-    ExplicitTop = 225
-    ExplicitHeight = 356
     object TabSheet5: TTabSheet
       Caption = #51068#48152#49324#54637
       ImageIndex = 4
-      ExplicitHeight = 328
       object JvLabel38: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -371,7 +366,6 @@ object HiChgRegItemF: THiChgRegItemF
     object SubConTS: TTabSheet
       Caption = #45812#45817#51088' '#51221#48372
       ImageIndex = 6
-      ExplicitHeight = 328
       object NxHeaderPanel1: TNxHeaderPanel
         Left = 3
         Top = 16
@@ -554,21 +548,6 @@ object HiChgRegItemF: THiChgRegItemF
           ImeName = 'Microsoft IME 2010'
           TabOrder = 2
         end
-        object Importance: TAdvOfficeCheckGroup
-          Tag = 23
-          Left = 133
-          Top = 155
-          Width = 185
-          Height = 62
-          Hint = #51473#50836#46020
-          Version = '1.3.8.5'
-          Color = clBtnFace
-          ParentBackground = False
-          ParentColor = False
-          TabOrder = 3
-          Columns = 2
-          Ellipsis = False
-        end
         object Plan_Finish: TEdit
           Tag = 21
           Left = 133
@@ -578,7 +557,23 @@ object HiChgRegItemF: THiChgRegItemF
           Hint = #51333#47308#44228#54925
           Alignment = taCenter
           ImeName = 'Microsoft IME 2010'
+          TabOrder = 3
+        end
+        object Importance: TRadioGroup
+          Tag = 23
+          Left = 133
+          Top = 161
+          Width = 92
+          Height = 60
           TabOrder = 4
+        end
+        object Priority: TRadioGroup
+          Tag = 23
+          Left = 231
+          Top = 159
+          Width = 92
+          Height = 60
+          TabOrder = 5
         end
       end
       object NxHeaderPanel2: TNxHeaderPanel
@@ -660,7 +655,7 @@ object HiChgRegItemF: THiChgRegItemF
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
-        object Open_Date: TDateTimePicker
+        object ChgRegOpenDate: TDateTimePicker
           Tag = 25
           Left = 79
           Top = 63
@@ -752,7 +747,7 @@ object HiChgRegItemF: THiChgRegItemF
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
-        object Test_Date: TDateTimePicker
+        object ChgRegTestDate: TDateTimePicker
           Tag = 27
           Left = 79
           Top = 61
@@ -844,7 +839,7 @@ object HiChgRegItemF: THiChgRegItemF
           ImeName = 'Microsoft IME 2010'
           TabOrder = 0
         end
-        object CLose_Date: TDateTimePicker
+        object ChgRegCloseDate: TDateTimePicker
           Tag = 29
           Left = 79
           Top = 61
@@ -861,7 +856,6 @@ object HiChgRegItemF: THiChgRegItemF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitHeight = 328
       inline TJHPFileListFrame1: TJHPFileListFrame
         Left = 0
         Top = 0
@@ -870,7 +864,7 @@ object HiChgRegItemF: THiChgRegItemF
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 601
-        ExplicitHeight = 328
+        ExplicitHeight = 311
         inherited JvLabel13: TJvLabel
           Height = 267
           ExplicitHeight = 302
@@ -879,7 +873,7 @@ object HiChgRegItemF: THiChgRegItemF
           Width = 503
           Height = 273
           ExplicitWidth = 503
-          ExplicitHeight = 290
+          ExplicitHeight = 273
           inherited FileName: TNxTextColumn
             DefaultWidth = 389
             Width = 389
@@ -888,7 +882,7 @@ object HiChgRegItemF: THiChgRegItemF
         inherited Panel2: TPanel
           Top = 273
           Width = 601
-          ExplicitTop = 290
+          ExplicitTop = 273
           ExplicitWidth = 601
           inherited CloseButton: TAdvGlowButton
             Left = 472
@@ -901,7 +895,7 @@ object HiChgRegItemF: THiChgRegItemF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C0101300098009C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800A40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2638,7 +2632,6 @@ object HiChgRegItemF: THiChgRegItemF
     Align = alBottom
     Rounding = 4
     TabOrder = 2
-    ExplicitTop = 584
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 542
@@ -2695,7 +2688,6 @@ object HiChgRegItemF: THiChgRegItemF
     Align = alTop
     ParentBackground = False
     TabOrder = 3
-    ExplicitTop = 82
     object JvLabel31: TJvLabel
       AlignWithMargins = True
       Left = 10
@@ -3041,7 +3033,6 @@ object HiChgRegItemF: THiChgRegItemF
     HeaderFont.Height = -11
     HeaderFont.Name = 'Tahoma'
     HeaderFont.Style = []
-    ExplicitTop = 42
     FullHeight = 130
     inline VesselInfoFr: TVesselInfoFr
       Left = 0

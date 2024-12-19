@@ -392,8 +392,8 @@ object ChgRegListF: TChgRegListF
         Top = 57
         Width = 113
         Height = 25
-        Date = 41527.710435775470000000
-        Time = 41527.710435775470000000
+        Date = 41527.710435775480000000
+        Time = 41527.710435775480000000
         Enabled = False
         ImeName = 'Microsoft IME 2010'
         TabOrder = 1
@@ -403,8 +403,8 @@ object ChgRegListF: TChgRegListF
         Top = 56
         Width = 113
         Height = 25
-        Date = 41527.710435775470000000
-        Time = 41527.710435775470000000
+        Date = 41527.710435775480000000
+        Time = 41527.710435775480000000
         Enabled = False
         ImeName = 'Microsoft IME 2010'
         TabOrder = 2
@@ -1314,6 +1314,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 1
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1336,6 +1337,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 2
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1509,6 +1511,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 11
       SortType = stAlphabetic
+      Visible = False
     end
     object Involves: TNxTextColumn
       Alignment = taCenter
@@ -1528,6 +1531,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 12
       SortType = stAlphabetic
+      Visible = False
     end
     object Modification: TNxTextColumn
       Alignment = taCenter
@@ -1661,6 +1665,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 19
       SortType = stAlphabetic
+      Visible = False
     end
     object Open_PIC: TNxTextColumn
       Alignment = taCenter
@@ -1738,6 +1743,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 23
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1760,6 +1766,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 24
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1782,6 +1789,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 25
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1804,6 +1812,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 26
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
     end
@@ -1826,8 +1835,48 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 27
       SortType = stNumeric
+      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
+    end
+    object RegisteredBy: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #46321#47197#51088
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 28
+      SortType = stAlphabetic
+    end
+    object Priority: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Priority'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 29
+      SortType = stAlphabetic
+      Visible = False
     end
   end
   object StatusBarPro1: TStatusBarPro

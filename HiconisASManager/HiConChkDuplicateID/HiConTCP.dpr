@@ -21,7 +21,8 @@ uses
   UnitHiconMPMData in '..\UnitHiconMPMData.pas',
   FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas' {TwoInputEditF},
   FrmHiConTCPConfig in 'FrmHiConTCPConfig.pas' {HiConTCPConfigF},
-  FrmResPortInfo4INFTag in 'FrmResPortInfo4INFTag.pas' {ResPortInfo4INFTagF};
+  FrmResPortInfo4INFTag in 'FrmResPortInfo4INFTag.pas' {ResPortInfo4INFTagF},
+  FrmNextGrid in '..\..\..\..\Common\Form\FrmNextGrid.pas';
 
 {$R *.res}
 

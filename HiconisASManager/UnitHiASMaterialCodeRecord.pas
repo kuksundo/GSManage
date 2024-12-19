@@ -14,7 +14,8 @@ type
     fMaterialCode, //자재코드
     fMaterialName, //자재명
     fDrawingNo,//도면번호
-    fSupplierName //공급업체명
+    fSupplierName, //공급업체명
+    fOrderPrice//구매단가
     : RawUTF8;
 
     fMaterialKind,
@@ -30,6 +31,7 @@ type
     property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
     property DrawingNo: RawUTF8 read fDrawingNo write fDrawingNo;
     property SupplierName: RawUTF8 read fSupplierName write fSupplierName;
+    property OrderPrice: RawUTF8 read fOrderPrice write fOrderPrice;
     property MaterialKind: integer read fMaterialKind write fMaterialKind;
     property MaterialCategory: integer read fMaterialCategory write fMaterialCategory;
   end;
@@ -39,6 +41,7 @@ type
   procedure DestroyHiASMaterialCodeClient();
 
   function GetMaterialCodeByCode(const AMatCode, AMatName: string): TOrmMaterialCode;
+  function GetOrderPriceByCode(const AMatCode, AMatName: string): string;
   function GetMaterialCodeByCauseHW(const AClaimCauseHW: integer): TOrmMaterialCode;
 
   procedure AddMaterialCodeFromVariant(AVar: variant);
@@ -112,6 +115,25 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetOrderPriceByCode(const AMatCode, AMatName: string): string;
+var
+  LOrm: TOrmMaterialCode;
+begin
+  Result := '';
+
+  if AMatCode = '' then
+    LOrm := TOrmMaterialCode.CreateAndFillPrepare(g_HiASMaterialCodeDB.orm, 'MaterialName LIKE ?', ['%'+AMatName+'%'])
+  else
+    LOrm := TOrmMaterialCode.CreateAndFillPrepare(g_HiASMaterialCodeDB.orm, 'MaterialCode = ? and MaterialName LIKE ?', [AMatCode, '%'+AMatName+'%']);
+
+  try
+    if LOrm.FillOne then
+      Result := LOrm.OrderPrice;
+  finally
+    LOrm.Free;
+  end;
 end;
 
 function GetMaterialCodeByCauseHW(const AClaimCauseHW: integer): TOrmMaterialCode;

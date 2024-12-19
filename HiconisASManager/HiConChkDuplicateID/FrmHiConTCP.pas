@@ -105,6 +105,35 @@ type
     Options1: TMenuItem;
     SetConfig1: TMenuItem;
     Button1: TButton;
+    DBInfo1: TMenuItem;
+    MPMInfo1: TMenuItem;
+    RunState1: TMenuItem;
+    RunInfo1: TMenuItem;
+    ViewLog1: TMenuItem;
+    Utilities1: TMenuItem;
+    Other1: TMenuItem;
+    Maintenance1: TMenuItem;
+    Interfaces1: TMenuItem;
+    lres1: TMenuItem;
+    lmpm1: TMenuItem;
+    lver1: TMenuItem;
+    fbver1: TMenuItem;
+    version2: TMenuItem;
+    resource1: TMenuItem;
+    linkmap1: TMenuItem;
+    pointmapo1: TMenuItem;
+    retainmap1: TMenuItem;
+    Web1: TMenuItem;
+    Backup1: TMenuItem;
+    GetVersions1: TMenuItem;
+    hirs1: TMenuItem;
+    hirswdt1: TMenuItem;
+    logic1: TMenuItem;
+    interfacea1: TMenuItem;
+    hiscmim1: TMenuItem;
+    N8: TMenuItem;
+    All1: TMenuItem;
+    version3: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -141,6 +170,13 @@ type
     procedure SearchINTTag1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure SetConfig1Click(Sender: TObject);
+    procedure version2Click(Sender: TObject);
+    procedure fbver1Click(Sender: TObject);
+    procedure lmpm1Click(Sender: TObject);
+    procedure NextGrid1CellDblClick(Sender: TObject; ACol, ARow: Integer);
+    procedure lver1Click(Sender: TObject);
+    procedure lres1Click(Sender: TObject);
+    procedure version3Click(Sender: TObject);
   private
     FHiconTCPIniConfig: THiconTCPIniConfig;
     FHiconTCPIniFileName: string;
@@ -148,8 +184,10 @@ type
     FIpAddrDic: IKeyValue<string, TIpListRec>;
     //Key: IPName
     FIDListDic: IKeyValue<string, TStringList>;
-    //Key: MM Address
-//    FAddrIdListDic: IKeyValue<string, TIDListRec>;
+    //Key: 1. AI
+    //Value: [[],[]] = array of array data
+    //web->DB Information->lmpm 조회시 데이터 저장함
+    FMPMListDic: IKeyValue<string, string>;
     //MM Address
 //    FDupIdList: IList<TDupIDListRec>;
     //Key: IP Address
@@ -166,6 +204,7 @@ type
     FHiConMariaDB: THiConMariaDB;
     FMyIpAddr: string; //This Computer Ip Address
     FIpAddrList4ThisComputer: TStringList;
+    FHiConSWVersionRec: THiConSWVersionRec;
 
     procedure SetNextGridColumn4DupTagId();
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
@@ -248,11 +287,58 @@ type
     procedure GetIdFromMPM_Async(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
     procedure GetIdsFromIpSelected;
+    function GetChannelStrUrlFromIpRec(AIpAddr: string): string;
+
+    procedure GetLResFromIpSelected;
+    function GetLResFromMPM(ARec: TIpListRec): integer;
+    function GetLResUrlFromIpRec(AIpAddr: string): string;
+    procedure SetLResList2GridByTagText(AIpAddr: string; ATagText: string);
+    procedure SetNextGridColumn4LRes();
+    procedure SetLResList2Grid(const AIpAddr: string);
+
+    procedure GetLMPMFromIpSelected;
+    function GetLMPMFromMPM(ARec: TIpListRec): integer;
+    function GetLMPMUrlFromIpRec(AIpAddr: string): string;
+    procedure SetLMPMList2GridByTagText(AIpAddr: string; ATagText: string);
+    procedure SetNextGridColumn4LMPM();
+    procedure SetLMPMList2Grid(const AIpAddr: string);
+
+    procedure SetLMPMFromMPMList2GridByKey(const AIpAddr, AKey: string);
+
+    procedure GetVersionMPMFromIpSelected;
+    function GetVersionMPMFromMPM(ARec: TIpListRec): integer;
+    function GetVersionMPMUrlFromIpRec(AIpAddr: string): string;
+    procedure SetVersionMPMList2GridByTagText(AIpAddr: string; ATagText: string);
+    procedure SetNextGridColumn4VersionMPM();
+
+    procedure GetVersionIntfFromIpSelected;
+    function GetVersionIntfFromMPM(ARec: TIpListRec): integer;
+    function GetVersionIntfUrlFromIpRec(AIpAddr: string): string;
+    //THiConSWVersionRec.FInterface_a/FHiscm_Im을 채움
+    procedure GetVersionIntfFromTagText(ATagText: string);
+    procedure SetVersionIntfList2GridByTagText(AIpAddr: string; ATagText: string);
+    procedure SetVersionIntf2Grid(const AIpAddr: string);
+    procedure SetNextGridColumn4VersionIntf();
+
+    procedure GetFBVerFromIpSelected;
+    function GetFBVerFromMPM(ARec: TIpListRec): integer;
+    function GetFBVerUrlFromIpRec(AIpAddr: string): string;
+    procedure SetFBVerList2GridByTagText(AIpAddr: string; ATagText: string);
+    procedure SetNextGridColumn4FBVer();
+
+    procedure GetLVerFromIpSelected;
+    function GetLVerFromMPM(ARec: TIpListRec): integer;
+    function GetLVerUrlFromIpRec(AIpAddr: string): string;
+    //THiConSWVersionRec.FHirs/FLogic을 채움
+    procedure GetLVerListFromTagText(ATagText: string; out ADesc, ALogicVer: string);
+    procedure SetLVerList2GridByTagText(const AIpAddr, ATagText: string);
+    procedure SetLVerList2Grid(const AIpAddr, ADesc, AVer: string);
+    procedure SetNextGridColumn4LVer();
+
     procedure HtmlParseFunc();
     procedure GetPreTagTextFromHtml();
 
     function GetFileNameFromIpAddr(AIpAddr: string): string;
-    function GetUrlFromIpRec(AIpAddr: string): string;
     function GetIpListRecByIp(AIpAddr: string): TIpListRec;
     function GetIpListRecByResName(AResName: string): TIpListRec;
 
@@ -265,7 +351,7 @@ type
     procedure DisplayDuplicatedAddr();
     procedure SetVisibleAllGridRow(AIsShow: Boolean);
 
-    function GetPortPrintDebug(AIpAddr, AMode: string): string;
+    function GetPortPrintDebug(AIpAddr, APortName: string): string;
     function GetJsonFromMPMByFileName(AIpAddrList, AJsonFileName: string): string;
     procedure Log(const AMsg: string);
     procedure ShowTD(const ATDRec: TMsgBox);
@@ -282,7 +368,7 @@ uses System.TimeSpan, System.Diagnostics, PJEnvVars,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
   UnitJsonUtil, sevenzip,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
-  FrmResPortInfo4INFTag
+  FrmResPortInfo4INFTag, FrmNextGrid
   ;
 
 {$R *.dfm}
@@ -771,6 +857,11 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.fbver1Click(Sender: TObject);
+begin
+  GetFBVerFromIpSelected();
+end;
+
 procedure THiconisTCPF.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   DestroyVar;
@@ -804,6 +895,74 @@ begin
   LStr := StringReplace(LStr, #13, '', [rfReplaceAll]);
   LStr := StringReplace(LStr, #10, '', [rfReplaceAll]);
   Result := '{' + LStr;
+end;
+
+procedure THiconisTCPF.GetFBVerFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetFBVerFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetFBVerFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetFBVerUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetFBVerUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetFBVerList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetFBVerList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+function THiconisTCPF.GetFBVerUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/fbver';
 end;
 
 function THiconisTCPF.GetFileNameFromIpAddr(AIpAddr: string): string;
@@ -870,14 +1029,14 @@ begin
     exit;
   end;
 
-  LUrl := GetUrlFromIpRec(LIpAddr);
+  LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
 
   LCon := HttpGet(LUrl, nil, False, nil, 5000);
 
   if LCon = '' then
   begin
     LIpAddr := ARec.PMPM_SIP;
-    LUrl := GetUrlFromIpRec(LIpAddr);
+    LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
     LCon := HttpGet(LUrl);
 
     if LCon <> '' then
@@ -911,13 +1070,13 @@ begin
       LHttp: TIdHttp;
       Lurl, LQuery, LFullUrl: string;
     begin
-      LUrl := GetUrlFromIpRec(LIpAddr);
+      LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
       LCon := HttpGet(LUrl);
 
       if LCon = '' then
       begin
         LIpAddr := ARec.PMPM_SIP;
-        LUrl := GetUrlFromIpRec(LIpAddr);
+        LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
         LCon := HttpGet(LUrl);
       end;
     end,
@@ -1066,6 +1225,74 @@ begin
   IdTCPClient1.Disconnect;
 end;
 
+procedure THiconisTCPF.GetLMPMFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetLMPMFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetLMPMFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetLMPMUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetLMPMUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetLMPMList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetLMPMList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+function THiconisTCPF.GetLMPMUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/lmpm';
+end;
+
 function THiconisTCPF.GetLogDrive(var AIsHistoryStation: Boolean): string;
 var
   LJson: RawUtf8;
@@ -1093,6 +1320,165 @@ begin
     else
       Result := 'D:';
   end;
+end;
+
+procedure THiconisTCPF.GetLResFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetLResFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetLResFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetLResUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetLResUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+function THiconisTCPF.GetLResUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/lres';
+end;
+
+procedure THiconisTCPF.GetLVerFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetLVerFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetLVerFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetLVerUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetLVerUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetLVerList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetLVerList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+procedure THiconisTCPF.GetLVerListFromTagText(ATagText: string; out ADesc,
+  ALogicVer: string);
+var
+  LStr, LLogic, LHirs: string;
+  LRow, i: integer;
+begin
+  ATagText := StringReplace(ATagText, #13#10, '', [rfReplaceAll]);
+  LStr := ExtractTextInsideGivenTagEx('pre', ATagText);
+  LHirs := ExtractTextInsideGivenTagNth('table', LStr, 1);
+  LLogic := ExtractTextInsideGivenTagNth('table', LStr, 5);
+
+//  LStr := ExtractTextInsideGivenTagEx('pre', LHirs);
+  LStr := ExtractTextBetweenDelim(LHirs, 'Ver', 'Copyright');
+  LStr := StringReplace(LStr, #13#10, '', [rfReplaceAll]);
+  LStr := Trim(LStr);
+  FHiConSWVersionRec.FHirs := LStr;
+
+  ADesc := ExtractTextInsideGivenTagNth('td', LLogic, 1);
+  ALogicVer := ExtractTextInsideGivenTagNth('td', LLogic, 2);
+
+  FHiConSWVersionRec.FLogic := ALogicVer;
+end;
+
+function THiconisTCPF.GetLVerUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/lver';
 end;
 
 function THiconisTCPF.GetModuleTypeFromDBByTagName(ATagName: string): string;
@@ -1168,7 +1554,7 @@ begin
   GetPortPrintDebug(LIpAddrList, '0');
 end;
 
-function THiconisTCPF.GetPortPrintDebug(AIpAddr, AMode: string): string;
+function THiconisTCPF.GetPortPrintDebug(AIpAddr, APortName: string): string;
 var
   LIOHandler: TIdIOHandler;
 begin
@@ -1186,7 +1572,7 @@ begin
   LIOHandler.WaitFor('login:');
   LIOHandler.WriteLn('root');
   LIOHandler.WaitFor('$');
-  LIOHandler.WriteLn('pp 01');
+  LIOHandler.WriteLn('pp ' + APortName); //01
   LIOHandler.WaitFor('Select>>');
   LIOHandler.WriteLn('0');
   LIOHandler.WaitFor('Choice: 0');
@@ -1389,7 +1775,165 @@ begin
   Result := GetTgzNPtcJsonNameByTagInfo(LStr, LBaseDir);
 end;
 
-function THiconisTCPF.GetUrlFromIpRec(AIpAddr: string): string;
+function THiconisTCPF.GetVersionMPMUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/version';
+end;
+
+procedure THiconisTCPF.GetVersionIntfFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetVersionIntfFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetVersionIntfFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetVersionIntfUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetVersionIntfUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetVersionIntfList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetVersionIntfList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+procedure THiconisTCPF.GetVersionIntfFromTagText(ATagText: string);
+var
+  LStr, LName, LVer: string;
+  LRow: integer;
+begin
+  LStr := ExtractTextInsideGivenTagEx('table', ATagText);
+  LName := ExtractTextInsideGivenTagNth('td', LStr, 1);
+  LVer := ExtractTextInsideGivenTagNth('td', LStr, 2);
+
+  LName := ExtractTextInsideGivenTagNth('td', LStr, 3);
+  LVer := ExtractTextInsideGivenTagNth('td', LStr, 4);
+
+  if LName = 'hiscm_im' then
+    FHiConSWVersionRec.FHiscm_Im := LVer;
+
+  LName := ExtractTextInsideGivenTagNth('td', LStr, 5);
+  LVer := ExtractTextInsideGivenTagNth('td', LStr, 6);
+
+  if LName = 'interface-a' then
+    FHiConSWVersionRec.FInterface_a := LVer;
+end;
+
+function THiconisTCPF.GetVersionIntfUrlFromIpRec(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + ':8000/version';
+end;
+
+procedure THiconisTCPF.GetVersionMPMFromIpSelected;
+var
+  i: integer;
+  LIp, LResName: string;
+  LIpListRec: TIpListRec;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LResName := IPAddrGrid.CellsByName['RES_NAME', i];
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LIpListRec := GetIpListRecByResName(LResName);
+
+      if GetVersionMPMFromMPM(LIpListRec) = -1 then
+        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+    end;
+  end;
+end;
+
+function THiconisTCPF.GetVersionMPMFromMPM(ARec: TIpListRec): integer;
+var
+  LCon: RawByteString;
+  LUrl, LIpAddr: string;
+begin
+  if ARec.PMPM_PIP = '127.0.0.1' then
+    exit;
+
+  LIpAddr := ARec.PMPM_PIP;
+
+  Result := PingHost(LIpAddr);
+
+  if Result = -1 then
+  begin
+    Log('Host not connected : <' + LIpAddr + '>');
+    exit;
+  end;
+
+  LUrl := GetVersionMPMUrlFromIpRec(LIpAddr);
+
+  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+
+  if LCon = '' then
+  begin
+    LIpAddr := ARec.PMPM_SIP;
+    LUrl := GetVersionMPMUrlFromIpRec(LIpAddr);
+    LCon := HttpGet(LUrl);
+
+    if LCon <> '' then
+    begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LCon;
+      SetVersionMPMList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+    end;
+  end
+  else
+  begin
+    ConsoleMemo.Lines.Clear;
+    ConsoleMemo.Lines.Text := LCon;
+    SetVersionMPMList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+  end;
+end;
+
+function THiconisTCPF.GetChannelStrUrlFromIpRec(AIpAddr: string): string;
 begin
   Result := 'http://' + AIpAddr + '/channelstr';
 end;
@@ -1441,6 +1985,7 @@ begin
 //  FDupIdList := Collections.NewList<TDupIDListRec>;
   FIpNIdList := Collections.NewKeyValue<string, TIDDic>;
   FIpNDupIdList := Collections.NewKeyValue<string, TIDList>;
+  FMPMListDic := Collections.NewKeyValue<string, string>;
 
   FTCPResponse := TStringList.Create;
   FHiConMariaDB := THiConMariaDB.Create;
@@ -1450,7 +1995,14 @@ begin
   FMyIpAddr := GetHiconisIp4ThisComputer();
   Caption := Caption + '(' + FMyIpAddr + ')';
 
+  EnsureDirectoryExists('c:\temp');
+
   InitEnum();
+end;
+
+procedure THiconisTCPF.lmpm1Click(Sender: TObject);
+begin
+  GetLMPMFromIpSelected();
 end;
 
 //procedure THiconisTCPF.IPAddrGridSelectCell(Sender: TObject; ACol,
@@ -1538,6 +2090,16 @@ begin
   ConsoleMemo.Lines.Add(AMsg);
 end;
 
+procedure THiconisTCPF.lres1Click(Sender: TObject);
+begin
+  GetLResFromIpSelected();
+end;
+
+procedure THiconisTCPF.lver1Click(Sender: TObject);
+begin
+  GetLVerFromIpSelected();
+end;
+
 procedure THiconisTCPF.MariaDBConnect1Click(Sender: TObject);
 begin
   FHiConMariaDB.CreateDB('10.8.2.11', '3306', 'test', 'root', 'aconis');
@@ -1579,6 +2141,20 @@ end;
 procedure THiconisTCPF.NetTimeServiceStatus1Click(Sender: TObject);
 begin
   GetNetTimeServiceStatus2Grid();
+end;
+
+procedure THiconisTCPF.NextGrid1CellDblClick(Sender: TObject; ACol,
+  ARow: Integer);
+var
+  LIpAddr, LKey: string;
+begin
+  if ARow = -1 then
+    exit;
+
+  LIpAddr := NextGrid1.CellsByName['IPAddr', ARow];
+  LKey := NextGrid1.CellsByName['IOCard', ARow];
+
+  SetLMPMFromMPMList2GridByKey(LIpAddr, LKey);
 end;
 
 procedure THiconisTCPF.PngBitBtn1Click(Sender: TObject);
@@ -1699,6 +2275,51 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.SetFBVerList2GridByTagText(AIpAddr, ATagText: string);
+var
+  LStr, LIdx, LFN, LFBName, LVer: string;
+  LRow, i: integer;
+  LList, LList2: IDocList;
+  Lvar, LVar2: variant;
+  LUtf8: RawUtf8;
+begin
+  ATagText := StringReplace(ATagText, #13#10, '', [rfReplaceAll]);
+  LStr := ExtractTextInsideGivenTagEx('table', ATagText);
+  LStr := ExtractTextInsideGivenTagEx('script', LStr);
+  ATagText := StrToken(LStr, '=');
+  LStr := StrToken(LStr, ';');
+
+  LList := DocList(LStr);
+
+  NextGrid1.BeginUpdate;
+  try
+    SetNextGridColumn4FBVer();
+
+    for Lvar in LList do
+    begin
+      LUtf8 := LVar;
+      LList2 := DocList(LUtf8);
+
+      LVar2 := LList2.Pop(0);
+
+      if LVar2 = 'index' then
+        Continue;
+
+      if VarIsNull(LVar2) then
+        Break;
+
+      LRow := NextGrid1.AddRow();
+      NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+      NextGrid1.CellsByName['index', LRow] := LVar2;
+      NextGrid1.CellsByName['file', LRow] := LList2.Pop(0);
+      NextGrid1.CellsByName['version', LRow] := LList2.Pop(0);
+      NextGrid1.CellsByName['FName', LRow] := LList2.Pop(0);
+    end;
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
 procedure THiconisTCPF.SetIdList2Grid(AIpAddr: string);
 begin
   if TaskTab.ActiveTabIndex = 0 then//전체
@@ -1770,7 +2391,6 @@ begin
   try
     NextGrid1.ClearRows;
 
-
     while AIpAddr <> '' do
     begin
       LIpAddr := StrToken(AIpAddr, ';');
@@ -1824,6 +2444,171 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.SetLMPMFromMPMList2GridByKey(const AIpAddr, AKey: string);
+var
+  LTable: string;
+begin
+  if FMPMListDic.TryGetValue(AKey, LTable) then
+  begin
+    LTable := StringReplace(LTable, ' ', '', [rfReplaceAll]);
+    LTable := StringReplace(LTable, '[ms]', '_ms', [rfReplaceAll]);
+
+    CreateNextGridForm('lmpm', AKey, LTable);
+  end;
+end;
+
+procedure THiconisTCPF.SetLMPMList2Grid(const AIpAddr: string);
+var
+  i, LRow: integer;
+begin
+  NextGrid1.BeginUpdate;
+  try
+    NextGrid1.ClearRows();
+    NextGrid1.Columns.Clear();
+
+    SetNextGridColumn4LMPM();
+
+    for i := FMPMListDic.Count - 1 downto 0 do
+    begin
+      LRow := NextGrid1.AddRow();
+      NextGrid1.CellsByName['IOCard', LRow] := FMPMListDic.Key[i];
+      NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    end;
+
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+procedure THiconisTCPF.SetLMPMList2GridByTagText(AIpAddr, ATagText: string);
+var
+  LStr, LTotalCountStr, LTable, LIOCard, LDelim: string;//LScript,
+  i, LTotalCount: integer;
+begin
+  ATagText := StringReplace(ATagText, #13#10, '', [rfReplaceAll]);
+  LStr := ExtractTextInsideGivenTagEx('pre', ATagText);
+
+  if Pos('Total RTU No =', LStr) > 0 then
+  begin
+    LTotalCountStr := StrToken(LStr, '=');
+    LTotalCountStr := StrToken(LStr, '<');
+
+    if not StrIsNumeric(LTotalCountStr) then
+    begin
+      ShowMessage('Please check "Total RTU No"');
+      exit;
+    end;
+  end;
+
+  LTotalCount := StrToIntDef(LTotalCountStr, 0);
+  FMPMListDic.Clear;
+
+  //"4. "을 검색하면 "14. "이 검색되는 문제 회피를 위해 downto로 수정함
+  for i := LTotalCount downto 1 do
+  begin
+    LDelim := IntToStr(i) + '. ';
+    //"1. AI (16) : 100 mSec" 가져옴
+    LIOCard := ExtractTextBetweenDelim(LStr, LDelim, '<');
+
+    if LIOCard = '' then
+    begin
+//        ShowMessage(LIOCard);
+      Continue;
+    end
+    else
+      LStr := ReplaceString(LStr, LDelim + LIOCard, '');
+
+    LIOCard := LDelim + LIOCard;
+
+    //LTotalCount 중에 없는 숫자가 존재하므로 일부 오류 발생하여 ExtractTextBetweenDelim()로 변경함
+//    LTable := ExtractTextInsideGivenTagNth('table', LStr, i);
+//    LScript := ExtractTextInsideGivenTagNth('script', LTable, 1);
+
+    LDelim := 'ta' + IntToStr(i) + ' = ';
+    LTable := ExtractTextBetweenDelim(LStr, LDelim, ';');
+//    LTable := StrToken(LScript, '=');
+//    LTable := StrToken(LScript, ';');
+
+    FMPMListDic.Add(LIOCard, LTable);
+//    if i = 1 then
+//      SetLMPMFromMPMList2GridByKey(AIpAddr, LIOCard);
+  end;//for
+
+  SetLMPMList2Grid(AIpAddr);
+end;
+
+procedure THiconisTCPF.SetLResList2Grid(const AIpAddr: string);
+begin
+
+end;
+
+procedure THiconisTCPF.SetLResList2GridByTagText(AIpAddr, ATagText: string);
+var
+  LStr, LData, LTotalCountStr,
+  LIndex,	LPrimary,	LSecondary,	LMaster,	LTime: string;
+  LRow,i, LCount: integer;
+begin
+  LStr := ExtractTextInsideGivenTagEx('pre', ATagText);
+
+  if Pos('Total Resource No. =', LStr) > 0 then
+  begin
+    LTotalCountStr := StrToken(LStr, '=');
+    LTotalCountStr := StrToken(LStr, '<');
+  end;
+
+  NextGrid1.BeginUpdate;
+  try
+    LCount := StrToIntDef(LTotalCountStr, 0);
+    SetNextGridColumn4LRes();
+
+    for i := 1 to LCount do
+    begin
+      LData := ExtractTextInsideGivenTagNth('tr', LStr, 3+i);
+      LIndex := ExtractTextInsideGivenTagNth('td', LData, 1);
+      LPrimary := ExtractTextInsideGivenTagNth('td', LData, 2);
+      LSecondary := ExtractTextInsideGivenTagNth('td', LData, 3);
+      LMaster := ExtractTextInsideGivenTagNth('td', LData, 4);
+      LTime := ExtractTextInsideGivenTagNth('td', LData, 5);
+
+      LRow := NextGrid1.AddRow();
+      NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+      NextGrid1.CellsByName['Index', LRow] := LIndex;
+      NextGrid1.CellsByName['Primary', LRow] := LPrimary;
+      NextGrid1.CellsByName['Secondary', LRow] := LSecondary;
+      NextGrid1.CellsByName['Master', LRow] := LMaster;
+      NextGrid1.CellsByName['Time', LRow] := LTime;
+    end;
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+procedure THiconisTCPF.SetLVerList2Grid(const AIpAddr, ADesc, AVer: string);
+var
+  LRow: integer;
+begin
+  NextGrid1.BeginUpdate;
+  try
+    SetNextGridColumn4LVer();
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    NextGrid1.CellsByName['Desc', LRow] := ADesc;
+    NextGrid1.CellsByName['Info', LRow] := AVer;
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+procedure THiconisTCPF.SetLVerList2GridByTagText(const AIpAddr, ATagText: string);
+var
+  LRow, i: integer;
+  LDesc, LVer: string;
+begin
+  GetLVerListFromTagText(ATagText, LDesc, LVer);
+  SetLVerList2Grid(AIpAddr, LDesc, LVer);
+end;
+
 procedure THiconisTCPF.SetNextGridColumn4DupTagId;
 var
   LDoc: variant;
@@ -1835,6 +2620,156 @@ begin
   TDocVariantData(LDoc).Value['MPMName'] := 'Name';
 
   AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4FBVer;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IPAddr';
+  TDocVariantData(LDoc).Value['index'] := 'index';
+  TDocVariantData(LDoc).Value['file'] := 'file';
+  TDocVariantData(LDoc).Value['version'] := 'wersion';
+  TDocVariantData(LDoc).Value['FName'] := 'name';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4LMPM();
+var
+  LDoc: variant;
+  Lvar: variant;
+  LList: IDocList;
+  LStr: string;
+begin
+  TDocVariant.New(LDoc);
+  TDocVariantData(LDoc).Value['IOCard'] := 'IO Card';
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IP Addr';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+
+  NextGrid1.Columns.Column['IOCard'].Alignment := taLeftJustify;
+  NextGrid1.Columns.Column['IOCard'].Width := 200;
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4LRes;
+var
+  LDoc: variant;
+  Lvar: variant;
+  LList: IDocList;
+  LStr: string;
+begin
+  TDocVariant.New(LDoc);
+  TDocVariantData(LDoc).Value['Index'] := 'Index';
+  TDocVariantData(LDoc).Value['Primary'] := 'Primary';
+  TDocVariantData(LDoc).Value['Secondary'] := 'Secondary';
+  TDocVariantData(LDoc).Value['Master'] := 'Master';
+  TDocVariantData(LDoc).Value['time'] := 'time';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4LVer;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IPAddr';
+  TDocVariantData(LDoc).Value['Desc'] := 'Desc';
+  TDocVariantData(LDoc).Value['Info'] := 'Info';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4VersionIntf;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IP Addr';
+  TDocVariantData(LDoc).Value['Program'] := 'Version';
+  TDocVariantData(LDoc).Value['Version'] := 'Version';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetNextGridColumn4VersionMPM;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IP Addr';
+  TDocVariantData(LDoc).Value['Program'] := 'Version';
+  TDocVariantData(LDoc).Value['Version'] := 'Version';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
+procedure THiconisTCPF.SetVersionIntf2Grid(const AIpAddr: string);
+var
+  LRow: integer;
+begin
+  NextGrid1.BeginUpdate;
+  try
+    SetNextGridColumn4VersionIntf();
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    NextGrid1.CellsByName['Program', LRow] := 'hiscm_im';
+    NextGrid1.CellsByName['Version', LRow] := FHiConSWVersionRec.FHiscm_Im;
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    NextGrid1.CellsByName['Program', LRow] := 'interface-a';
+    NextGrid1.CellsByName['Version', LRow] := FHiConSWVersionRec.FInterface_a;
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+procedure THiconisTCPF.SetVersionIntfList2GridByTagText(AIpAddr,
+  ATagText: string);
+begin
+  GetVersionIntfFromTagText(ATagText);
+  SetVersionIntf2Grid(AIpAddr);
+end;
+
+procedure THiconisTCPF.SetVersionMPMList2GridByTagText(AIpAddr, ATagText: string);
+var
+  LStr, LName, LVer: string;
+  LRow: integer;
+begin
+  LStr := ExtractTextInsideGivenTagEx('table', ATagText);
+  LName := ExtractTextInsideGivenTagNth('td', LStr, 1);
+  LVer := ExtractTextInsideGivenTagNth('td', LStr, 2);
+
+  NextGrid1.BeginUpdate;
+  try
+    SetNextGridColumn4VersionMPM();
+
+    LName := ExtractTextInsideGivenTagNth('td', LStr, 3);
+    LVer := ExtractTextInsideGivenTagNth('td', LStr, 4);
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    NextGrid1.CellsByName['Program', LRow] := LName;
+    NextGrid1.CellsByName['Version', LRow] := LVer;
+
+    LName := ExtractTextInsideGivenTagNth('td', LStr, 5);
+    LVer := ExtractTextInsideGivenTagNth('td', LStr, 6);
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := AIpAddr;
+    NextGrid1.CellsByName['Program', LRow] := LName;
+    NextGrid1.CellsByName['Version', LRow] := LVer;
+  finally
+    NextGrid1.EndUpdate();
+  end;
 end;
 
 procedure THiconisTCPF.SetVisibleAllGridRow(AIsShow: Boolean);
@@ -1900,6 +2835,16 @@ begin
 
   LResult := VerifyLogParamFromConf(LLogDrive); //DEFAULT_INFLUXDB_CONF_NAME
   ShowMessage(LResult);
+end;
+
+procedure THiconisTCPF.version2Click(Sender: TObject);
+begin
+  GetVersionMPMFromIpSelected();
+end;
+
+procedure THiconisTCPF.version3Click(Sender: TObject);
+begin
+  GetVersionIntfFromIpSelected();
 end;
 
 end.

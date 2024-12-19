@@ -2,7 +2,7 @@ object TaskEditF: TTaskEditF
   Left = 0
   Top = 0
   Caption = 'Task Edit Form'
-  ClientHeight = 705
+  ClientHeight = 704
   ClientWidth = 607
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,19 +19,22 @@ object TaskEditF: TTaskEditF
   TextHeight = 16
   object PageControl1: TPageControl
     Left = 0
-    Top = 277
+    Top = 273
     Width = 607
-    Height = 386
-    ActivePage = TabSheet4
-    Align = alBottom
+    Height = 389
+    ActivePage = TabSheet5
+    Align = alClient
     TabOrder = 0
     TabWidth = 120
+    ExplicitTop = 255
+    ExplicitHeight = 386
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
+      ExplicitHeight = 355
       DesignSize = (
         599
-        355)
+        358)
       object JvLabel36: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -328,7 +331,7 @@ object TaskEditF: TTaskEditF
         Left = 122
         Top = 248
         Width = 431
-        Height = 104
+        Height = 107
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -336,6 +339,7 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 2
+        ExplicitHeight = 104
       end
       object CurWorkCB: TComboBox
         Left = 122
@@ -386,7 +390,7 @@ object TaskEditF: TTaskEditF
         Left = 123
         Top = 126
         Width = 431
-        Height = 104
+        Height = 107
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -394,6 +398,7 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 7
+        ExplicitHeight = 104
       end
       object ClaimServiceKindCB: TComboBox
         Left = 122
@@ -433,12 +438,13 @@ object TaskEditF: TTaskEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
+      ExplicitHeight = 355
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 92
-        Height = 349
+        Height = 352
         Align = alLeft
         Alignment = taCenter
         AutoSize = False
@@ -468,16 +474,18 @@ object TaskEditF: TTaskEditF
         Left = 98
         Top = 0
         Width = 501
-        Height = 355
+        Height = 358
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 355
         object Panel2: TPanel
           Left = 1
-          Top = 316
+          Top = 319
           Width = 499
           Height = 38
           Align = alBottom
           TabOrder = 0
+          ExplicitTop = 316
           object AdvGlowButton6: TAdvGlowButton
             AlignWithMargins = True
             Left = 370
@@ -563,7 +571,7 @@ object TaskEditF: TTaskEditF
           Left = 1
           Top = 1
           Width = 499
-          Height = 315
+          Height = 318
           Margins.Left = 40
           Margins.Top = 0
           Touch.InteractiveGestures = [igPan, igPressAndTap]
@@ -577,6 +585,7 @@ object TaskEditF: TTaskEditF
           TabStop = True
           OnCellDblClick = fileGridCellDblClick
           OnMouseDown = fileGridMouseDown
+          ExplicitHeight = 315
           object NxIncrementColumn3: TNxIncrementColumn
             Alignment = taCenter
             DefaultWidth = 32
@@ -681,6 +690,10 @@ object TaskEditF: TTaskEditF
     object SubConTS: TTabSheet
       Caption = #54801#47141#49324
       ImageIndex = 6
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 185
@@ -1254,6 +1267,10 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel6: TPanel
         Left = 0
         Top = 0
@@ -1553,9 +1570,13 @@ object TaskEditF: TTaskEditF
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         599
-        355)
+        358)
       object JvLabel12: TJvLabel
         AlignWithMargins = True
         Left = 19
@@ -1857,7 +1878,7 @@ object TaskEditF: TTaskEditF
         Left = 122
         Top = 166
         Width = 458
-        Height = 93
+        Height = 96
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -1865,6 +1886,7 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 0
+        ExplicitHeight = 93
       end
       object CustCompanyCodeEdit: TEdit
         Left = 123
@@ -1897,7 +1919,7 @@ object TaskEditF: TTaskEditF
         Left = 122
         Top = 276
         Width = 458
-        Height = 76
+        Height = 79
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -1905,6 +1927,7 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 4
+        ExplicitHeight = 76
       end
       object CustCompanyTypeCB: TComboBox
         Left = 392
@@ -1983,6 +2006,10 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -2422,7 +2449,7 @@ object TaskEditF: TTaskEditF
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 666
+    Top = 665
     Width = 607
     Height = 36
     Margins.Left = 0
@@ -2430,6 +2457,7 @@ object TaskEditF: TTaskEditF
     Align = alBottom
     Rounding = 4
     TabOrder = 1
+    ExplicitTop = 644
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 540
@@ -3400,7 +3428,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800DC0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800EC0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5307,7 +5335,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400B00210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400C00210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

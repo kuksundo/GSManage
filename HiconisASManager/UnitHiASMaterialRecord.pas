@@ -150,12 +150,7 @@ begin
 
 function GetMaterial4ProjFromTask(ATask: TOrmHiconisASTask): TSQLMaterial4Project;
 begin
-  Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'TaskID = ?', [ATask.ID]);
-
-  if Result.FillOne then
-    Result.IsUpdate := True
-  else
-    Result.IsUpdate := False;
+  Result := GetMaterial4ProjFromTaskID(ATask.ID);
 end;
 
 function GetMaterial4ProjFromTaskID(const ATaskID: TID): TSQLMaterial4Project;

@@ -623,8 +623,8 @@ begin
     LFileListF := TFileListF.Create(nil);
     try
       LIDList4Invoice := TIDList4JHPFile(InvoiceGrid.Row[LRow].Data);
-      LFileListF.FileListFrame1.FJHPFiles_ := TOrmJHPFile(LIDList4Invoice.JHPFile.CreateCopy);
-      LFileListF.FileListFrame1.LoadFiles2Grid(LIDList4Invoice);
+//      LFileListF.FileListFrame1.FJHPFiles_ := TOrmJHPFile(LIDList4Invoice.JHPFile.CreateCopy);
+//      LFileListF.FileListFrame1.LoadFiles2Grid(LIDList4Invoice);
 
       LFIleListF.FileListFrame1.DeleteButton.Visible := False;
       LFIleListF.FileListFrame1.AddButton.Visible := False;
@@ -635,7 +635,7 @@ begin
         if Assigned(TIDList4Invoice(InvoiceGrid.Row[LRow].Data).fInvoiceFile) then
           TIDList4Invoice(InvoiceGrid.Row[LRow].Data).fInvoiceFile.Free;
 
-        LSQLInvoiceFile := TSQLInvoiceFile(LFileListF.FileListFrame1.FJHPFiles_.CreateCopy);
+//        LSQLInvoiceFile := TSQLInvoiceFile(LFileListF.FileListFrame1.FJHPFiles_.CreateCopy);
         TIDList4Invoice(InvoiceGrid.Row[LRow].Data).fInvoiceFile := LSQLInvoiceFile;
         LoadInvoiceFileCount2Grid(LSQLInvoiceFile, InvoiceGrid, LRow);
       end;

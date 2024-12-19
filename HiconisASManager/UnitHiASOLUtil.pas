@@ -100,6 +100,7 @@ begin
       Result := replaceString(Result, '_HullNo_', AHiASIniConfig.FHullNo);
       Result := replaceString(Result, '_ProjNo_', AHiASIniConfig.FProjNo);
       Result := replaceString(Result, '_ClaimNo_', AHiASIniConfig.FClaimNo);
+      Result := replaceString(Result, '_Price_', AHiASIniConfig.FPrice);
       AHiASIniConfig.FText := AHiASIniConfig.FClaimNo + '번 Claim 해결을 위한 자재 구입 목적의 예산 요청';
       Result := replaceString(Result, '_Reason_', AHiASIniConfig.FText);
     end;

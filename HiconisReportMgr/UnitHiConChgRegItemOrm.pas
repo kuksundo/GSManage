@@ -32,6 +32,7 @@ type
     : RawUTF8;
 
     fImportance,
+    fPriority,
     fInvolves,
     fModification
     : integer;
@@ -72,6 +73,7 @@ type
     property Involves: integer read fInvolves write fInvolves;
     property ReqSrc: integer read fModification write fModification;
     property Importance: integer read fImportance write fImportance;
+    property Priority: integer read fPriority write fPriority;
 
     property ChgRegDate: TTimeLog read fRegDate write fRegDate;
     property ChgRegOpenDate: TTimeLog read fOpen_Date write fOpen_Date;

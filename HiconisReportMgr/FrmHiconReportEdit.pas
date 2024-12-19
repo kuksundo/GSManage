@@ -16,7 +16,7 @@ uses
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
   UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2,
-  UnitHiConRptDM, UnitHGSSerialRecord2
+  UnitHiConRptDM, UnitHGSSerialRecord2, UnitJHPFileRecord
   ;
 
 type
@@ -84,7 +84,7 @@ type
     WorkItemKey: TNxNumberColumn;
     JvLabel2: TJvLabel;
     OwnerComment: TMemo;
-    TJHPFileListFrame1: TJHPFileListFrame;
+    JHPFileFr: TJHPFileListFrame;
     JvLabel1: TJvLabel;
     ReportKind: TComboBox;
     JvLabel8: TJvLabel;
@@ -92,11 +92,11 @@ type
     ComissionRptNo: TNxButtonEdit;
     ShipBuilder: TEdit;
 
+    procedure FormCreate(Sender: TObject);
     procedure AeroButton2Click(Sender: TObject);
     procedure WorkItemGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure HullNoClickBtn(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure AeroButton3Click(Sender: TObject);
   private
     procedure ReportWorkItemEdit(const ARow: integer=-1);
@@ -113,6 +113,7 @@ type
     procedure SetWorkItemGridFromJson(const AJson: string);
     procedure AddModifyItemGrpValue2Json(var AJson: string);
     procedure DeleteWorkItemByReportKey();
+    procedure LoadGSFiles2FormByKeyID(const AKeyId: Int64);
   end;
 
   //AFromDocDict : True = DB에 저장하지 않음
@@ -125,6 +126,7 @@ implementation
 
 uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUtil,
   UnitHiConReportMgrData, UnitCheckGrpAdvUtil, UnitComponentUtil, UnitTRegExUtil,
+  UnitBase64Util2,
   FrmHiReportWorkItemEdit, FrmSearchVessel2;
 
 {$R *.dfm}
@@ -136,6 +138,7 @@ var
   LJson, LJson2: string;
   LVar: variant;
   LControl: TWinControl;
+  LKeyId: Int64;
 begin
   LHiConReportEditF := THiConReportEditF.Create(nil);
   try
@@ -145,6 +148,10 @@ begin
       SetCompNameValueFromJson2FormByClassType(LHiConReportEditF, LJson);
       LJson2 := Utf8ToString(AWorkItemJson);
       SetWorkItemGridFromJson(LJson2);
+
+      LKeyId := StrToInt64Def(ReportKey.Text, 0);
+      LoadGSFiles2FormByKeyID(LkeyId);
+
       PageControl1.ActivePageIndex := 0;
 
       while True do
@@ -185,6 +192,7 @@ begin
 
           LJson := GetCompNameValue2JsonFromFormByClassType(LHiConReportEditF);
           LJson2 := GetWorkItem2JsonFromGrid();
+          JHPFileFr.ApplyFileFromGrid2DB(LKeyId);
 
           if not AFromDocDict then
           begin
@@ -201,8 +209,11 @@ begin
             end;
           end;
 
+
           AReportJson := StringToUtf8(LJson);
           AWorkItemJson := StringToUtf8(LJson2);
+
+          ShowMessage('Data has saved!');
         end;//if
 
         Break;
@@ -285,6 +296,8 @@ end;
 
 procedure THiConReportEditF.FormCreate(Sender: TObject);
 begin
+  JHPFileFr.FIgnoreFileTypePrompt := True;
+
   InitEnum();
 end;
 
@@ -317,6 +330,11 @@ procedure THiConReportEditF.InitEnum;
 begin
   g_HiRptKind.SetType2Combo(ReportKind);
   g_HiRptModifiedItem.SetType2List(ModifyItems.Items);
+end;
+
+procedure THiConReportEditF.LoadGSFiles2FormByKeyID(const AKeyId: Int64);
+begin
+  JHPFileFr.LoadFiles2GridByTaskID(AKeyId);
 end;
 
 procedure THiConReportEditF.LoadWorkItemVar2Grid(AVar: variant; ARow: integer);

@@ -72,7 +72,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel18: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 109
+    Top = 140
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -99,7 +99,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel1: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 140
+    Top = 109
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -217,7 +217,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object NeedCount: TEdit
     Left = 114
-    Top = 111
+    Top = 142
     Width = 92
     Height = 21
     Hint = 'Text'
@@ -227,8 +227,8 @@ object MaterialDetailF: TMaterialDetailF
   end
   object UnitPrice: TEdit
     Left = 114
-    Top = 140
-    Width = 82
+    Top = 111
+    Width = 92
     Height = 21
     Hint = 'Text'
     Alignment = taCenter

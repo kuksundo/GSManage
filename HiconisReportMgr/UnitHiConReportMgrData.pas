@@ -133,12 +133,21 @@ const
 {$REGION 'R_HiRptModifyReqSrc'}
 type
   THiRptImportance = (
-    hriMinorChg, hriMajorChg, hriLowPriority, hriHighPriority,
+    hriMinorChg, hriMajorChg,
     hriFinal);
+
+  THiRptPriority = (
+    hrpLowPriority, hrpHighPriority,
+    hrpFinal);
 const
   R_HiRptImportance : array[Low(THiRptImportance)..High(THiRptImportance)] of string =
     (
-      'Minor Change', 'Major Change', 'Low Priority', 'High Priority',
+      'Minor Change', 'Major Change',
+     '');
+
+  R_HiRptPriority : array[Low(THiRptPriority)..High(THiRptPriority)] of string =
+    (
+      'Low Priority', 'High Priority',
      '');
 {$ENDREGION}
 
@@ -154,8 +163,11 @@ var
   g_HiRptModifiedItem: TLabelledEnum<THiRptModifiedItem>;
   g_HiRptModifyReqSrc: TLabelledEnum<THiRptModifyReqSrc>;
   g_HiRptImportance: TLabelledEnum<THiRptImportance>;
+  g_HiRptPriority: TLabelledEnum<THiRptPriority>;
 
 implementation
+
+uses UnitStringUtil;
 
 function GetYardNameByHullNo(AHullNo: string): string;
 begin
@@ -171,7 +183,7 @@ begin
   if Pos('DW', AHullNo) > 0 then
     Result := 'Hanwa'
   else
-    Result := '';
+    Result := RemoveNumbersBetweenString(AHullNo);
 end;
 
 initialization
@@ -184,5 +196,6 @@ initialization
 //  g_HiRptModifiedItem.InitArrayRecord(R_HiRptModifiedItem);
 //  g_HiRptModifyReqSrc.InitArrayRecord(R_HiRptModifyReqSrc);
 //  g_HiRptImportance.InitArrayRecord(R_HiRptImportance);
+//  g_HiRptPriority.InitArrayRecord(R_HiRptPriority);
 
 end.

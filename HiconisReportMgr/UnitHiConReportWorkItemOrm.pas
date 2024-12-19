@@ -56,6 +56,7 @@ type
   function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: TTimeLog): TOrmHiconReportDetail; overload;
   function GetHiconReportDetailByReportNItemKey(const AReportKey, AItemKey: string): TOrmHiconReportDetail; overload;
   function GetHiRptDetailJsonAryByReportKey(const AKeyID: TTimeLog): variant;
+  function GetRptKeyJsonAryByWorkCode(const AWorkCode: integer): variant;
 
   procedure AddHiconReportDetailFromVariant(AVar: variant; AOnlyAdd: Boolean);
   procedure AddHiconReportDetailFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean=False);
@@ -178,6 +179,22 @@ var
   LUtf8: RawUtf8;
 begin
   LOrmHiconReportDetail := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'ReportKey4Item = ?', [AKeyID]);
+  try
+    LDocList := LOrmHiconReportDetail.FillTable.ToIList<TOrmHiconReportDetail>;
+    LUtf8 := LDocList.Data.SaveToJson();
+    Result := _JSON(LUtf8);
+  finally
+    LOrmHiconReportDetail.Free;
+  end;
+end;
+
+function GetRptKeyJsonAryByWorkCode(const AWorkCode: integer): variant;
+var
+  LOrmHiconReportDetail: TOrmHiconReportDetail;
+  LDocList: IList<TOrmHiconReportDetail>;
+  LUtf8: RawUtf8;
+begin
+  LOrmHiconReportDetail := TOrmHiconReportDetail.CreateAndFillPrepare(g_HiconReportDetailDB.orm, 'WorkCode = ?', [AWorkCode]);
   try
     LDocList := LOrmHiconReportDetail.FillTable.ToIList<TOrmHiconReportDetail>;
     LUtf8 := LDocList.Data.SaveToJson();
