@@ -2,20 +2,33 @@ unit UnitHiconSystemDBUtil;
 
 interface
 
-uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows,
+uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Data.DB, Data.Win.ADODB,
   mormot.db.sql.oledb, mormot.db.sql, mormot.core.base, mormot.core.variants,
-  UnitChkDupIdData, UnitHiconMPMData;
+  UnitChkDupIdData, UnitHiconMPMData, UnitHiconDBData;
 
 type
   THiConSystemDB = class
   public
-    class function GetList2JsonFromDB(AQuery: string; ADBFileName: string=''): RawUtf8;
+    //작동 안됨-20250110
+    class function CheckAccessDBEngineInstalledFromADODB(): Boolean;
+    class function GetSystemDBFileNameByBaseDir(ABaseDir: string): string;
+    class function GetList2JsonFromDB(const AQuery: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
     class function GetResourceList2JsonFromDB(ADBFileName: string=''): RawUtf8;
     class function GetSVRList2JsonFromDB(ADBFileName: string=''): RawUtf8;
     class function GetHistoryStationInfo2JsonFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetDataType2JsonAryFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetDataType2JsonFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetSystemType2JsonAryFromDB(ADBFileName: string=''): RawUtf8;
+    class function GetSystemType2JsonFromDB(ADBFileName: string=''): RawUtf8;
+
     class function GetTagInfo2JsonFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AWhereFieldName: string; ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2RecFromINFTable(ATagName: string; ADBFileName: string=''): TTagInfoRec_INF;
     class function GetChInfo2JsonFromChannelTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+    //IOC Table에서 AMPMName에 연결된 COM Card List 조회함
+    //AMPMName: MPM11/FBM11
+    //Result: COM011* list
+    class function GetCOMCardNameListFromIOCTableByMPMName(AMPMName, ADBFileName: string): RawUtf8;
 
     //MPM Name으로 IP 주소 가져옴
     class function GetIPAddr2JsonFromRESTable(AResName: string; ADBFileName: string=''): RawUtf8;
@@ -27,17 +40,44 @@ implementation
 
 { THiConSystemDB }
 
+class function THiConSystemDB.CheckAccessDBEngineInstalledFromADODB: Boolean;
+var
+  ADOConnect: TADOConnection;
+begin
+  Result := False;
+
+  ADOConnect := TADOConnection.Create(nil);
+  try
+    try
+      if FileExists('D:\ACONIS-NX\DB\system_bak.accdb') then
+      begin
+//        ADOConnect.ConnectionString := 'Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\ACONIS-NX\DB\system_bak.accdb;';
+        ADOConnect.ConnectionString := 'Provider=Microsoft.ACE.OLEDB.16.0;Data Source=D:\ACONIS-NX\DB\system_bak.accdb;';
+        ADOConnect.LoginPrompt := False;
+        ADOConnect.Connected := True;
+        Result := True;
+      end;
+    except
+      on E: Exception do
+        Result := False; //Provider not installed or invalid
+    end;
+  finally
+    ADOConnect.Free;
+  end;
+end;
+
 class function THiConSystemDB.GetChInfo2JsonFromChannelTable(ATagName,
   ADBFileName: string): RawUtf8;
 var
   LQuery: string;
   LDocDict: IDocDict;
   LDocList: IDocList;
+  LRowCount: integer;
 begin
   Result := '';
 
   LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, CARD, POINT, TYPE, FUNC_NAME from INF where TAG_NAME = "' + ATagName + '"';
-  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
 
   LDocList := DocList(Result);
 
@@ -48,15 +88,59 @@ begin
   end;
 end;
 
+class function THiConSystemDB.GetCOMCardNameListFromIOCTableByMPMName(
+  AMPMName, ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LRowCount: integer;
+begin
+//  LQuery := 'select CODE from IOC where RESOURCE = "' + AMPMName + '" and CODE Like "COM*"' ;
+  LQuery := 'select CODE from IOC where RESOURCE = "' + AMPMName + '" and CODE Like "COM%"' ;
+//  LQuery := 'select CODE from IOC where RESOURCE = "' + AMPMName + '"' ;
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+end;
+
+class function THiConSystemDB.GetDataType2JsonAryFromDB(
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LRowCount: integer;
+begin
+  LQuery := 'select Value, Text, Category, ValueID from DataTypes';
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+end;
+
+class function THiConSystemDB.GetDataType2JsonFromDB(
+  ADBFileName: string): RawUtf8;
+var
+  LList: IDocList;
+  LDict, LDict2: IDocDict;
+  i: integer;
+begin
+  Result := GetDataType2JsonAryFromDB(ADBFileName);
+
+  LDict2 := DocDict('{}');
+  LList := DocList(Result);
+
+  for i := 0 to LList.Len - 1 do
+  begin
+    LDict := DocDict(LList.S[i]);
+    LDict2.S[LDict.S['Value']] := LDict.S['Text'];
+  end;
+
+  Result := LDict2.Json;
+end;
+
 class function THiConSystemDB.GetHistoryStationInfo2JsonFromDB(
   ADBFileName: string): RawUtf8;
 var
   LQuery: string;
   LDocDict: IDocDict;
   LDocList: IDocList;
+  LRowCount: integer;
 begin
   LQuery := 'select SVR_NAME as RES_NAME, PIP as PMPM_PIP, SIP as PMPM_SIP, DESCRIPTION from SERVER where DESCRIPTION = "HISTORY STATION"';
-  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
 
   LDocList := DocList(Result);
 
@@ -96,9 +180,10 @@ var
   LQuery: string;
   LDocDict: IDocDict;
   LDocList: IDocList;
+  LRowCount: integer;
 begin
   LQuery := 'select RES_NAME, CAB_ID, DESCRIPTION, PMPM_PIP, PMPM_SIP, SMPM_PIP, SMPM_SIP, SUB_POS from RESOURCE where RES_NAME = "' + AResName + '"';
-  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
 
   LDocList := DocList(Result);
 
@@ -109,13 +194,15 @@ begin
   end;
 end;
 
-class function THiConSystemDB.GetList2JsonFromDB(AQuery, ADBFileName: string): RawUtf8;
+class function THiConSystemDB.GetList2JsonFromDB(const AQuery: string;
+  out ARowCount: integer; ADBFileName: string): RawUtf8;
 var
   LProps: TOleDBConnectionProperties;
   LConn: TSQLDBConnection;
   LQuery: TSQLDBStatement;
 begin
   Result := '';
+  ARowCount := 0;
 
   if AQuery = '' then
     exit;
@@ -146,7 +233,9 @@ begin
         LQuery.Execute(AQuery, True);
         Result := LQuery.FetchAllAsJson(True);
 
-        if LQuery.TotalRowsRetrieved = 0 then
+        ARowCount := LQuery.TotalRowsRetrieved;
+
+        if ARowCount = 0 then
           Result := '';
 
       finally
@@ -164,18 +253,91 @@ class function THiConSystemDB.GetResourceList2JsonFromDB(
   ADBFileName: string): RawUtf8;
 var
   LQuery: string;
+  LRowCount: integer;
 begin
   LQuery := 'select RES_NAME, PMPM_PIP, PMPM_SIP from RESOURCE';
-  Result := GetList2JsonFromDB(LQuery);
+  Result := GetList2JsonFromDB(LQuery, LRowCount);
 end;
 
 class function THiConSystemDB.GetSVRList2JsonFromDB(
   ADBFileName: string): RawUtf8;
 var
   LQuery: string;
+  LRowCount: integer;
 begin
   LQuery := 'select SVR_NAME as RES_NAME, PIP as PMPM_PIP, SIP as PMPM_SIP, DESCRIPTION from SERVER';
-  Result := GetList2JsonFromDB(LQuery);
+  Result := GetList2JsonFromDB(LQuery, LRowCount);
+end;
+
+class function THiConSystemDB.GetSystemDBFileNameByBaseDir(
+  ABaseDir: string): string;
+begin
+  if UpperCase(ABaseDir) = 'D:\' then
+  begin
+    Result := ABaseDir + 'ACONIS-NX\DB\system_bak.accdb'
+  end
+  else
+  begin
+    Result := ABaseDir + 'D_Drive\ACONIS-NX\DB\system_bak.accdb';
+  end;
+end;
+
+class function THiConSystemDB.GetSystemType2JsonAryFromDB(
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LRowCount: integer;
+begin
+  LQuery := 'select SYS_TYPE, SYS_NAME, DESCRIPTION, SHARED from SystemType';
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+end;
+
+class function THiConSystemDB.GetSystemType2JsonFromDB(
+  ADBFileName: string): RawUtf8;
+var
+  LList: IDocList;
+  LDict, LDict2: IDocDict;
+  i: integer;
+begin
+  Result := GetSystemType2JsonAryFromDB(ADBFileName);
+
+  LDict2 := DocDict('{}');
+  LList := DocList(Result);
+
+  for i := 0 to LList.Len - 1 do
+  begin
+    LDict := DocDict(LList.S[i]);
+    LDict2.S[LDict.S['SYS_TYPE']] := LDict.S['SYS_NAME'];
+  end;
+
+  Result := LDict2.Json;
+end;
+
+class function THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AWhereFieldName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+//  LDocDict: IDocDict;
+//  LDocList: IDocList;
+  LRowCount: integer;
+begin
+  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, RES_ID, CH_ID, DATA_TYPE, ORG_TAG, IN_OUT, INDEX_NO, FUNC_NAME, VAR_NAME, SYS_TYPE from MAPPING_TABLE where ' + AWhereFieldName + ' Like "%' + ATagName + '%"';
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+
+//  if Result = '' then
+//    exit;
+
+//  LDocList := DocList(Result);
+//  Result := LDocList.Json;
+
+//  if LRowCount > 1 then
+//  begin
+//  end
+//  else
+//  begin
+//    LDocDict := DocDict(Result);
+//    Result := LDocDict.Json;
+//  end;
 end;
 
 class function THiConSystemDB.GetTagInfo2JsonFromINFTable(ATagName,
@@ -184,9 +346,10 @@ var
   LQuery: string;
   LDocDict: IDocDict;
   LDocList: IDocList;
+  LRowCount: integer;
 begin
   LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME = "' + ATagName + '"';
-  Result := GetList2JsonFromDB(LQuery, ADBFileName);
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
 
   if Result = '' then
     exit;

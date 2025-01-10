@@ -25,11 +25,18 @@ object TagEditF: TTagEditF
   end
   object Label2: TLabel
     Left = 21
-    Top = 112
+    Top = 126
     Width = 56
     Height = 16
     Alignment = taRightJustify
     Caption = 'Base Dir :'
+  end
+  object Label3: TLabel
+    Left = 83
+    Top = 105
+    Width = 224
+    Height = 16
+    Caption = 'Json/Tgz : HullNo_ICMS, Online : Blank'
   end
   object InputEdit: TEdit
     Left = 83
@@ -59,7 +66,7 @@ object TagEditF: TTagEditF
   end
   object InputEdit2: TEdit
     Left = 83
-    Top = 109
+    Top = 123
     Width = 262
     Height = 24
     ImeName = 'Microsoft IME 2010'
@@ -81,7 +88,7 @@ object TagEditF: TTagEditF
   end
   object BitBtn3: TBitBtn
     Left = 347
-    Top = 109
+    Top = 123
     Width = 26
     Height = 25
     Glyph.Data = {
@@ -115,7 +122,7 @@ object TagEditF: TTagEditF
     OnClick = BitBtn3Click
   end
   object JvSelectDirectory1: TJvSelectDirectory
-    Left = 8
-    Top = 136
+    Left = 16
+    Top = 160
   end
 end

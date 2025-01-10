@@ -12,6 +12,7 @@ object HiconisTCPF: THiconisTCPF
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -158,6 +159,7 @@ object HiconisTCPF: THiconisTCPF
       Height = 25
       Caption = 'Test'
       TabOrder = 3
+      Visible = False
       OnClick = Button1Click
     end
   end
@@ -867,6 +869,7 @@ object HiconisTCPF: THiconisTCPF
           Caption = 'Access DB'
           object GetModuleNamebyTagName1: TMenuItem
             Caption = 'Get Module Name by TagName'
+            OnClick = GetModuleNamebyTagName1Click
           end
         end
       end
@@ -886,6 +889,14 @@ object HiconisTCPF: THiconisTCPF
         object AutoLogonEnabled1: TMenuItem
           Caption = 'Auto Logon Enabled'
           OnClick = AutoLogonEnabled1Click
+        end
+        object AccessDBEngineInstalled1: TMenuItem
+          Caption = 'AccessDB Engine Installed'
+          OnClick = AccessDBEngineInstalled1Click
+        end
+        object MariaDBInbstalled1: TMenuItem
+          Caption = 'MariaDB Inbstalled'
+          OnClick = MariaDBInbstalled1Click
         end
       end
       object Straton1: TMenuItem

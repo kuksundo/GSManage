@@ -92,13 +92,14 @@ type
   function GetHiChgRegItemByReportNHcrNo(const AReportKey: TTimeLog; AHcrNo: string): TOrmHiChgRegItem; overload;
   function GetHiChgRegItemByReportNHcrNo(const AReportKey, AHcrNo: string): TOrmHiChgRegItem; overload;
   function GetHiChgRegItemJsonAryByReportKey(const AKeyID: TTimeLog): variant;
+  function GetHiChgRegItemCountByReportKey(const AKeyID: TTimeLog): integer;
 
   procedure AddHiChgRegItemFromVariant(AVar: variant; AOnlyAdd: Boolean);
   procedure AddHiChgRegItemFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean=False);
   procedure AddOrUpdateHiChgRegItem(AOrm: TOrmHiChgRegItem; AOnlyAdd: Boolean=false);
   function AddOrUpdateHiChgRegItemFromJsonAryByKeyId(const AJsonAry: string; const ADoUpdate: Boolean): Integer;
 
-  procedure DeleteHiChgRegItemByRptKey(const AKeyID: TTimeLog);
+  procedure DeleteHiChgRegItemFromDBByRptKey(const AKeyID: TTimeLog);
   procedure DeleteHiChgRegItemByChgRegRptNo(const AHcrNo: string);
 
 var
@@ -222,6 +223,24 @@ begin
   end;
 end;
 
+function GetHiChgRegItemCountByReportKey(const AKeyID: TTimeLog): integer;
+var
+  LOrm: TOrmTable;
+  LResult: RawUtf8;
+begin
+  Result := 0;
+
+  //'{"fieldCount":1,"values":["count(*)",3],"rowCount":1}
+//  LResult := ADB.ExecuteJson([],'select count(*) from ' + TOrmJHPFile.SQLTableName + ' where TaskID = ' + IntToStr(AID));
+
+  LOrm := g_HiChgRegItemDB.ExecuteList([],'select ReportKey4ChgReg from ' + TOrmHiChgRegItem.SQLTableName + ' where ReportKey4ChgReg = ' + IntToStr(AKeyID));
+  try
+    Result := LOrm.RowCount;
+  finally
+    LOrm.Free;
+  end;
+end;
+
 procedure AddHiChgRegItemFromVariant(AVar: variant; AOnlyAdd: Boolean);
 var
   LHcrNo: string;
@@ -316,7 +335,7 @@ begin
   end;//for
 end;
 
-procedure DeleteHiChgRegItemByRptKey(const AKeyID: TTimeLog);
+procedure DeleteHiChgRegItemFromDBByRptKey(const AKeyID: TTimeLog);
 begin
   g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ReportKey4ChgReg = ?', [AKeyID]);
 end;

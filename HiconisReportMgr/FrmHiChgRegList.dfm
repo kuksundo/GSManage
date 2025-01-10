@@ -12,6 +12,8 @@ object ChgRegListF: TChgRegListF
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object CurvyPanel1: TCurvyPanel

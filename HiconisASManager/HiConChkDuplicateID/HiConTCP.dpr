@@ -22,7 +22,10 @@ uses
   FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas' {TwoInputEditF},
   FrmHiConTCPConfig in 'FrmHiConTCPConfig.pas' {HiConTCPConfigF},
   FrmResPortInfo4INFTag in 'FrmResPortInfo4INFTag.pas' {ResPortInfo4INFTagF},
-  FrmNextGrid in '..\..\..\..\Common\Form\FrmNextGrid.pas';
+  FrmNextGrid in '..\..\..\..\Common\Form\FrmNextGrid.pas',
+  FrmSearchModuleByTagName in 'FrmSearchModuleByTagName.pas' {SrchModuleByTagF},
+  UnitHiconDBData in '..\UnitHiconDBData.pas',
+  UnitHiconOWSUtil in '..\UnitHiconOWSUtil.pas';
 
 {$R *.res}
 
@@ -31,8 +34,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisTCPF, HiconisTCPF);
-  Application.CreateForm(TTwoInputEditF, TwoInputEditF);
-  Application.CreateForm(THiConTCPConfigF, HiConTCPConfigF);
-  Application.CreateForm(TResPortInfo4INFTagF, ResPortInfo4INFTagF);
   Application.Run;
 end.

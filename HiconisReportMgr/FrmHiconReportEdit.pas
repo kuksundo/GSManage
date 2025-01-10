@@ -13,7 +13,8 @@ uses
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
-  mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
+  mormot.core.datetime, mormot.core.rtti, mormot.core.collections, mormot.rest.sqlite3,
+  mormot.orm.core,
 
   UnitHiConReportListOrm, UnitHiConReportWorkItemOrm, UnitFrameFileList2,
   UnitHiConRptDM, UnitHGSSerialRecord2, UnitJHPFileRecord
@@ -99,6 +100,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure AeroButton3Click(Sender: TObject);
   private
+    procedure SetJHPFileDB4Fr(ADB: TRestClientDB);
     procedure ReportWorkItemEdit(const ARow: integer=-1);
     procedure LoadWorkItemVar2Grid(AVar: variant; ARow: integer=-1);
     procedure LoadWorkItemVarFromGrid(var AVar: variant; const ARow: integer=-1);
@@ -117,7 +119,8 @@ type
   end;
 
   //AFromDocDict : True = DB에 저장하지 않음
-  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8; AFromDocDict: Boolean): integer;
+  function DisplayHiRptEditForm(var AReportJson, AWorkItemJson:
+    RawUtf8; AFromDocDict: Boolean; AJHPFileDB4HiRpt: TRestClientDB; var AOrmModel: TOrmModel): integer;
 
 var
   HiConReportEditF: THiConReportEditF;
@@ -132,7 +135,7 @@ uses UnitNextGridUtil2, UnitRttiUtil2, UnitVesselMasterRecord2, UnitClipBoardUti
 {$R *.dfm}
 
 function DisplayHiRptEditForm(var AReportJson, AWorkItemJson: RawUtf8;
-  AFromDocDict: Boolean): integer;
+  AFromDocDict: Boolean; AJHPFileDB4HiRpt: TRestClientDB; var AOrmModel: TOrmModel): integer;
 var
   LHiConReportEditF: THiConReportEditF;
   LJson, LJson2: string;
@@ -144,6 +147,7 @@ begin
   try
     with LHiConReportEditF do
     begin
+      SetJHPFileDB4Fr(AJHPFileDB4HiRpt);
       LJson := Utf8ToString(AReportJson);
       SetCompNameValueFromJson2FormByClassType(LHiConReportEditF, LJson);
       LJson2 := Utf8ToString(AWorkItemJson);
@@ -387,6 +391,11 @@ begin
   //"저장" 버튼을 누르면 True
   if DisplayRptWorkItemEditForm(LVar) = mrOK then
     LoadWorkItemVar2Grid(LVar, ARow);
+end;
+
+procedure THiConReportEditF.SetJHPFileDB4Fr(ADB: TRestClientDB);
+begin
+  JHPFileFr.FJHPFileDB4Fr := ADB;
 end;
 
 procedure THiConReportEditF.SetWorkItemGridFromJson(const AJson: string);

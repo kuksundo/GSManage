@@ -112,7 +112,18 @@ begin
     end;
     3: Result := AHiASIniConfig.DirectDeliverPIC;//자재직투입 요청
     4: Result := AHiASIniConfig.ShippingPIC;//출하지시 요청
-    5: Result := AHiASIniConfig.ServicePIC;//필드서비스팀 요청
+    5: begin//필드서비스팀 요청
+      LUtf8 := StringFromFile(AHiASIniConfig.FReqAttendReviewFN);
+      LStr := Utf8ToString(LUtf8);//방선 검토 요청Mail
+      Result := replaceString(LStr, '_FieldServicePIC_', GetPICNameFromConfig(AHiASIniConfig.ServicePIC));
+      Result := replaceString(Result, '_HullNo_', AHiASIniConfig.FHullNo);
+      Result := replaceString(Result, '_ShipName_', AHiASIniConfig.FShipName);
+      Result := replaceString(Result, '_ServiceDate_', AHiASIniConfig.FServiceDate);
+      Result := replaceString(Result, '_Place_', AHiASIniConfig.FPlace);
+      Result := replaceString(Result, '_ComissionCompany_', AHiASIniConfig.FComissionCompany);
+      Result := replaceString(Result, '_AgentDetail_', AHiASIniConfig.FAgentDetail);
+      Result := replaceString(Result, '_ClaimNo_', AHiASIniConfig.FClaimNo);
+    end;
 //    6: Result := PO_REQ_EMAIL_ADDR; //PO 요청
 //    7: Result := FSettings.ShippingReqEmailAddr;//출하 요청
 //    8: Result := FSettings.FieldServiceReqEmailAddr;//필드서비스팀 요청

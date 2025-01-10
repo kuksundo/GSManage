@@ -15,12 +15,14 @@ uses
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
 
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
+
   CommonData2, UnitMakeReport2, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState, UnitTodoCollect2,
   UnitHiconisMasterRecord,  UnitGSFileRecord2, FrmSubCompanyEdit2, FrmOLEmailList,//FrmEmailListView2
   FrmFileSelect, UnitGSFileData2, UnitOLDataType, UnitElecServiceData2, UnitOLEmailRecord2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitHiASToDoRecord, UnitToDoList,
   UnitHiASMaterialDetailRecord, FrmASMaterialDetailEdit, FrmASMaterialEdit,
-  UnitMacroListClass2, UnitHiconisASData
+  UnitMacroListClass2, UnitHiconisASData, UnitHiASIniConfig, UnitOutLookDataType
   ;
 
 type
@@ -281,6 +283,8 @@ type
     Claim1: TMenuItem;
     N25: TMenuItem;
     HullNoClaimNo1: TMenuItem;
+    PopupMenu5: TPopupMenu;
+    N26: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -352,6 +356,7 @@ type
     procedure BitBtn4Click(Sender: TObject);
     procedure Claim1Click(Sender: TObject);
     procedure HullNoClaimNo1Click(Sender: TObject);
+    procedure N26Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -405,7 +410,6 @@ type
     FEmailDisplayTask: TOrmHiconisASTask;
     FTaskEditConfig: THiconisASTaskEditConfig;
     FSQLGSFiles: TSQLGSFile;
-//    FFSMState: TFSMState;
     FFSMState: THiconisASStateMachine;
     FOLMessagesFromDrop,
     //현재 Task의 작업순서 List
@@ -414,6 +418,7 @@ type
 //    FToDoCollect: TpjhToDoItemCollection;
     FToDoList: TpjhToDoList;
     FRemoteIPAddress: string;
+    FHiASIniConfig: THiASIniConfig;
 
     class procedure ShowEMailListFromTask(ATask: TOrmHiconisASTask; AOLEmailSrchRec: TOLEmailSrchRec; ARemoteIPAddress, APort, ARoot: string);
     class procedure LoadEmailListFromTask(ATask: TOrmHiconisASTask; AForm: TOLEmailListF);
@@ -473,11 +478,15 @@ type
 
     //HiconisASTask를 DB에 저장 할려면 반드시 HullNo/ProjectNo/ClaimNo가 있어야 함
     function CheckTaskDBKeyFromForm(): Boolean;
+
+    procedure SendCmd4CreateMail(AMailType: integer);
+    procedure SetHiASIniConfig(var AHiASIniConfig: THiASIniConfig);
   end;
 
   function ProcessTaskJson(AJson: String): Boolean;
   function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-      ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+      ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig;
+      var AHiASIniConfig: THiASIniConfig): integer;
   function DisplayTaskInfo2EditFormFromVariant(ADoc: variant;
     ARemoteIPAddress, APort, ARoot: string): Boolean;
 
@@ -495,7 +504,7 @@ uses FrmHiconisASManage, DragDropInternet, DragDropFormats,
   FrmSearchCustomer2, UnitDragUtil, UnitStringUtil,//UnitIPCModule2, FrmTodoList,
   DateUtils, UnitBase64Util2, FrmSearchVessel2, UnitRttiUtil2,//UnitCmdExecService,
   UnitElecMasterData, UnitOutlookUtil2, UnitStateMachineUtil, UnitCommonFormUtil,
-  UnitKeyBdUtil, UnitHiASUtil,
+  UnitKeyBdUtil, UnitHiASUtil, UnitHiASOLUtil, UnitIPCMsgQUtil,
   FrmToDoList2, UnitVesselMasterRecord2, UnitClipBoardUtil, UnitAdvCompUtil;
 
 {$R *.dfm}
@@ -558,7 +567,7 @@ begin
     end;
 
     try
-      FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LTaskEditConfig);
+//      FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, LDoc, LTaskEditConfig,FrmHiconisASTaskEdit.FHiASIniConfig);
     finally
       FreeAndNil(LTask);
     end;
@@ -568,7 +577,8 @@ begin
 end;
 
 function DisplayTaskInfo2EditForm(var ATask: TOrmHiconisASTask;
-  ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig): integer;
+  ASQLEmailMsg: TSQLOLEmailMsg; AJson: RawUtf8; ATaskEditConfig: THiconisASTaskEditConfig;
+  var AHiASIniConfig: THiASIniConfig): integer;
 var
   LTaskEditF: TTaskEditF;
   LCustomer: TSQLCustomer;
@@ -592,6 +602,7 @@ begin
     with LTaskEditF do
     begin
       RecordCopy(FTaskEditConfig, ATaskEditConfig, TypeInfo(THiconisASTaskEditConfig));
+      SetHiASIniConfig(AHiASIniConfig);
 
       FTask := ATask;
 
@@ -1346,6 +1357,46 @@ begin
   ShowDTIForm;
 end;
 
+procedure TTaskEditF.SendCmd4CreateMail(AMailType: integer);
+var
+  LOLMailRec: TOLMailRec;
+  LValue: TOmniValue;
+  LMsgQ: TOmniMessageQueue;
+  LMsg: string;
+begin
+  case AMailType of
+    5: ; //방선 가능 검토 요청 메일
+  end;
+
+  FHiASIniConfig.FHullNo := HullNoEdit.Text;
+  FHiASIniConfig.FShipName := ShipNameEdit.Text;
+  FHiASIniConfig.FClaimNo := ClaimNoEdit.Text;
+  FHiASIniConfig.FAgentDetail := CustAgentMemo.Text;
+
+  if FHiASIniConfig.FAgentDetail = '' then
+    FHiASIniConfig.FAgentDetail := 'To Be Updated';
+
+  if FHiASIniConfig.FComissionCompany = '' then
+    FHiASIniConfig.FComissionCompany := 'To Be Updated';
+
+  FHiASIniConfig.FServiceDate := DateToStr(AttendSchedulePicker.Date);
+  FHiASIniConfig.FPlace := NationPortEdit.Text;
+
+  LOLMailRec.Subject := WorkSummaryEdit.Text;
+  LOLMailRec.Recipients := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LOLMailRec.To_ := GetRecvEmailAddress(AMailType, FHiASIniConfig);
+  LOLMailRec.CC := GetCCEmailAddress(AMailType, FHiASIniConfig);
+  LMsg := GetEmailBody(AMailType, FHiASIniConfig);
+  LOLMailRec.HTMLBody := LMsg;
+//  LOLMailRec.Body := GetEmailBody(AMailType, FHiASIniConfig);
+
+  LOLMailRec.FSenderHandle := Handle;
+
+  LValue := TOmniValue.FromRecord(LOLMailRec);
+  LMsgQ := FTaskEditConfig.IPCMQCommandOLEmail;
+  SendCmd2OmniMsgQ(Ord(olckCreateMail), LValue, LMsgQ);
+end;
+
 procedure TTaskEditF.ServiceChargeCBDropDown(Sender: TObject);
 begin
   g_ASServiceChargeType.SetType2Combo(ServiceChargeCB);
@@ -1357,6 +1408,11 @@ var
 begin
   LRec := Get_Doc_ServiceOrder_Rec;
   MakeDocServiceOrder(LRec);
+end;
+
+procedure TTaskEditF.SetHiASIniConfig(var AHiASIniConfig: THiASIniConfig);
+begin
+  FHiASIniConfig := AHiASIniConfig;
 end;
 
 procedure TTaskEditF.CancelMailSelectBtnClick(Sender: TObject);
@@ -3079,6 +3135,11 @@ begin
 
   if CheckDocCompanySelection(LRec) then
     MakeDocCompanySelection(LRec,TMenuItem(Sender).Tag);
+end;
+
+procedure TTaskEditF.N26Click(Sender: TObject);
+begin
+  SendCmd4CreateMail(TMenuItem(Sender).Tag);
 end;
 
 procedure TTaskEditF.N3Click(Sender: TObject);

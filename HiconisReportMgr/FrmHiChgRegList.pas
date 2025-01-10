@@ -12,9 +12,10 @@ uses
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text, mormot.core.json,
-  mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
+  mormot.core.datetime, mormot.core.rtti, mormot.core.collections, mormot.rest.sqlite3,
+  mormot.orm.core,
 
-  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR
+  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR, UnitJHPFileRecord
   ;
 
 type
@@ -103,6 +104,8 @@ type
     RegisteredBy: TNxTextColumn;
     Priority: TNxTextColumn;
 
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure SaveastoDFM1Click(Sender: TObject);
     procedure btn_SearchClick(Sender: TObject);
     procedure btn_CloseClick(Sender: TObject);
@@ -116,6 +119,8 @@ type
     procedure ExportSelectedToExcel1Click(Sender: TObject);
   private
     FReportKey4ChgReg: TTimeLog;
+    FJHPFileDB4ChgReg: TRestClientDB;
+    FJHPFileDB4ChgRegModel: TOrmModel;
 
     procedure ClearFindCondForm();
     procedure SetSrchCondHdrFromDict(ADict: IDocDict);
@@ -241,8 +246,18 @@ begin
 end;
 
 class procedure TChgRegListF.DeleteHCRReportByReportKey(const ARptKey: TTimeLog);
+var
+  LJHPFileDB4ChgReg: TRestClientDB;
+  LJHPFileDB4ChgRegModel: TOrmModel;
 begin
-  DeleteHiChgRegItemByRptKey(ARptKey);
+  DeleteHiChgRegItemFromDBByRptKey(ARptKey);
+  LJHPFileDB4ChgReg := InitJHPFileClient2(ExtractFilePath(Application.ExeName) + 'HiconChgReg.exe', LJHPFileDB4ChgRegModel);
+  try
+    DeleteJHPFilesFromDBByTaskID(ARptKey, LJHPFileDB4ChgReg);
+  finally
+    LJHPFileDB4ChgRegModel.Free;
+    LJHPFileDB4ChgReg.Free;
+  end;
 end;
 
 procedure TChgRegListF.DeleteHCRReportFromSelectedGrid;
@@ -449,6 +464,17 @@ begin
   MakeHCRReportBySelected();
 end;
 
+procedure TChgRegListF.FormCreate(Sender: TObject);
+begin
+  FJHPFileDB4ChgReg := InitJHPFileClient2(ExtractFilePath(Application.ExeName) + 'HiconChgReg.exe', FJHPFileDB4ChgRegModel);
+end;
+
+procedure TChgRegListF.FormDestroy(Sender: TObject);
+begin
+  FJHPFileDB4ChgRegModel.Free;
+  FJHPFileDB4ChgReg.Free;
+end;
+
 function TChgRegListF.GetHiconReportRecByHcrNo(
   const AHcrNo: string): THiconReportRec;
 var
@@ -537,7 +563,7 @@ begin
   end;
 
   //"저장" 버튼을 누르면 True
-  if DisplayHiChgRegEditForm(FReportKey4ChgReg, LUtf8, LFromDocDict) = mrOK then
+  if DisplayHiChgRegEditForm(FReportKey4ChgReg, LUtf8, LFromDocDict, FJHPFileDB4ChgReg) = mrOK then
   begin
     //신규 추가한 경우 Report No가 새로 생성됨
     //Current Serial No를 DB에 저장 해야함

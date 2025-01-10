@@ -9,6 +9,9 @@ const
   HIRPT_FILE_EXT = '.hirpt';
   KN_REPORT = 'Report';//Json KeyName
   KN_WORKITEM = 'WorkItem';
+  KN_REPORT_FILES = 'Report_Files';
+  KN_CHGREGRPT = 'ChgRegRpt';
+  KN_CHGREGRPT_FILES = 'ChgRegRpt_Files';
 
 type
   THiconReportRec = packed record

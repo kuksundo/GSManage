@@ -17,6 +17,7 @@ type
     FReqBudgetIncreaseMailFN,//부품예산증액 요청 Mail원본
     FReqPartsInputMailFN,//자재입고 요청 Mail원본
     FDIModuleRecallStatusFN, //DI 모듈 리콜 현황 리스트 파일(Json 형식)
+    FReqAttendReviewFN,//방선가능 검토 요청
 
     FPurchasePIC,     //구매담당자 이메일 주소
     FDirectDeliverPIC,//자재직투입담당자 이메일 주소
@@ -28,7 +29,7 @@ type
     FTechnicalPIC     //기술담당자 이메일 주소(장주호CI)
     : string;
   public
-    FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject, FPrice: string;
+    FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject, FPrice, FAgentDetail, FComissionCompany, FPlace, FServiceDate: string;
   published
     //Section Name, Key Name, Default Key Value  (Control.hint = SectionName;KeyName 으로 저장 함)
     [JHPIni('EMail','My Employee ID','A379042','1', tkString)]
@@ -71,6 +72,8 @@ type
     property ReqPartsInputMailFN : string read FReqPartsInputMailFN write FReqPartsInputMailFN;
     [JHPIni('File','DIModuleRecallStatusFN','DIModuleRecallStatusFN.txt','29', tkString)]
     property DIModuleRecallStatusFN : string read FDIModuleRecallStatusFN write FDIModuleRecallStatusFN;
+    [JHPIni('File','ReqAttendReviewFN','ReqAttendReviewFN.txt','30', tkString)]
+    property ReqAttendReviewFN : string read FReqAttendReviewFN write FReqAttendReviewFN;
   end;
 
 implementation

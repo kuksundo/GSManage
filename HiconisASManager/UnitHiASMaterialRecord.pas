@@ -7,7 +7,7 @@ uses SysUtils, Classes, Generics.Collections,
   mormot.rest.sqlite3, mormot.orm.base, mormot.core.data, mormot.core.variants,
   mormot.core.datetime, mormot.core.json,
 
-  UnitHiconisMasterRecord, CommonData2
+  UnitHiconisMasterRecord, CommonData2, UnitArrayUtil
   ;
 
 type
@@ -81,6 +81,8 @@ uses SysUtils, Classes, Generics.Collections,
   function GetMaterial4ProjFromTask(ATask: TOrmHiconisASTask): TSQLMaterial4Project;
   function GetMaterial4ProjFromTaskID(const ATaskID: TID): TSQLMaterial4Project;
   function GetMaterial4ProjFromTaskIDNPORNo(const ATaskID: TID; const APorNo: string): TSQLMaterial4Project;
+  function GetMaterial4ProjFromShippingNo(const AShippingNo: RawUTF8): TSQLMaterial4Project;
+  function GetTaskIDAryFromMaterial4ProjByShippingNo(const AShippingNo: RawUTF8): TpjhArray<TID>;
 
   procedure AddOrUpdateMaterial4Project(AMaterial4Project: TSQLMaterial4Project);
 
@@ -174,6 +176,39 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetMaterial4ProjFromShippingNo(const AShippingNo: RawUTF8): TSQLMaterial4Project;
+begin
+  Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'ShippingNo = ?', [AShippingNo]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetTaskIDAryFromMaterial4ProjByShippingNo(const AShippingNo: RawUTF8): TpjhArray<TID>;
+var
+  LOrm: TSQLMaterial4Project;
+begin
+  Result := Default(TpjhArray<TID>);
+
+  LOrm := GetMaterial4ProjFromShippingNo(AShippingNo);
+  try
+    if LOrm.IsUpdate then
+    begin
+      if LOrm.FillRewind then
+      begin
+        while LOrm.FillOne do
+        begin
+          Result.Append(LOrm.TaskID);
+        end;//while
+      end;
+    end;
+  finally
+    LOrm.Free;
+  end;
 end;
 
 procedure DeleteMaterial4ProjFromTask(ATask: TOrmHiconisASTask);

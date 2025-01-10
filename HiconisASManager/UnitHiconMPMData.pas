@@ -3,7 +3,7 @@ unit UnitHiconMPMData;
 interface
 
 uses System.Classes, System.SysUtils, UnitEnumHelper,
-  mormot.core.variants, mormot.core.unicode, mormot.core.json;
+  mormot.core.variants, mormot.core.unicode, mormot.core.json, mormot.core.base;
 
 const
   //호선별 Hiconis Backup 폴더에서 MPM 관련 백업파일 위치 지정
@@ -12,10 +12,10 @@ const
 type
   TTagSearchRec = packed record
     FTagName,
-    FBaseDir,
+    FBaseDir, //Z:\HiCONIS\HHI3276_ICMS
     FIPAddr
     : string;
-    FSrcKind //0:From Backup, 1:From Tgz Backup, 2: From Online
+    FSrcKind //0:From Json Backup, 1:From Tgz Backup, 2: From Online
     : integer;
   end;
 
@@ -315,6 +315,7 @@ function GetMPMNoFromResName(AMPMName: string): string;
 //ADirName: 검샐할 폴더 full path
 //Result: COM011* list
 function GetCOMCardNameListFromDirByMPMName(AMPMName, ADirName: string): TStringList;
+function GetCOMCardNameListFromIOCTableByMPMName(AMPMName, ADBFileName: string): TStringList;
 //ABaseDir: 호선No별 Folder Name(F:\Hiconis_Backup\HMD8310_ICMS\)
 function GetIntfJsonContentsBySlotNo(AMPMName, ASlotNo, ABaseDir: string; out APortName: string): string;
 //Result: Port4
@@ -458,7 +459,7 @@ function GetTagSearchRecFromTagInfoEditForm(AIpAddr: string=''): TTagSearchRec;
 implementation
 
 uses UnitFileSearchUtil, UnitStringUtil, UnitGZipJclUtil, UnitJsonUtil,
-  UnitFolderUtil2, UnitFileUtil,
+  UnitFolderUtil2, UnitFileUtil, UnitHiconSystemDBUtil,
   FrmTagInputEdit;
 
 function GetMPMNoFromResName(AMPMName: string): string;
@@ -482,9 +483,30 @@ begin
   Result := GetFileListFromFolder(ADirName, LCOMCardName, False, faDirectory);
 end;
 
+function GetCOMCardNameListFromIOCTableByMPMName(AMPMName, ADBFileName: string): TStringList;
+var
+  LUtf8: RawUtf8;
+  LList: IDocList;
+  LDict: IDocDict;
+begin
+  Result := TStringList.Create;
+
+  LUtf8 := THiConSystemDB.GetCOMCardNameListFromIOCTableByMPMName(AMPMName, ADBFileName);
+
+  LList := DocList(LUtf8);
+
+  for LDict in LList do
+  begin
+    LUtf8 := LDict.S['CODE'];
+
+    if POS('COM', LUtf8) > 0 then
+      Result.Add(Utf8ToString(LUtf8));
+  end;
+end;
+
 function GetIntfJsonContentsBySlotNo(AMPMName, ASlotNo, ABaseDir: string; out APortName: string): string;
 var
-  LFullPathIntfJsonFN, LJson, LPortName, LCOMCardName: string;
+  LFullPathIntfJsonFN, LJson, LPortName, LCOMCardName, LBaseDir, LDBFileName: string;
   LComList: TStringList;
   i: integer;
 begin
@@ -493,25 +515,33 @@ begin
   if ABaseDir = '' then
     ABaseDir := 'C:\temp\';
 
-  ABaseDir := IncludeTrailingPathDelimiter(ABaseDir) + 'MPM_FBM_COM\';
+  LBaseDir := IncludeTrailingPathDelimiter(ABaseDir) + 'MPM_FBM_COM\';
 
-  LFullPathIntfJsonFN := ABaseDir + AMPMName + '\home\db\interface.json';
+  if DirectoryExists(LBaseDir + AMPMName) then
+    LFullPathIntfJsonFN := LBaseDir + AMPMName + '\home\db\interface.json'
+  else
+    LFullPathIntfJsonFN := LBaseDir + AMPMName  + 'P' + '\home\db\interface.json';
 
   if FileExists(LFullPathIntfJsonFN) then
   begin
-    LJson := StringFromFile(LFullPathIntfJsonFN);
+    LJson := JHPStringFromFile(LFullPathIntfJsonFN);
+    LPortName := GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
 
     //일치하는 SlotNo = InfAddr port가 MPM의 Interface.json에 없으면
     if LPortName = '' then
     begin
+      LDBFileName := THiConSystemDB.GetSystemDBFileNameByBaseDir(ABaseDir);
       //COM Card List에서 검색함
-      LComList := GetCOMCardNameListFromDirByMPMName(AMPMName, ABaseDir);
+      LComList := GetCOMCardNameListFromIOCTableByMPMName(AMPMName, LDBFileName);
       try
         for i := 0 to LComList.Count - 1 do
         begin
-          LFullPathIntfJsonFN := IncludeTrailingPathDelimiter(LComList.Strings[i]) + 'home\db\interface.json';
+          LFullPathIntfJsonFN := LBaseDir + IncludeTrailingPathDelimiter(LComList.Strings[i]) + 'home\db\interface.json';
 
-          LJson := StringFromFile(LFullPathIntfJsonFN);
+          if not FileExists(LFullPathIntfJsonFN) then
+            Continue;
+
+          LJson := JHPStringFromFile(LFullPathIntfJsonFN);
           LPortName := GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
 
           if LPortName <> '' then
@@ -519,6 +549,7 @@ begin
             LCOMCardName := ExtractFileName(LComList.Strings[i]);
             Result := LJson;
             APortName := LCOMCardName + ';' + LPortName;
+            Break;
           end;
         end;
       finally
@@ -552,7 +583,7 @@ begin
 
   if FileExists(AFileName) then
   begin
-    LJson := StringFromFile(AFileName);
+    LJson := JHPStringFromFile(AFileName);
     Result := GetPortNameFromIntfJsonBySlotNo(LJson, ASlotNo);
   end;
 end;
@@ -1408,7 +1439,12 @@ begin
   Result.FSrcKind := StrTointDef(strToken(LStr, ';'), 0);
 
   case Result.FSrcKind of
-    0,1: Result.FBaseDir := strToken(LStr, ';');
+    0,1: begin
+      Result.FBaseDir := strToken(LStr, ';');
+
+      if Result.FBaseDir <> '' then
+        Result.FBaseDir := IncludeTrailingPathDelimiter(Result.FBaseDir);
+    end;
     2: Result.FIPAddr := strToken(LStr, ';');
   end;
 end;

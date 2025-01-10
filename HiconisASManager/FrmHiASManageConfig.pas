@@ -102,6 +102,7 @@ type
     Edit17: TEdit;
     Label32: TLabel;
     Label33: TLabel;
+    Label34: TLabel;
     procedure MQProtocolComboDropDown(Sender: TObject);
     procedure MQProtocolComboChange(Sender: TObject);
   private

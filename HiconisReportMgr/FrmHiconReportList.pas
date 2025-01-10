@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus, Vcl.ImgList,
-  SBPro, NxColumnClasses, NxColumns,
+  SBPro, NxColumnClasses, NxColumns, Winapi.Activex,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, AdvOfficeTabSet,
   Vcl.Buttons, AdvEdit, AdvEdBtn, Vcl.Mask, JvExMask, JvToolEdit, JvCombobox,
   Vcl.StdCtrls, AeroButtons, Vcl.ComCtrls, AdvGroupBox, AdvOfficeButtons,
@@ -197,24 +197,30 @@ type
     procedure C21Click(Sender: TObject);
     procedure D1Click(Sender: TObject);
     procedure ShowChangeRegisterList1Click(Sender: TObject);
+    procedure HiRptListGridMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FAppSigInfoJson: string;
     FCLO4HiRptMgr: TCLO4HiRptMgr;
+    FJHPFileDB4HiRpt: TRestClientDB;
+    FJHPFileDB4HiRptModel: TOrmModel;
 
     //보고서 리스트 내,외부 저장용
     FRptDocDict: IDocDict; //{Report: [], WorkItem: []}
+    FRptDocList: IDocList; //[{Report: [], WorkItem: []},...]
 
     procedure InitVar();
     procedure DestroyVar();
     procedure InitEnum();
 
     procedure ClearRptDocDict();
+    procedure ClearRptDocList();
     procedure SetEnable4SaveDBBtn();
 
     function CommandLineParse(var AErrMsg: string): boolean;
     procedure InitCLO();
-//    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
-//      Index: integer; out AStream: IStream);
+    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
+      Index: integer; out AStream: IStream);
 
     procedure GetSearchCondRec(var ARec: THiRptMgrSearchCondRec);
     procedure DisplayReportList2GridByConstArray(AWhere: string; const AAry: TConstArray);
@@ -230,6 +236,7 @@ type
     function CheckRptDocDictExist: Boolean;
     function GetReportJsonFromDocDictByKeyId(const AKeyId: string): RawUtf8;
     procedure LoadReportListFromDocDict2Grid();
+    procedure LoadReportListFromDocList2Grid();
     procedure LoadReportListFromRawByteString(const ARaw: RawByteString);
 
     function GetRowIdxFromGridByKeyId(const AKeyId: string): integer;
@@ -245,15 +252,24 @@ type
 
     function GetWorkItemJsonFromOrmBySelectedRow(): RawUtf8;
     function GetWorkItemJsonFromOrmByRowIdx(const AIdx: integer): RawUtf8;
-    function GetWorkItemJsonListFromOrmBySelectedRows(): RawUtf8;
+    function GetWorkItemJsonFromOrmByReportKey(const AKeyId: TTimeLog): RawUtf8;
+    function GetWorkItemJsonAryFromOrmBySelectedRows(): RawUtf8;
     function GetWorkItemDocListFromOrmBySelectedRows(): IDocList;
     procedure ReplaceWorkItemList2RptDocDict(const AKeyId: string; const AJsonAry: RawUtf8);
+
+    //Result: [[FileList],[]...] = 2차원 배열임
+    function GetAttachFileJsonAryFromOrmBySelectedRows(const AIsIncludeDiskFile: Boolean=True): RawUtf8;
+    //Result: [{FileList},{}...] = 1차원 배열임
+    function GetAttachFileJsonAryFromOrmByRowIdx(const AIdx: integer; AIsIncludeDiskFile: Boolean=True): RawUtf8;
+    function GetAttachFileJsonAryFromOrmByReportKey(const AKeyId: TTimeLog; AIsIncludeDiskFile: Boolean=True): RawUtf8;
+    function GetAttachFileDocListFromOrmByReportKey(const AKeyId: TTimeLog; AIsIncludeDiskFile: Boolean=True): IDocList;
 
     function GetHiconReportRecFromDBByKeyId(const AKeyId: string): THiconReportRec;
 
     procedure LoadReportList2GridFromFile();
-    procedure MakeZipFileFromSelected();
+    procedure MakeZipFileFromSelected(AIsIncludeAttachFile: Boolean=False);
     procedure MakeZipFileFromString(const AContent: string; AFileName: string='');
+    function GetHiRptList2JsonAryFromSelected(AIsIncludeAttachFile: Boolean=False; AIsIncludeChgRegRpt: Boolean=False): RawUtf8;
 
     procedure DeleteReportFromSelectedGrid();
     procedure DeleteReportByReportKey(const ARptKey: TTimeLog);
@@ -414,12 +430,68 @@ begin
   ClearFindCondForm();
 end;
 
+function THiConReportListF.GetAttachFileDocListFromOrmByReportKey(
+  const AKeyId: TTimeLog; AIsIncludeDiskFile: Boolean): IDocList;
+var
+  LJson: RawUtf8;
+begin
+  Result := DocList('[]');
+
+  LJson := GetFiles2JsonAryFromOrmByID(AKeyId, FJHPFileDB4HiRpt, AIsIncludeDiskFile);
+  Result.Append(_JSON(LJson));
+end;
+
+function THiConReportListF.GetAttachFileJsonAryFromOrmByReportKey(
+  const AKeyId: TTimeLog; AIsIncludeDiskFile: Boolean): RawUtf8;
+begin
+  Result := GetFiles2JsonAryFromOrmByID(AKeyId, FJHPFileDB4HiRpt, AIsIncludeDiskFile);
+end;
+
+function THiConReportListF.GetAttachFileJsonAryFromOrmByRowIdx(
+  const AIdx: integer; AIsIncludeDiskFile: Boolean): RawUtf8;
+var
+  LKeyId: TTimeLog;
+begin
+  Result := '';
+
+  if AIdx = -1 then
+    exit;
+
+  if AIdx >= HiRptListGrid.RowCount then
+    exit;
+
+  LKeyId := StrToInt64Def(HiRptListGrid.CellByName['ReportKey', AIdx].AsString, 0);
+  Result := GetAttachFileJsonAryFromOrmByReportKey(LKeyId, AIsIncludeDiskFile);
+end;
+
+function THiConReportListF.GetAttachFileJsonAryFromOrmBySelectedRows(
+  const AIsIncludeDiskFile: Boolean): RawUtf8;
+var
+  i: integer;
+  LJsonAry: RawUtf8;
+  LList: IDocList;
+begin
+  Result := '';
+  LList := DocList('[]');
+
+  for i := 0 to HiRptListGrid.RowCount - 1 do
+  begin
+    if HiRptListGrid.Row[i].Selected then
+    begin
+      LJsonAry := GetAttachFileJsonAryFromOrmByRowIdx(i, AIsIncludeDiskFile);
+      LList.Append(LJsonAry);
+    end;
+  end;//for
+
+  Result := LList.Json;
+end;
+
 function THiConReportListF.GetHiconReportRecFromDBByKeyId(
   const AKeyId: string): THiconReportRec;
 var
   LRptKey: TTimeLog;
   LOrmHiconReportList: TOrmHiconReportList;
-  LVar: variant;
+  LUtf8: RawUtf8;
 begin
   Result := Default(THiconReportRec);
 
@@ -428,11 +500,71 @@ begin
   try
     Result.FReportListJson := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
 
-    Lvar := GetHiRptDetailJsonAryByReportKey(LRptKey);
-    Result.FReportDetailJsonAry := UTF8ToString(Lvar);
+    LUtf8 := GetHiRptDetailJsonAryByReportKey(LRptKey);
+    Result.FReportDetailJsonAry := UTF8ToString(LUtf8);
   finally
     LOrmHiconReportList.Free;
   end;
+end;
+
+function THiConReportListF.GetHiRptList2JsonAryFromSelected(
+  AIsIncludeAttachFile, AIsIncludeChgRegRpt: Boolean): RawUtf8;
+var
+  LDocList, LDocList2: IDocList;
+  LVar: variant;
+  LUtf8: RawUtf8;
+  LKeyId: TTimeLog;
+  i, LCount: integer;
+begin
+  Result := '';
+  LDocList := DocList('[]');
+
+  for i := 0 to HiRptListGrid.RowCount - 1 do
+  begin
+    FRptDocDict.Clear;
+
+    if HiRptListGrid.Row[i].Selected then
+    begin
+      LVar := GetNxGridRow2Variant(HiRptListGrid, i);
+      LUtf8 := LVar;
+      //{'Report': {}, 'WorkItem': [{},{}...], 'Files': [{},{}...]}
+      FRptDocDict.S[KN_REPORT] := LUtf8;//'Report'
+
+      LKeyId := StrToInt64Def(HiRptListGrid.CellByName['ReportKey', i].AsString, 0);
+
+      LUtf8 := GetWorkItemJsonFromOrmByReportKey(LKeyId);
+      FRptDocDict.S[KN_WORKITEM] := LUtf8;//'WorkItem': [] = json array임
+
+      if AIsIncludeAttachFile then
+      begin
+        LCount := GetFileCountFromID(LKeyId, FJHPFileDB4HiRpt);
+
+        if LCount > 0 then
+        begin
+          LUtf8 := GetFiles2JsonAryFromOrmByID(LKeyId, FJHPFileDB4HiRpt);
+          FRptDocDict.S[KN_REPORT_FILES] := LUtf8;//'Report_Files': [] = json array임
+        end;
+      end
+      else
+        FRptDocDict.S[KN_REPORT_FILES] := '[]';
+
+      if AIsIncludeChgRegRpt then
+      begin
+        LCount := GetHiChgRegItemCountByReportKey(LKeyId);
+
+        if LCount > 0 then
+        begin
+
+        end;
+      end
+      else
+        FRptDocDict.S[KN_CHGREGRPT] := '[]';
+
+      LDocList.Append(FRptDocDict.Json);
+    end;
+  end;
+
+  Result := LDocList.Json;
 end;
 
 function THiConReportListF.GetReportJsonFromDocDictByKeyId(
@@ -558,6 +690,12 @@ begin
   SetEnable4SaveDBBtn();
 end;
 
+procedure THiConReportListF.ClearRptDocList;
+begin
+  FRptDocList.Clear;
+  SetEnable4SaveDBBtn();
+end;
+
 procedure THiConReportListF.Close1Click(Sender: TObject);
 begin
   Close;
@@ -608,7 +746,9 @@ procedure THiConReportListF.DeleteReportByReportKey(const ARptKey: TTimeLog);
 begin
   DeleteReportListByReportKey(ARptKey);
   DeleteWorkItemByReportKey(ARptKey);
-  DeleteJHPFilesFromDBByTaskID(ARptKey);
+  DeleteJHPFilesFromDBByTaskID(ARptKey, FJHPFileDB4HiRpt);
+
+  TChgRegListF.DeleteHCRReportByReportKey(ARptKey);
 end;
 
 procedure THiConReportListF.DeleteReportFromSelectedGrid;
@@ -654,6 +794,8 @@ end;
 
 procedure THiConReportListF.DestroyVar;
 begin
+  FJHPFileDB4HiRptModel.Free;
+  FJHPFileDB4HiRpt.Free;
   FCLO4HiRptMgr.Free;
 end;
 
@@ -852,61 +994,80 @@ var
   LFromOutlook: Boolean;
   LFileName, LFileExt: string;
   LJson: RawUtf8;
-  LDocType: integer;
+  LDocType, i: integer;
+  LUnicodeStrings: TUnicodeStrings;
+  LStrings: TStrings;
 begin
   LFileName := '';
   LRawByte := '';
   LFromOutlook := False;
   if (DataFormatAdapter1.DataFormat <> nil) then
   begin
-    LFileName := (DataFormatAdapter1.DataFormat as TFileDataFormat).Files.Text;
+    LUnicodeStrings := (DataFormatAdapter1.DataFormat as TFileDataFormat).Files;
+    LFileName := LUnicodeStrings.Text;
 
     // OutLook에서 Drag한 경우에는 LFileName = '' 임
     if LFileName = '' then
     begin
+      LStrings := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames;
       // OutLook에서 첨부파일을 Drag 했을 경우
-      if (TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count > 0) then
+//      if LStrings.Count > 0) then
+      for i := 0 to LStrings.Count - 1 do
       begin
-        LFileName := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames[0];
+        LFileName := LStrings[i];
         LFileExt := ExtractFileExt(LFileName);
 
         if LowerCase(LFileExt) = HIRPT_FILE_EXT then
         begin
-          LTargetStream := GetStreamFromDropDataFormat(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat));
+          LTargetStream := GetStreamFromDropDataFormat2(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat), i);
           try
             if not Assigned(LTargetStream) then
               ShowMessage('Not Assigned');
 
             LRawByte := StreamToRawByteString(LTargetStream);
             LFromOutlook := True;
+
+            if LRawByte <> '' then
+            begin
+              LoadReportListFromRawByteString(LRawByte);
+          //    ShowMessage(FRptDocDict.S[KN_REPORT]);
+            end;
           finally
             if Assigned(LTargetStream) then
               LTargetStream.Free;
           end;
         end;
-      end;
+      end;//for
     end
     else// 윈도우 탐색기에서 Drag 했을 경우 LFileName에 Drag한 File Name이 존재함
     begin
-      LFileExt := ExtractFileExt(LFileName);
-
-      if LowerCase(LFileExt) = HIRPT_FILE_EXT then
+      for i := 0 to LUnicodeStrings.Count - 1 do
       begin
-        LRawByte := StringFromFile(LFileName);
-      end;
+        LFileName := LUnicodeStrings.Strings[i];
+        LFileExt := ExtractFileExt(LFileName);
+
+        if LowerCase(LFileExt) = HIRPT_FILE_EXT then
+        begin
+          if FileExists(LFileName) then
+            LRawByte := StringFromFile(LFileName)
+          else
+            LRawByte := '';
+        end;
+
+        if LRawByte <> '' then
+        begin
+          LoadReportListFromRawByteString(LRawByte);
+      //    ShowMessage(FRptDocDict.S[KN_REPORT]);
+        end;
+      end;//for
     end;
   end;
-
-  if LRawByte <> '' then
-  begin
-    LoadReportListFromRawByteString(LRawByte);
-//    ShowMessage(FRptDocDict.S[KN_REPORT]);
-  end;
-end;
+end;
 
 procedure THiConReportListF.ExportSelectedToZip1Click(Sender: TObject);
 begin
   MakeZipFileFromSelected();
+//  GetHiRptList2JsonAryFromSelected();
 end;
 
 procedure THiConReportListF.FormClose(Sender: TObject;
@@ -977,25 +1138,32 @@ begin
   end;
 end;
 
-function THiConReportListF.GetWorkItemJsonFromOrmByRowIdx(
-  const AIdx: integer): RawUtf8;
+function THiConReportListF.GetWorkItemJsonFromOrmByReportKey(
+  const AKeyId: TTimeLog): RawUtf8;
 var
-  LKeyId: TTimeLog;
   LOrmHiconReportDetail: TOrmHiconReportDetail;
   LDocList: IList<TOrmHiconReportDetail>;
 begin
-  if AIdx = -1 then
-    LKeyId := 0
-  else
-    LKeyId := StrToInt64Def(HiRptListGrid.CellByName['ReportKey', AIdx].AsString, 0);
-
-  LOrmHiconReportDetail := GetHiconReportDetailByReportKey(LKeyId);
+  LOrmHiconReportDetail := GetHiconReportDetailByReportKey(AKeyId);
   try
     LDocList := LOrmHiconReportDetail.FillTable.ToIList<TOrmHiconReportDetail>;
     Result := LDocList.Data.SaveToJson();
   finally
     LOrmHiconReportDetail.Free;
   end;
+end;
+
+function THiConReportListF.GetWorkItemJsonFromOrmByRowIdx(
+  const AIdx: integer): RawUtf8;
+var
+  LKeyId: TTimeLog;
+begin
+  if AIdx = -1 then
+    LKeyId := 0
+  else
+    LKeyId := StrToInt64Def(HiRptListGrid.CellByName['ReportKey', AIdx].AsString, 0);
+
+  Result := GetWorkItemJsonFromOrmByReportKey(LKeyId);
 end;
 
 function THiConReportListF.GetWorkItemJsonFromOrmBySelectedRow: RawUtf8;
@@ -1006,7 +1174,7 @@ begin
   Result := GetWorkItemJsonFromOrmByRowIdx(HiRptListGrid.SelectedRow);
 end;
 
-function THiConReportListF.GetWorkItemJsonListFromOrmBySelectedRows: RawUtf8;
+function THiConReportListF.GetWorkItemJsonAryFromOrmBySelectedRows: RawUtf8;
 var
   i: integer;
   LDocList: IDocList;
@@ -1057,7 +1225,7 @@ begin
   LFromDocDict := FRptDocDict.Len > 0;
 
   //"저장" 버튼을 누르면 True
-  if DisplayHiRptEditForm(LRptUtf8, LWorkItemUtf8, LFromDocDict) = mrOK then
+  if DisplayHiRptEditForm(LRptUtf8, LWorkItemUtf8, LFromDocDict, FJHPFileDB4HiRpt, FJHPFileDB4HiRptModel) = mrOK then
   begin
     LoadReportFromJson2Grid(LRptUtf8, ARow);
 
@@ -1073,6 +1241,25 @@ procedure THiConReportListF.HiRptListGridCellDblClick(Sender: TObject; ACol,
   ARow: Integer);
 begin
   HiRptEdit(ARow);
+end;
+
+procedure THiConReportListF.HiRptListGridMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  LFileName: string;
+begin
+//  if (DragDetectPlus(TWinControl(Sender).Handle, Point(X,Y))) then
+  if (HiRptListGrid.SelectedCount > 0) and (DragDetectPlus(TWinControl(Sender))) then
+  begin
+    if HiRptListGrid.SelectedRow = -1 then
+      exit;
+
+    TVirtualFileStreamDataFormat(DataFormatAdapter2.DataFormat).FileNames.Clear;
+    LFileName := IntToStr(TimeLogFromDateTime(now)) + HIRPT_FILE_EXT;
+    TVirtualFileStreamDataFormat(DataFormatAdapter2.DataFormat).FileNames.Add(LFileName);
+
+    DropEmptySource1.Execute;
+  end;
 end;
 
 procedure THiConReportListF.HullNoEditClickBtn(Sender: TObject);
@@ -1121,15 +1308,17 @@ begin
   InitHiconReportListClient('');
   InitHiconReportDetailClient('');
   InitHiChgRegItemClient('');
-  InitJHPFileClient('');
+  FJHPFileDB4HiRpt := InitJHPFileClient2('', FJHPFileDB4HiRptModel);
   //UnitHiConReportMgR.CheckRegByAppSigUsingOrm()에서 InitHMSSerialOrm() 실행함
 
   InitEnum();
 
   FRptDocDict := DocDict('{}');
+  FRptDocList := DocList('[]');
 
   DOC_DIR := ExtractFilePath(Application.ExeName) + 'db\files\';
-  //  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+
+  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
 end;
 
 procedure THiConReportListF.LoadFromReportFile1Click(Sender: TObject);
@@ -1168,17 +1357,40 @@ begin
   LoadReportListFromJsonAry2Grid(FRptDocDict.S[KN_REPORT]);
 end;
 
+procedure THiConReportListF.LoadReportListFromDocList2Grid;
+var
+  LList: IDocList;
+  LDict: IDocDict;
+  LUtf8: RawUtf8;
+  LRow: integer;
+  i: integer;
+begin
+  if HiRptListGrid.RowCount > 0 then
+    HiRptListGrid.ClearRows;
+
+  for i := 0 to FRptDocList.Len - 1 do
+  begin
+    LUtf8 := FRptDocList.Item[i];
+    LDict := DocDict(LUtf8);
+
+    LoadReportFromJson2Grid(LDict.S[KN_REPORT]);
+  end;
+end;
+
 procedure THiConReportListF.LoadReportListFromJsonAry2Grid(AJson: RawUtf8);
 var
   LList: IDocList;
   LDict: IDocDict;
   LUtf8: RawUtf8;
   LRow: integer;
+  i: integer;
 begin
   LList := DocList(AJson);
 
-  for LDict in LList do
+  for i := 0 to LList.Len - 1 do
   begin
+    LUtf8 := LList.Item[i];
+    LDict := DocDict(LUtf8);
     LRow := GetRowIdxFromGridByKeyId(LDict.S['ReportKey']);
     LUtf8 := LDict.Json;
 
@@ -1191,13 +1403,13 @@ procedure THiConReportListF.LoadReportListFromRawByteString(
 var
   LContent: string;
 begin
+  ClearRptDocList();
+
   LContent := MakeBase64ToString(ARaw);
 
-  ClearRptDocDict();
+  FRptDocList := DocList(StringToUtf8(LContent));
 
-  FRptDocDict.Json := LContent;
-
-  LoadReportListFromDocDict2Grid();
+  LoadReportListFromDocList2Grid();
 
   SetEnable4SaveDBBtn();
 end;
@@ -1271,22 +1483,31 @@ begin
   end;
 end;
 
-procedure THiConReportListF.MakeZipFileFromSelected;
+procedure THiConReportListF.MakeZipFileFromSelected(AIsIncludeAttachFile: Boolean);
 var
   LDocList, LDocList2: IDocList;
   LStr: string;
+  LUtf8: RawUtf8;
 begin
-  LDocList := NextGrid2DocList(HiRptListGrid, False, True, True);
-  {Report: [], WorkItem: []}
-  FRptDocDict.Clear;
-  FRptDocDict.S[KN_REPORT] := LDocList.Json;//'Report'
-  LDocList2 := GetWorkItemDocListFromOrmBySelectedRows();
-  FRptDocDict.S[KN_WORKITEM] := LDocList2.Json;//'WorkItem': [[],[]} = array of array 임
-//  LStr := FRptDocDict.ToString();
-  LStr := FRptDocDict.Json;
-  LStr := MakeStringToBin64(LStr);
+  LUtf8 := GetHiRptList2JsonAryFromSelected();
+  LStr := MakeRawUTF8ToBin64(LUtf8);
 
-  MakeZipFileFromString(LStr);
+  MakeZipFileFromString(Utf8ToString(LStr));
+
+//  LDocList := NextGrid2DocList(HiRptListGrid, False, True, True);
+//  {Report: [], WorkItem: []}
+//  FRptDocDict.Clear;
+//  FRptDocDict.S[KN_REPORT] := LDocList.Json;//'Report'
+//  LDocList2 := GetWorkItemDocListFromOrmBySelectedRows();
+//  FRptDocDict.S[KN_WORKITEM] := LDocList2.Json;//'WorkItem': [[],[]} = array of array 임
+//
+//  if AIsIncludeAttachFile then
+//
+////  LStr := FRptDocDict.ToString();
+//  LStr := FRptDocDict.Json;
+//  LStr := MakeStringToBin64(LStr);
+
+//  MakeZipFileFromString(LStr);
 end;
 
 procedure THiConReportListF.MakeZipFileFromString(const AContent: string; AFileName: string);
@@ -1387,11 +1608,32 @@ begin
   LoadReportListFromDocDict2Grid();
 end;
 
-//procedure THiConReportListF.OnGetStream(
-//  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
-//  out AStream: IStream);
-//begin
-//
-//end;
+procedure THiConReportListF.OnGetStream(
+  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
+  out AStream: IStream);
+var
+  Stream: TMemoryStream;
+  Data: AnsiString;
+  LUtf8: RawUtf8;
+begin
+  Stream := TMemoryStream.Create;
+  try
+    AStream := nil;
+
+//    LUtf8 := GetJsonAryFromSelectedRow(HiRptListGrid);
+    LUtf8 := GetHiRptList2JsonAryFromSelected();
+
+    if LUtf8 = '' then
+      exit;
+
+    LUtf8 := MakeRawUTF8ToBin64(LUtf8);
+
+    Stream.Write(PChar(LUtf8)^, Length(LUtf8));
+    AStream := TFixedStreamAdapter.Create(Stream, soOwned);
+  except
+    Stream.Free;
+    raise;
+  end;
+end;
 
 end.

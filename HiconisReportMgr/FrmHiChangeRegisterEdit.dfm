@@ -191,7 +191,7 @@ object HiChgRegItemF: THiChgRegItemF
     Top = 253
     Width = 609
     Height = 339
-    ActivePage = TabSheet5
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 1
     TabWidth = 120
@@ -856,7 +856,7 @@ object HiChgRegItemF: THiChgRegItemF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      inline TJHPFileListFrame1: TJHPFileListFrame
+      inline JHPFileFr4ChgRegItem: TJHPFileListFrame
         Left = 0
         Top = 0
         Width = 601
@@ -876,7 +876,7 @@ object HiChgRegItemF: THiChgRegItemF
           ExplicitHeight = 273
           inherited FileName: TNxTextColumn
             DefaultWidth = 389
-            Width = 389
+            Width = 269
           end
         end
         inherited Panel2: TPanel
@@ -895,7 +895,7 @@ object HiChgRegItemF: THiChgRegItemF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800A40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800A80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

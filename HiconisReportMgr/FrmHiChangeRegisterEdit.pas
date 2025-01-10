@@ -12,7 +12,7 @@ uses
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text,
-  mormot.core.datetime, mormot.core.rtti, mormot.core.collections,
+  mormot.core.datetime, mormot.core.rtti, mormot.core.collections, mormot.rest.sqlite3,
 
   UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHiConReportMgrData
   ;
@@ -31,7 +31,7 @@ type
     Involves: TAdvOfficeCheckGroup;
     SubConTS: TTabSheet;
     TabSheet3: TTabSheet;
-    TJHPFileListFrame1: TJHPFileListFrame;
+    JHPFileFr4ChgRegItem: TJHPFileListFrame;
     JvLabel1: TJvLabel;
     ReqSrc: TAdvOfficeCheckGroup;
     NxHeaderPanel1: TNxHeaderPanel;
@@ -108,7 +108,8 @@ type
   end;
 
   //AFromDocDict : True = DB에 저장하지 않음
-  function DisplayHiChgRegEditForm(const ARptKey: TTimeLog; var AChgRegItemJson: RawUtf8; AFromDocDict: Boolean): integer;
+  function DisplayHiChgRegEditForm(const ARptKey: TTimeLog; var AChgRegItemJson: RawUtf8;
+    AFromDocDict: Boolean; AJHPFileDB4HiChgReg: TRestClientDB): integer;
 
 var
   HiChgRegItemF: THiChgRegItemF;
@@ -120,7 +121,7 @@ uses UnitRttiUtil2, UnitComponentUtil;
 {$R *.dfm}
 
 function DisplayHiChgRegEditForm(const ARptKey: TTimeLog;
-  var AChgRegItemJson: RawUtf8; AFromDocDict: Boolean): integer;
+  var AChgRegItemJson: RawUtf8; AFromDocDict: Boolean; AJHPFileDB4HiChgReg: TRestClientDB): integer;
 var
   LHiChgRegItemF: THiChgRegItemF;
   LJson: string;
@@ -132,11 +133,13 @@ begin
   try
     with LHiChgRegItemF do
     begin
+      JHPFileFr4ChgRegItem.FJHPFileDB4Fr := AJHPFileDB4HiChgReg;
       SetVesselInfo2FormByRptKey(ARptKey);
 
       LJson := Utf8ToString(AChgRegItemJson);
       SetCompNameValueFromJson2FormByClassType(LHiChgRegItemF, LJson);
       PageControl1.ActivePageIndex := 0;
+      JHPFileFr4ChgRegItem.LoadFiles2GridByTaskID(ARptKey);
 
       while True do
       begin
@@ -186,6 +189,7 @@ begin
           end;
 
           AChgRegItemJson := StringToUtf8(LJson);
+          JHPFileFr4ChgRegItem.ApplyFileFromGrid2DB(ARptKey);
         end;//if
 
         Break;
@@ -242,6 +246,7 @@ end;
 
 procedure THiChgRegItemF.FormCreate(Sender: TObject);
 begin
+  JHPFileFr4ChgRegItem.FIgnoreFileTypePrompt := True;
   InitEnum();
 end;
 

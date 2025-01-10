@@ -22,16 +22,13 @@ object TaskEditF: TTaskEditF
     Top = 273
     Width = 607
     Height = 389
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alClient
     TabOrder = 0
     TabWidth = 120
-    ExplicitTop = 255
-    ExplicitHeight = 386
     object TabSheet5: TTabSheet
       Caption = #51652#54665#54788#54889
       ImageIndex = 4
-      ExplicitHeight = 355
       DesignSize = (
         599
         358)
@@ -339,7 +336,6 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 2
-        ExplicitHeight = 104
       end
       object CurWorkCB: TComboBox
         Left = 122
@@ -398,7 +394,6 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 7
-        ExplicitHeight = 104
       end
       object ClaimServiceKindCB: TComboBox
         Left = 122
@@ -438,7 +433,6 @@ object TaskEditF: TTaskEditF
     object TabSheet3: TTabSheet
       Caption = #52392#48512#54028#51068
       ImageIndex = 2
-      ExplicitHeight = 355
       object JvLabel13: TJvLabel
         AlignWithMargins = True
         Left = 3
@@ -477,7 +471,6 @@ object TaskEditF: TTaskEditF
         Height = 358
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 355
         object Panel2: TPanel
           Left = 1
           Top = 319
@@ -485,7 +478,6 @@ object TaskEditF: TTaskEditF
           Height = 38
           Align = alBottom
           TabOrder = 0
-          ExplicitTop = 316
           object AdvGlowButton6: TAdvGlowButton
             AlignWithMargins = True
             Left = 370
@@ -585,7 +577,6 @@ object TaskEditF: TTaskEditF
           TabStop = True
           OnCellDblClick = fileGridCellDblClick
           OnMouseDown = fileGridMouseDown
-          ExplicitHeight = 315
           object NxIncrementColumn3: TNxIncrementColumn
             Alignment = taCenter
             DefaultWidth = 32
@@ -690,10 +681,6 @@ object TaskEditF: TTaskEditF
     object SubConTS: TTabSheet
       Caption = #54801#47141#49324
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 185
@@ -1267,10 +1254,6 @@ object TaskEditF: TTaskEditF
     object TabSheet4: TTabSheet
       Caption = #51088#51116#51221#48372
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel6: TPanel
         Left = 0
         Top = 0
@@ -1361,7 +1344,7 @@ object TaskEditF: TTaskEditF
         Left = 0
         Top = 33
         Width = 599
-        Height = 322
+        Height = 325
         Touch.InteractiveGestures = [igPan, igPressAndTap]
         Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
         Align = alClient
@@ -1570,10 +1553,6 @@ object TaskEditF: TTaskEditF
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         599
         358)
@@ -1886,7 +1865,6 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitHeight = 93
       end
       object CustCompanyCodeEdit: TEdit
         Left = 123
@@ -1927,7 +1905,6 @@ object TaskEditF: TTaskEditF
         ImeName = 'Microsoft IME 2010'
         ScrollBars = ssVertical
         TabOrder = 4
-        ExplicitHeight = 76
       end
       object CustCompanyTypeCB: TComboBox
         Left = 392
@@ -2006,10 +1983,6 @@ object TaskEditF: TTaskEditF
     object TabSheet6: TTabSheet
       Caption = #49688#53685#51221#48372
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object JvLabel56: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -2457,7 +2430,6 @@ object TaskEditF: TTaskEditF
     Align = alBottom
     Rounding = 4
     TabOrder = 1
-    ExplicitTop = 644
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 540
@@ -3166,6 +3138,7 @@ object TaskEditF: TTaskEditF
       Layout = tlCenter
       ParentColor = False
       ParentFont = False
+      PopupMenu = PopupMenu5
       RoundedFrame = 3
       Transparent = True
       HotTrackFont.Charset = ANSI_CHARSET
@@ -3428,7 +3401,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800EC0510001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800000610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5335,7 +5308,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400C00210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400D40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6084,6 +6057,15 @@ object TaskEditF: TTaskEditF
     object Claim1: TMenuItem
       Caption = 'Claim '#51312#54924
       OnClick = Claim1Click
+    end
+  end
+  object PopupMenu5: TPopupMenu
+    Left = 444
+    Top = 508
+    object N26: TMenuItem
+      Tag = 5
+      Caption = #48169#49440' '#44032#45733' '#44160#53664' '#50836#52397' Mail'
+      OnClick = N26Click
     end
   end
 end

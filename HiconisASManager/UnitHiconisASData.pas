@@ -21,7 +21,7 @@ type
     FFrom, FTo: TDateTime;
     FQueryDate: TQueryDateType;
     FHullNo, FShipName, FCustomer, FProdType, FSubject,
-    FPorNo, FMaterialCode: string;
+    FPorNo, FMaterialCode, FShippingNo: string;
     FCurWork, FBefAft, FWorkKind,
     FClaimServiceKind, FClaimStatus, FClaimCatetory, FClaimLocation, FClaimKind,
     FClaimCauseHW, FClaimCauseSW: integer;

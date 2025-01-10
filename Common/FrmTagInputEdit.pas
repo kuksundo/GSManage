@@ -18,6 +18,7 @@ type
     RadioGroup1: TRadioGroup;
     BitBtn3: TBitBtn;
     JvSelectDirectory1: TJvSelectDirectory;
+    Label3: TLabel;
     procedure RadioGroup1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
   private

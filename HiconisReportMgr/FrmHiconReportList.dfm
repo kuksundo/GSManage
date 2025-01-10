@@ -1272,6 +1272,7 @@ object HiConReportListF: THiConReportListF
     TabOrder = 2
     TabStop = True
     OnCellDblClick = HiRptListGridCellDblClick
+    OnMouseDown = HiRptListGridMouseDown
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30

@@ -11,6 +11,7 @@ object ResPortInfo4INFTagF: TResPortInfo4INFTagF
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 13
   object JvLabel18: TJvLabel
@@ -333,7 +334,6 @@ object ResPortInfo4INFTagF: TResPortInfo4INFTagF
     Height = 64
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 272
     object BitBtn1: TBitBtn
       Left = 48
       Top = 16

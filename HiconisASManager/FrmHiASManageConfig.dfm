@@ -497,6 +497,8 @@ object HiASConfigF: THiASConfigF
     object FileTS: TTabSheet
       Caption = 'File'
       ImageIndex = 2
+      ExplicitLeft = 8
+      ExplicitTop = 25
       object Label6: TLabel
         Left = 36
         Top = 16
@@ -530,6 +532,15 @@ object HiASConfigF: THiASConfigF
         Width = 97
         Height = 16
         Caption = #51088#51116#51077#44256' '#50836#52397' Mail'
+        ParentShowHint = False
+        ShowHint = False
+      end
+      object Label34: TLabel
+        Left = 36
+        Top = 212
+        Width = 152
+        Height = 16
+        Caption = #48169#49440' '#44032#45733' '#44160#53664' '#50836#52397' Html File'
         ParentShowHint = False
         ShowHint = False
       end
@@ -588,6 +599,7 @@ object HiASConfigF: THiASConfigF
         Text = ''
       end
       object JvFilenameEdit5: TJvFilenameEdit
+        Tag = 30
         Left = 36
         Top = 230
         Width = 381

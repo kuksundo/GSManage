@@ -191,6 +191,7 @@ type
     JvLabel10: TJvLabel;
     BitBtn4: TBitBtn;
     ShippingNoEdit: TEdit;
+    N11: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -260,6 +261,7 @@ type
     procedure N8Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure Claim1Click(Sender: TObject);
+    procedure N11Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -485,7 +487,7 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
   FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
   UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2,
-  UnitAdvCompUtil, UnitHiASUtil;
+  UnitAdvCompUtil, UnitHiASUtil, UnitArrayUtil;
 
 {$R *.dfm}
 
@@ -653,6 +655,11 @@ var
 begin
   LRec := Get_Doc_ServiceOrder_Rec(ARow);
   MakeDocServiceOrder(LRec);
+end;
+
+procedure THiconisAsManageF.N11Click(Sender: TObject);
+begin
+  SendCmd4CreateMail(TMenuItem(Sender).Tag);
 end;
 
 procedure THiconisAsManageF.N12Click(Sender: TObject);
@@ -1022,6 +1029,7 @@ begin
 //    FPoNo := PONoEdit.Text;
     FPorNo := PorNoEdit.Text;
     FMaterialCode := MaterialCodeEdit.Text;
+    FShippingNo := ShippingNoEdit.Text;
 
     FClaimCatetory := Category1.Tag;
     FClaimLocation := Location1.Tag;
@@ -1631,6 +1639,7 @@ begin
   ClaimStatusCombo.ItemIndex := -1;
 
   OrderNoEdit.Text := '';
+  ShippingNoEdit.Text := '';
   ComboBox1.ItemIndex := -1;
 //  ProductTypeCombo.ItemIndex := -1;
   ClaimStatusCombo.ItemIndex := -1;
@@ -2215,7 +2224,7 @@ begin
 //      LVar := null;
 
     FOLMailListFormDisplayed := True;
-    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, AJson, FTaskEditConfig);
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, AJson, FTaskEditConfig, FHiASIniConfig);
 //    end
 //    else
 //      LResult := FrmHiconisASTaskEdit.ShowEditFormFromClaimReportVar(LTask, AJson);
@@ -2391,7 +2400,7 @@ var
   LpjhBit32: TpjhBit32;
   i: integer;
   LIsCSKind: Boolean;
-//  Lary: IntegerArray;
+  Lary: TpjhArray<TID>;
 
   procedure _DisplayTask2Grid;
   begin
@@ -2648,6 +2657,30 @@ begin
       if LWhere <> '' then
         LWhere := LWhere + ' and ';
       LWhere := LWhere + ' (ClaimCauseSW & ?) <> 0 ';
+    end;
+
+    if ASearchCondRec.FShippingNo <> '' then
+    begin
+      Lary := GetTaskIDAryFromMaterial4ProjByShippingNo(ASearchCondRec.FShippingNo);
+      LWhere2 := '';
+
+      for i := 0 to LAry.Count - 1 do
+      begin
+        AddConstArray(ConstArray, [LAry.ArrayData[i]]);
+
+        if LWhere2 <> '' then
+          LWhere2 := LWhere2 + ' or ';
+        LWhere2 := LWhere2 + ' ID = ?';
+      end;//for
+
+      if LWhere2 <> '' then
+      begin
+        LWhere2 := '(' + LWhere2 + ')';
+
+        if LWhere <> '' then
+          LWhere := LWhere + ' and ';
+        LWhere := LWhere + LWhere2;
+      end;
     end;
 
     LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
@@ -2917,7 +2950,7 @@ begin
   LTask.TaskID := LTask.ID;
   try
     FOLMailListFormDisplayed := True;
-    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,'', FTaskEditConfig);
+    LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,'', FTaskEditConfig, FHiASIniConfig);
     //Task Edit Form에서 "저장" 버튼을 누른 경우
     if LResult = mrOK then
     begin

@@ -134,6 +134,8 @@ type
     N8: TMenuItem;
     All1: TMenuItem;
     version3: TMenuItem;
+    AccessDBEngineInstalled1: TMenuItem;
+    MariaDBInbstalled1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -177,6 +179,9 @@ type
     procedure lver1Click(Sender: TObject);
     procedure lres1Click(Sender: TObject);
     procedure version3Click(Sender: TObject);
+    procedure GetModuleNamebyTagName1Click(Sender: TObject);
+    procedure AccessDBEngineInstalled1Click(Sender: TObject);
+    procedure MariaDBInbstalled1Click(Sender: TObject);
   private
     FHiconTCPIniConfig: THiconTCPIniConfig;
     FHiconTCPIniFileName: string;
@@ -366,9 +371,9 @@ uses System.TimeSpan, System.Diagnostics, PJEnvVars,
   UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
-  UnitJsonUtil, sevenzip,
+  UnitJsonUtil, sevenzip, UnitHiconOWSUtil,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
-  FrmResPortInfo4INFTag, FrmNextGrid
+  FrmResPortInfo4INFTag, FrmNextGrid, FrmSearchModuleByTagName
   ;
 
 {$R *.dfm}
@@ -382,6 +387,19 @@ begin
   else
 //      ChangeRowColorByIndex(IPAddrGrid, AIdx, clGreen)
     ChangeRowFontColorByIndex(IPAddrGrid, AIdx, clBlack);
+end;
+
+procedure THiconisTCPF.AccessDBEngineInstalled1Click(Sender: TObject);
+var
+  LResult: string;
+begin
+//  if THiConSystemDB.CheckAccessDBEngineInstalledFromADODB() then
+  if THiConOWS.CheckAccessDBEngineInstalledFromRegistry() then
+    LResult := 'AccessDB Engine Installed!'
+  else
+    LResult := 'AccessDB Engine Not Installed!';
+
+  ShowMessage(LResult);
 end;
 
 procedure THiconisTCPF.AdvancedConfiguration1Click(Sender: TObject);
@@ -477,7 +495,7 @@ end;
 
 procedure THiconisTCPF.AutoLogonEnabled1Click(Sender: TObject);
 begin
-  if not IsWindowsAutoLoginEnabled() then
+  if not THiConOWS.CheckAdminAutoLogin() then
     ShowMessage('AutoLogon not enabled');
 end;
 
@@ -540,7 +558,7 @@ procedure THiconisTCPF.Button1Click(Sender: TObject);
 //  LStrList: TStringList;
 begin
 //  LStrList := GetCOMCardNameListFromDirByMPMName('MPM21', 'E:\temp\HiCONIS\DB\DOWNLOAD');
-//  ShowMessage(LStrList.Text);
+  ShowMessage(THiConSystemDB.GetCOMCardNameListFromIOCTableByMPMName('MPM31', ''));
 //  LStrList.Free;
 end;
 
@@ -1481,6 +1499,11 @@ begin
   Result := 'http://' + AIpAddr + '/lver';
 end;
 
+procedure THiconisTCPF.GetModuleNamebyTagName1Click(Sender: TObject);
+begin
+  CreateSrchModuleByTagForm();
+end;
+
 function THiconisTCPF.GetModuleTypeFromDBByTagName(ATagName: string): string;
 var
   LChannelInfoJson: string;
@@ -1638,7 +1661,7 @@ end;
 
 function THiconisTCPF.GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
 var
-  LStr, LPortName, LResName, LIPAddr: string;
+  LStr, LPortName, LResName, LIPAddr, LDBName: string;
   LDict: IDocDict;
 begin
 //  LBaseDir := DOWNLOAD_FULL_PATH;
@@ -1648,7 +1671,20 @@ begin
   if ARec.FTagName = '' then
     exit;
 
-  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName);
+  case ARec.FSrcKind of
+    0,1: begin
+      if ARec.FBaseDir = '' then
+      begin
+        ShowMessage('Base Dir should be "Z:\HiCONIS\HullNo_ICMS"');
+        exit;
+      end
+      else
+        LDBName := ARec.FBaseDir + 'D_Drive\ACONIS-NX\DB\system_bak.accdb';
+    end;
+    2: LDBName := 'D:\ACONIS-NX\DB\system_bak.accdb';
+  end;
+
+  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName, LDBName);
   LPortName := GetResNPortNameByInfTagInfo(LStr, ARec);//GetResNPortName2JsonByInfTagInfo(LStr, ARec);
   LResName := StrToken(LPortName, ';');
   LIPAddr := GetIpAddrByResNameFromBackup(LResName, ARec.FBaseDir);
@@ -1661,6 +1697,9 @@ begin
   LDict.S['IPAddr1'] := StrToken(LIPAddr, ';');
   LDict.S['IPAddr2'] := LIPAddr;
 
+  //{"TAG_NAME":"INF_SCR_ENG10_701","DESCRIPTION":"M/E LOW SULFUR FUEL SUPPLIED",
+  //"RESOURCE":"COM01402","SLOT":83,"DIR":1,"TYPE":1,"ADDR":1003,"SUB_POS":0,
+  //"FTYPE":"1","Port":"Port4","IPAddr1":"10.8.1.213","IPAddr2":"11.8.1.213"}
   Result := LDict.Json;
 
   CreateNShowDateSeletForm(Result);
@@ -2104,6 +2143,18 @@ procedure THiconisTCPF.MariaDBConnect1Click(Sender: TObject);
 begin
   FHiConMariaDB.CreateDB('10.8.2.11', '3306', 'test', 'root', 'aconis');
   FHiConMariaDB.ConnectDB
+end;
+
+procedure THiconisTCPF.MariaDBInbstalled1Click(Sender: TObject);
+var
+  LResult: string;
+begin
+  if THiConOWS.CheckMariaDBInstalledFromService() then
+    LResult := 'MariaDB Installed!'
+  else
+    LResult := 'MariaDB Not Installed!';
+
+  ShowMessage(LResult);
 end;
 
 procedure THiconisTCPF.ModifyLogParam2Click(Sender: TObject);
