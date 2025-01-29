@@ -31,6 +31,8 @@ type
     IsReclaim: TCheckBox;
     BitBtn3: TBitBtn;
     BitBtn1: TBitBtn;
+    JvLabel4: TJvLabel;
+    PlateNo: TEdit;
     procedure MaterialCodeClickBtn(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);

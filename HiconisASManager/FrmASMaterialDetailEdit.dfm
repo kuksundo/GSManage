@@ -3,7 +3,7 @@ object MaterialDetailF: TMaterialDetailF
   Top = 0
   Hint = 'Text'
   Caption = 'MaterialDetailF'
-  ClientHeight = 271
+  ClientHeight = 305
   ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -72,7 +72,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel18: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 140
+    Top = 171
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -99,7 +99,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel1: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 109
+    Top = 140
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -126,7 +126,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel29: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 171
+    Top = 202
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -181,12 +181,39 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel3: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 201
+    Top = 232
     Width = 100
     Height = 25
     Alignment = taCenter
     AutoSize = False
     Caption = #51088#51116#49373#49457#51068#51088
+    Color = 14671839
+    FrameColor = clGrayText
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = #47569#51008' '#44256#46357
+    Font.Style = [fsBold]
+    Layout = tlCenter
+    ParentColor = False
+    ParentFont = False
+    RoundedFrame = 3
+    Transparent = True
+    HotTrackFont.Charset = ANSI_CHARSET
+    HotTrackFont.Color = clWindowText
+    HotTrackFont.Height = -13
+    HotTrackFont.Name = #47569#51008' '#44256#46357
+    HotTrackFont.Style = []
+  end
+  object JvLabel4: TJvLabel
+    AlignWithMargins = True
+    Left = 7
+    Top = 109
+    Width = 100
+    Height = 25
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Plate No'
     Color = 14671839
     FrameColor = clGrayText
     Font.Charset = ANSI_CHARSET
@@ -217,7 +244,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object NeedCount: TEdit
     Left = 114
-    Top = 142
+    Top = 173
     Width = 92
     Height = 21
     Hint = 'Text'
@@ -227,7 +254,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object UnitPrice: TEdit
     Left = 114
-    Top = 111
+    Top = 142
     Width = 92
     Height = 21
     Hint = 'Text'
@@ -237,7 +264,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object NeedDate: TDateTimePicker
     Left = 114
-    Top = 172
+    Top = 203
     Width = 89
     Height = 24
     Hint = 'Date'
@@ -249,7 +276,7 @@ object MaterialDetailF: TMaterialDetailF
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 232
+    Top = 266
     Width = 335
     Height = 36
     Margins.Left = 0
@@ -257,6 +284,7 @@ object MaterialDetailF: TMaterialDetailF
     Align = alBottom
     Rounding = 4
     TabOrder = 4
+    ExplicitTop = 232
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 268
@@ -298,7 +326,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object CreateDate: TDateTimePicker
     Left = 114
-    Top = 202
+    Top = 233
     Width = 89
     Height = 24
     Hint = 'Date'
@@ -368,7 +396,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object IsReclaim: TCheckBox
     Left = 224
-    Top = 144
+    Top = 175
     Width = 97
     Height = 17
     Caption = 'Is Reclaim'
@@ -443,5 +471,15 @@ object MaterialDetailF: TMaterialDetailF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     TabOrder = 10
     OnClick = BitBtn1Click
+  end
+  object PlateNo: TEdit
+    Left = 111
+    Top = 110
+    Width = 198
+    Height = 21
+    Hint = 'Text'
+    Alignment = taCenter
+    ImeName = 'Microsoft IME 2010'
+    TabOrder = 11
   end
 end

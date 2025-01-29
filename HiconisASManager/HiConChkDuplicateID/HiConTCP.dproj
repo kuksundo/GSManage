@@ -88,6 +88,7 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=g3hwVr4cMXsdkmV/GWcDabv273kmtoJPJvN+tvPQl1EgBb1Ki0GH4nM/lNWxHe1N;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <DCC_Define>DEF_CRYPT_ALL;$(DCC_Define)</DCC_Define>
@@ -95,7 +96,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>E:\pjh\Dev\Lang\Delphi\Project\GSManage\Bin\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;E:\pjh\vcl\OnGuard\source;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\TSmBios\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;F:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-versioninfo;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -159,6 +160,21 @@
         </DCCReference>
         <DCCReference Include="..\UnitHiconDBData.pas"/>
         <DCCReference Include="..\UnitHiconOWSUtil.pas"/>
+        <DCCReference Include="..\..\..\..\Common\Form\FrmLogInWithIPAddr.pas">
+            <Form>LogInWithIPAddrF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnitHiConFuncCodeOrm.pas"/>
+        <DCCReference Include="..\UnitMakeHiconDBUtil.pas"/>
+        <DCCReference Include="..\..\..\..\Common\Form\FrmJHPWaitForm.pas">
+            <Form>WaitForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas"/>
+        <DCCReference Include="UnitHiConMPMWebUtil.pas"/>
+        <DCCReference Include="UnitHiConMPMFileUtil.pas"/>
+        <DCCReference Include="..\..\..\..\Common\UnitElfReader.pas"/>
+        <DCCReference Include="..\..\..\..\OpenSrc\lib\DelphiDabbler\dd-versioninfo\PJVersionInfo.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -1375,6 +1375,24 @@ object TaskEditF: TTaskEditF
           Visible = False
           Width = 120
         end
+        object ID: TNxTextColumn
+          Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = 'ID'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 1
+          SortType = stAlphabetic
+        end
         object MaterialCode: TNxTextColumn
           Alignment = taCenter
           DefaultValue = '2024-06-21'
@@ -1391,7 +1409,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 1
+          Position = 2
           SortType = stAlphabetic
         end
         object MaterialName: TNxTextColumn
@@ -1410,7 +1428,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 2
+          Position = 3
           SortType = stAlphabetic
           Width = 150
         end
@@ -1429,7 +1447,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 3
+          Position = 4
           SortType = stAlphabetic
           Visible = False
         end
@@ -1448,7 +1466,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 4
+          Position = 5
           SortType = stAlphabetic
         end
         object UnitPrice: TNxTextColumn
@@ -1466,7 +1484,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 5
+          Position = 6
           SortType = stAlphabetic
         end
         object NeedDate: TNxDateColumn
@@ -1485,7 +1503,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 6
+          Position = 7
           SortType = stDate
           FormatMask = 'yyyy-mm-dd'
           NoneCaption = 'None'
@@ -1507,7 +1525,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 7
+          Position = 8
           SortType = stDate
           NoneCaption = 'None'
           TodayCaption = 'Today'
@@ -1527,7 +1545,7 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 8
+          Position = 9
           SortType = stAlphabetic
           Visible = False
         end
@@ -1546,8 +1564,27 @@ object TaskEditF: TTaskEditF
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           ParentFont = False
-          Position = 9
+          Position = 10
           SortType = stBoolean
+        end
+        object PlateNo: TNxTextColumn
+          Alignment = taCenter
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = 'PlateNo'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 11
+          SortType = stAlphabetic
+          Visible = False
         end
       end
     end
@@ -3401,7 +3438,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800000610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800100610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5308,7 +5345,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400D40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400E40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

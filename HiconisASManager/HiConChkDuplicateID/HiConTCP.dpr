@@ -2,6 +2,7 @@ program HiConTCP;
 
 uses
   Vcl.Forms,
+  mormot.db.raw.sqlite3.static,
   FrmHiConTCP in 'FrmHiConTCP.pas' {HiconisTCPF},
   FrmIpList in 'FrmIpList.pas' {IPListF},
   FrmInputIpAddress in '..\..\..\..\Common\Form\FrmInputIpAddress.pas',
@@ -25,11 +26,30 @@ uses
   FrmNextGrid in '..\..\..\..\Common\Form\FrmNextGrid.pas',
   FrmSearchModuleByTagName in 'FrmSearchModuleByTagName.pas' {SrchModuleByTagF},
   UnitHiconDBData in '..\UnitHiconDBData.pas',
-  UnitHiconOWSUtil in '..\UnitHiconOWSUtil.pas';
+  UnitHiconOWSUtil in '..\UnitHiconOWSUtil.pas',
+  FrmLogInWithIPAddr in '..\..\..\..\Common\Form\FrmLogInWithIPAddr.pas' {LogInWithIPAddrF},
+  UnitHiConFuncCodeOrm in 'UnitHiConFuncCodeOrm.pas',
+  UnitMakeHiconDBUtil in '..\UnitMakeHiconDBUtil.pas',
+  FrmJHPWaitForm in '..\..\..\..\Common\Form\FrmJHPWaitForm.pas' {WaitForm},
+  UnitRegAppUtil in '..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
+  UnitHiConMPMWebUtil in 'UnitHiConMPMWebUtil.pas',
+  UnitHiConMPMFileUtil in 'UnitHiConMPMFileUtil.pas',
+  UnitElfReader in '..\..\..\..\Common\UnitElfReader.pas',
+  PJVersionInfo in '..\..\..\..\OpenSrc\lib\DelphiDabbler\dd-versioninfo\PJVersionInfo.pas';
 
 {$R *.res}
 
+//{51C38D1E-7304-4CDB-82FE-365B23A49649}=Prod Code -> Version Info -> InternalName에 Encrypted로 저장됨
+//UnitCryptUtil2.EncryptString_Syn3()를 이용하여 암호화 함
+//Encrypted: g3hwVr4cMXsdkmV/GWcDabv273kmtoJPJvN+tvPQl1EgBb1Ki0GH4nM/lNWxHe1N
+
 begin
+//  if not UnitRegAppUtil.CheckRegByAppSigUsingRegistry('') then
+//    exit;
+
+//  if not TLogin4OTP.ShowLogin then
+//    exit;
+
   ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;

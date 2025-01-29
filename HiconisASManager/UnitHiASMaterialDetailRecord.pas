@@ -18,6 +18,7 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     fPORNo: RawUTF8;
     fMaterialCode, //자재코드
     fMaterialName, //자재명
+    fPlateNo, //자재명
     fUnitPrice//자재 단가
     : RawUTF8;
     fNeedDate, //소요일자
@@ -36,6 +37,7 @@ uses SysUtils, Classes, Generics.Collections, Forms,
     property PORNo: RawUTF8 read fPORNo write fPORNo;
     property MaterialCode: RawUTF8 read fMaterialCode write fMaterialCode;
     property MaterialName: RawUTF8 read fMaterialName write fMaterialName;
+    property PlateNo: RawUTF8 read fPlateNo write fPlateNo;
     property UnitPrice: RawUTF8 read fUnitPrice write fUnitPrice;
 
     property CreateDate: TTimeLog read FCreateDate write FCreateDate;
@@ -51,8 +53,11 @@ uses SysUtils, Classes, Generics.Collections, Forms,
   procedure DestroyHiASMaterialDetailClient();
 
   function GetMaterialDetailFromTask(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
-  function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
+  function GetMaterialDetailFromTaskID(ATaskID: TID): TSQLMaterialDetail;
+  function GetMaterialDetailFromID(AID: TID): TSQLMaterialDetail;
+  function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
   function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
+  function GetMaterialDetailByPlateNo(const APlateNo: string): TSQLMaterialDetail;
 
   procedure AddOrUpdateMaterialDetail(AOrm: TSQLMaterialDetail);
 
@@ -138,6 +143,26 @@ begin
   end;
 end;
 
+function GetMaterialDetailFromTaskID(ATaskID: TID): TSQLMaterialDetail;
+begin
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'TaskID = ?', [ATaskID]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetMaterialDetailFromID(AID: TID): TSQLMaterialDetail;
+begin
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'ID = ?', [AID]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
 function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
 var
   LMaterial4Project: TSQLMaterial4Project;
@@ -168,6 +193,16 @@ begin
     Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'MaterialCode = ?', [AMatCode])
   else
     Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PORNo = ? and MaterialCode = ?', [APorNo, AMatCode]);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
+function GetMaterialDetailByPlateNo(const APlateNo: string): TSQLMaterialDetail;
+begin
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PlateNo like ?', [APlateNo]);
 
   if Result.FillOne then
     Result.IsUpdate := True

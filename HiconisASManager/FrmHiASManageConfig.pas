@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
   AdvOfficeButtons, AdvGlowButton, AdvOfficeSelectors, AdvGroupBox, Vcl.Mask,
   JvExMask, JvToolEdit, JvExControls, JvComCtrls, Vcl.ComCtrls, BaseGrid,
-  UnitMQData;
+  UnitMQData, AdvEdit, AdvEdBtn, AdvDirectoryEdit;
 
 type
   THiASConfigF = class(TForm)
@@ -103,6 +103,8 @@ type
     Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
+    AdvDirectoryEdit1: TAdvDirectoryEdit;
+    Label35: TLabel;
     procedure MQProtocolComboDropDown(Sender: TObject);
     procedure MQProtocolComboChange(Sender: TObject);
   private

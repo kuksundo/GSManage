@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RegularExpressions, Vcl.Menus,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RegularExpressions, Vcl.Menus, StrUtils,
   Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, NxScrollControl,
   NxCustomGridControl, NxCustomGrid, NxGrid, NxColumnClasses, NxColumns,
   AdvOfficeTabSet,
@@ -136,6 +136,38 @@ type
     version3: TMenuItem;
     AccessDBEngineInstalled1: TMenuItem;
     MariaDBInbstalled1: TMenuItem;
+    CheckDBExistByName1: TMenuItem;
+    OWS1: TMenuItem;
+    MariaDB2: TMenuItem;
+    AccDB1: TMenuItem;
+    CheckIfExistloggingDB1: TMenuItem;
+    CheckIfExistalarmdbDB1: TMenuItem;
+    CheckIfExistreportdbDB1: TMenuItem;
+    ODBCDSNList1: TMenuItem;
+    N32Bit1: TMenuItem;
+    N64Bit1: TMenuItem;
+    CheckAconisSystemExist1: TMenuItem;
+    N32Bit2: TMenuItem;
+    N64Bit2: TMenuItem;
+    CheckAconisuserExist1: TMenuItem;
+    CheckAconisAlarmExist1: TMenuItem;
+    CheckAconisAlarmExist2: TMenuItem;
+    CheckAconisnxLoggingExist1: TMenuItem;
+    CheckAlmPlaybackExist1: TMenuItem;
+    N32Bit3: TMenuItem;
+    N64Bit3: TMenuItem;
+    N32Bit4: TMenuItem;
+    N64Bit4: TMenuItem;
+    N32Bit5: TMenuItem;
+    N64Bit5: TMenuItem;
+    N32Bit6: TMenuItem;
+    N64Bit6: TMenuItem;
+    N32Bit7: TMenuItem;
+    N64Bit7: TMenuItem;
+    ImportFuncCodeFromxls1: TMenuItem;
+    N9: TMenuItem;
+    MPM2: TMenuItem;
+    GetFileVersion1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -182,6 +214,26 @@ type
     procedure GetModuleNamebyTagName1Click(Sender: TObject);
     procedure AccessDBEngineInstalled1Click(Sender: TObject);
     procedure MariaDBInbstalled1Click(Sender: TObject);
+    procedure CheckDBExistByName1Click(Sender: TObject);
+    procedure CheckIfExistloggingDB1Click(Sender: TObject);
+    procedure CheckIfExistalarmdbDB1Click(Sender: TObject);
+    procedure CheckIfExistreportdbDB1Click(Sender: TObject);
+    procedure N32Bit1Click(Sender: TObject);
+    procedure N64Bit1Click(Sender: TObject);
+    procedure N32Bit2Click(Sender: TObject);
+    procedure N32Bit3Click(Sender: TObject);
+    procedure N32Bit4Click(Sender: TObject);
+    procedure N32Bit5Click(Sender: TObject);
+    procedure N32Bit6Click(Sender: TObject);
+    procedure N32Bit7Click(Sender: TObject);
+    procedure N64Bit2Click(Sender: TObject);
+    procedure N64Bit3Click(Sender: TObject);
+    procedure N64Bit4Click(Sender: TObject);
+    procedure N64Bit5Click(Sender: TObject);
+    procedure N64Bit6Click(Sender: TObject);
+    procedure N64Bit7Click(Sender: TObject);
+    procedure ImportFuncCodeFromxls1Click(Sender: TObject);
+    procedure GetFileVersion1Click(Sender: TObject);
   private
     FHiconTCPIniConfig: THiconTCPIniConfig;
     FHiconTCPIniFileName: string;
@@ -207,9 +259,13 @@ type
     FIpList,
     FMPMBackupResultList: TStringList;
     FHiConMariaDB: THiConMariaDB;
-    FMyIpAddr: string; //This Computer Ip Address
+    FMyIpAddr,     //This Computer Ip Address
+    FCurrentIpAddr //현재 처리 중인 Ip Address
+    : string;
     FIpAddrList4ThisComputer: TStringList;
     FHiConSWVersionRec: THiConSWVersionRec;
+
+    procedure WMCopyData(var Msg: TMessage); message WM_COPYDATA;
 
     procedure SetNextGridColumn4DupTagId();
     procedure SetIdList2GridByTagText(AIpAddr: string; ATagText: string);
@@ -238,8 +294,16 @@ type
     function CheckIfExistAcoAutoRun: Boolean;
     function CompareAcoAutoRunInStartupNBIN: string;
     function CheckAcoAutoRunIsCorrect: string;
+
     function CheckIfExistInfluxdbConf: Boolean;
     function CheckInfluxdbConfIsCorrect: string;
+
+    function CheckIfDBExistOnMariaDBFromLogInWithIPAddrForm(var ADBName: string): Boolean;
+
+    function CheckIfDBExistOnMariaDBFromIpSelected(const ADBName: string): Boolean;
+    function CheckIfDBExistOnMariaDBByIpList(const ADBName: string; AIpAddrList: string): Boolean;
+    function CheckIfDBExistOnMariaDBByIpAddr(const ADBName, AIpAddr: string): Boolean;
+
     //현재 컴퓨터가 History Station = "E:\" OWS = "D:\" 반환
     function GetLogDrive(var AIsHistoryStation: Boolean): string;
 
@@ -295,8 +359,8 @@ type
     function GetChannelStrUrlFromIpRec(AIpAddr: string): string;
 
     procedure GetLResFromIpSelected;
-    function GetLResFromMPM(ARec: TIpListRec): integer;
-    function GetLResUrlFromIpRec(AIpAddr: string): string;
+//    function GetLResFromMPM(ARec: TIpListRec): integer;
+//    function GetLResUrlFromIpRec(AIpAddr: string): string;
     procedure SetLResList2GridByTagText(AIpAddr: string; ATagText: string);
     procedure SetNextGridColumn4LRes();
     procedure SetLResList2Grid(const AIpAddr: string);
@@ -358,7 +422,7 @@ type
 
     function GetPortPrintDebug(AIpAddr, APortName: string): string;
     function GetJsonFromMPMByFileName(AIpAddrList, AJsonFileName: string): string;
-    procedure Log(const AMsg: string);
+    procedure Log(const AMsg: string; const AMsgKind: integer=1);
     procedure ShowTD(const ATDRec: TMsgBox);
   end;
 
@@ -367,13 +431,14 @@ var
 
 implementation
 
-uses System.TimeSpan, System.Diagnostics, PJEnvVars,
+uses System.TimeSpan, System.Diagnostics, PJEnvVars, UnitMakeHiconDBUtil,
   UnitStringUtil, UnitExcelUtil, UnitNextGridUtil2, UnitAnimationThread,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
-  UnitJsonUtil, sevenzip, UnitHiconOWSUtil,
+  UnitJsonUtil, sevenzip, UnitHiconOWSUtil, UnitCopyData, UnitHiConMPMWebUtil,
+  UnitHiConMPMFileUtil, UnitElfReader,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
-  FrmResPortInfo4INFTag, FrmNextGrid, FrmSearchModuleByTagName
+  FrmResPortInfo4INFTag, FrmNextGrid, FrmSearchModuleByTagName, FrmLogInWithIPAddr
   ;
 
 {$R *.dfm}
@@ -578,10 +643,48 @@ begin
   SetConnectStatus2IpAddrGridBySelected(IpAddrGrid.SelectedRow);
 end;
 
+procedure THiconisTCPF.CheckDBExistByName1Click(Sender: TObject);
+var
+  LMsg, LDBName: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := CheckIfDBExistOnMariaDBFromLogInWithIPAddrForm(LDBName);
+
+  if LIsExist then
+    LMsg := 'DataBase Name : "' + LDBName + '" is exist!'
+  else
+    LMsg := 'DataBase Name : "' + LDBName + '" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
 procedure THiconisTCPF.CheckDuplicatedID1Click(Sender: TObject);
 begin
 //  GetIdsFromIpListDic();
   GetIdsFromIpSelected();
+end;
+
+function THiconisTCPF.CheckIfDBExistOnMariaDBFromLogInWithIPAddrForm(
+  var ADBName: string): Boolean;
+var
+  LUserID, LPasswd, LIPAddr, LPortNo, LDBName: string;
+  LUseDBName, LIsExist: Boolean;
+  LModalResult: TModalResult;
+begin
+  Result := False;
+  LUseDBName := True;
+  LUserID := 'root';
+  LIPAddr := '127.0.0.1';
+  LPortNo := '3306';
+  LDBName := ADBName;
+
+  LModalResult := TLogInWithIPAddrF.Execute(LUserID, LPasswd, LIPAddr, LPortNo, LDBName, LUseDBName);
+
+  if LModalResult = mrOK then
+  begin
+    Result := THiConOWS.CheckDataBaseExistOnMariaDByName(LIPAddr, LPortNo, LDBName, LUserID, LPasswd);
+    ADBName := LDBName;
+  end;
 end;
 
 function THiconisTCPF.CheckIfExistAcoAutoRun: Boolean;
@@ -617,6 +720,21 @@ begin
   Result := FileExists(APath);
 end;
 
+procedure THiconisTCPF.CheckIfExistalarmdbDB1Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := CheckIfDBExistOnMariaDBFromIpSelected('alarmdb');
+
+  if LIsExist then
+    LMsg := 'DataBase Name : "alarmdb" is exist!'
+  else
+    LMsg := 'DataBase Name : "alarmdb" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
 function THiconisTCPF.CheckIfExistInfluxdbConf: Boolean;
 var
   LPath, LStr, LMsg: string;
@@ -636,6 +754,63 @@ begin
   LMsg := LMsg + LStr + #13#10 + LPath;
 
   ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.CheckIfExistloggingDB1Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := CheckIfDBExistOnMariaDBFromIpSelected('logging');
+
+  if LIsExist then
+    LMsg := 'DataBase Name : "logging" is exist!'
+  else
+    LMsg := 'DataBase Name : "logging" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.CheckIfExistreportdbDB1Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := CheckIfDBExistOnMariaDBFromIpSelected('reportdb');
+
+  if LIsExist then
+    LMsg := 'DataBase Name : "reportdb" is exist!'
+  else
+    LMsg := 'DataBase Name : "reportdb" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+function THiconisTCPF.CheckIfDBExistOnMariaDBByIpAddr(
+  const ADBName, AIpAddr: string): Boolean;
+begin
+  Result := THiConOWS.CheckDataBaseExistOnMariaDByName(AIpAddr, '3306', ADBName, '', '');
+end;
+
+function THiconisTCPF.CheckIfDBExistOnMariaDBByIpList(
+  const ADBName: string; AIpAddrList: string): Boolean;
+var
+  LIpAddr: string;
+begin
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
+    Result := CheckIfDBExistOnMariaDBByIpAddr(ADBName, LIpAddr);
+  end;
+end;
+
+function THiconisTCPF.CheckIfDBExistOnMariaDBFromIpSelected(const ADBName: string): Boolean;
+var
+  LIpAddrList: string;
+begin
+  //';'로 구분됨
+  LIpAddrList := GetSelectedIpAddrList();
+  Result := CheckIfDBExistOnMariaDBByIpList(ADBName, LIpAddrList);
 end;
 
 function THiconisTCPF.CheckInfluxdbConfIsCorrect: string;
@@ -736,7 +911,7 @@ begin
     Parallel.TaskConfig.OnMessage(Self).OnTerminated(
       procedure (const ATask: IOmniTaskControl)
       begin
-        Log('Backup file is downloaded to ' + LResult);
+        Log('Backup file is downloaded to ' + LResult, 1);
       end
     )
   );
@@ -918,7 +1093,7 @@ end;
 procedure THiconisTCPF.GetFBVerFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LResName: string;//LIp,
   LIpListRec: TIpListRec;
 begin
   for i := 0 to IPAddrGrid.RowCount - 1 do
@@ -926,7 +1101,7 @@ begin
     if IPAddrGrid.Row[i].Selected then
     begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
-      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+//      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
 
       if GetFBVerFromMPM(LIpListRec) = -1 then
@@ -949,7 +1124,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -987,6 +1162,45 @@ function THiconisTCPF.GetFileNameFromIpAddr(AIpAddr: string): string;
 begin
   EnsureDirectoryExists('c:\temp\');
   Result := 'c:\temp\' + replaceString(AIpAddr, '.', '_') + '.pjh';
+end;
+
+procedure THiconisTCPF.GetFileVersion1Click(Sender: TObject);
+var
+  LStr: string;
+//  ElfHeader: TElfHeader;
+  ElfHeader: TElf32Header;
+  i: integer;
+begin
+  if OpenDialog1.Execute then
+  begin
+//    LStr := THiConMPMFile.GetVersionFromBackup(OpenDialog1.FileName);
+//    ElfHeader := THiConMPMFile.GetElfHeaderFromBackup(OpenDialog1.FileName);
+//      Log('Valid ELF file detected.');
+//      Log('Class: ' + IfThen(ElfHeader.ClassType = 1, '32-bit', '64-bit'));
+//      Log('Data Encoding: ' + IfThen(ElfHeader.DataEncoding = 1, 'Little-endian', 'Big-endian'));
+//      Log('Version: ' + IntToStr(ElfHeader.Version));
+//      Log('OS ABI: ' + IntToStr(ElfHeader.OSABI));
+//      Log('ABI Version: ' + IntToStr(ElfHeader.ABIVersion));
+    ElfHeader := THiConMPMFile.GetElf32HeaderFromBackup(OpenDialog1.FileName);
+    // Print ELF Identification (magic number)
+    Log('ELF Identification: ');
+    for I := 0 to 3 do
+      Log(Chr(ElfHeader.Ident[I]));
+
+    // Print ELF file type
+    Log('File Type: ' + IntToStr(ElfHeader.Type_));
+    // Print Machine type
+    Log('Machine: ' + IntToStr(ElfHeader.Machine));
+    // Print Entry point address
+    Log('Entry Point Address: $' + IntToHex(ElfHeader.Entry, 8));
+    // Print Program Header Offset
+    Log('Program Header Offset: ' + IntToStr(ElfHeader.Phoff));
+    // Print Section Header Offset
+    Log('Section Header Offset: ' + IntToStr(ElfHeader.Shoff));
+    // Print Number of Section Headers
+    Log('Number of Section Headers: ' + IntToStr(ElfHeader.Shnum));
+//    Log(LStr);
+  end;
 end;
 
 function THiconisTCPF.GetHiconisIp4ThisComputer: string;
@@ -1043,7 +1257,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -1106,7 +1320,7 @@ begin
         begin
           ConsoleMemo.Lines.Clear;
           ConsoleMemo.Lines.Text := LCon;
-          SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+          SetIdList2GridByTagText(LIpAddr, LCon);
         end;
       end
     )
@@ -1134,7 +1348,7 @@ end;
 procedure THiconisTCPF.GetIdsFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LIp,LResName: string;
   LIpListRec: TIpListRec;
 begin
 //  NextGrid1.ClearRows;
@@ -1246,7 +1460,7 @@ end;
 procedure THiconisTCPF.GetLMPMFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LResName: string;//LIp,
   LIpListRec: TIpListRec;
 begin
   for i := 0 to IPAddrGrid.RowCount - 1 do
@@ -1254,7 +1468,7 @@ begin
     if IPAddrGrid.Row[i].Selected then
     begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
-      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+//      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
 
       if GetLMPMFromMPM(LIpListRec) = -1 then
@@ -1277,7 +1491,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -1353,65 +1567,66 @@ begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
       LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
+      THiConMPMWeb.GetLResFromMPM_Async(LIpListRec);
 
-      if GetLResFromMPM(LIpListRec) = -1 then
-        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
+//      if THiConMPMWeb.GetLResFromMPM_Async(LIpListRec) = -1 then
+//        ShowMessage('Host not connected : <' + LIpListRec.PMPM_PIP + '>');
     end;
   end;
 end;
 
-function THiconisTCPF.GetLResFromMPM(ARec: TIpListRec): integer;
-var
-  LCon: RawByteString;
-  LUrl, LIpAddr: string;
-begin
-  if ARec.PMPM_PIP = '127.0.0.1' then
-    exit;
+//function THiconisTCPF.GetLResFromMPM(ARec: TIpListRec): integer;
+//var
+//  LCon: RawByteString;
+//  LUrl, LIpAddr: string;
+//begin
+//  if ARec.PMPM_PIP = '127.0.0.1' then
+//    exit;
+//
+//  LIpAddr := ARec.PMPM_PIP;
+//
+//  Result := PingHost(LIpAddr);
+//
+//  if Result = -1 then
+//  begin
+//    Log('Host not connected : <' + LIpAddr + '>');
+//    exit;
+//  end;
+//
+//  LUrl := THiConMPMWeb.GetLResUrlFromIpRec(LIpAddr);
+//
+//  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+//
+//  if LCon = '' then
+//  begin
+//    LIpAddr := ARec.PMPM_SIP;
+//    LUrl := THiConMPMWeb.GetLResUrlFromIpRec(LIpAddr);
+//    LCon := HttpGet(LUrl);
+//
+//    if LCon <> '' then
+//    begin
+//      ConsoleMemo.Lines.Clear;
+//      ConsoleMemo.Lines.Text := LCon;
+//      SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+//    end;
+//  end
+//  else
+//  begin
+//    ConsoleMemo.Lines.Clear;
+//    ConsoleMemo.Lines.Text := LCon;
+//    SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+//  end;
+//end;
 
-  LIpAddr := ARec.PMPM_PIP;
-
-  Result := PingHost(LIpAddr);
-
-  if Result = -1 then
-  begin
-    Log('Host not connected : <' + LIpAddr + '>');
-    exit;
-  end;
-
-  LUrl := GetLResUrlFromIpRec(LIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-
-  if LCon = '' then
-  begin
-    LIpAddr := ARec.PMPM_SIP;
-    LUrl := GetLResUrlFromIpRec(LIpAddr);
-    LCon := HttpGet(LUrl);
-
-    if LCon <> '' then
-    begin
-      ConsoleMemo.Lines.Clear;
-      ConsoleMemo.Lines.Text := LCon;
-      SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
-    end;
-  end
-  else
-  begin
-    ConsoleMemo.Lines.Clear;
-    ConsoleMemo.Lines.Text := LCon;
-    SetLResList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
-  end;
-end;
-
-function THiconisTCPF.GetLResUrlFromIpRec(AIpAddr: string): string;
-begin
-  Result := 'http://' + AIpAddr + '/lres';
-end;
+//function THiconisTCPF.GetLResUrlFromIpRec(AIpAddr: string): string;
+//begin
+//  Result := 'http://' + AIpAddr + '/lres';
+//end;
 
 procedure THiconisTCPF.GetLVerFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LResName: string;//LIp,
   LIpListRec: TIpListRec;
 begin
   for i := 0 to IPAddrGrid.RowCount - 1 do
@@ -1419,7 +1634,7 @@ begin
     if IPAddrGrid.Row[i].Selected then
     begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
-      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+//      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
 
       if GetLVerFromMPM(LIpListRec) = -1 then
@@ -1442,7 +1657,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -1501,7 +1716,7 @@ end;
 
 procedure THiconisTCPF.GetModuleNamebyTagName1Click(Sender: TObject);
 begin
-  CreateSrchModuleByTagForm();
+  CreateSrchModuleByTagForm(FHiconTCPIniConfig);
 end;
 
 function THiconisTCPF.GetModuleTypeFromDBByTagName(ATagName: string): string;
@@ -1731,7 +1946,7 @@ begin
       end;
 
       AddNextGridRowFromVariant(NextGrid1, LVar, True);
-      Log(LResult);
+      Log(LResult, 1);
     end;
   end;
 end;
@@ -1822,7 +2037,7 @@ end;
 procedure THiconisTCPF.GetVersionIntfFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LResName: string;//LIp,
   LIpListRec: TIpListRec;
 begin
   for i := 0 to IPAddrGrid.RowCount - 1 do
@@ -1830,7 +2045,7 @@ begin
     if IPAddrGrid.Row[i].Selected then
     begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
-      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+//      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
 
       if GetVersionIntfFromMPM(LIpListRec) = -1 then
@@ -1853,7 +2068,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -1912,7 +2127,7 @@ end;
 procedure THiconisTCPF.GetVersionMPMFromIpSelected;
 var
   i: integer;
-  LIp, LResName: string;
+  LResName: string;//LIp,
   LIpListRec: TIpListRec;
 begin
   for i := 0 to IPAddrGrid.RowCount - 1 do
@@ -1920,7 +2135,7 @@ begin
     if IPAddrGrid.Row[i].Selected then
     begin
       LResName := IPAddrGrid.CellsByName['RES_NAME', i];
-      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+//      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
       LIpListRec := GetIpListRecByResName(LResName);
 
       if GetVersionMPMFromMPM(LIpListRec) = -1 then
@@ -1943,7 +2158,7 @@ begin
 
   if Result = -1 then
   begin
-    Log('Host not connected : <' + LIpAddr + '>');
+    Log('Host not connected : <' + LIpAddr + '>', 1);
     exit;
   end;
 
@@ -2007,6 +2222,14 @@ begin
 
 end;
 
+procedure THiconisTCPF.ImportFuncCodeFromxls1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute() then
+  begin
+    ImportHiconFuncCodeFromXlsFile(OpenDialog1.FileName);
+  end;
+end;
+
 procedure THiconisTCPF.InitEnum;
 begin
   g_ServiceState.InitArrayRecord(R_ServiceState_Eng);
@@ -2030,6 +2253,7 @@ begin
   FHiConMariaDB := THiConMariaDB.Create;
 
   GetIpList4ThisComputer();
+  LoadConfigFromFile();
 
   FMyIpAddr := GetHiconisIp4ThisComputer();
   Caption := Caption + '(' + FMyIpAddr + ')';
@@ -2037,6 +2261,8 @@ begin
   EnsureDirectoryExists('c:\temp');
 
   InitEnum();
+  //SendCopyData4함수를 허용하기 위해 초기화 함
+  UnitCopyData.UnitCopyDataInit(Name, Handle);
 end;
 
 procedure THiconisTCPF.lmpm1Click(Sender: TObject);
@@ -2124,9 +2350,19 @@ begin
   end;
 end;
 
-procedure THiconisTCPF.Log(const AMsg: string);
+procedure THiconisTCPF.Log(const AMsg: string; const AMsgKind: integer);
 begin
-  ConsoleMemo.Lines.Add(AMsg);
+  case AMsgKind of
+    1: ConsoleMemo.Lines.Add(AMsg);
+    //UnitHiConMPMWebUtil.THiConMPMWeb이 보내는 IP Address
+    2: FCurrentIpAddr := AMsg;
+    //UnitHiConMPMWebUtil.THiConMPMWeb.GetLResFromMPM_Async이 보내는 결과 메세지
+    3: begin
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := AMsg;
+      SetLResList2GridByTagText(FCurrentIpAddr, AMsg);
+    end;
+  end;
 end;
 
 procedure THiconisTCPF.lres1Click(Sender: TObject);
@@ -2187,6 +2423,211 @@ begin
   LIpAddr := GetSelectedIpAddrList();
   DownloadBackupMPMForEach(LIpAddr);
 //  BackupMPM(LIpAddr);
+end;
+
+procedure THiconisTCPF.N32Bit1Click(Sender: TObject);
+var
+  LList: TStringList;
+begin
+  LList := THiConOWS.GetODBCDSNListFromRegistry;
+  try
+    ShowMessage(IntToStr(LList.Count));
+  finally
+    LList.Free;
+  end;
+end;
+
+procedure THiconisTCPF.N32Bit2Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+//  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('ODBC Core');
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis_System');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Aconis_System" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Aconis_System" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N32Bit3Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis_user');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Aconis_user" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Aconis_user" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N32Bit4Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis-Alarm');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Aconis-Alarm" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Aconis-Alarm" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N32Bit5Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconisnx-Logging');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Aconisnx-Logging" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Aconisnx-Logging" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N32Bit6Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconisnx-Manual');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Aconisnx-Manual" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Aconisnx-Manual" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N32Bit7Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Alm-Playback');
+
+  if LIsExist then
+    LMsg := 'System DNS(32Bit): "Alm-Playback" is exist!'
+  else
+    LMsg := 'System DNS(32Bit): "Alm-Playback" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit1Click(Sender: TObject);
+var
+  LList: TStringList;
+begin
+  LList := THiConOWS.GetODBCDSNListFromRegistry(False);
+  try
+    ShowMessage(IntToStr(LList.Count));
+  finally
+    LList.Free;
+  end;
+end;
+
+procedure THiconisTCPF.N64Bit2Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis_System', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Aconis_System" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Aconis_System" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit3Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis_user', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Aconis_user" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Aconis_user" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit4Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconis-Alarm', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Aconis-Alarm" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Aconis-Alarm" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit5Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconisnx-Logging', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Aconisnx-Logging" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Aconisnx-Loggingv" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit6Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Aconisnx-Manual', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Aconisnx-Manual" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Aconisnx-Manual" is NOT exist!';
+
+  ShowMessage(LMsg);
+end;
+
+procedure THiconisTCPF.N64Bit7Click(Sender: TObject);
+var
+  LMsg: string;
+  LIsExist: Boolean;
+begin
+  LIsExist := THiConOWS.CheckODBCDSNExistFromRegistryByName('Alm-Playback', False);
+
+  if LIsExist then
+    LMsg := 'System DNS(64Bit): "Alm-Playback" is exist!'
+  else
+    LMsg := 'System DNS(64Bit): "Alm-Playback" is NOT exist!';
+
+  ShowMessage(LMsg);
 end;
 
 procedure THiconisTCPF.NetTimeServiceStatus1Click(Sender: TObject);
@@ -2896,6 +3337,15 @@ end;
 procedure THiconisTCPF.version3Click(Sender: TObject);
 begin
   GetVersionIntfFromIpSelected();
+end;
+
+procedure THiconisTCPF.WMCopyData(var Msg: TMessage);
+var
+  LMsg: string;
+begin
+  LMsg := PChar(PCopyDataStruct(Msg.LParam)^.lpData);
+
+  Log(LMsg, Msg.WParam);
 end;
 
 end.

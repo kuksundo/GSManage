@@ -26,7 +26,8 @@ type
     FBudgetPIC,       //부품예산담당자 이메일 주소
     FServicePIC,      //방선엔지니어담당자 이메일 주소
     FLogisticPIC,     //물류담당자 이메일 주소
-    FTechnicalPIC     //기술담당자 이메일 주소(장주호CI)
+    FTechnicalPIC,    //기술담당자 이메일 주소(장주호CI)
+    FASDocBaseDir     //AS용 문서(CIPL/Shipping Mark/인수증/공사완료확인서) 저장 폴더
     : string;
   public
     FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject, FPrice, FAgentDetail, FComissionCompany, FPlace, FServiceDate: string;
@@ -74,6 +75,8 @@ type
     property DIModuleRecallStatusFN : string read FDIModuleRecallStatusFN write FDIModuleRecallStatusFN;
     [JHPIni('File','ReqAttendReviewFN','ReqAttendReviewFN.txt','30', tkString)]
     property ReqAttendReviewFN : string read FReqAttendReviewFN write FReqAttendReviewFN;
+    [JHPIni('File','ASDocBaseDir','C:\Users\HHI\Documents\HiCONIS\','31', tkString)]
+    property ASDocBaseDir : string read FASDocBaseDir write FASDocBaseDir;
   end;
 
 implementation

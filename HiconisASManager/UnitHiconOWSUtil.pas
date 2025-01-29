@@ -2,24 +2,31 @@ unit UnitHiconOWSUtil;
 
 interface
 
-uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows;
+uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Classes,
+  UnitHiconMariaDBUtil;
 
 type
   THiConOWS = class
   public
     class function CheckAdminAutoLogin(): Boolean;
     class function GetOWSAdminPasswd(): string;
+    class function GetOWSEncryptedAdminPasswd(): string;
     class function CheckDefaultHiconisFolderExist(): Boolean;
     class function CheckAccessDBEngineInstalledFromRegistry(): Boolean;
     //AccessDB Engine용 File
     class function CheckMsoFileNotExistFromRegistry(): Boolean;
     class function CheckMariaDBInstalledFromService(): Boolean;
     class function GetMariaDBRootPasswd(): string;
+    class function GetMariaDBEncryptedRootPasswd(): string;
+    class function CheckDataBaseExistOnMariaDByName(const AHostIp, APort, ADataBaseName: string;
+      AUserId: string=''; AEncryptedPasswd: string=''; AHiconDB: THiConMariaDB=nil): Boolean;
+    class function GetODBCDSNListFromRegistry(const AIsODBC32bit: Boolean=true; const AIsSystemDSN: Boolean=true): TStringList;
+    class function CheckODBCDSNExistFromRegistryByName(const ADSN: string; const AIsODBC32bit: Boolean=true; const AIsSystemDSN: Boolean=true): Boolean;
   end;
 
 implementation
 
-uses UnitSystemUtil, UnitServiceUtil;
+uses UnitSystemUtil, UnitServiceUtil, UnitCryptUtil3;
 
 { THiConOWS }
 
@@ -53,6 +60,39 @@ class function THiConOWS.CheckAdminAutoLogin: Boolean;
 begin
   //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\AutoAdminLogon = '1' 여부 확인
   Result := IsWindowsAdminAutoLoginEnabled();
+end;
+
+class function THiConOWS.CheckDataBaseExistOnMariaDByName(const AHostIp, APort,
+  ADataBaseName: string; AUserId, AEncryptedPasswd: string; AHiconDB: THiConMariaDB): Boolean;
+var
+  LHiConMariaDB: THiConMariaDB;
+  LLocalCreated: Boolean;
+begin
+  LLocalCreated := False;
+  Result := False;
+
+  if AUserId = '' then
+    AUserId := 'root';
+
+  if AEncryptedPasswd = '' then
+    AEncryptedPasswd := GetMariaDBEncryptedRootPasswd();
+
+  if Assigned(AHiconDB) then
+    LHiConMariaDB := AHiconDB
+  else
+  begin
+    LHiConMariaDB := THiConMariaDB.Create;
+    LLocalCreated := True;
+  end;
+
+  LHiConMariaDB.CreateDB(AHostIp, APort, 'mysql', AUserId, AEncryptedPasswd);
+  Result := LHiConMariaDB.CheckDataBaseExistByName(ADataBaseName);
+
+  if LLocalCreated then
+  begin
+    LHiConMariaDB.DestroyDB();
+    FreeAndNil(LHiConMariaDB);
+  end;
 end;
 
 class function THiConOWS.CheckDefaultHiconisFolderExist: Boolean;
@@ -89,14 +129,85 @@ begin
   end;
 end;
 
+class function THiConOWS.CheckODBCDSNExistFromRegistryByName(const ADSN: string;
+  const AIsODBC32bit, AIsSystemDSN: Boolean): Boolean;
+var
+  LList: TStringList;
+  LStr, LStr2: string;
+begin
+  Result := False;
+  LList := GetODBCDSNListFromRegistry(AIsODBC32bit, AIsSystemDSN);
+  try
+    for LStr in LList do
+    begin
+      LStr2 := UpperCase(LStr);
+
+      if LStr2 = UpperCase(ADSN) then
+      begin
+        Result := True;
+        Break;
+      end;
+    end;
+  finally
+    LList.Free;
+  end;
+end;
+
+class function THiConOWS.GetMariaDBEncryptedRootPasswd: string;
+begin
+  //Encrypt : MakeEncrypNBase64String
+  //DeCrypt : MakeUnBase64NDecryptString
+  Result := 'pkZRgQCmRlGBdmViY2Zkc29BWi9KWTJiRjZWZ2FJdz09'; //"aconis"
+end;
+
 class function THiConOWS.GetMariaDBRootPasswd: string;
 begin
-  Result := 'aconis';
+  Result := MakeUnBase64NDecryptString(GetMariaDBEncryptedRootPasswd()); //"aconis"
+end;
+
+class function THiConOWS.GetODBCDSNListFromRegistry(const AIsODBC32bit, AIsSystemDSN: Boolean): TStringList;
+var
+  Reg: TRegistry;
+  LRegPath: string;
+begin
+  Result := TStringList.Create;
+
+  Reg := TRegistry.Create(KEY_READ);
+  try
+    Reg.RootKey := HKEY_LOCAL_MACHINE;
+
+    if AIsSystemDSN then
+      Reg.RootKey := HKEY_LOCAL_MACHINE
+    else
+      Reg.RootKey := HKEY_CURRENT_USER;
+
+    if AIsODBC32bit then
+      LRegPath := 'SOFTWARE\Wow6432Node\ODBC\ODBCINST.INI\'
+    else
+      LRegPath := 'SOFTWARE\ODBC\ODBCINST.INI\';
+
+    if Reg.OpenKeyReadOnly(LRegPath) then
+    begin
+      Reg.GetKeyNames(Result);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+
+
 end;
 
 class function THiConOWS.GetOWSAdminPasswd: string;
 begin
-  Result := 'hhiaconis';
+  Result := MakeUnBase64NDecryptString(GetOWSEncryptedAdminPasswd()); //"aconis"
+end;
+
+class function THiConOWS.GetOWSEncryptedAdminPasswd: string;
+begin
+  //Encrypt : MakeEncrypNBase64String
+  //DeCrypt : MakeUnBase64NDecryptString
+  Result := 'kRA9igCRED2KdE8zYWN0RTBaZnl3Ym12STVGVVhMZz09'; //"hhiaconis"
 end;
 
 end.

@@ -20,7 +20,9 @@ uses
   UnitHiConReportMgR in '..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR.pas',
   UnitRegAppUtil in '..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
   UnitHMSSignatureOrm in '..\Common\UnitHMSSignatureOrm.pas',
-  UnitFileInfoUtil in '..\..\..\Common\UnitFileInfoUtil.pas';
+  UnitFileInfoUtil in '..\..\..\Common\UnitFileInfoUtil.pas',
+  UnitHiConReportMgR2 in '..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR2.pas',
+  UnitLicRegInfoClass in '..\..\..\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas';
 
 {$R *.res}
 

@@ -2,7 +2,7 @@ unit UnitHiconMariaDBUtil;
 
 interface
 
-uses System.SysUtils, Vcl.Forms, Vcl.Dialogs,
+uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, System.Variants,
   mormot.db.sql.oledb, mormot.db.sql, mormot.core.base, mormot.db.sql.zeos,
   mormot.orm.core, mormot.db.core, mormot.orm.sql;
 
@@ -23,17 +23,49 @@ type
     FConnection: TSQLDBConnection;
     FModel: TOrmModel;
   public
-    procedure CreateDB(AHostIp, APort, ADBName, AUserId, APassed: string);
+    FIsConnected: Boolean;
+
+    //AEncryptedPasswd:
+    //Encrypt : MakeEncrypNBase64String
+    //DeCrypt : MakeUnBase64NDecryptString
+    procedure CreateDB(AHostIp, APort, ADBName, AUserId, AEncryptedPasswd: string);
     procedure ConnectDB();
     procedure DestroyDB();
+    procedure CreateModel();
+    procedure DestroyModel();
     function ExecuteQuery(AQuery: string; ANoResult: Boolean=False): ISQLDBRows;
     function GetResultStatFromSQL(AQuery: string): Boolean;
     function GetList2JsonFromDB(AQuery: string; ADBName, ATableName: string): RawUtf8;
+
+    function CheckDataBaseExistByName(const ADBName: string): Boolean;
   end;
 
 implementation
 
+uses UnitCryptUtil3;
+
 { THiConMariaDB }
+
+function THiConMariaDB.CheckDataBaseExistByName(const ADBName: string): Boolean;
+var
+  LQry: string;
+  LSQLDBRows: ISQLDBRows;
+  LRowData: Variant;
+begin
+//  LQry := 'SHOW DATABASES LIKE "' + ADBName + '"';
+  LQry := 'select schema_name from information_schema.schemata where schema_name="' + ADBName + '"';
+  LSQLDBRows := ExecuteQuery(LQry);
+  LRowData := LSQLDBRows.RowData;
+
+  while LSQLDBRows.Step do
+  begin
+    LQry := LRowData.schema_name;
+  end;
+
+  Result := LQry = ADBName;
+//  Result := not VarIsNull(LRowData);
+//  Result := LRowData <> UnAssigned;
+end;
 
 procedure THiConMariaDB.ConnectDB();
 begin
@@ -42,14 +74,27 @@ begin
 
   FConnection := FConnProp.NewConnection;
   FConnection.Connect;
+
+  FIsConnected := True;
 end;
 
 procedure THiConMariaDB.CreateDB(AHostIp, APort, ADBName, AUserId,
-  APassed: string);
+  AEncryptedPasswd: string);
+var
+  LPasswd: string;
 begin
-  FConnProp := TSQLDBZEOSConnectionProperties.Create(
-    TSQLDBZEOSConnectionProperties.URI(dMariaDB, AHostIp + ':' + APort, '.\lib\libmariadb.dll'), ADBName, AUserId, APassed);
+  FIsConnected := False;
 
+  LPasswd := MakeUnBase64NDecryptString(AEncryptedPasswd);
+
+  FConnProp := TSQLDBZEOSConnectionProperties.Create(
+    TSQLDBZEOSConnectionProperties.URI(dMariaDB, AHostIp + ':' + APort, '.\lib\libmariadb.dll'), ADBName, AUserId, LPasswd);
+
+  ConnectDB();
+end;
+
+procedure THiConMariaDB.CreateModel;
+begin
   FModel := TOrmModel.Create([THiconConfigOrm]);
   VirtualTableExternalRegisterAll(FModel, FConnProp);
 end;
@@ -61,10 +106,12 @@ begin
 
   if Assigned(FConnProp) then
     FConnProp.Free;
+end;
 
+procedure THiConMariaDB.DestroyModel;
+begin
   if Assigned(FModel) then
     FModel.Free;
-
 end;
 
 function THiConMariaDB.ExecuteQuery(AQuery: string; ANoResult: Boolean): ISQLDBRows;
@@ -75,7 +122,7 @@ begin
 //  LStatement := FConnection.NewStatement;
 //  LStatement.
   if not FConnection.Connected then
-    exit;
+    ConnectDB();
 
   if ANoResult then
   begin

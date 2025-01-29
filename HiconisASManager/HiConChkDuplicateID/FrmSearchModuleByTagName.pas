@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, Vcl.Menus,
-  mormot.core.base, mormot.core.variants, UnitHiconDBData;
+  mormot.core.base, mormot.core.variants,
+  UnitHiconDBData, UnitHiconTCPIniConfig;
 
 type
   TSrchModuleByTagF = class(TForm)
@@ -24,6 +25,15 @@ type
     BitBtn1: TBitBtn;
     PopupMenu1: TPopupMenu;
     SelectFromTAGNAMEField1: TMenuItem;
+    Label3: TLabel;
+    HullNoEdit: TEdit;
+    BitBtn2: TBitBtn;
+    Label4: TLabel;
+    BaseDirEdit: TEdit;
+    Label5: TLabel;
+    EquipKindCombo: TComboBox;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn3Click(Sender: TObject);
@@ -31,29 +41,32 @@ type
     procedure Button1Click(Sender: TObject);
     procedure TagInfoGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure SelectFromTAGNAMEField1Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
   private
     function CheckRequiredInput4Search(): Boolean;
     function IsTagNameColumnByIndex(const ACol: integer): Boolean;
-    function GetTagInfoFromGrid2JsonAry(const ATagName: string): RawUtf8;
+    function GetTagInfoFromDB2Grid(ATagName: string=''): Boolean;
     procedure LoadTagInfoFromJsonAry2Grid(const ATagInfoJsonAry: RawUtf8);
+    function GetDBNameFromForm(): string;
     //DATA_TYPE,IN_OUT,SYS_TYPE 필드를 Desc로 대체함
     function UpdateDBValue2HumanReadable(const ATagInfoJsonAry: RawUtf8): RawUtf8;
   public
-    { Public declarations }
+    FHiconTCPIniConfig: THiconTCPIniConfig;
   end;
 
-  function CreateSrchModuleByTagForm(const ATagName: string=''): string;
+  function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
 
 var
   SrchModuleByTagF: TSrchModuleByTagF;
 
 implementation
 
-uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells;
+uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells,
+  FrmJHPWaitForm;
 
 {$R *.dfm}
 
-function CreateSrchModuleByTagForm(const ATagName: string): string;
+function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig;const ATagName: string): string;
 begin
   Result := '';
 
@@ -64,10 +77,19 @@ begin
   try
     with SrchModuleByTagF do
     begin
+      FHiconTCPIniConfig := AConfig;
+      HullNoEdit.Text := FHiconTCPIniConfig.HiconHullNo;
+      BaseDirEdit.Text := FHiconTCPIniConfig.HiconBaseDir;
+      EquipKindCombo.Text := FHiconTCPIniConfig.EquipKind;
+
       TagNameEdit.Text := ATagName;
 
+
       if FileExists('D:\ACONIS-NX\DB\system_bak.accdb') then
-        SystemDBEdit.Text := 'D:\ACONIS-NX\DB\system_bak.accdb';
+        SystemDBEdit.Text := 'D:\ACONIS-NX\DB\system_bak.accdb'
+      else
+        SystemDBEdit.Text := GetDBNameFromForm();
+
 
       if ShowModal = mrOK then
       begin
@@ -80,7 +102,9 @@ end;
 
 procedure TSrchModuleByTagF.BitBtn1Click(Sender: TObject);
 begin
-  GetTagInfoFromGrid2JsonAry(TagNameEdit.Text);
+  EventWaitShow('', False);
+  GetTagInfoFromDB2Grid();
+  EventWaitHide();
 
 //  if CheckRequiredInput4Search() then
 //  begin
@@ -99,6 +123,11 @@ begin
   begin
     SystemDBEdit.Text := OpenDialog1.FileName;
   end;
+end;
+
+procedure TSrchModuleByTagF.BitBtn5Click(Sender: TObject);
+begin
+  SystemDBEdit.Text := GetDBNameFromForm();
 end;
 
 procedure TSrchModuleByTagF.Button1Click(Sender: TObject);
@@ -132,18 +161,37 @@ begin
   g_HiSysDB_InOut.InitArrayRecord(R_HiSysDB_InOut);
 end;
 
-function TSrchModuleByTagF.GetTagInfoFromGrid2JsonAry(
-  const ATagName: string): RawUtf8;
+function TSrchModuleByTagF.GetDBNameFromForm: string;
+begin
+  Result := BaseDirEdit.Text + HullNoEdit.Text + '_' + EquipKindCombo.Text + '\D_Drive\ACONIS-NX\DB\system_bak.accdb';
+end;
+
+function TSrchModuleByTagF.GetTagInfoFromDB2Grid(ATagName: string): Boolean;
 var
   LUtf8: RawUtf8;
+  LDBNameFullPath: string;
 begin
   if CheckRequiredInput4Search() then
   begin
-    LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'VAR_NAME', SystemDBEdit.Text);
+    if ATagName = '' then
+      ATagName := TagNameEdit.Text;
+
+    LDBNameFullPath := SystemDBEdit.Text;
+
+    if LDBNameFullPath = '' then
+      LDBNameFullPath := GetDBNameFromForm();
+
+    if not FileExists(LDBNameFullPath) then
+    begin
+      ShowMessage('DB not exist : [' + LDBNameFullPath + ']');
+      exit;
+    end;
+
+    LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'VAR_NAME', LDBNameFullPath);
 
     //VAR_NAME 필드에 없으면 TAG_NAME 필드에서 검색함
     if LUtf8 = '' then
-      LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'TAG_NAME', SystemDBEdit.Text);
+      LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'TAG_NAME', LDBNameFullPath);
 
 
     if LUtf8 <> '' then
@@ -216,7 +264,7 @@ begin
   begin
     LTagName := TagInfoGrid.Cells[ACol, ARow];
 
-    GetTagInfoFromGrid2JsonAry(LTagName);
+    GetTagInfoFromDB2Grid(LTagName);
   end;
 end;
 

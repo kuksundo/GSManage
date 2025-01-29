@@ -2,7 +2,7 @@ object HiconisTCPF: THiconisTCPF
   Left = 0
   Top = 0
   Caption = 'HiconisTCPF'
-  ClientHeight = 560
+  ClientHeight = 600
   ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object HiconisTCPF: THiconisTCPF
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 398
+    Top = 438
     Width = 772
     Height = 6
     Cursor = crVSplit
@@ -31,7 +31,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 185
     Top = 41
     Width = 6
-    Height = 357
+    Height = 397
     ExplicitLeft = 216
     ExplicitHeight = 297
   end
@@ -165,7 +165,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object Panel2: TPanel
     Left = 0
-    Top = 521
+    Top = 561
     Width = 772
     Height = 39
     Align = alBottom
@@ -183,7 +183,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object ConsoleMemo: TMemo
     Left = 0
-    Top = 404
+    Top = 444
     Width = 772
     Height = 117
     Align = alBottom
@@ -194,7 +194,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 0
     Top = 41
     Width = 185
-    Height = 357
+    Height = 397
     Align = alLeft
     Caption = 'Panel3'
     TabOrder = 3
@@ -284,7 +284,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 42
       Width = 183
-      Height = 314
+      Height = 354
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -392,7 +392,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 191
     Top = 41
     Width = 581
-    Height = 357
+    Height = 397
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
@@ -799,7 +799,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 28
       Width = 579
-      Height = 328
+      Height = 368
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -821,6 +821,13 @@ object HiconisTCPF: THiconisTCPF
       object SaveIPListToFile1: TMenuItem
         Caption = 'Save IPList To File'
         OnClick = SaveIPListToFile1Click
+      end
+      object N9: TMenuItem
+        Caption = '-'
+      end
+      object ImportFuncCodeFromxls1: TMenuItem
+        Caption = 'Import FuncCode From xls'
+        OnClick = ImportFuncCodeFromxls1Click
       end
       object N1: TMenuItem
         Caption = '-'
@@ -852,6 +859,10 @@ object HiconisTCPF: THiconisTCPF
           object ExecuteSQL1: TMenuItem
             Caption = 'Execute SQL'
             OnClick = ExecuteSQL1Click
+          end
+          object CheckDBExistByName1: TMenuItem
+            Caption = 'Check DB Exist By Name'
+            OnClick = CheckDBExistByName1Click
           end
         end
         object InfluxDB2: TMenuItem
@@ -898,6 +909,85 @@ object HiconisTCPF: THiconisTCPF
           Caption = 'MariaDB Inbstalled'
           OnClick = MariaDBInbstalled1Click
         end
+        object ODBCDSNList1: TMenuItem
+          Caption = 'ODBC DSN List'
+          object N32Bit1: TMenuItem
+            Caption = '32Bit'
+            Visible = False
+            OnClick = N32Bit1Click
+          end
+          object N64Bit1: TMenuItem
+            Caption = '64Bit'
+            Visible = False
+            OnClick = N64Bit1Click
+          end
+          object CheckAconisSystemExist1: TMenuItem
+            Caption = 'Check "Aconis_System" Exist'
+            object N32Bit2: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit2Click
+            end
+            object N64Bit2: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit2Click
+            end
+          end
+          object CheckAconisuserExist1: TMenuItem
+            Caption = 'Check "Aconis_user" Exist'
+            object N32Bit3: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit3Click
+            end
+            object N64Bit3: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit3Click
+            end
+          end
+          object CheckAconisAlarmExist1: TMenuItem
+            Caption = 'Check "Aconis-Alarm" Exist'
+            object N32Bit4: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit4Click
+            end
+            object N64Bit4: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit4Click
+            end
+          end
+          object CheckAconisAlarmExist2: TMenuItem
+            Caption = 'Check "Aconisnx-Logging" Exist'
+            object N32Bit5: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit5Click
+            end
+            object N64Bit5: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit5Click
+            end
+          end
+          object CheckAconisnxLoggingExist1: TMenuItem
+            Caption = 'Check "Aconisnx-Manual" Exist'
+            object N32Bit6: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit6Click
+            end
+            object N64Bit6: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit6Click
+            end
+          end
+          object CheckAlmPlaybackExist1: TMenuItem
+            Caption = 'Check "Alm-Playback" Exist'
+            object N32Bit7: TMenuItem
+              Caption = '32Bit'
+              OnClick = N32Bit7Click
+            end
+            object N64Bit7: TMenuItem
+              Caption = '64Bit'
+              OnClick = N64Bit7Click
+            end
+          end
+        end
       end
       object Straton1: TMenuItem
         Caption = 'Straton'
@@ -911,6 +1001,13 @@ object HiconisTCPF: THiconisTCPF
         object GetTagInfoFromSystemBak1: TMenuItem
           Caption = 'Get Tag Info From System_Bak'
           OnClick = GetTagInfoFromSystemBak1Click
+        end
+      end
+      object MPM2: TMenuItem
+        Caption = 'MPM'
+        object GetFileVersion1: TMenuItem
+          Caption = 'Get File Version from Backup'
+          OnClick = GetFileVersion1Click
         end
       end
     end
@@ -1104,22 +1201,43 @@ object HiconisTCPF: THiconisTCPF
     object N4: TMenuItem
       Caption = '-'
     end
-    object InfluxDB1: TMenuItem
-      Caption = 'Influx DB'
-      object ShowRetentionPolicies1: TMenuItem
-        Caption = 'Show Retention Policies From Selected IP'
-        OnClick = ShowRetentionPolicies1Click
+    object OWS1: TMenuItem
+      Caption = 'OWS'
+      object MariaDB2: TMenuItem
+        Caption = 'MariaDB'
+        object CheckIfExistloggingDB1: TMenuItem
+          Caption = 'Check If Exist "logging" DB'
+          OnClick = CheckIfExistloggingDB1Click
+        end
+        object CheckIfExistalarmdbDB1: TMenuItem
+          Caption = 'Check If Exist "alarmdb" DB'
+          OnClick = CheckIfExistalarmdbDB1Click
+        end
+        object CheckIfExistreportdbDB1: TMenuItem
+          Caption = 'Check If Exist "reportdb" DB'
+          OnClick = CheckIfExistreportdbDB1Click
+        end
       end
-      object N6: TMenuItem
-        Caption = '-'
+      object InfluxDB1: TMenuItem
+        Caption = 'Influx DB'
+        object ShowRetentionPolicies1: TMenuItem
+          Caption = 'Show Retention Policies From Selected IP'
+          OnClick = ShowRetentionPolicies1Click
+        end
+        object N6: TMenuItem
+          Caption = '-'
+        end
+        object AlterRetentionPolicy4OWSFromSelectedIP1: TMenuItem
+          Caption = 'Alter Retention Policy 4 OWS From Selected IP'
+          OnClick = AlterRetentionPolicy4OWSFromSelectedIP1Click
+        end
+        object AlterRetentionPolicy4OWSFromSelectedIP2: TMenuItem
+          Caption = 'Alter Retention Policy 4 History From Selected IP'
+          OnClick = AlterRetentionPolicy4OWSFromSelectedIP2Click
+        end
       end
-      object AlterRetentionPolicy4OWSFromSelectedIP1: TMenuItem
-        Caption = 'Alter Retention Policy 4 OWS From Selected IP'
-        OnClick = AlterRetentionPolicy4OWSFromSelectedIP1Click
-      end
-      object AlterRetentionPolicy4OWSFromSelectedIP2: TMenuItem
-        Caption = 'Alter Retention Policy 4 History From Selected IP'
-        OnClick = AlterRetentionPolicy4OWSFromSelectedIP2Click
+      object AccDB1: TMenuItem
+        Caption = 'AccessDB'
       end
     end
     object N5: TMenuItem

@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Clipbrd,
   Vcl.Buttons, PngSpeedButton,
-  JvExControls, JvLabel, CurvyControls,
+  JvExControls, JvLabel, CurvyControls, AdvToolBtn,
   NxColumnClasses, NxColumns, NxScrollControl, NxCustomGridControl,
   NxCustomGrid, NxGrid,
 
@@ -14,7 +14,7 @@ uses
   mormot.core.unicode,
 
   UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord,
-  CommonData2, AdvToolBtn
+  CommonData2, UnitHiASIniConfig
   ;
 
 type
@@ -94,14 +94,18 @@ type
     procedure InitCombo;
   public
     FTaskID: TID;
+    FHiASIniConfig: THiASIniConfig;
+    FCurrentASFN: string; //현재 작성중인 문서 파일 이름
 
     procedure LoadMaterialOrm2Form(AOrm: TSQLMaterial4Project);
     procedure LoadMaterialOrmFromForm(AOrm: TSQLMaterial4Project);
     procedure LoadMaterialVar2Form(AVar: variant);
     procedure LoadMaterialVarFromForm(var AVar: variant);
+
+    procedure SetHiASIniConfig(var AHiASIniConfig: THiASIniConfig);
   end;
 
-  function DisplayMaterial2EditForm(var ADoc: variant): Boolean;
+  function DisplayMaterial2EditForm(var ADoc: variant; var AHiASIniConfig: THiASIniConfig): Boolean;
 
 var
   ASMaterialF: TASMaterialF;
@@ -113,7 +117,7 @@ uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit, UnitMakeReport2,
 
 {$R *.dfm}
 
-function DisplayMaterial2EditForm(var ADoc: variant): Boolean;
+function DisplayMaterial2EditForm(var ADoc: variant; var AHiASIniConfig: THiASIniConfig): Boolean;
 var
   LASMaterialF: TASMaterialF;
 begin
@@ -131,6 +135,7 @@ begin
         LoadMaterialVar2Form(ADoc);
       end;
 
+      SetHiASIniConfig(AHiASIniConfig);
       FTaskID := ADoc.TaskID;
 
       //"저장" 버튼을 누른 경우
@@ -144,7 +149,6 @@ begin
   finally
     LASMaterialF.Free;
   end;
-
 end;
 
 { TASMaterialF }
@@ -374,7 +378,8 @@ begin
     end;
     //Commercial Invoice Info
     FAccount := 'TO: MASTER OF "' + FShipName + '"(' + FHullNo + ')';
-    FAccountAddr := FAccount + #13#10 + '(SHIP''''S SPARE IN TRANSIT)' + #13#10 + DeliveryAddress.Text;
+//    FAccountAddr := FAccount + #13#10 + '(SHIP''''S SPARE IN TRANSIT)' + #13#10 + DeliveryAddress.Text;
+    FAccountAddr := DeliveryAddress.Text;
     FPortOfLoading := PortName.Text;
     FInvoieNo := FHullNo + '-' + FormatDateTime('yymmdd & mmm. dd, yyyy', now);
     FTermOfDelivery := TermOfDelivery.Text;
@@ -393,9 +398,13 @@ begin
     FMeasurement := Measurement.Text;
     FCMB := CBM.Text;
 
+    FCurrentASFN := FHiASIniConfig.FASDocBaseDir  + 'CIPL\' + FHullNo + '-' + FClaimNo + '-' + FDescription + '-CIPL_' + FormatDateTime('yyyymmdd', Date) + '.xlsx';
+    Clipboard.AsText := FCurrentASFN;
   end;
 
   MakeCIPL(LCIPLRec);
+
+  ShowMessage('CIPL File Name is copied to clip board [ ' + FCurrentASFN + ']');
 end;
 
 procedure TASMaterialF.PngSpeedButton2Click(Sender: TObject);
@@ -420,9 +429,14 @@ begin
     FDescription := MaterialName.Text;
     FQty := SupplyCount.Text;
     FNumOfPkgs := NumOfPkg.Text;
+
+    FCurrentASFN := FHiASIniConfig.FASDocBaseDir + 'ShipMark\' + FHullNo + '-' + FClaimNo + '-' + FDescription + '-SM_' + FormatDateTime('yyyymmdd', Date) + '.xlsx';
+    Clipboard.AsText := FCurrentASFN;
   end;
 
   MakeShippingMark(LSHIPMARK_Rec);
+
+  ShowMessage('Shipping Mark File Name is copied to clip board [ ' + FCurrentASFN + ']');
 end;
 
 procedure TASMaterialF.PngSpeedButton3Click(Sender: TObject);
@@ -469,6 +483,11 @@ begin
   end;
 
   MakeReceiptAcceptance(LRECEIPTACCPT_Rec);
+end;
+
+procedure TASMaterialF.SetHiASIniConfig(var AHiASIniConfig: THiASIniConfig);
+begin
+  FHiASIniConfig := AHiASIniConfig;
 end;
 
 end.

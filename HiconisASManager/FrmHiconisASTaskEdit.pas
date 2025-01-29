@@ -285,6 +285,8 @@ type
     HullNoClaimNo1: TMenuItem;
     PopupMenu5: TPopupMenu;
     N26: TMenuItem;
+    PlateNo: TNxTextColumn;
+    ID: TNxTextColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -2594,7 +2596,9 @@ procedure TTaskEditF.LoadTaskForm2MaterialDetailNSave2DB(AForm: TTaskEditF;
   ATaskID: TID);
 var
   LRow: integer;
-  LPorNo, LMatCode: string;
+//  LPorNo, LMatCode: string;
+  LStr: string;
+  LID: TID;
   LMatDetail: TSQLMaterialDetail;
 begin
   with AForm.MaterialGrid do
@@ -2602,10 +2606,13 @@ begin
     //Grid에서 POR No 가져와서 DB 조회함
     for LRow := 0 to RowCount - 1 do
     begin
-      LPorNo := CellsByName['PORNo', LRow];
-      LMatCode := CellsByName['MaterialCode', LRow];
+      LStr := CellsByName['ID', LRow];
+      LID := StrToInt64Def(LStr, 0);
+//      LPorNo := CellsByName['PORNo', LRow];
+//      LMatCode := CellsByName['MaterialCode', LRow];
 
-      LMatDetail := GetMaterialDetailByPorNoNMatCode(LPorNo, LMatCode);
+//      LMatDetail := GetMaterialDetailByPorNoNMatCode(LPorNo, LMatCode);
+      LMatDetail := GetMaterialDetailFromID(LID);
       try
         if Row[LRow].Visible then
         begin
@@ -3072,7 +3079,7 @@ begin
 
   LDoc.TaskID := FTask.ID;
   //"저장" 버튼을 누르면 True
-  if DisplayMaterial2EditForm(LDoc) then
+  if DisplayMaterial2EditForm(LDoc, FHiASIniConfig) then
   begin
     FMatDeliveryInfoJson := Utf8ToString(LDoc);
     PORNoEdit.Text := GetPorNoFromJson(FMatDeliveryInfoJson);

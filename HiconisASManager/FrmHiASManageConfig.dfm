@@ -497,8 +497,6 @@ object HiASConfigF: THiASConfigF
     object FileTS: TTabSheet
       Caption = 'File'
       ImageIndex = 2
-      ExplicitLeft = 8
-      ExplicitTop = 25
       object Label6: TLabel
         Left = 36
         Top = 16
@@ -528,7 +526,7 @@ object HiASConfigF: THiASConfigF
       end
       object Label33: TLabel
         Left = 36
-        Top = 112
+        Top = 114
         Width = 97
         Height = 16
         Caption = #51088#51116#51077#44256' '#50836#52397' Mail'
@@ -541,6 +539,15 @@ object HiASConfigF: THiASConfigF
         Width = 152
         Height = 16
         Caption = #48169#49440' '#44032#45733' '#44160#53664' '#50836#52397' Html File'
+        ParentShowHint = False
+        ShowHint = False
+      end
+      object Label35: TLabel
+        Left = 36
+        Top = 322
+        Width = 138
+        Height = 16
+        Caption = 'AS Doc Base Directory'
         ParentShowHint = False
         ShowHint = False
       end
@@ -619,6 +626,45 @@ object HiASConfigF: THiASConfigF
         ImeName = 'Microsoft Office IME 2007'
         TabOrder = 6
         Text = ''
+      end
+      object AdvDirectoryEdit1: TAdvDirectoryEdit
+        Tag = 31
+        Left = 36
+        Top = 342
+        Width = 381
+        Height = 24
+        Hint = 'Text'
+        EmptyTextStyle = []
+        Flat = False
+        LabelFont.Charset = DEFAULT_CHARSET
+        LabelFont.Color = clWindowText
+        LabelFont.Height = -11
+        LabelFont.Name = 'Tahoma'
+        LabelFont.Style = []
+        Lookup.Font.Charset = DEFAULT_CHARSET
+        Lookup.Font.Color = clWindowText
+        Lookup.Font.Height = -11
+        Lookup.Font.Name = 'Arial'
+        Lookup.Font.Style = []
+        Lookup.Separator = ';'
+        Color = clWindow
+        ReadOnly = False
+        TabOrder = 7
+        Text = ''
+        Visible = True
+        Version = '1.3.5.0'
+        ButtonStyle = bsButton
+        ButtonWidth = 18
+        Etched = False
+        Glyph.Data = {
+          CE000000424DCE0000000000000076000000280000000C0000000B0000000100
+          0400000000005800000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00F00000000FFF
+          00000088888880FF00000B088888880F00000BB08888888000000BBB00000000
+          00000BBBBBBB0B0F00000BBB00000B0F0000F000BBBBBB0F0000FF0BBBBBBB0F
+          0000FF0BBB00000F0000FFF000FFFFFF0000}
+        BrowseDialogText = 'Select Directory'
       end
     end
     object TabSheet3: TTabSheet

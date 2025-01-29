@@ -73,7 +73,7 @@
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=IeCVpAAh4JWkcDZmMVVjY3laL0dIQ0JpcXdXZ2hHdUpMbTNpcjdiekRXYTVnTTJFY21rMGNIRW5pTXhjTGFrRFBLSHdZM0VTemdFZEZ1NEVjT2ZyR3ovSFlwSUI4b2hzOUF0NEp3d0x6YjEwbjE0NjRwdytRWTlvNnhKclpIbEcrSng1S1RLSnVxSkxTNUhkditOVWM2YkNUZnk1UGpQaSs2MnpqQ2ZoN3ZBank4QXo5VlF3PQ==</VerInfo_Keys>
         <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <DCC_Define>DEF_CRYPT_ALL;USE_REGCODE;$(DCC_Define)</DCC_Define>
+        <DCC_Define>DEF_CRYPT_ALL;USE_REGCODE;USE_SIGORM;$(DCC_Define)</DCC_Define>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\ArrayHelper-master;E:\pjh\Dev\Lang\Delphi\Project\GSManage\VesselList;E:\pjh\Dev\Lang\Delphi\Project\GSManage\Common;E:\pjh\Dev\Lang\Delphi\Project\RPA\Outlook;E:\pjh\Dev\Lang\Delphi\Project\GSManage;E:\pjh\Dev\Lang\Delphi\Common\Form;E:\pjh\Dev\Lang\Delphi\Common\Frame;E:\pjh\Dev\Lang\Delphi\Common\DataType;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\GpDelphiUnit\src;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegisterPas2;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\Common;E:\pjh\Dev\Lang\Delphi\Common\DataType\MAPI;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -136,6 +136,8 @@
         <DCCReference Include="..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas"/>
         <DCCReference Include="..\Common\UnitHMSSignatureOrm.pas"/>
         <DCCReference Include="..\..\..\Common\UnitFileInfoUtil.pas"/>
+        <DCCReference Include="..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR2.pas"/>
+        <DCCReference Include="..\..\..\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
