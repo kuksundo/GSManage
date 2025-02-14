@@ -152,6 +152,7 @@ type
     ImportCustomerListfromMAPSxlsFile1: TMenuItem;
     FromXls1: TMenuItem;
     FromCSV1: TMenuItem;
+    oGrid1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -198,6 +199,7 @@ type
     procedure ImportCustomerListfromMAPSxlsFile1Click(Sender: TObject);
     procedure FromXls1Click(Sender: TObject);
     procedure FromCSV1Click(Sender: TObject);
+    procedure oGrid1Click(Sender: TObject);
   private
     procedure InitEnum;
     procedure DestroyList4VesselMaster;
@@ -230,7 +232,7 @@ implementation
 uses
   FrmEditVesselInfo2, FrmHiMAPSelect2, frmHiMAPDetail2, FrmViewNationCode2,
   FrmAnsiDeviceNoList2, FrmViewEngineMaster2, FrmVesselAdvancedSearch, frmGeneratorDetail2,
-  UnitHiMAPRecord2, UnitMakeHgsDB2,
+  UnitHiMAPRecord2, UnitMakeHgsDB2, UnitNextGridUtil2,
   UnitMakeAnsiDeviceDB2, UnitAnsiDeviceRecord2, HtmlParserEx,
   UnitStringUtil, UnitExcelUtil, UnitMakeMasterCustomerDB2,
   UnitBase64Util2;
@@ -1142,6 +1144,17 @@ begin
 //  LStrList.Free;
 //  ShowMessage(CBKind.ToString(ckVCS));
 //  ShowMessage(IntToStr(Ord(CBKind.ToType('VCS'))));
+end;
+
+procedure TVesselListF.oGrid1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    if FileExists(OpenDialog1.FileName) then
+    begin
+      CsvFile2NextGrid(OpenDialog1.FileName, VesselListGrid);
+    end;
+  end;
 end;
 
 procedure TVesselListF.OperatorEditKeyPress(Sender: TObject; var Key: Char);

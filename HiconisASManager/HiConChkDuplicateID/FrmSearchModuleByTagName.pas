@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
   NxScrollControl, NxCustomGridControl, NxCustomGrid, NxGrid, Vcl.Menus,
-  mormot.core.base, mormot.core.variants,
+  mormot.core.base, mormot.core.variants, mormot.core.unicode,
   UnitHiconDBData, UnitHiconTCPIniConfig;
 
 type
@@ -34,6 +34,11 @@ type
     EquipKindCombo: TComboBox;
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
+    Label6: TLabel;
+    TableCombo: TComboBox;
+    Label7: TLabel;
+    FieldCombo: TComboBox;
+    Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn3Click(Sender: TObject);
@@ -43,6 +48,8 @@ type
     procedure SelectFromTAGNAMEField1Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
   private
+    procedure WMCopyData(var Msg: TMessage); message WM_COPYDATA;
+
     function CheckRequiredInput4Search(): Boolean;
     function IsTagNameColumnByIndex(const ACol: integer): Boolean;
     function GetTagInfoFromDB2Grid(ATagName: string=''): Boolean;
@@ -50,28 +57,30 @@ type
     function GetDBNameFromForm(): string;
     //DATA_TYPE,IN_OUT,SYS_TYPE 필드를 Desc로 대체함
     function UpdateDBValue2HumanReadable(const ATagInfoJsonAry: RawUtf8): RawUtf8;
+  protected
+    procedure ProcessAsyncResult(const AMsg: string; const AMsgKind: integer);
   public
     FHiconTCPIniConfig: THiconTCPIniConfig;
   end;
 
   function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
 
-var
-  SrchModuleByTagF: TSrchModuleByTagF;
-
 implementation
 
-uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells,
+uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells, UnitCopyData,
   FrmJHPWaitForm;
 
 {$R *.dfm}
 
 function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig;const ATagName: string): string;
+var
+  SrchModuleByTagF: TSrchModuleByTagF;
 begin
   Result := '';
+  SrchModuleByTagF := nil;
 
-  if Assigned(SrchModuleByTagF) then
-    FreeAndNil(SrchModuleByTagF);
+//  if Assigned(SrchModuleByTagF) then
+//    FreeAndNil(SrchModuleByTagF);
 
   SrchModuleByTagF := TSrchModuleByTagF.Create(nil);
   try
@@ -104,7 +113,6 @@ procedure TSrchModuleByTagF.BitBtn1Click(Sender: TObject);
 begin
   EventWaitShow('', False);
   GetTagInfoFromDB2Grid();
-  EventWaitHide();
 
 //  if CheckRequiredInput4Search() then
 //  begin
@@ -170,6 +178,7 @@ function TSrchModuleByTagF.GetTagInfoFromDB2Grid(ATagName: string): Boolean;
 var
   LUtf8: RawUtf8;
   LDBNameFullPath: string;
+  LResult: integer;
 begin
   if CheckRequiredInput4Search() then
   begin
@@ -187,17 +196,22 @@ begin
       exit;
     end;
 
-    LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'VAR_NAME', LDBNameFullPath);
+//    LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'VAR_NAME', LDBNameFullPath);
+    //결과는 WM_COPYDATA 로 반환 됨
+    LResult := THiConSystemDB.GetTagInfo2JsonByTableName_Async(Handle, ATagName, TableCombo.Text, FieldCombo.Text, LDBNameFullPath);
 
     //VAR_NAME 필드에 없으면 TAG_NAME 필드에서 검색함
-    if LUtf8 = '' then
-      LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'TAG_NAME', LDBNameFullPath);
+//    if LUtf8 = '' then
+//    begin
+//      ShowMessage('Data is null. Please change Tag Name or Field Name.');
+//      exit;
+//    end;
+//      LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'TAG_NAME', LDBNameFullPath);
 
-
-    if LUtf8 <> '' then
-    begin
-      LoadTagInfoFromJsonAry2Grid(LUtf8);
-    end;
+//    if LUtf8 <> '' then
+//    begin
+//      LoadTagInfoFromJsonAry2Grid(LUtf8);
+//    end;
   end;
 end;
 
@@ -221,6 +235,22 @@ begin
   LUtf8 := UpdateDBValue2HumanReadable(ATagInfoJsonAry);
 //  LUtf8 := ATagInfoJsonAry;
   AddNextGridRowsFromJsonAry(TagInfoGrid, LUtf8, True);
+end;
+
+procedure TSrchModuleByTagF.ProcessAsyncResult(const AMsg: string;
+  const AMsgKind: integer);
+begin
+  case AMsgKind of
+    //THiConSystemDB.GetTagInfo2JsonByTableName_Async 결과 처리
+    1: begin
+      if AMsg <> '' then
+      begin
+        LoadTagInfoFromJsonAry2Grid(StringToUtf8(AMsg));
+      end;
+    end;
+  end;
+
+  EventWaitHide();
 end;
 
 procedure TSrchModuleByTagF.SelectFromTAGNAMEField1Click(Sender: TObject);
@@ -300,6 +330,15 @@ begin
   end;
 
   Result := LList2.Json;
+end;
+
+procedure TSrchModuleByTagF.WMCopyData(var Msg: TMessage);
+var
+  LMsg: string;
+begin
+  LMsg := PChar(PCopyDataStruct(Msg.LParam)^.lpData);
+
+  ProcessAsyncResult(LMsg, Msg.WParam);
 end;
 
 end.

@@ -15,7 +15,6 @@ uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Classes,
 type
   THiConMPMWeb = class
   public
-    class procedure Log2CopyData(const AMsg: string; const AMsgKind: integer);
     class function GetLResFromMPM_Async(ARec: TIpListRec): string;
     class function GetLResUrlFromIpRec(AIpAddr: string): string;
   end;
@@ -46,7 +45,7 @@ begin
 
       if PingHost(LIpAddr) = -1 then
       begin
-        Log2CopyData('Host not connected : <' + LIpAddr + '>', 1);
+        TGPCopyData.Log2CopyData('Host not connected : <' + LIpAddr + '>', 1, msgHandle4CopyData);
         exit;
       end;
 
@@ -60,8 +59,8 @@ begin
       begin
         if LCon <> '' then
         begin
-          Log2CopyData(LIpAddr, 2);
-          Log2CopyData(LCon, 3);
+          TGPCopyData.Log2CopyData(LIpAddr, 2, msgHandle4CopyData);
+          TGPCopyData.Log2CopyData(LCon, 3, msgHandle4CopyData);
         end;
       end
     )
@@ -71,11 +70,6 @@ end;
 class function THiConMPMWeb.GetLResUrlFromIpRec(AIpAddr: string): string;
 begin
   Result := 'http://' + AIpAddr + '/lres';
-end;
-
-class procedure THiConMPMWeb.Log2CopyData(const AMsg: string; const AMsgKind: integer);
-begin
-  SendCopyData4(msgHandle4CopyData, AMsg, AMsgKind);
 end;
 
 end.

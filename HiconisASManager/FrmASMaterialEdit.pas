@@ -113,7 +113,7 @@ var
 implementation
 
 uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit, UnitMakeReport2,
-  UnitMiscUtil, UnitStringUtil, UnitAdvCompUtil;
+  UnitMiscUtil, UnitStringUtil, UnitAdvCompUtil, UnitFileInfoUtil;
 
 {$R *.dfm}
 
@@ -398,7 +398,7 @@ begin
     FMeasurement := Measurement.Text;
     FCMB := CBM.Text;
 
-    FCurrentASFN := FHiASIniConfig.FASDocBaseDir  + 'CIPL\' + FHullNo + '-' + FClaimNo + '-' + FDescription + '-CIPL_' + FormatDateTime('yyyymmdd', Date) + '.xlsx';
+    FCurrentASFN := GetValidFileName(FHiASIniConfig.FASDocBaseDir  + 'CIPL\' + FHullNo + '-' + FClaimNo + '-' + FDescription + '-CIPL_' + FormatDateTime('yyyymmdd', Date) + '.xlsx');
     Clipboard.AsText := FCurrentASFN;
   end;
 

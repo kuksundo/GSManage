@@ -635,16 +635,16 @@ begin
 //  begin
 //    TDocVariant.New(LVar);
 
-    for LRow := Low(ASQLGSFile.Files) to High(ASQLGSFile.Files) do
-    begin
-      LSQLGSFileRec := ASQLGSFile.Files[LRow];
-//      LVar.fFileName := LSQLGSFileRec.fFilename;
-//      LVar.fGSDocType := LSQLGSFileRec.fGSDocType;
-      LUtf8 := RecordSaveJson(LSQLGSFileRec, TypeInfo(TJHPFileRec));
-//      LUtf8 := LVar;
-      LDynArrFile.Add(LUtf8);
-    end;
-//  end;
+//    for LRow := Low(ASQLGSFile.Files) to High(ASQLGSFile.Files) do
+//    begin
+//      LSQLGSFileRec := ASQLGSFile.Files[LRow];
+////      LVar.fFileName := LSQLGSFileRec.fFilename;
+////      LVar.fGSDocType := LSQLGSFileRec.fGSDocType;
+//      LUtf8 := RecordSaveJson(LSQLGSFileRec, TypeInfo(TJHPFileRec));
+////      LUtf8 := LVar;
+//      LDynArrFile.Add(LUtf8);
+//    end;
+////  end;
 
   LVar := _JSON(LDynArrFile.SaveToJSON);
   LUtf8 := LVar;

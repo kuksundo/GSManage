@@ -180,7 +180,7 @@ end;
 
 function GetMaterial4ProjFromShippingNo(const AShippingNo: RawUTF8): TSQLMaterial4Project;
 begin
-  Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'ShippingNo = ?', [AShippingNo]);
+  Result := TSQLMaterial4Project.CreateAndFillPrepare(g_HiASMaterialDB.orm, 'ShippingNo LIKE ?', ['%'+AShippingNo+'%']);
 
   if Result.FillOne then
     Result.IsUpdate := True

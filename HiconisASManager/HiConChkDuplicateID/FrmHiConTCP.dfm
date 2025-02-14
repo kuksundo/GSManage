@@ -1150,15 +1150,19 @@ object HiconisTCPF: THiconisTCPF
           end
           object resource1: TMenuItem
             Caption = 'resource'
+            Enabled = False
           end
           object linkmap1: TMenuItem
             Caption = 'linkmap'
+            Enabled = False
           end
           object pointmapo1: TMenuItem
             Caption = 'pointmap'
+            Enabled = False
           end
           object retainmap1: TMenuItem
             Caption = 'retainmap'
+            Enabled = False
           end
         end
         object MPMInfo1: TMenuItem

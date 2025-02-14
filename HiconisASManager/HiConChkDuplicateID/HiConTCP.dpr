@@ -31,11 +31,13 @@ uses
   UnitHiConFuncCodeOrm in 'UnitHiConFuncCodeOrm.pas',
   UnitMakeHiconDBUtil in '..\UnitMakeHiconDBUtil.pas',
   FrmJHPWaitForm in '..\..\..\..\Common\Form\FrmJHPWaitForm.pas' {WaitForm},
-  UnitRegAppUtil in '..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
   UnitHiConMPMWebUtil in 'UnitHiConMPMWebUtil.pas',
   UnitHiConMPMFileUtil in 'UnitHiConMPMFileUtil.pas',
   UnitElfReader in '..\..\..\..\Common\UnitElfReader.pas',
-  PJVersionInfo in '..\..\..\..\OpenSrc\lib\DelphiDabbler\dd-versioninfo\PJVersionInfo.pas';
+  PJVersionInfo in '..\..\..\..\OpenSrc\lib\DelphiDabbler\dd-versioninfo\PJVersionInfo.pas',
+  UnitWMIUtil in '..\..\..\..\Common\UnitWMIUtil.pas',
+  UnitRegAppUtil in '..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
+  UnitOLEVarUtil in '..\..\..\..\Common\UnitOLEVarUtil.pas';
 
 {$R *.res}
 

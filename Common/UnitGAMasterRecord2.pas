@@ -1141,7 +1141,7 @@ end;
 
 function GetFilesFromTask(ATask: TSQLGSTask): TOrmJHPFile;
 begin
-  Result := GetJHPFilesFromID(ATask.ID);
+//  Result := GetJHPFilesFromID(ATask.ID);
 end;
 
 function GetCustomerFromTask(ATask: TSQLGSTask): TSQLCustomer;
@@ -1596,19 +1596,19 @@ procedure DeleteFilesFromTaskID(ATaskID: TID);
 var
   LSQLGSFile: TOrmJHPFile;
 begin
-  LSQLGSFile := GetJHPFilesFromID(ATaskID);
-
-  if LSQLGSFile.IsUpdate then
-    LSQLGSFile.FillRewind;
-
-  try
-    while LSQLGSFile.FillOne do
-    begin
-      g_FileDB.Delete(TOrmJHPFile, LSQLGSFile.ID);
-    end;
-  finally
-    FreeAndNil(LSQLGSFile);
-  end;
+//  LSQLGSFile := GetJHPFilesFromID(ATaskID);
+//
+//  if LSQLGSFile.IsUpdate then
+//    LSQLGSFile.FillRewind;
+//
+//  try
+//    while LSQLGSFile.FillOne do
+//    begin
+//      g_FileDB.Delete(TOrmJHPFile, LSQLGSFile.ID);
+//    end;
+//  finally
+//    FreeAndNil(LSQLGSFile);
+//  end;
 end;
 
 procedure DeleteCustomerFromTask(ATask: TSQLGSTask);
@@ -2402,14 +2402,14 @@ var
   LGSFile: TOrmJHPFile;
   i: integer;
 begin
-  LGSFile := GetJHPFilesFromID(ADoc.TaskID);
-  try
-    LoadGSFileFromVariant(LGSFile, ADoc);
-    DeleteFilesFromTaskID(ADoc.TaskID);
-    g_FileDB.Add(LGSFile, true);
-  finally
-    LGSFile.Free;
-  end;
+//  LGSFile := GetJHPFilesFromID(ADoc.TaskID);
+//  try
+//    LoadGSFileFromVariant(LGSFile, ADoc);
+//    DeleteFilesFromTaskID(ADoc.TaskID);
+//    g_FileDB.Add(LGSFile, true);
+//  finally
+//    LGSFile.Free;
+//  end;
 end;
 
 procedure InitClient4InvoiceManage;

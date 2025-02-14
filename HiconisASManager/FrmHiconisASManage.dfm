@@ -3,7 +3,7 @@ object HiconisAsManageF: THiconisAsManageF
   Top = 0
   Caption = 'HiconisAsManageF'
   ClientHeight = 649
-  ClientWidth = 1160
+  ClientWidth = 1371
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object HiconisAsManageF: THiconisAsManageF
     AlignWithMargins = True
     Left = 0
     Top = 3
-    Width = 1160
+    Width = 1371
     Height = 134
     Margins.Left = 0
     Margins.Right = 0
@@ -220,8 +220,8 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel9: TJvLabel
       AlignWithMargins = True
-      Left = 610
-      Top = 57
+      Left = 960
+      Top = 97
       Width = 79
       Height = 25
       Alignment = taCenter
@@ -291,8 +291,8 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel7: TJvLabel
       AlignWithMargins = True
-      Left = 754
-      Top = 70
+      Left = 958
+      Top = 39
       Width = 79
       Height = 25
       Alignment = taCenter
@@ -345,13 +345,94 @@ object HiconisAsManageF: THiconisAsManageF
     end
     object JvLabel10: TJvLabel
       AlignWithMargins = True
-      Left = 754
-      Top = 39
+      Left = 958
+      Top = 8
       Width = 79
       Height = 25
       Alignment = taCenter
       AutoSize = False
       Caption = #52636#54616#51648#49884#48264#54840
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel16: TJvLabel
+      AlignWithMargins = True
+      Left = 958
+      Top = 68
+      Width = 79
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #51088#51116#47749
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel17: TJvLabel
+      AlignWithMargins = True
+      Left = 754
+      Top = 40
+      Width = 79
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #44277#49324#49444#47749
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel18: TJvLabel
+      AlignWithMargins = True
+      Left = 754
+      Top = 70
+      Width = 79
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Email'#49444#47749
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -502,7 +583,7 @@ object HiconisAsManageF: THiconisAsManageF
         #51060#54980)
     end
     object Panel1: TPanel
-      Left = 955
+      Left = 1166
       Top = 0
       Width = 205
       Height = 134
@@ -585,8 +666,8 @@ object HiconisAsManageF: THiconisAsManageF
       OnKeyPress = HullNoEditKeyPress
     end
     object PORNoEdit: TEdit
-      Left = 693
-      Top = 57
+      Left = 1043
+      Top = 97
       Width = 117
       Height = 21
       ImeName = 'Microsoft IME 2010'
@@ -628,8 +709,8 @@ object HiconisAsManageF: THiconisAsManageF
       OnDropDown = CurWorkCBDropDown
     end
     object MaterialCodeEdit: TEdit
-      Left = 837
-      Top = 70
+      Left = 1041
+      Top = 39
       Width = 117
       Height = 21
       ImeName = 'Microsoft IME 2010'
@@ -653,7 +734,7 @@ object HiconisAsManageF: THiconisAsManageF
       OnChange = FindCondCBChange
     end
     object ClaimServiceKindCB: TJvCheckedComboBox
-      Left = 436
+      Left = 440
       Top = 72
       Width = 114
       Height = 21
@@ -945,8 +1026,8 @@ object HiconisAsManageF: THiconisAsManageF
       OnClick = BitBtn3Click
     end
     object BitBtn4: TBitBtn
-      Left = 832
-      Top = 39
+      Left = 1036
+      Top = 8
       Width = 25
       Height = 25
       Glyph.Data = {
@@ -977,11 +1058,11 @@ object HiconisAsManageF: THiconisAsManageF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 20
-      OnClick = BitBtn3Click
+      OnClick = BitBtn4Click
     end
     object ShippingNoEdit: TEdit
-      Left = 858
-      Top = 41
+      Left = 1062
+      Top = 10
       Width = 96
       Height = 21
       CharCase = ecUpperCase
@@ -989,11 +1070,38 @@ object HiconisAsManageF: THiconisAsManageF
       TabOrder = 21
       OnKeyPress = HullNoEditKeyPress
     end
+    object MaterialNameEdit: TEdit
+      Left = 1041
+      Top = 68
+      Width = 117
+      Height = 21
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 22
+      OnKeyPress = HullNoEditKeyPress
+    end
+    object WorkSummaryEdit: TEdit
+      Left = 837
+      Top = 40
+      Width = 117
+      Height = 21
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 23
+      OnKeyPress = HullNoEditKeyPress
+    end
+    object Edit3: TEdit
+      Left = 837
+      Top = 70
+      Width = 117
+      Height = 21
+      ImeName = 'Microsoft IME 2010'
+      TabOrder = 24
+      OnKeyPress = HullNoEditKeyPress
+    end
   end
   object TaskTab: TAdvOfficeTabSet
     Left = 0
     Top = 140
-    Width = 1160
+    Width = 1371
     Height = 27
     AdvOfficeTabs = <
       item
@@ -1709,8 +1817,8 @@ object HiconisAsManageF: THiconisAsManageF
   object grid_Req: TNextGrid
     Left = 0
     Top = 167
-    Width = 1160
-    Height = 463
+    Width = 1371
+    Height = 422
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Align = alClient
@@ -1725,6 +1833,7 @@ object HiconisAsManageF: THiconisAsManageF
     TabStop = True
     OnCellDblClick = grid_ReqCellDblClick
     OnKeyDown = grid_ReqKeyDown
+    OnSelectCell = grid_ReqSelectCell
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -2227,7 +2336,7 @@ object HiconisAsManageF: THiconisAsManageF
   object StatusBarPro1: TStatusBarPro
     Left = 0
     Top = 630
-    Width = 1160
+    Width = 1371
     Height = 19
     Panels = <
       item
@@ -2247,6 +2356,160 @@ object HiconisAsManageF: THiconisAsManageF
       end>
     SimplePanel = False
   end
+  object Panel2: TPanel
+    Left = 0
+    Top = 589
+    Width = 1371
+    Height = 41
+    Align = alBottom
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 4
+    object JvLabel12: TJvLabel
+      AlignWithMargins = True
+      Left = 8
+      Top = 10
+      Width = 105
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Delivery Date'
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel13: TJvLabel
+      AlignWithMargins = True
+      Left = 247
+      Top = 8
+      Width = 105
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #48372#51613#47564#47308#51068
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel14: TJvLabel
+      AlignWithMargins = True
+      Left = 485
+      Top = 8
+      Width = 105
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #49440#51333
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object JvLabel15: TJvLabel
+      AlignWithMargins = True
+      Left = 724
+      Top = 8
+      Width = 105
+      Height = 25
+      Alignment = taCenter
+      AutoSize = False
+      Caption = #49440#54805
+      Color = 14671839
+      FrameColor = clGrayText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      RoundedFrame = 3
+      Transparent = True
+      HotTrackFont.Charset = ANSI_CHARSET
+      HotTrackFont.Color = clWindowText
+      HotTrackFont.Height = -13
+      HotTrackFont.Name = #47569#51008' '#44256#46357
+      HotTrackFont.Style = []
+    end
+    object DeliveryDateEdit: TEdit
+      Left = 119
+      Top = 9
+      Width = 116
+      Height = 24
+      Alignment = taCenter
+      TabOrder = 0
+    end
+    object ExpireDateEdit: TEdit
+      Left = 358
+      Top = 9
+      Width = 116
+      Height = 24
+      Alignment = taCenter
+      TabOrder = 1
+    end
+    object ShipTypeEdit: TEdit
+      Left = 596
+      Top = 9
+      Width = 116
+      Height = 24
+      Alignment = taCenter
+      TabOrder = 2
+    end
+    object CargoSizeEdit: TEdit
+      Left = 835
+      Top = 9
+      Width = 116
+      Height = 24
+      Alignment = taCenter
+      TabOrder = 3
+    end
+  end
   object imagelist24x24: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
@@ -2255,7 +2518,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 16
     Top = 208
     Bitmap = {
-      494C010101007000980418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010101007000AC0418001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000005C43
@@ -2565,7 +2828,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 104
     Top = 208
     Bitmap = {
-      494C010102005402A80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102005402BC0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000505052E101010521717
       17611D1D1D6C1F1D1E6D272425792523257825232578262425791F1E1E6E1E1E
@@ -2943,7 +3206,7 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 208
     Bitmap = {
-      494C01010300C800D00520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010300C800E40520002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -192,6 +192,21 @@ type
     BitBtn4: TBitBtn;
     ShippingNoEdit: TEdit;
     N11: TMenuItem;
+    Panel2: TPanel;
+    JvLabel12: TJvLabel;
+    DeliveryDateEdit: TEdit;
+    JvLabel13: TJvLabel;
+    ExpireDateEdit: TEdit;
+    JvLabel14: TJvLabel;
+    ShipTypeEdit: TEdit;
+    JvLabel15: TJvLabel;
+    CargoSizeEdit: TEdit;
+    JvLabel16: TJvLabel;
+    MaterialNameEdit: TEdit;
+    JvLabel17: TJvLabel;
+    WorkSummaryEdit: TEdit;
+    JvLabel18: TJvLabel;
+    Edit3: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -262,6 +277,8 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure Claim1Click(Sender: TObject);
     procedure N11Click(Sender: TObject);
+    procedure grid_ReqSelectCell(Sender: TObject; ACol, ARow: Integer);
+    procedure BitBtn4Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -428,11 +445,13 @@ type
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
     procedure DisplayTask2GridByPorNo(const APorNo: string);
     procedure DisplayTask2GridByMaterialCode(const AMaterialCode: string);
+    procedure DisplayTask2GridByMaterialName(const AMaterialName: string);
     procedure LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
     procedure LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
       ARow: integer = -1);
     procedure grid_Req_ClearRows();
+    procedure LoadFooterFromVesselListDB2FormByHullNo(const AHullNo: string);
 
     procedure AddFolderListFromOL(AFolder: string);
 
@@ -478,7 +497,7 @@ var
 implementation
 
 uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
-  UnitGSFileRecord2, getIp, UnitBase64Util2,
+  UnitGSFileRecord2, getIp, UnitBase64Util2, UnitmORMotUtil2, UnitFolderUtil2,
   UnitHiconisASVarJsonUtil, UnitHiASToDoRecord, FrmToDoList2,
   UnitStringUtil, UnitExcelUtil, UnitClipBoardUtil, UnitOutLookUtil,
 
@@ -497,8 +516,21 @@ begin
 end;
 
 procedure THiconisAsManageF.CurWorkCBDropDown(Sender: TObject);
+var
+  i: integer;
+  LpjhBit32: TpjhBit32;
 begin
-  g_SalesProcess.SetType2Combo(CurWorkCB);
+  CurWorkCB.Clear;
+  LpjhBit32 := GetSetFromCheckCombo(ClaimServiceKindCB);
+
+  for i := 0 to 31 do
+  begin
+    if LpjhBit32.Bit[i] then
+    begin
+      SetState2ComboByClaimServiceKind(g_ClaimServiceKind.ToType(i), CurWorkCB);
+//      Break;
+    end;
+  end;//for
 end;
 
 procedure THiconisAsManageF.LoadConfig2Form(AForm: THiASConfigF);
@@ -517,6 +549,23 @@ begin
     AFileName := FHiASIniFileName;
 
   FHiASIniConfig.Load(AFileName);
+end;
+
+procedure THiconisAsManageF.LoadFooterFromVesselListDB2FormByHullNo(
+  const AHullNo: string);
+var
+  LRec: TVesselInfo4AS;
+begin
+  if AHullNo = '' then
+    exit;
+
+  LRec := GetVesselInfo4ASByHullNo(AHullNo);
+
+  DeliveryDateEdit.Text := LRec.fDeliveryDate;
+  ShipTypeEdit.Text := LRec.fShipType;
+  CargoSizeEdit.Text := LRec.fCargoSize;
+
+  ExpireDateEdit.Text := GetDateStrFromTimeLog(CalcWarrantyExpireDateByHullNo(AHullNo));;
 end;
 
 procedure THiconisAsManageF.LoadGSTask2Grid(ATask: TOrmHiconisASTask; AGrid: TNextGrid;
@@ -1020,7 +1069,7 @@ begin
     FClaimStatus := ClaimStatusCombo.ItemIndex;
 //    FSubject := SubjectEdit.Text;
     FClaimServiceKind := GetSetFromCheckCombo(ClaimServiceKindCB);;//ClaimServiceKindCB.ItemIndex;
-    FCurWork :=  CurWorkCB.ItemIndex;
+    FCurWork :=  g_HiconisASState.ToOrdinal(CurWorkCB.Text);
     FBefAft :=  BefAftCB.ItemIndex;
     FWorkKind :=  WorkKindCB.ItemIndex;
     FClaimNo := Trim(ClaimNoEdit.Text);
@@ -1028,8 +1077,11 @@ begin
     FOrderNo := Trim(OrderNoEdit.Text);
 //    FPoNo := PONoEdit.Text;
     FPorNo := PorNoEdit.Text;
-    FMaterialCode := MaterialCodeEdit.Text;
-    FShippingNo := ShippingNoEdit.Text;
+    FMaterialCode := Trim(MaterialCodeEdit.Text);
+    FMaterialName := MaterialNameEdit.Text;
+
+    FShippingNo := Trim(ShippingNoEdit.Text);
+    FWorkSummary := WorkSummaryEdit.Text;
 
     FClaimCatetory := Category1.Tag;
     FClaimLocation := Location1.Tag;
@@ -1492,6 +1544,13 @@ begin
 //    ShowMessage(ClipBoard.AsText);
 end;
 
+procedure THiconisAsManageF.grid_ReqSelectCell(Sender: TObject; ACol,
+  ARow: Integer);
+begin
+  if grid_Req.SelectedRow <> -1 then
+    LoadFooterFromVesselListDB2FormByHullNo(grid_Req.CellsByName['HullNo', grid_Req.SelectedRow]);
+end;
+
 procedure THiconisAsManageF.grid_Req_ClearRows;
 var
   i: integer;
@@ -1938,6 +1997,11 @@ begin
   ClipboardCopyOrPaste2AdvEditBtn(ClaimNoEdit);
 end;
 
+procedure THiconisAsManageF.BitBtn4Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(ShippingNoEdit);
+end;
+
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
 begin
 //  Create_ToDoList_Frm('', AToDoCollect, True,
@@ -2355,6 +2419,40 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.DisplayTask2GridByMaterialName(
+  const AMaterialName: string);
+var
+  LMaterialDetail: TSQLMaterialDetail;
+  LSQLGSTask: TOrmHiconisASTask;
+begin
+  LMaterialDetail := GetMaterialDetailByMatName(AMaterialName);
+  try
+    if LMaterialDetail.IsUpdate then
+    begin
+      LMaterialDetail.FillRewind;
+
+      grid_Req.BeginUpdate;
+      try
+        grid_Req_ClearRows;
+
+        while LMaterialDetail.FillOne do
+        begin
+          LSQLGSTask := GetLoadTask(LMaterialDetail.TaskID);
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            LSQLGSTask.Free;
+          end;
+        end;//while
+      finally
+        grid_Req.EndUpdate;
+      end;
+    end;
+  finally
+    LMaterialDetail.Free;
+  end;
+end;
+
 procedure THiconisAsManageF.DisplayTask2GridByPorNo(const APorNo: string);
 var
   LMaterial4Project: TSQLMaterial4Project;
@@ -2403,6 +2501,8 @@ var
   Lary: TpjhArray<TID>;
 
   procedure _DisplayTask2Grid;
+  var
+    LHullNo: RawUtf8;
   begin
     try
       if AFromRemote then
@@ -2425,6 +2525,9 @@ var
           grid_Req.EndUpdate;
         end;
       end;
+
+      LHullNo := LSQLGSTask.HullNo;
+      LoadFooterFromVesselListDB2FormByHullNo(LHullNo);
     finally
       LSQLGSTask.Free;
     end;
@@ -2448,7 +2551,18 @@ begin
     begin
       if MessageDlg('자재번호로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
         '그래도 진행 하시겠습니까?' + #13#10 +
-        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+        '"No" 를 선택하면 자재번호  조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+      begin
+        DisplayTask2GridByMaterialCode(ASearchCondRec.FMaterialCode);
+        exit;
+      end;
+    end;
+
+    if ASearchCondRec.FMaterialName <> '' then
+    begin
+      if MessageDlg('자재명으로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
+        '그래도 진행 하시겠습니까?' + #13#10 +
+        '"No" 를 선택하면 자재명 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
       begin
         DisplayTask2GridByMaterialCode(ASearchCondRec.FMaterialCode);
         exit;
@@ -2683,6 +2797,14 @@ begin
       end;
     end;
 
+    if ASearchCondRec.FWorkSummary <> '' then
+    begin
+      AddConstArray(ConstArray, ['%'+ASearchCondRec.FWorkSummary+'%']);
+      if LWhere <> '' then
+        LWhere := LWhere + ' and ';
+      LWhere := LWhere + ' WorkSummary LIKE ? ';
+    end;
+
     LSQLGSTask := TOrmHiconisASTask.CreateAndFillPrepare(g_ProjectDB.Orm, LWhere, ConstArray);
     _DisplayTask2Grid;
   finally
@@ -2888,6 +3010,8 @@ begin
     StartOLControlWorker()
   else
     ShowMessage('Outlook does not exists!');
+
+  InitVesselMasterClient(GetSubFolderPath(ExtractFilePath(Application.ExeName), 'db') + 'VesselList.sqlite');
 
   InitEnum();
   Parallel.TaskConfig.OnMessage(WM_OLMSG_RESULT,DisplayOLMsg2Grid);

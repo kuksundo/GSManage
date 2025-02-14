@@ -28,6 +28,19 @@ type
     fQueryDate: TVesselQueryDateType;
   end;
 
+  TVesselInfo4AS = packed record
+    fHullNo,
+    fShipName,
+    fShipBuilderName,
+    fShipManagerName,
+    fClass,
+    fShipType,
+    fVesselStatus,
+    fDeliveryDate,
+    fCargoSize
+    : RawUTF8;
+  end;
+
   TList4VesselMaster = class
     fTaskID: TID;
     fHullNo,
@@ -250,6 +263,7 @@ procedure AddOrUpdateVesselGPNDeliveryDateFromVariant(ADoc: variant);
 procedure AddOrUpdateVesselInfo4SeaWebFromVariant(ADoc: variant);
 procedure LoadVesselInfo4SeaWebFromVariant(AVesselInfo4SeaWeb:TSQLVesselInfo4SeaWeb; ADoc: variant);
 function GetVesselInfo4SeaWebFromUpdatedNotZero: TSQLVesselInfo4SeaWeb;
+function GetVesselInfo4ASByHullNo(const AHullNo: string): TVesselInfo4AS;
 
 function GetVesselMasterFromSearchRec(AVesselSearchParamRec: TVesselSearchParamRec): TSQLVesselMaster;
 function GetSqlWhereFromVesselQueryDate(AVesselQueryDateType: TVesselQueryDateType): string;
@@ -279,6 +293,9 @@ procedure InitVesselMasterClient(AVesselMasterDBName: string = '');
 var
   LStr: string;
 begin
+  if Assigned(g_VesselMasterDB) then
+    exit;
+
   if AVesselMasterDBName = '' then
   begin
     LStr := GetSubFolderPath(ExtractFilePath(Application.ExeName), 'db');
@@ -621,6 +638,31 @@ begin
     Result.IsUpdate := True
   else
     Result.IsUpdate := False;
+end;
+
+function GetVesselInfo4ASByHullNo(const AHullNo: string): TVesselInfo4AS;
+var
+  LSQLVesselMaster: TSQLVesselMaster;
+begin
+  Result := Default(TVesselInfo4AS);
+
+  LSQLVesselMaster := GetVesselMasterFromHullNo(AHullNo);
+  try
+    if LSQLVesselMaster.IsUpdate then
+    begin
+      Result.fHullNo := LSQLVesselMaster.HullNo;
+      Result.fShipName := LSQLVesselMaster.ShipName;
+      Result.fShipBuilderName := LSQLVesselMaster.ShipBuilderName;
+      Result.fShipManagerName := LSQLVesselMaster.ShipManagerName;
+      Result.fClass := LSQLVesselMaster.SClass1;
+      Result.fShipType := LSQLVesselMaster.ShipType;
+      Result.fCargoSize := LSQLVesselMaster.CargoSize;
+      Result.fVesselStatus := LSQLVesselMaster.VesselStatus;
+      Result.fDeliveryDate := GetDateStrFromTimeLog(LSQLVesselMaster.DeliveryDate);
+    end;
+  finally
+    FreeAndNil(LSQLVesselMaster);
+  end;
 end;
 
 procedure LoadVesselInfo4SeaWebFromVariant(AVesselInfo4SeaWeb:TSQLVesselInfo4SeaWeb;

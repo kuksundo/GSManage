@@ -3,7 +3,8 @@ unit FrmHiConTCP;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Rtti,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RegularExpressions, Vcl.Menus, StrUtils,
   Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, NxScrollControl,
   NxCustomGridControl, NxCustomGrid, NxGrid, NxColumnClasses, NxColumns,
@@ -472,18 +473,40 @@ var
   LList: TStringList;
   LStr: string;
   LVar: variant;
+  LDocList: IDocList;
+  LValue: variant;
 begin
 //  EnableNIC_WMI();
 //  LList := GetNICIndexList_WMI();
 
 //  LList := GetAdvPropertyListOfNIC();
 //  LList := GetAdvPropertyListFromRegByIdx('0013');
-  LStr := GetAdvNICProp2JsonFromRegKeyByIpAddr('10.8.2.100');
-  LVar := _JSON(StringToUtf8(LStr));
-  AddNextGridRowsFromVariant2(NextGrid1, LVar, True);
-//  ShowMessage(LStr);
-//  ShowMessage(GetNICAdvPropsJsonFromRegistryByIpAddr('', LList));
 
+//  LStr := GetAdvNICProp2JsonFromRegKeyByIpAddr('10.8.2.100');
+//  LVar := _JSON(StringToUtf8(LStr));
+//  AddNextGridRowsFromVariant2(NextGrid1, LVar, True);
+
+//  LList := TGPNIC_WMI.GetNICIndexList();
+
+//  LStr := TGPNIC_WMI.GetNICAdvProp2JsonAryByDispName_WMI('Flow Control');
+//  LDocList := DocList(LStr);
+//  NextGridFromDocList(NextGrid1, LDocList);
+
+//  AddNextGridRowsFromStrAry2D();
+
+  LValue := '1';
+  if TGPNIC_WMI.SetNICAdvPropValueByNICNameNDispName_WMI('Ethernet0', '*FlowControl', LValue) then;
+  ShowMessage('Flow Control Success');
+
+//  LStr := TGPNIC_WMI.GetNICAdvProp2JsonByNICNameNDispName_WMI('Ethernet0', 'Flow Control');
+//  ShowMessage(LStr);
+
+  //  ShowMessage(GetNICAdvPropsJsonFromRegistryByIpAddr('', LList));
+
+//  LList := TGPNIC_WMI.GetNICNameList;//GetNICIndexList();
+//  LDocList := DocList(LList.Text);
+//  NextGridFromDocList(NextGrid1, LDocList);
+//  ShowMessage(LList.Text);
 //  LList.Free;
 end;
 

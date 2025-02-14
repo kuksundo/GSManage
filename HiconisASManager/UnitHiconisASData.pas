@@ -2,7 +2,8 @@ unit UnitHiconisASData;
 
 interface
 
-uses System.Classes, UnitEnumHelper, FSMClass_Dic, FSMState, Vcl.StdCtrls;
+uses System.Classes, UnitEnumHelper, FSMClass_Dic, FSMState, Vcl.StdCtrls,
+  JHP.Util.Bit32Helper;
 
 type
   TQueryDateType = (qdtNull,
@@ -21,7 +22,7 @@ type
     FFrom, FTo: TDateTime;
     FQueryDate: TQueryDateType;
     FHullNo, FShipName, FCustomer, FProdType, FSubject,
-    FPorNo, FMaterialCode, FShippingNo: string;
+    FPorNo, FMaterialCode, FShippingNo, FWorkSummary, FMaterialName: string;
     FCurWork, FBefAft, FWorkKind,
     FClaimServiceKind, FClaimStatus, FClaimCatetory, FClaimLocation, FClaimKind,
     FClaimCauseHW, FClaimCauseSW: integer;
@@ -429,6 +430,9 @@ const
     ''
      );
 
+procedure SetState2ComboByClaimServiceKind(const ACSK: TClaimServiceKind; ACombo: TComboBox);
+function GetCurWorkValueByClaimServiceKindSetAndCurWorkText(const ACSKSet: integer; const ACurWorkStatusText: string): integer;
+
 var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_HiASFindCondition: TLabelledEnum<THiASFindCondition>;
@@ -449,6 +453,27 @@ var
   g_ClaimCauseSW: TLabelledEnum<TClaimCauseSW>;
 
 implementation
+
+uses UnitStateMachineUtil, UnitHiconisMasterRecord;
+
+procedure SetState2ComboByClaimServiceKind(const ACSK: TClaimServiceKind; ACombo: TComboBox);
+begin
+  case ACSK of
+    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, g_HiconisASState, ACombo);
+    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, g_HiconisASState, ACombo);
+    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, g_HiconisASState, ACombo);
+    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, g_HiconisASState, ACombo);
+    cskOverDue: ;
+  end;
+end;
+
+function GetCurWorkValueByClaimServiceKindSetAndCurWorkText(const ACSKSet: integer; const ACurWorkStatusText: string): integer;
+var
+  i: integer;
+  LpjhBit32: TpjhBit32;
+begin
+
+end;
 
 initialization
 //  g_QueryDateType.InitArrayRecord(R_QueryDateType);

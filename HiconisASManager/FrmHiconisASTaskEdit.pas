@@ -1956,13 +1956,15 @@ end;
 
 procedure TTaskEditF.InitCurWorkCB;
 begin
-  case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
-    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, g_HiconisASState, CurWorkCB);
-    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, g_HiconisASState, CurWorkCB);
-    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, g_HiconisASState, CurWorkCB);
-    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, g_HiconisASState, CurWorkCB);
-    cskOverDue: ;
-  end;
+//  case g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex) of
+//    cskPartSupply: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_Mat, g_HiconisASState, CurWorkCB);
+//    cskPartSupplyNSE: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE_Mat, g_HiconisASState, CurWorkCB);
+//    cskSEOnboard: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_SE, g_HiconisASState, CurWorkCB);
+//    cskTechInfo: TFSMHelper<THiconisASState,THiconisASTrigger>.GetAllStates2ComboUsingEnumHelper(g_FSM_TechInfo, g_HiconisASState, CurWorkCB);
+//    cskOverDue: ;
+//  end;
+
+  SetState2ComboByClaimServiceKind(g_ClaimServiceKind.ToType(ClaimServiceKindCB.ItemIndex), CurWorkCB);
 
   if CurWorkCB.ItemIndex = -1 then
   begin

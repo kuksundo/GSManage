@@ -3,6 +3,8 @@ unit UnitHiconSystemDBUtil;
 interface
 
 uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Data.DB, Data.Win.ADODB,
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
+  OtlSync,
   mormot.db.sql.oledb, mormot.db.sql, mormot.core.base, mormot.core.variants,
   UnitChkDupIdData, UnitHiconMPMData, UnitHiconDBData;
 
@@ -21,9 +23,13 @@ type
     class function GetSystemType2JsonAryFromDB(ADBFileName: string=''): RawUtf8;
     class function GetSystemType2JsonFromDB(ADBFileName: string=''): RawUtf8;
 
-    class function GetTagInfo2JsonFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2JsonByTableName_Async(AFormHandle: THandle; ATagName: string; ATableName, AFieldName: string; ADBFileName: string=''): integer;
     class function GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AWhereFieldName: string; ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2JsonAryFromTAGMSTTable(ATagName, AWhereFieldName: string; ADBFileName: string=''): RawUtf8;
+    class function GetTagInfo2JsonAryFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+
     class function GetTagInfo2RecFromINFTable(ATagName: string; ADBFileName: string=''): TTagInfoRec_INF;
+    class function GetTagInfo2JsonFromINFTable(ATagName: string; ADBFileName: string=''): RawUtf8;
     class function GetChInfo2JsonFromChannelTable(ATagName: string; ADBFileName: string=''): RawUtf8;
     //IOC Table에서 AMPMName에 연결된 COM Card List 조회함
     //AMPMName: MPM11/FBM11
@@ -37,6 +43,8 @@ type
   end;
 
 implementation
+
+uses UnitCopyData;
 
 { THiConSystemDB }
 
@@ -313,6 +321,24 @@ begin
   Result := LDict2.Json;
 end;
 
+class function THiConSystemDB.GetTagInfo2JsonAryFromINFTable(ATagName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+  LRowCount: integer;
+begin
+  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME Like "%' + ATagName + '%"';
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+
+  if Result = '' then
+    exit;
+
+  LDocList := DocList(Result);
+  Result := LDocList.Json;
+end;
+
 class function THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AWhereFieldName,
   ADBFileName: string): RawUtf8;
 var
@@ -340,6 +366,53 @@ begin
 //  end;
 end;
 
+class function THiConSystemDB.GetTagInfo2JsonAryFromTAGMSTTable(ATagName,
+  AWhereFieldName, ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+  LRowCount: integer;
+begin
+  LQuery := 'select * from TAG_MST where ' + AWhereFieldName + ' Like "%' + ATagName + '%"';
+  Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+end;
+
+class function THiConSystemDB.GetTagInfo2JsonByTableName_Async(AFormHandle: THandle; ATagName, ATableName,
+  AFieldName, ADBFileName: string): integer;
+var
+  LResult: RawUtf8;
+begin
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    begin
+      if ATableName = 'MAPPING_TABLE' then
+      begin
+        LResult := GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AFieldName, ADBFileName);
+      end
+      else
+      if ATableName = 'TAG_MST' then
+      begin
+        LResult := GetTagInfo2JsonAryFromTAGMSTTable(ATagName, AFieldName, ADBFileName);
+      end
+      else
+      if ATableName = 'INF' then
+      begin
+        LResult := GetTagInfo2JsonAryFromINFTable(ATagName,  ADBFileName);
+      end;
+    end,
+
+    Parallel.TaskConfig.OnMessage(nil).OnTerminated(
+      procedure
+      begin
+        if LResult <> '' then
+        begin
+//          TGPCopyData.FFormHandle := AFormHandle;
+          TGPCopyData.Log2CopyData(LResult, 1, AFormHandle);
+        end;
+      end
+    )
+  );
+end;
+
 class function THiConSystemDB.GetTagInfo2JsonFromINFTable(ATagName,
   ADBFileName: string): RawUtf8;
 var
@@ -348,7 +421,7 @@ var
   LDocList: IDocList;
   LRowCount: integer;
 begin
-  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME = "' + ATagName + '"';
+  LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, SLOT, DIR, TYPE, ADDR, SUB_POS from INF where TAG_NAME Like "%' + ATagName + '%"';
   Result := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
 
   if Result = '' then

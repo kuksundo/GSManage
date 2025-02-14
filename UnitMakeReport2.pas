@@ -156,7 +156,7 @@ var
 
 implementation
 
-uses UnitStringUtil, UnitStreamUtil,
+uses UnitStringUtil, UnitStreamUtil, UnitFileInfoUtil,
   UnitHiconisASVarJsonUtil,
   UnitElecServiceData2, UnitDateUtil,
   UnitGSTariffRecord2, UnitGSTriffData;
@@ -1097,7 +1097,7 @@ begin
     exit;
   end;
 
-  LTempFileName := 'c:\temp\' + ACIPLRec.FHullNo + '_' + ACIPLRec.FDescription + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LTempFileName := GetValidFileName('c:\temp\' + ACIPLRec.FHullNo + '_' + ACIPLRec.FDescription + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh');
   LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
 
   if LFileCopySuccess then
@@ -1125,6 +1125,8 @@ begin
 
     LRange := LWorksheet.range['D11'];
     LRange.FormulaR1C1 := ACIPLRec.FRemark;
+//    LRange.HorizontalAlignment := xlHAlignCenter;//xlCenter;
+//    LRange.VerticalAlignment := xlVAlignCenter;//xlCenter;
 
     LRange := LWorksheet.range['A21'];
     LRange.FormulaR1C1 := ACIPLRec.FClaimNo;
@@ -1207,7 +1209,7 @@ begin
     exit;
   end;
 
-  LTempFileName := 'c:\temp\' + AShipMarkRec.FHullNo + '_' + AShipMarkRec.FDescription + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LTempFileName := GetValidFileName('c:\temp\' + AShipMarkRec.FHullNo + '_' + RemoveSpaceBetweenStrings(AShipMarkRec.FDescription) + '_' + FormatDateTime('yyyymmdd', Date) + '.pjh');
   LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
 
   if LFileCopySuccess then
@@ -1337,7 +1339,7 @@ begin
     exit;
   end;
 
-  LTempFileName := 'c:\temp\' + ARectAcceptRec.FHullNo + '_ReceiptAccept_' + FormatDateTime('yyyymmdd', Date) + '.pjh';
+  LTempFileName := GetValidFileName('c:\temp\' + ARectAcceptRec.FHullNo + '_ReceiptAccept_' + FormatDateTime('yyyymmdd', Date) + '.pjh');
   LFileCopySuccess := CopyFile(LFileName, LTempFileName, False);
 
   if LFileCopySuccess then

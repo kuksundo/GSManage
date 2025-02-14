@@ -57,6 +57,7 @@ uses SysUtils, Classes, Generics.Collections, Forms,
   function GetMaterialDetailFromID(AID: TID): TSQLMaterialDetail;
   function GetMaterialDetailFromTaskByReclaim(ATask: TOrmHiconisASTask): TSQLMaterialDetail;
   function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
+  function GetMaterialDetailByMatName(const AMatName: string): TSQLMaterialDetail;
   function GetMaterialDetailByPlateNo(const APlateNo: string): TSQLMaterialDetail;
 
   procedure AddOrUpdateMaterialDetail(AOrm: TSQLMaterialDetail);
@@ -190,7 +191,7 @@ end;
 function GetMaterialDetailByPorNoNMatCode(const APorNo, AMatCode: string): TSQLMaterialDetail;
 begin
   if APorNo = '' then
-    Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'MaterialCode = ?', [AMatCode])
+    Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'MaterialCode like ?', ['%'+AMatCode+'%'])
   else
     Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PORNo = ? and MaterialCode = ?', [APorNo, AMatCode]);
 
@@ -200,9 +201,19 @@ begin
     Result.IsUpdate := False;
 end;
 
+function GetMaterialDetailByMatName(const AMatName: string): TSQLMaterialDetail;
+begin
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'MaterialName like ?', ['%'+AMatName+'%']);
+
+  if Result.FillOne then
+    Result.IsUpdate := True
+  else
+    Result.IsUpdate := False;
+end;
+
 function GetMaterialDetailByPlateNo(const APlateNo: string): TSQLMaterialDetail;
 begin
-  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PlateNo like ?', [APlateNo]);
+  Result := TSQLMaterialDetail.CreateAndFillPrepare(g_HiASMaterialDetailDB.orm, 'PlateNo like ?', ['%'+APlateNo+'%']);
 
   if Result.FillOne then
     Result.IsUpdate := True

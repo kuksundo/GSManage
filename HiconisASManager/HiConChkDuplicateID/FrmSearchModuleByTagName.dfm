@@ -40,9 +40,6 @@ object SrchModuleByTagF: TSrchModuleByTagF
     TabOrder = 0
     TabStop = True
     OnCellDblClick = TagInfoGridCellDblClick
-    ExplicitTop = 88
-    ExplicitWidth = 501
-    ExplicitHeight = 288
   end
   object Panel1: TPanel
     Left = 0
@@ -51,18 +48,17 @@ object SrchModuleByTagF: TSrchModuleByTagF
     Height = 105
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 800
     object Label1: TLabel
-      Left = 17
-      Top = 16
-      Width = 68
+      Left = 13
+      Top = 74
+      Width = 72
       Height = 16
       Alignment = taRightJustify
-      Caption = 'Tag Name: '
+      Caption = 'Tag Name : '
     end
     object Label2: TLabel
       Left = 15
-      Top = 46
+      Top = 16
       Width = 70
       Height = 16
       Alignment = taRightJustify
@@ -92,10 +88,26 @@ object SrchModuleByTagF: TSrchModuleByTagF
       Alignment = taRightJustify
       Caption = 'Equipment Kind: '
     end
+    object Label6: TLabel
+      Left = 7
+      Top = 44
+      Width = 78
+      Height = 16
+      Alignment = taRightJustify
+      Caption = 'Table Name :'
+    end
+    object Label7: TLabel
+      Left = 244
+      Top = 44
+      Width = 73
+      Height = 16
+      Alignment = taRightJustify
+      Caption = 'Field Name :'
+    end
     object TagNameEdit: TEdit
       Tag = 1
       Left = 91
-      Top = 13
+      Top = 71
       Width = 262
       Height = 24
       Hint = 'Tag Name'
@@ -105,7 +117,7 @@ object SrchModuleByTagF: TSrchModuleByTagF
     object SystemDBEdit: TEdit
       Tag = 2
       Left = 121
-      Top = 43
+      Top = 13
       Width = 281
       Height = 24
       Hint = 'System DB'
@@ -114,7 +126,7 @@ object SrchModuleByTagF: TSrchModuleByTagF
     end
     object BitBtn3: TBitBtn
       Left = 91
-      Top = 43
+      Top = 13
       Width = 26
       Height = 25
       Glyph.Data = {
@@ -149,7 +161,7 @@ object SrchModuleByTagF: TSrchModuleByTagF
     end
     object BitBtn1: TBitBtn
       Left = 355
-      Top = 12
+      Top = 70
       Width = 79
       Height = 25
       Caption = 'Search'
@@ -286,7 +298,7 @@ object SrchModuleByTagF: TSrchModuleByTagF
     end
     object BitBtn5: TBitBtn
       Left = 408
-      Top = 43
+      Top = 13
       Width = 26
       Height = 25
       Glyph.Data = {
@@ -319,6 +331,34 @@ object SrchModuleByTagF: TSrchModuleByTagF
       TabOrder = 9
       OnClick = BitBtn5Click
     end
+    object TableCombo: TComboBox
+      Tag = 3
+      Left = 91
+      Top = 41
+      Width = 142
+      Height = 24
+      Hint = 'Text'
+      TabOrder = 10
+      Text = 'MAPPING_TABLE'
+      Items.Strings = (
+        'MAPPING_TABLE'
+        'TAG_MST'
+        'INF')
+    end
+    object FieldCombo: TComboBox
+      Tag = 3
+      Left = 323
+      Top = 41
+      Width = 111
+      Height = 24
+      Hint = 'Text'
+      ItemIndex = 0
+      TabOrder = 11
+      Text = 'TAG_NAME'
+      Items.Strings = (
+        'TAG_NAME'
+        'VAR_NAME')
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -327,7 +367,6 @@ object SrchModuleByTagF: TSrchModuleByTagF
     Height = 41
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 501
     object Button1: TButton
       Left = 794
       Top = 1
@@ -337,7 +376,14 @@ object SrchModuleByTagF: TSrchModuleByTagF
       Caption = 'Close'
       TabOrder = 0
       OnClick = Button1Click
-      ExplicitLeft = 403
+    end
+    object Button2: TButton
+      Left = 16
+      Top = 8
+      Width = 75
+      Height = 25
+      Caption = 'Test'
+      TabOrder = 1
     end
   end
   object OpenDialog1: TOpenDialog
