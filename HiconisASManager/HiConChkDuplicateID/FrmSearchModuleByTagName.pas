@@ -63,7 +63,7 @@ type
     FHiconTCPIniConfig: THiconTCPIniConfig;
   end;
 
-  function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
+function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
 
 implementation
 
@@ -162,6 +162,7 @@ procedure TSrchModuleByTagF.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   TagInfoGrid.ClearRows; //Memory Leak 방지 위해 추가함
+//  TagInfoGrid.Columns.Clear;
 end;
 
 procedure TSrchModuleByTagF.FormCreate(Sender: TObject);
@@ -192,6 +193,7 @@ begin
 
     if not FileExists(LDBNameFullPath) then
     begin
+      EventWaitHide();
       ShowMessage('DB not exist : [' + LDBNameFullPath + ']');
       exit;
     end;
@@ -226,12 +228,15 @@ procedure TSrchModuleByTagF.LoadTagInfoFromJsonAry2Grid(
 var
   LUtf8: RawUtf8;
 begin
-//  TagInfoGrid.ClearRows; //AddNextGridRowsFromJsonAry()에서 ClearRows()를 실행함
+  //AddNextGridRowsFromJsonAry()에서 ClearRows()를 실행하면 Memory Leak 발생함
+  //Column을 동적으로 생성했을 경우 ClearRow를 먼저 실행한 후 Columns.Clear를 실행해야 Memory Leak 방지함
+  TagInfoGrid.ClearRows;
   TagInfoGrid.Columns.Clear;
 
 //{"TAG_NAME":"DI01320_07","DESCRIPTION":"","RESOURCE":"MPM13","RES_ID":3,"CH_ID":369228399,
 //"DATA_TYPE":1,"ORG_TAG":"DI01320","IN_OUT":1,"INDEX_NO":0,"FUNC_NAME":"NX-DI16",
 //"VAR_NAME":"SHG_SHG36_X","SYS_TYPE":10}
+//DATA_TYPE,IN_OUT,SYS_TYPE 필드를 Desc로 대체함
   LUtf8 := UpdateDBValue2HumanReadable(ATagInfoJsonAry);
 //  LUtf8 := ATagInfoJsonAry;
   AddNextGridRowsFromJsonAry(TagInfoGrid, LUtf8, True);

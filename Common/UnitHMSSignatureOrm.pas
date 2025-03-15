@@ -10,7 +10,8 @@ type
   TOrmHMSSignature = class(TOrm)
   private
     fSigKey,
-    fSignature
+    fSignature,
+    fMsg
     : RawUtf8;
 
     fUpdateDate: TTimeLog;
@@ -20,6 +21,7 @@ type
   published
     property SigKey: RawUtf8 read fSigKey write fSigKey;
     property Signature: RawUtf8 read fSignature write fSignature;
+    property Msg: RawUtf8 read fMsg write fMsg;
     property UpdateDate: TTimeLog read fUpdateDate write fUpdateDate;
   end;
 
@@ -31,6 +33,7 @@ procedure AddOrUpdateHMSSignatureBySigKey(const ASigKey: RawUtf8;
   AOrm: TOrmHMSSignature; ADB: TRestClientDB);
 procedure AddOrUpdateHMSSignature(AOrm: TOrmHMSSignature; ADB: TRestClientDB);
 procedure AdddOrUpdateSignatureFieldByBase64(const ABase64: RawUtf8; ASigKey: RawUtf8; ADB: TRestClientDB);
+procedure AdddOrUpdateMsgFieldByBase64(const ABase64: RawUtf8; ASigKey: RawUtf8; ADB: TRestClientDB);
 
 implementation
 
@@ -49,6 +52,25 @@ begin
       LOrmHMSSignature.SigKey := ASigKey;
 
     LOrmHMSSignature.Signature := ABase64;
+    AddOrUpdateHMSSignature(LOrmHMSSignature, ADB);
+  finally
+    LOrmHMSSignature.Free;
+  end;
+end;
+
+procedure AdddOrUpdateMsgFieldByBase64(const ABase64: RawUtf8; ASigKey: RawUtf8; ADB: TRestClientDB);
+var
+  LOrmHMSSignature: TOrmHMSSignature;
+begin
+  if ASigKey = '' then
+    ASigKey := ChangeFileExt(ExtractFileName(Application.ExeName),'');
+
+  LOrmHMSSignature := GetHMSSignatureBySigKey(ASigKey, ADB);
+  try
+    if not LOrmHMSSignature.IsUpdate then
+      LOrmHMSSignature.SigKey := ASigKey;
+
+    LOrmHMSSignature.Msg := ABase64;
     AddOrUpdateHMSSignature(LOrmHMSSignature, ADB);
   finally
     LOrmHMSSignature.Free;

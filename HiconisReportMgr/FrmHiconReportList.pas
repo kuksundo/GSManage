@@ -537,7 +537,7 @@ begin
 
       if AIsIncludeAttachFile then
       begin
-        LCount := GetFileCountFromID(LKeyId, FJHPFileDB4HiRpt);
+        LCount := GetFileCountFromTaskID(LKeyId, FJHPFileDB4HiRpt);
 
         if LCount > 0 then
         begin
@@ -972,6 +972,7 @@ begin
   try
     HiRptListGrid.BeginUpdate;
     try
+      HiRptListGrid.ClearRows();
 //      LUtf8 := LOrmHiconReportList.GetJsonValues(true, true, soSelect);
       LDocList := LOrmHiconReportList.FillTable.ToIList<TOrmHiconReportList>;
       LUtf8 := LDocList.Data.SaveToJson();
@@ -1359,7 +1360,7 @@ end;
 
 procedure THiConReportListF.LoadReportListFromDocList2Grid;
 var
-  LList: IDocList;
+//  LList: IDocList;
   LDict: IDocDict;
   LUtf8: RawUtf8;
   LRow: integer;
@@ -1485,7 +1486,7 @@ end;
 
 procedure THiConReportListF.MakeZipFileFromSelected(AIsIncludeAttachFile: Boolean);
 var
-  LDocList, LDocList2: IDocList;
+//  LDocList, LDocList2: IDocList;
   LStr: string;
   LUtf8: RawUtf8;
 begin

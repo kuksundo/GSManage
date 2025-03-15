@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{B1D71A74-2716-4D3D-B600-975B85AD2FC1}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="HiconisASManageR.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\RPA\MacroManage\MacroManagement2.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="HiconisASManageR">
+        <MSBuild Projects="HiconisASManageR.dproj"/>
+    </Target>
+    <Target Name="HiconisASManageR:Clean">
+        <MSBuild Projects="HiconisASManageR.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="HiconisASManageR:Make">
+        <MSBuild Projects="HiconisASManageR.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MacroManagement2">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj"/>
+    </Target>
+    <Target Name="MacroManagement2:Clean">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MacroManagement2:Make">
+        <MSBuild Projects="..\..\RPA\MacroManage\MacroManagement2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="HiconisASManageR;MacroManagement2"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="HiconisASManageR:Clean;MacroManagement2:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="HiconisASManageR:Make;MacroManagement2:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

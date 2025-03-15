@@ -2,8 +2,8 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>1899-12-30 00:00:00.000.951,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.844,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.881,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.844,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.250,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR2.pas</Transaction>
   </Transactions>
 </BorlandProject>

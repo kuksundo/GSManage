@@ -1,7 +1,7 @@
 object ChgRegListF: TChgRegListF
   Left = 0
   Top = 0
-  Caption = 'ChgRegListF'
+  Caption = 'Change Register Report List'
   ClientHeight = 500
   ClientWidth = 1122
   Color = clBtnFace
@@ -1277,6 +1277,7 @@ object ChgRegListF: TChgRegListF
     TabOrder = 2
     TabStop = True
     OnCellDblClick = HiChgRegListGridCellDblClick
+    OnMouseDown = HiChgRegListGridMouseDown
     object NxIncrementColumn1: TNxIncrementColumn
       Alignment = taCenter
       DefaultWidth = 30
@@ -1402,6 +1403,7 @@ object ChgRegListF: TChgRegListF
     end
     object ChgRegSubject: TNxTextColumn
       Alignment = taCenter
+      DefaultWidth = 200
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1418,6 +1420,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 6
       SortType = stAlphabetic
+      Width = 200
     end
     object SystemName: TNxTextColumn
       Alignment = taCenter
@@ -1475,8 +1478,9 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 9
       SortType = stAlphabetic
+      Visible = False
     end
-    object InitiaedDuring: TNxTextColumn
+    object InitiatedDuring: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -1494,6 +1498,7 @@ object ChgRegListF: TChgRegListF
       ParentFont = False
       Position = 10
       SortType = stAlphabetic
+      Visible = False
     end
     object ReqSrc: TNxTextColumn
       Alignment = taCenter
@@ -1573,6 +1578,44 @@ object ChgRegListF: TChgRegListF
       Position = 14
       SortType = stAlphabetic
     end
+    object OpenStatus: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'OpenStatus'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 15
+      SortType = stAlphabetic
+    end
+    object Distinction: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Distinction'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 16
+      SortType = stAlphabetic
+    end
     object Plan_Engineer: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET
@@ -1589,141 +1632,7 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 15
-      SortType = stAlphabetic
-    end
-    object Plan_ClosePIC: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #54869#51064#45812#45817
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 16
-      SortType = stAlphabetic
-    end
-    object Plan_Finish: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #51333#47308#44228#54925
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
       Position = 17
-      SortType = stAlphabetic
-    end
-    object EstimatedWorkHour: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #50696#49345#51089#50629#49884#44036
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 18
-      SortType = stAlphabetic
-    end
-    object Importance: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #51473#50836#46020
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 19
-      SortType = stAlphabetic
-      Visible = False
-    end
-    object Open_PIC: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #51217#49688#45812#45817#51088#51060#47492
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 20
-      SortType = stAlphabetic
-    end
-    object Test_PIC: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #53580#49828#53944#45812#45817#51088#51060#47492
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 21
-      SortType = stAlphabetic
-    end
-    object Close_PIC: TNxTextColumn
-      Alignment = taCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = #50756#47308#45812#45817#51088#51060#47492
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 22
       SortType = stAlphabetic
     end
     object ChgRegDate: TNxNumberColumn
@@ -1743,11 +1652,169 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 23
+      Position = 18
       SortType = stNumeric
-      Visible = False
       Increment = 1.000000000000000000
       Precision = 0
+    end
+    object ChgRegCloseDate: TNxNumberColumn
+      Alignment = taCenter
+      DefaultValue = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Close Date'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 19
+      SortType = stNumeric
+      Increment = 1.000000000000000000
+      Precision = 0
+    end
+    object Plan_ClosePIC: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #54869#51064#45812#45817
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 20
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object Plan_Finish: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51333#47308#44228#54925
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 21
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object EstimatedWorkHour: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #50696#49345#51089#50629#49884#44036
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 22
+      SortType = stAlphabetic
+    end
+    object Importance: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51473#50836#46020
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 23
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object Open_PIC: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #51217#49688#45812#45817#51088#51060#47492
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 24
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object Test_PIC: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #53580#49828#53944#45812#45817#51088#51060#47492
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 25
+      SortType = stAlphabetic
+    end
+    object Close_PIC: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = #50756#47308#45812#45817#51088#51060#47492
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 26
+      SortType = stAlphabetic
     end
     object ChgRegOpenDate: TNxNumberColumn
       Alignment = taCenter
@@ -1766,7 +1833,7 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 24
+      Position = 27
       SortType = stNumeric
       Visible = False
       Increment = 1.000000000000000000
@@ -1789,30 +1856,7 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 25
-      SortType = stNumeric
-      Visible = False
-      Increment = 1.000000000000000000
-      Precision = 0
-    end
-    object ChgRegCloseDate: TNxNumberColumn
-      Alignment = taCenter
-      DefaultValue = '0'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Header.Caption = 'ChgRegCloseDate'
-      Header.Alignment = taCenter
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
-      ParentFont = False
-      Position = 26
+      Position = 28
       SortType = stNumeric
       Visible = False
       Increment = 1.000000000000000000
@@ -1835,7 +1879,7 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 27
+      Position = 29
       SortType = stNumeric
       Visible = False
       Increment = 1.000000000000000000
@@ -1857,7 +1901,7 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 28
+      Position = 30
       SortType = stAlphabetic
     end
     object Priority: TNxTextColumn
@@ -1876,7 +1920,27 @@ object ChgRegListF: TChgRegListF
       Header.Font.Style = []
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
-      Position = 29
+      Position = 31
+      SortType = stAlphabetic
+      Visible = False
+    end
+    object ChgRegCompany: TNxTextColumn
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Header.Caption = 'Company'
+      Header.Alignment = taCenter
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
+      ParentFont = False
+      Position = 32
       SortType = stAlphabetic
       Visible = False
     end
@@ -1918,6 +1982,10 @@ object ChgRegListF: TChgRegListF
       Caption = 'Export Selected To Excel'
       OnClick = ExportSelectedToExcel1Click
     end
+    object ExportSelectedTohichg1: TMenuItem
+      Caption = 'Export Selected To .hichg'
+      OnClick = ExportSelectedTohichg1Click
+    end
     object N2: TMenuItem
       Caption = '-'
     end
@@ -1932,5 +2000,46 @@ object ChgRegListF: TChgRegListF
       Visible = False
       OnClick = SetColCaptionFromList1Click
     end
+  end
+  object DropEmptyTarget1: TDropEmptyTarget
+    DragTypes = [dtCopy, dtLink]
+    OnDrop = DropEmptyTarget1Drop
+    Target = HiChgRegListGrid
+    WinTarget = 0
+    Left = 116
+    Top = 204
+  end
+  object DataFormatAdapterOutlook1: TDataFormatAdapter
+    DragDropComponent = DropEmptyTarget1
+    DataFormatName = 'TOutlookDataFormat'
+    Left = 148
+    Top = 204
+  end
+  object DataFormatAdapterTarget: TDataFormatAdapter
+    DragDropComponent = DropEmptyTarget1
+    DataFormatName = 'TVirtualFileStreamDataFormat'
+    Left = 184
+    Top = 204
+  end
+  object DataFormatAdapter1: TDataFormatAdapter
+    DragDropComponent = DropEmptyTarget1
+    DataFormatName = 'TFileDataFormat'
+    Left = 218
+    Top = 204
+  end
+  object DropEmptySource1: TDropEmptySource
+    DragTypes = [dtCopy, dtMove]
+    Left = 116
+    Top = 236
+  end
+  object DataFormatAdapter2: TDataFormatAdapter
+    DragDropComponent = DropEmptySource1
+    DataFormatName = 'TVirtualFileStreamDataFormat'
+    Left = 148
+    Top = 237
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 64
+    Top = 200
   end
 end

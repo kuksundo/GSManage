@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.610,E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConChgReportMgR2.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.250,E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR2.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.363,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiReportWorkItemEdit.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.829,E:\pjh\Dev\Lang\Delphi\Common\UnitSetUtil.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.063,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiconReportList.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.241,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\HiConChgReportMgr.dproj=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\HiConReportMgr.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.951,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.746,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\FrmHiconReportEdit.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.351,E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConChgReportMgR.pas=E:\pjh\Dev\Lang\Delphi\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConReportMgR.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.844,E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.135,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.881,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisReportMgr\Unit1.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="..\..\GSManage"/>
+    <File Path="..\Common"/>
+    <File Path="..\Common\FrameVesselInfo.pas"/>
+    <File Path="..\Common\FrameVesselInfo.dfm"/>
+    <File Path="..\Common\UnitHMSSignatureOrm.pas"/>
+    <File Path="..\..\..\..\Delphi"/>
+    <File Path="..\..\..\Common"/>
+    <File Path="..\..\..\Common\Frame"/>
+    <File Path="..\..\..\Common\Frame\UnitFrameFileList2.pas"/>
+    <File Path="..\..\..\Common\Frame\UnitFrameFileList2.dfm"/>
+    <File Path="..\..\..\Common\UnitCheckGrpAdvUtil.pas"/>
+    <File Path="..\..\..\Common\UnitFileInfoUtil.pas"/>
+    <File Path="..\..\..\Common\UnitSetUtil.pas"/>
+    <File Path="..\..\..\NoGitHub"/>
+    <File Path="..\..\..\NoGitHub\RecordUnit2"/>
+    <File Path="..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr"/>
+    <File Path="..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConChgReportMgR.pas"/>
+    <File Path="..\..\..\NoGitHub\RecordUnit2\HiconisReportMgr\UnitHiConChgReportMgR2.pas"/>
+    <File Path="..\..\..\NoGitHub\RegCodeManager2"/>
+    <File Path="..\..\..\NoGitHub\RegCodeManager2\Common"/>
+    <File Path="..\..\..\NoGitHub\RegCodeManager2\Common\UnitLicRegInfoClass.pas"/>
+    <File Path="..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas"/>
+    <File Path="FrmHiChangeRegisterEdit.pas"/>
+    <File Path="FrmHiChangeRegisterEdit.dfm"/>
+    <File Path="FrmHiChgRegList.pas"/>
+    <File Path="FrmHiChgRegList.dfm"/>
+    <File Path="UnitHiConChgRegItemOrm.pas"/>
+    <File Path="UnitHiConReportListOrm.pas"/>
+    <File Path="UnitHiConReportMakeUtil.pas"/>
+    <File Path="UnitHiConReportMgrData.pas"/>
+    <File Path="UnitHiConReportWorkItemOrm.pas"/>
+    <File Path="UnitHiConRptDM.pas"/>
+    <File Path="UnitHiConRptDM.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

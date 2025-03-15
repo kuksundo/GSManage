@@ -11,14 +11,15 @@ type
   TOrmHiChgRegItem = class(TOrm)
   private
     fReportKey: TTimeLog;
+
     fChgRegRptNo,
+    fChgRegCompany,
     fReportAuthorID,
     fReportAuthorName,
     fTitle,
     fSystemName,
     fDocRef,
     fChapter,
-    fInitiatedDuring,
     fRegisteredBy,
     fReqSrc,
     fModDetail,
@@ -31,10 +32,13 @@ type
     fClose_PIC
     : RawUTF8;
 
+    fInitiatedDuring,
     fImportance,
     fPriority,
     fInvolves,
-    fModification
+    fModification,
+    fOpenStatus, //OPENED, CLOSED
+    fDistinction //HARDWARE, SOFTWARE
     : integer;
 
     fRegDate,
@@ -52,13 +56,13 @@ type
   published
     property ReportKey4ChgReg : TTimeLog read fReportKey write fReportKey;
     property ChgRegRptNo: RawUTF8 read fChgRegRptNo write fChgRegRptNo;
+    property ChgRegCompany: RawUTF8 read fChgRegCompany write fChgRegCompany;
     property ChgRegRptAuthorID: RawUTF8 read fReportAuthorID write fReportAuthorID;
     property ChgRegRptAuthorName: RawUTF8 read fReportAuthorName write fReportAuthorName;
     property ChgRegSubject: RawUTF8 read fTitle write fTitle;
     property SystemName: RawUTF8 read fSystemName write fSystemName;
     property DocRef: RawUTF8 read fDocRef write fDocRef;
     property Chapter: RawUTF8 read fChapter write fChapter;
-    property InitiaedDuring: RawUTF8 read fInitiatedDuring write fInitiatedDuring;
     property RegisteredBy: RawUTF8 read fRegisteredBy write fRegisteredBy;
     property Modification: RawUTF8 read fReqSrc write fReqSrc;
     property ModDetail: RawUTF8 read fModDetail write fModDetail;
@@ -70,10 +74,13 @@ type
     property Test_PIC: RawUTF8 read fTest_PIC write fTest_PIC;
     property Close_PIC: RawUTF8 read fClose_PIC write fClose_PIC;
 
+    property InitiatedDuring: integer read fInitiatedDuring write fInitiatedDuring;
     property Involves: integer read fInvolves write fInvolves;
     property ReqSrc: integer read fModification write fModification;
     property Importance: integer read fImportance write fImportance;
     property Priority: integer read fPriority write fPriority;
+    property OpenStatus: integer read fOpenStatus write fOpenStatus;
+    property Distinction: integer read fDistinction write fDistinction;
 
     property ChgRegDate: TTimeLog read fRegDate write fRegDate;
     property ChgRegOpenDate: TTimeLog read fOpen_Date write fOpen_Date;

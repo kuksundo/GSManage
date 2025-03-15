@@ -2,7 +2,7 @@ object HiconisTCPF: THiconisTCPF
   Left = 0
   Top = 0
   Caption = 'HiconisTCPF'
-  ClientHeight = 600
+  ClientHeight = 640
   ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object HiconisTCPF: THiconisTCPF
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 438
+    Top = 478
     Width = 772
     Height = 6
     Cursor = crVSplit
@@ -31,7 +31,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 185
     Top = 41
     Width = 6
-    Height = 397
+    Height = 437
     ExplicitLeft = 216
     ExplicitHeight = 297
   end
@@ -159,13 +159,12 @@ object HiconisTCPF: THiconisTCPF
       Height = 25
       Caption = 'Test'
       TabOrder = 3
-      Visible = False
       OnClick = Button1Click
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 561
+    Top = 601
     Width = 772
     Height = 39
     Align = alBottom
@@ -183,7 +182,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object ConsoleMemo: TMemo
     Left = 0
-    Top = 444
+    Top = 484
     Width = 772
     Height = 117
     Align = alBottom
@@ -194,7 +193,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 0
     Top = 41
     Width = 185
-    Height = 397
+    Height = 437
     Align = alLeft
     Caption = 'Panel3'
     TabOrder = 3
@@ -284,7 +283,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 42
       Width = 183
-      Height = 354
+      Height = 394
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -392,7 +391,7 @@ object HiconisTCPF: THiconisTCPF
     Left = 191
     Top = 41
     Width = 581
-    Height = 397
+    Height = 437
     Align = alClient
     Caption = 'Panel5'
     TabOrder = 4
@@ -799,7 +798,7 @@ object HiconisTCPF: THiconisTCPF
       Left = 1
       Top = 28
       Width = 579
-      Height = 368
+      Height = 408
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Align = alClient
@@ -1124,6 +1123,10 @@ object HiconisTCPF: THiconisTCPF
         Caption = 'Search INF Tag'
         OnClick = SearchINTTag1Click
       end
+      object CommandList1: TMenuItem
+        Caption = 'Web Command List'
+        OnClick = CommandList1Click
+      end
       object Web1: TMenuItem
         Caption = 'Web'
         object DBInfo1: TMenuItem
@@ -1162,7 +1165,7 @@ object HiconisTCPF: THiconisTCPF
           end
           object retainmap1: TMenuItem
             Caption = 'retainmap'
-            Enabled = False
+            OnClick = retainmap1Click
           end
         end
         object MPMInfo1: TMenuItem
@@ -1179,9 +1182,6 @@ object HiconisTCPF: THiconisTCPF
         end
         object Utilities1: TMenuItem
           Caption = 'Utilities'
-          object Backup1: TMenuItem
-            Caption = 'Backup'
-          end
           object MPMBackup1: TMenuItem
             Caption = 'MPM Backup From Selected'
             OnClick = MPMBackup1Click
@@ -1192,12 +1192,250 @@ object HiconisTCPF: THiconisTCPF
         end
         object Maintenance1: TMenuItem
           Caption = 'Maintenance'
+          object Backup1: TMenuItem
+            Caption = 'Backup'
+            OnClick = Backup1Click
+          end
+          object Restore1: TMenuItem
+            Caption = 'Restore'
+            OnClick = Restore1Click
+          end
+          object RetainBackup1: TMenuItem
+            Caption = 'RetainBackup'
+            Enabled = False
+          end
+          object RetainRestore1: TMenuItem
+            Caption = 'RetainRestore'
+            Enabled = False
+          end
+          object appup1: TMenuItem
+            Caption = 'appup'
+            Enabled = False
+          end
+          object appdown1: TMenuItem
+            Caption = 'appdown'
+            Enabled = False
+          end
+          object cf1: TMenuItem
+            Caption = 'cf'
+            OnClick = cf1Click
+          end
+          object reboot1: TMenuItem
+            Caption = 'reboot'
+            OnClick = reboot1Click
+          end
         end
         object Interfaces1: TMenuItem
           Caption = 'Interfaces'
-          object version3: TMenuItem
-            Caption = 'version'
-            OnClick = version3Click
+          object RUNState2: TMenuItem
+            Caption = 'RUN State'
+            object rundiag1: TMenuItem
+              Caption = 'run diag'
+              OnClick = rundiag1Click
+            end
+            object version3: TMenuItem
+              Caption = 'version'
+              OnClick = version3Click
+            end
+            object timeSync1: TMenuItem
+              Caption = 'timeSync'
+              Enabled = False
+            end
+            object redundant1: TMenuItem
+              Caption = 'redundant'
+              Enabled = False
+            end
+          end
+          object ConfigJson1: TMenuItem
+            Caption = 'Config Json'
+            object interfaceJson1: TMenuItem
+              Caption = 'interfaceJson'
+              Enabled = False
+            end
+            object channelJson1: TMenuItem
+              Caption = 'channelJson'
+              Enabled = False
+            end
+            object modbusJson1: TMenuItem
+              Caption = 'modbusJson'
+              Enabled = False
+            end
+            object backupJson1: TMenuItem
+              Caption = 'backupJson'
+              Enabled = False
+            end
+          end
+          object SelectCardDiag1: TMenuItem
+            Caption = 'Select Card Diag'
+            object selectCard1: TMenuItem
+              Caption = 'selectCard'
+              Enabled = False
+            end
+            object dbUpdate1: TMenuItem
+              Caption = 'dbUpdate'
+              Enabled = False
+            end
+            object sinffing1: TMenuItem
+              Caption = 'sniffing'
+              Enabled = False
+            end
+            object infcomm1: TMenuItem
+              Caption = 'infcomm'
+              Enabled = False
+            end
+            object commStatus1: TMenuItem
+              Caption = 'comStatus'
+              Enabled = False
+            end
+            object infStatus1: TMenuItem
+              Caption = 'infStatus'
+              Enabled = False
+            end
+            object chStatus1: TMenuItem
+              Caption = 'chStatus'
+              Enabled = False
+            end
+            object ptStatus1: TMenuItem
+              Caption = 'ptStatus'
+              Enabled = False
+            end
+            object outAreaList1: TMenuItem
+              Caption = 'outAreaList'
+              Enabled = False
+            end
+            object privateMessage1: TMenuItem
+              Caption = 'privateMessage'
+              Enabled = False
+            end
+          end
+          object MyDiag1: TMenuItem
+            Caption = 'My Diag'
+            object trendTxRx1: TMenuItem
+              Caption = 'trendTxRx'
+              Enabled = False
+            end
+            object trendInf1: TMenuItem
+              Caption = 'trendInf'
+              Enabled = False
+            end
+            object errorList1: TMenuItem
+              Caption = 'errorList'
+              Enabled = False
+            end
+          end
+          object Logs1: TMenuItem
+            Caption = 'Logs'
+            object bootLog1: TMenuItem
+              Caption = 'bootLog'
+              Enabled = False
+            end
+            object viewInfLog1: TMenuItem
+              Caption = 'viewInfLog'
+              Enabled = False
+            end
+          end
+          object Interface1: TMenuItem
+            Caption = 'Interface'
+            object viewInfConfig1: TMenuItem
+              Caption = 'viewInfConf'
+              Enabled = False
+            end
+            object viewChConf1: TMenuItem
+              Caption = 'viewChConf'
+              Enabled = False
+            end
+            object viewPtcConf1: TMenuItem
+              Caption = 'viewPtcConf'
+              Enabled = False
+            end
+            object viewPortConf1: TMenuItem
+              Caption = 'viewPortConf'
+              Enabled = False
+            end
+            object viewTritonConf1: TMenuItem
+              Caption = 'viewTritonConf'
+              Enabled = False
+            end
+          end
+          object CANInfo1: TMenuItem
+            Caption = 'CAN Info'
+            object viewCANStatus1: TMenuItem
+              Caption = 'viewCANStatus'
+              Enabled = False
+            end
+            object RxCANMsg1: TMenuItem
+              Caption = 'RxCANMsg'
+              Enabled = False
+            end
+            object UpdateInputList1: TMenuItem
+              Caption = 'UpdateInputList'
+              Enabled = False
+            end
+          end
+          object Others1: TMenuItem
+            Caption = 'Others'
+            object viewIMReg1: TMenuItem
+              Caption = 'viewIMReg'
+              Enabled = False
+            end
+            object viewHicsrReg1: TMenuItem
+              Caption = 'viewHicsrReg'
+              Enabled = False
+            end
+            object viewSysCommand1: TMenuItem
+              Caption = 'SysCommand'
+              Enabled = False
+            end
+            object refresh1: TMenuItem
+              Caption = 'refresh'
+              Enabled = False
+            end
+            object pstate1: TMenuItem
+              Caption = 'pstate'
+              Enabled = False
+            end
+            object dmesg1: TMenuItem
+              Caption = 'dmesg'
+              Enabled = False
+            end
+            object help1: TMenuItem
+              Caption = 'help'
+              Enabled = False
+            end
+          end
+          object Debug1: TMenuItem
+            Caption = 'Debug'
+            object VRTUTest1: TMenuItem
+              Caption = 'VRTUTest'
+              Enabled = False
+            end
+          end
+          object Maintenance2: TMenuItem
+            Caption = 'Maintenance'
+            object BackUp2: TMenuItem
+              Caption = 'Backup'
+              Enabled = False
+            end
+            object Restore2: TMenuItem
+              Caption = 'Restore'
+              Enabled = False
+            end
+            object appup2: TMenuItem
+              Caption = 'appup'
+              Enabled = False
+            end
+            object appdown2: TMenuItem
+              Caption = 'appdown'
+              Enabled = False
+            end
+            object cf2: TMenuItem
+              Caption = 'cf'
+              Enabled = False
+            end
+            object reboot2: TMenuItem
+              Caption = 'reboot'
+              Enabled = False
+            end
           end
         end
       end

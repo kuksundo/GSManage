@@ -7,6 +7,7 @@ uses System.Classes, UnitEnumHelper, Vcl.StdCtrls;
 const
   MAX_REPORT_WORKITEM = 14;
   HIRPT_FILE_EXT = '.hirpt';
+  HICHGREG_FILE_EXT = '.hichg';
   KN_REPORT = 'Report';//Json KeyName
   KN_WORKITEM = 'WorkItem';
   KN_REPORT_FILES = 'Report_Files';
@@ -111,12 +112,14 @@ const
 type
   THiRptModifiedItem = (
     hrmiStraton, hrmiDB, hrmiHMI, hrmiSystem, hrmiIOList, hrmiDrawing, hrmiCnEChart,
+    hrmiHW, hrmiEtc,
     hrmiFinal);
 
 const
   R_HiRptModifiedItem : array[Low(THiRptModifiedItem)..High(THiRptModifiedItem)] of string =
     (
       'Straton', 'DB', 'HMI(HiView)', 'System(HiCONIS)', 'I/O List', 'Drawing', 'C & E Chart',
+      'HARDWARE', 'ETC',
      '');
 {$ENDREGION}
 
@@ -133,7 +136,7 @@ const
      '');
 {$ENDREGION}
 
-{$REGION 'R_HiRptModifyReqSrc'}
+{$REGION 'R_HiRptImportance'}
 type
   THiRptImportance = (
     hriMinorChg, hriMajorChg,
@@ -154,6 +157,42 @@ const
      '');
 {$ENDREGION}
 
+{$REGION 'R_HiRptOpenStatus'}
+type
+  THiRptOpenStatus = (
+    hrosOpened, hrosClosed, hrosFinal);
+
+const
+  R_HiRptOpenStatus : array[Low(THiRptOpenStatus)..High(THiRptOpenStatus)] of string =
+    (
+      'OPENED', 'CLOSED',
+     '');
+{$ENDREGION}
+
+{$REGION 'R_HiRptDistinction'}
+type
+  THiRptDistinction = (
+    hrdHW, hrdSW, hrdFinal);
+
+const
+  R_HiRptDistinction : array[Low(THiRptDistinction)..High(THiRptDistinction)] of string =
+    (
+      'HARDWARE', 'SOFTWARE',
+     '');
+{$ENDREGION}
+
+{$REGION 'R_HiRptInitiatedDuring'}
+type
+  THiRptInitiatedDuring = (
+    hridHWEng, hridSWProd, hridCommissioning, hridFinal);
+
+const
+  R_HiRptInitiatedDuring : array[Low(THiRptInitiatedDuring)..High(THiRptInitiatedDuring)] of string =
+    (
+      'HW ENGINEERING', 'SW PRODUCTION', 'COMMISSIONING',
+     '');
+{$ENDREGION}
+
 function GetYardNameByHullNo(AHullNo: string): string;
 
 var
@@ -167,6 +206,9 @@ var
   g_HiRptModifyReqSrc: TLabelledEnum<THiRptModifyReqSrc>;
   g_HiRptImportance: TLabelledEnum<THiRptImportance>;
   g_HiRptPriority: TLabelledEnum<THiRptPriority>;
+  g_HiRptOpenStatus: TLabelledEnum<THiRptOpenStatus>;
+  g_HiRptDistinction: TLabelledEnum<THiRptDistinction>;
+  g_HiRptInitiatedDuring: TLabelledEnum<THiRptInitiatedDuring>;
 
 implementation
 
@@ -200,5 +242,8 @@ initialization
 //  g_HiRptModifyReqSrc.InitArrayRecord(R_HiRptModifyReqSrc);
 //  g_HiRptImportance.InitArrayRecord(R_HiRptImportance);
 //  g_HiRptPriority.InitArrayRecord(R_HiRptPriority);
+//  g_HiRptOpenStatus.InitArrayRecord(R_HiRptOpenStatus);
+//  g_HiRptDistinction.InitArrayRecord(R_HiRptDistinction);
+//  g_HiRptInitiatedDuring.InitArrayRecord(R_HiRptInitiatedDuring);
 
 end.

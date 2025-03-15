@@ -82,7 +82,6 @@ type
     JvLabel20: TJvLabel;
     Chapter: TEdit;
     JvLabel21: TJvLabel;
-    InitiaedDuring: TEdit;
     JvLabel13: TJvLabel;
     ChgRegDate: TDateTimePicker;
     JvLabel14: TJvLabel;
@@ -91,6 +90,14 @@ type
     RegisteredBy: TEdit;
     Importance: TRadioGroup;
     Priority: TRadioGroup;
+    NxHeaderPanel5: TNxHeaderPanel;
+    JvLabel22: TJvLabel;
+    JvLabel23: TJvLabel;
+    OpenStatus: TRadioGroup;
+    Distinction: TRadioGroup;
+    InitiatedDuring: TComboBox;
+    JvLabel25: TJvLabel;
+    ChgRegCompany: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -135,6 +142,7 @@ begin
     begin
       JHPFileFr4ChgRegItem.FJHPFileDB4Fr := AJHPFileDB4HiChgReg;
       SetVesselInfo2FormByRptKey(ARptKey);
+      ReportKind.ItemIndex := Ord(hrkCHR)-1;
 
       LJson := Utf8ToString(AChgRegItemJson);
       SetCompNameValueFromJson2FormByClassType(LHiChgRegItemF, LJson);
@@ -265,6 +273,9 @@ begin
   g_HiRptModifyReqSrc.InitArrayRecord(R_HiRptModifyReqSrc);
   g_HiRptImportance.InitArrayRecord(R_HiRptImportance);
   g_HiRptPriority.InitArrayRecord(R_HiRptPriority);
+  g_HiRptOpenStatus.InitArrayRecord(R_HiRptOpenStatus);
+  g_HiRptDistinction.InitArrayRecord(R_HiRptDistinction);
+  g_HiRptInitiatedDuring.InitArrayRecord(R_HiRptInitiatedDuring);
 
   g_HiRptModifyReqSrc.SetType2List(ReqSrc.Items);
   g_HiRptModifiedItem.SetType2List(Involves.Items);
@@ -273,6 +284,8 @@ begin
 
   g_HiRptKind.SetType2List(ReportKind.Items);
   ReportKind.ItemIndex:= Ord(hrkCHR);
+
+  g_HiRptInitiatedDuring.SetType2List(InitiatedDuring.Items);
 end;
 
 procedure THiChgRegItemF.SetVesselInfo2FormByRptKey(const ARptKey: TTimeLog);

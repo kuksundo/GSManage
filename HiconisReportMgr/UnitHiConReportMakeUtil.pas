@@ -2,7 +2,9 @@ unit UnitHiConReportMakeUtil;
 
 interface
 
-uses Sysutils, Dialogs, Classes, System.Variants,
+uses Sysutils, Dialogs, Classes, System.Variants, ActiveX,
+  OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
+  OtlSync,
   mormot.core.variants, mormot.core.unicode, mormot.core.datetime,
   mormot.core.os, mormot.core.json, mormot.core.base,
   UnitHiConReportMgrData;
@@ -12,8 +14,9 @@ const
   COMMISSION_REPORT_SUMMARY_FILENAME = 'HiCONiS Commissioning Report-Summary.xlsx';
   COMMISSION_REPORT_WORKCODE_FILENAME = 'HiCONiS Commissioning Report.xlsx';
 
-  CHANGE_REGISTER_REPORT_FILENAME = 'HiCONiS Commissioning Report_HCR.xlsx';
+  CHANGE_REGISTER_REPORT_FILENAME = 'HiCONiS Commissioning Report_HICR.xlsx';
 
+procedure MakeCommissionReportByReportKind_Async(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
 procedure MakeCommissionReportByReportKind(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
 procedure MakeCommissionReportTotal(AJsonAry: string; AFileName: string='');//Rec: THiconReportRec;
 procedure MakeCommissionReportSummary(AJsonAry: string; AFileName: string='');
@@ -32,13 +35,37 @@ procedure SetCommissionReportWorkCodeBySheet(AJsonAry: string; ASheet: OleVarian
 procedure MakeChangeRegisterReport(AJsonAry: string; AFileName: string='');
 procedure SetHCRHeaderBySheet(AHeaderJson: variant; ASheet: OleVariant);
 procedure SetHCRBySheet(AHCRJson: variant; ASheet: OleVariant);
+procedure MakeChangeRegisterReport_Async(AJsonAry: string; AFileName: string='');
 
 var
   DOC_DIR: string;
 
 implementation
 
-uses UnitExcelUtil, JHP.Util.Bit32Helper;
+uses UnitExcelUtil, JHP.Util.Bit32Helper, FrmJHPWaitForm;
+
+procedure MakeCommissionReportByReportKind_Async(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
+begin
+  EventWaitShow('', False);
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    begin
+      CoInitialize(nil);
+      try
+        MakeCommissionReportByReportKind(AJsonAry, AHiCommissionRptKind, AXlsFileName);
+      finally
+        CoUninitialize();
+      end;
+    end,
+
+    Parallel.TaskConfig.OnMessage(nil).OnTerminated(
+      procedure
+      begin
+        EventWaitHide();
+      end
+    )
+  );
+end;
 
 procedure MakeCommissionReportByReportKind(AJsonAry: string; AHiCommissionRptKind: integer; AXlsFileName: string);
 var
@@ -593,6 +620,7 @@ var
   LExcel: OleVariant;
   LWorkBook: OleVariant;
   LSrcWorksheet, LDestWorksheet: OleVariant;
+  LPageSetup: OleVariant;
   LFileName, LTempFileName, LSheetName, LFileExt, LOriginSheetName: string;
   LHiRptVar, LHCRVar: variant;
   LHiconReportRec: THiconReportRec;
@@ -625,6 +653,7 @@ begin
 //  TDocVariant.New(LHiRptVar);
 
   LExcel := GetActiveExcelOleObject(True);
+//  LExcel.Visible := False;
   LExcel.DisplayAlerts := False; // Suppress confirmation dialogs
 
   LWorkBook := LExcel.Workbooks.Open(LTempFileName);
@@ -654,6 +683,10 @@ begin
       else
       begin
         LDestWorksheet := CopySheet2WorkBookByName(LWorkBook, LOriginSheetName, LSheetName);
+        LPageSetup := LDestWorksheet.PageSetup;
+        LPageSetup.FitToPagesWide := 1; //한 페이지에 너비 맞춤
+        LPageSetup.FitToPagesTall := 1; //한 페이지에 높이 맞춤
+        LPageSetup.Zoom := False; //확대/축소 설정 비활성화 (FitToPagesWide/Tall을 위해 필요함
       end;
     end;
 
@@ -683,7 +716,7 @@ begin
   LRange := ASheet.range['G5'];//선주
   LRange.FormulaR1C1 := LStr;
 
-  LStr := AHeaderJson.HullNo;
+  LStr := AHeaderJson.ShipBuilder;
   LRange := ASheet.range['J4'];//Yard
   LRange.FormulaR1C1 := GetYardNameByHullNo(LStr);
 
@@ -700,13 +733,17 @@ var
   LpjhBit32: TpjhBit32;
   LIdx: integer;
 begin
-  LStr := AHCRJson.ChgRegRptNo;
-  LRange := ASheet.range['A3']; //Doc.No.
-  LRange.FormulaR1C1 := LStr;
+//  LStr := AHCRJson.ChgRegRptNo;
+//  LRange := ASheet.range['A3']; //Doc.No.
+//  LRange.FormulaR1C1 := LStr;
 
-  LRange := ASheet.range['B4']; //Date
-  LDate := TimeLogToDateTime(AHCRJson.ChgRegDate);
-  LRange.FormulaR1C1 := FormatDateTime('YYYY.MM.DD', LDate);
+//  LRange := ASheet.range['B4']; //Date
+//  LDate := TimeLogToDateTime(AHCRJson.ChgRegDate);
+//  LRange.FormulaR1C1 := FormatDateTime('YYYY.MM.DD', LDate);
+
+  LStr := AHCRJson.ChgRegCompany;
+  LRange := ASheet.range['B4']; //Company
+  LRange.FormulaR1C1 := LStr;
 
   LStr := AHCRJson.ChgRegRptAuthorName;
   LRange := ASheet.range['B5']; //Name
@@ -736,7 +773,7 @@ begin
   LDate := TimeLogToDateTime(AHCRJson.ChgRegDate);
   LRange.FormulaR1C1 := FormatDateTime('YYYY.MM.DD', LDate);
 
-  LStr := AHCRJson.InitiaedDuring;
+  LStr := g_HiRptInitiatedDuring.ToString(AHCRJson.InitiatedDuring);
   LRange := ASheet.range['B19']; //Initiated During
   LRange.FormulaR1C1 := LStr;
 
@@ -770,13 +807,17 @@ begin
   LRange := ASheet.range['J31']; //Estimated Work Hours
   LRange.FormulaR1C1 := LStr;
 
-  LStr := AHCRJson.Open_PIC;
-  LRange := ASheet.range['J37']; //Opened Engineer
+  LStr := g_HiRptOpenStatus.ToString(AHCRJson.OpenStatus);
+  LRange := ASheet.range['J37']; //STATUS = OPENED / CLOSED
   LRange.FormulaR1C1 := LStr;
 
-  LRange := ASheet.range['J39']; //Opened Date
-  LDate := TimeLogToDateTime(AHCRJson.ChgRegOpenDate);
-  LRange.FormulaR1C1 := FormatDateTime('YYYY.MM.DD', LDate);
+  LStr := g_HiRptDistinction.ToString(AHCRJson.Distinction);
+  LRange := ASheet.range['J39']; //DISTINCTION = HARDWARE / SOFTWARE
+  LRange.FormulaR1C1 := LStr;
+
+//  LRange := ASheet.range['J39']; //Opened Date
+//  LDate := TimeLogToDateTime(AHCRJson.ChgRegOpenDate);
+//  LRange.FormulaR1C1 := FormatDateTime('YYYY.MM.DD', LDate);
 
   LStr := AHCRJson.Test_PIC;
   LRange := ASheet.range['J43']; //Test Engineer
@@ -818,6 +859,8 @@ begin
   SetValueCheckBoxByTextOnWorkSheet(ASheet, 'I/O LIST', LpjhBit32.Bit[4]);
   SetValueCheckBoxByTextOnWorkSheet(ASheet, 'DRAWING', LpjhBit32.Bit[5]);
   SetValueCheckBoxByTextOnWorkSheet(ASheet, 'C&E CHART', LpjhBit32.Bit[6]);
+  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'HARDWARE', LpjhBit32.Bit[7]);
+  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'ETC', LpjhBit32.Bit[8]);
 //  end;
 
   LStr := g_HiRptImportance.ToString(AHCRJson.Importance);
@@ -836,8 +879,29 @@ begin
 //  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'Low Priority', LpjhBit32.Bit[2]);
 //  SetValueCheckBoxByTextOnWorkSheet(ASheet, 'High Priority', LpjhBit32.Bit[3]);
 //  end;
+end;
 
+procedure MakeChangeRegisterReport_Async(AJsonAry: string; AFileName: string);
+begin
+  EventWaitShow('', False);
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    begin
+      CoInitialize(nil);
+      try
+        MakeChangeRegisterReport(AJsonAry, AFileName);
+      finally
+        CoUninitialize();
+      end;
+    end,
 
+    Parallel.TaskConfig.OnMessage(nil).OnTerminated(
+      procedure
+      begin
+        EventWaitHide();
+      end
+    )
+  );
 end;
 
 end.

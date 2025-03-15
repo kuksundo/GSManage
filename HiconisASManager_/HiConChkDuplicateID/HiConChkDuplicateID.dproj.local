@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.896,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.240,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\UnitTRegExUtil.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas=E:\pjh\Dev\Lang\Delphi\Common\UnitHtmlUtil.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.421,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.dfm=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.542,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.pas=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.542,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmHiConChkDuplicateID.dfm=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.100,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\HiConChkDuplicateID.dproj=C:\Users\Administrator\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.058,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\UnitChkDupIdData.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.153,E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\FrmIpList.pas=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.526,=E:\pjh\Dev\Lang\Delphi\Common\Form\FrmInputIpAddress.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.674,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.406,=E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.212,=C:\Users\Administrator\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+  </Transactions>
+</BorlandProject>

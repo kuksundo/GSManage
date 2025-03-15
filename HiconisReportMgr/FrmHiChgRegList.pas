@@ -4,18 +4,21 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SBPro, NxScrollControl,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SBPro, NxScrollControl, Winapi.ActiveX,
   NxCustomGridControl, NxCustomGrid, NxGrid, AdvOfficeTabSet, AeroButtons,
   Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit, JvCombobox, Vcl.Buttons,
   AdvEdit, AdvEdBtn, Vcl.StdCtrls, Vcl.ComCtrls, AdvGroupBox, AdvOfficeButtons,
   JvExControls, JvLabel, CurvyControls, Vcl.Menus, NxColumnClasses, NxColumns,
+
+  DropSource, DragDrop, DropTarget, DragDropFile, DragDropFormats,
 
   mormot.core.base, mormot.core.variants, mormot.core.buffers, mormot.core.unicode,
   mormot.core.data, mormot.orm.base, mormot.core.os, mormot.core.text, mormot.core.json,
   mormot.core.datetime, mormot.core.rtti, mormot.core.collections, mormot.rest.sqlite3,
   mormot.orm.core,
 
-  VarRecUtils, UnitHiConReportMgrData, UnitHiConReportMgR, UnitJHPFileRecord
+  {$IFDEF DEF_HiConChgReportMgR}, UnitHiConChgReportMgR, {$ELSE}UnitHiConReportMgR,{$ENDIF}
+  VarRecUtils, UnitHiConReportMgrData, UnitJHPFileRecord
   ;
 
 type
@@ -78,7 +81,7 @@ type
     SystemName:TnxTextColumn;
     DocRef:TnxTextColumn;
     Chapter:TnxTextColumn;
-    InitiaedDuring:TnxTextColumn;
+    InitiatedDuring: TNxTextColumn;
     ReqSrc:TnxTextColumn;
     Modification:TnxTextColumn;
     ModDetail:TnxTextColumn;
@@ -103,6 +106,17 @@ type
     N2: TMenuItem;
     RegisteredBy: TNxTextColumn;
     Priority: TNxTextColumn;
+    OpenStatus: TNxTextColumn;
+    Distinction: TNxTextColumn;
+    ChgRegCompany: TNxTextColumn;
+    ExportSelectedTohichg1: TMenuItem;
+    DropEmptyTarget1: TDropEmptyTarget;
+    DataFormatAdapterOutlook1: TDataFormatAdapter;
+    DataFormatAdapterTarget: TDataFormatAdapter;
+    DataFormatAdapter1: TDataFormatAdapter;
+    DropEmptySource1: TDropEmptySource;
+    DataFormatAdapter2: TDataFormatAdapter;
+    OpenDialog1: TOpenDialog;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -117,10 +131,22 @@ type
       ARow: Integer);
     procedure DeleteHCRReport1Click(Sender: TObject);
     procedure ExportSelectedToExcel1Click(Sender: TObject);
+    procedure ExportSelectedTohichg1Click(Sender: TObject);
+    procedure DropEmptyTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
+    procedure HiChgRegListGridMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FReportKey4ChgReg: TTimeLog;
     FJHPFileDB4ChgReg: TRestClientDB;
     FJHPFileDB4ChgRegModel: TOrmModel;
+
+    //보고서 리스트 내,외부 저장용
+    FHiChgRegDocDict: IDocDict; //{Report: [], WorkItem: []}
+    FHiChgRegDocList: IDocList; //[{Report: [], WorkItem: []},...]
+
+    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
+      Index: integer; out AStream: IStream);
 
     procedure ClearFindCondForm();
     procedure SetSrchCondHdrFromDict(ADict: IDocDict);
@@ -131,6 +157,7 @@ type
     procedure DisplayChgRegList2GridByConstArray(AWhere: string; const AAry: TConstArray);
     procedure DisplayChgRegList2GridByRptKey(ARptKey: TTimeLog);
     procedure DisplayChgRegList2Grid(const ARec: THiRptMgrSearchCondRec);
+    function AddHiChgRegListGridRowsFromJsonAry(AJsonAry: RawUtf8; AIsAddColumn: Boolean=false; AIsClearRow: Boolean=false): integer;
 
     procedure HiChgRegItemEdit(const ARow: integer=-1);
     procedure LoadChgRegJson2Grid(AVar: Variant; ARow: integer=-1);
@@ -142,6 +169,28 @@ type
     procedure MakeHCRReportBySelected();
 
     function GetHiconReportRecByHcrNo(const AHcrNo: string): THiconReportRec;
+
+    function ReplaceStatusValue2StrFromJsonAry(AJson: RawUtf8): RawUtf8;
+    function ReplaceStatusValue2StrFromJson(AJson: RawUtf8): RawUtf8;
+    function ReplaceStrValue2StatusFromJsonAry(AJson: RawUtf8): RawUtf8;
+    function ReplaceStrValue2StatusFromJson(AJson: RawUtf8): RawUtf8;
+
+    procedure LoadHiChgRegList2GridFromFile();
+    procedure MakeZipFileFromSelected(AIsIncludeAttachFile: Boolean=False);
+    procedure MakeZipFileFromString(const AContent: string; AFileName: string='');
+    function GetHiChgRegList2JsonAryFromSelected(AIsIncludeAttachFile: Boolean=False): RawUtf8;
+
+    procedure ClearChgRegDocDict();
+    procedure ClearChgRegDocList();
+    procedure SetEnable4SaveDBBtn();
+
+    procedure LoadChgRegListFromDocDict2Grid();
+    procedure LoadChgRegListFromDocList2Grid();
+    procedure LoadChgRegListFromRawByteString(const ARaw: RawByteString);
+    procedure LoadChgRegListFromJsonAry2Grid(AJson: RawUtf8);
+    procedure LoadChgRegFromJson2Grid(AJson: RawUtf8; ARow: integer=-1);
+    procedure LoadChgRegVar2Grid(AVar: variant; ARow: integer=-1);
+    function GetRowIdxFromGridByKeyId(const ARpgKeyId, AChgRegRptNo: string): integer;
   public
     Class procedure DeleteHCRReportByReportKey(const ARptKey: TTimeLog);
   end;
@@ -156,7 +205,7 @@ implementation
 
 uses UnitDFMUtil, UnitNextGridUtil2, UnitComboBoxUtil, JHP.Util.Bit32Helper,
   UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHGSSerialRecord2,
-  UnitHiConReportMakeUtil,
+  UnitHiConReportMakeUtil, UnitBase64Util2, UnitDragUtil,
   FrmHiChangeRegisterEdit;
 
 {$R *.dfm}
@@ -167,28 +216,41 @@ var
   LJson: RawUtf8;
   LDict: IDocDict;
 begin
-  LDict := DocDict(AReportJson);
-
   LChgRegListEditF := TChgRegListF.Create(nil);
   try
     with LChgRegListEditF do
     begin
-      FReportKey4ChgReg := StrToInt64(LDict['ReportKey']);
+      if AReportJson <> '' then
+      begin
+        LDict := DocDict(AReportJson);
+        FReportKey4ChgReg := StrToInt64(LDict['ReportKey']);
+        SetSrchCondHdrFromDict(LDict);
+      end
+      else
+        FReportKey4ChgReg := -1;
 
-      SetSrchCondHdrFromDict(LDict);
       LJson := GetHiChgRegItemJsonAryByReportKey(FReportKey4ChgReg);
-      AddNextGridRowsFromJsonAry(HiChgRegListGrid, LJson, HiChgRegListGrid.Columns.Count = 0);
+      AddHiChgRegListGridRowsFromJsonAry(LJson, HiChgRegListGrid.Columns.Count = 0);
 
       Result := ShowModal;
 
       if Result = mrOK then
       begin
-        AddNextGridRowsFromJsonAry(HiChgRegListGrid, LJson, HiChgRegListGrid.Columns.Count = 0);
+        AddHiChgRegListGridRowsFromJsonAry(LJson, HiChgRegListGrid.Columns.Count = 0);
       end;
     end;//with
   finally
     LChgRegListEditF.Free;
   end;
+end;
+
+function TChgRegListF.AddHiChgRegListGridRowsFromJsonAry(AJsonAry: RawUtf8;
+  AIsAddColumn, AIsClearRow: Boolean): integer;
+var
+  LJson: RawUtf8;
+begin
+  LJson := ReplaceStatusValue2StrFromJsonAry(AJsonAry);
+  AddNextGridRowsFromJsonAry(HiChgRegListGrid, LJson, AIsAddColumn);
 end;
 
 procedure TChgRegListF.btn_CloseClick(Sender: TObject);
@@ -217,6 +279,18 @@ end;
 procedure TChgRegListF.Button1Click(Sender: TObject);
 begin
   ClearFindCondForm();
+end;
+
+procedure TChgRegListF.ClearChgRegDocDict;
+begin
+  FHiChgRegDocDict.Clear;
+  SetEnable4SaveDBBtn();
+end;
+
+procedure TChgRegListF.ClearChgRegDocList;
+begin
+  FHiChgRegDocList.Clear;
+  SetEnable4SaveDBBtn();
 end;
 
 procedure TChgRegListF.ClearFindCondForm;
@@ -428,7 +502,7 @@ begin
     try
       LDocList := LOrmHiChgRegItem.FillTable.ToIList<TOrmHiChgRegItem>;
       LUtf8 := LDocList.Data.SaveToJson();
-      AddNextGridRowsFromJsonAry(HiChgRegListGrid, LUtf8, HiChgRegListGrid.Columns.Count = 0);
+      AddHiChgRegListGridRowsFromJsonAry(LUtf8, HiChgRegListGrid.Columns.Count = 0);
     finally
       HiChgRegListGrid.EndUpdate;
     end;
@@ -448,9 +522,10 @@ begin
   try
     HiChgRegListGrid.BeginUpdate;
     try
+      HiChgRegListGrid.ClearRows();
       LDocList := LOrmHiChgRegItem.FillTable.ToIList<TOrmHiChgRegItem>;
       LUtf8 := LDocList.Data.SaveToJson();
-      AddNextGridRowsFromJsonAry(HiChgRegListGrid, LUtf8, HiChgRegListGrid.Columns.Count = 0);
+      AddHiChgRegListGridRowsFromJsonAry(LUtf8, HiChgRegListGrid.Columns.Count = 0);
     finally
       HiChgRegListGrid.EndUpdate;
     end;
@@ -459,20 +534,159 @@ begin
   end;
 end;
 
+procedure TChgRegListF.DropEmptyTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+var
+  LTargetStream: TStream;
+  LRawByte: RawByteString;
+  LFromOutlook: Boolean;
+  LFileName, LFileExt: string;
+  LJson: RawUtf8;
+  LDocType, i: integer;
+  LUnicodeStrings: TUnicodeStrings;
+  LStrings: TStrings;
+begin
+  LFileName := '';
+  LRawByte := '';
+  LFromOutlook := False;
+  if (DataFormatAdapter1.DataFormat <> nil) then
+  begin
+    LUnicodeStrings := (DataFormatAdapter1.DataFormat as TFileDataFormat).Files;
+    LFileName := LUnicodeStrings.Text;
+
+    // OutLook에서 Drag한 경우에는 LFileName = '' 임
+    if LFileName = '' then
+    begin
+      LStrings := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames;
+      // OutLook에서 첨부파일을 Drag 했을 경우
+//      if LStrings.Count > 0) then
+      for i := 0 to LStrings.Count - 1 do
+      begin
+        LFileName := LStrings[i];
+        LFileExt := ExtractFileExt(LFileName);
+
+        if LowerCase(LFileExt) = HICHGREG_FILE_EXT then
+        begin
+          LTargetStream := GetStreamFromDropDataFormat2(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat), i);
+          try
+            if not Assigned(LTargetStream) then
+              ShowMessage('Not Assigned');
+
+            LRawByte := StreamToRawByteString(LTargetStream);
+            LFromOutlook := True;
+
+            if LRawByte <> '' then
+            begin
+              LoadChgRegListFromRawByteString(LRawByte);
+          //    ShowMessage(FRptDocDict.S[KN_REPORT]);
+            end;
+          finally
+            if Assigned(LTargetStream) then
+              LTargetStream.Free;
+          end;
+        end;
+      end;//for
+    end
+    else// 윈도우 탐색기에서 Drag 했을 경우 LFileName에 Drag한 File Name이 존재함
+    begin
+      for i := 0 to LUnicodeStrings.Count - 1 do
+      begin
+        LFileName := LUnicodeStrings.Strings[i];
+        LFileExt := ExtractFileExt(LFileName);
+
+        if LowerCase(LFileExt) = HICHGREG_FILE_EXT then
+        begin
+          if FileExists(LFileName) then
+            LRawByte := StringFromFile(LFileName)
+          else
+            LRawByte := '';
+        end;
+
+        if LRawByte <> '' then
+        begin
+          LoadChgRegListFromRawByteString(LRawByte);
+      //    ShowMessage(FRptDocDict.S[KN_REPORT]);
+        end;
+      end;//for
+    end;
+  end;
+end;
+
 procedure TChgRegListF.ExportSelectedToExcel1Click(Sender: TObject);
 begin
   MakeHCRReportBySelected();
 end;
 
+procedure TChgRegListF.ExportSelectedTohichg1Click(Sender: TObject);
+begin
+  MakeZipFileFromSelected();
+end;
+
 procedure TChgRegListF.FormCreate(Sender: TObject);
 begin
+  InitHiChgRegItemClient('');
   FJHPFileDB4ChgReg := InitJHPFileClient2(ExtractFilePath(Application.ExeName) + 'HiconChgReg.exe', FJHPFileDB4ChgRegModel);
+  FHiChgRegDocDict := DocDict('{}');
+  FHiChgRegDocList := DocList('[]');
+
+  if not g_HiRptOpenStatus.IsInitArray then
+    g_HiRptOpenStatus.InitArrayRecord(R_HiRptOpenStatus);
+
+  if not g_HiRptDistinction.IsInitArray then
+    g_HiRptDistinction.InitArrayRecord(R_HiRptDistinction);
+
+  (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
 end;
 
 procedure TChgRegListF.FormDestroy(Sender: TObject);
 begin
   FJHPFileDB4ChgRegModel.Free;
   FJHPFileDB4ChgReg.Free;
+end;
+
+function TChgRegListF.GetHiChgRegList2JsonAryFromSelected(AIsIncludeAttachFile: Boolean): RawUtf8;
+var
+  LDocList, LDocList2: IDocList;
+  LVar: variant;
+  LUtf8: RawUtf8;
+  LKeyId: TTimeLog;
+  i, LCount: integer;
+begin
+  Result := '';
+  LDocList := DocList('[]');
+
+  for i := 0 to HiChgRegListGrid.RowCount - 1 do
+  begin
+    FHiChgRegDocDict.Clear;
+
+    if HiChgRegListGrid.Row[i].Selected then
+    begin
+      LVar := GetNxGridRow2Variant(HiChgRegListGrid, i);
+      LUtf8 := LVar;
+      //{'ChgRegRpt': {}, 'Files': [{},{}...]}
+      FHiChgRegDocDict.S[KN_CHGREGRPT] := LUtf8;//'ChgRegRpt'
+
+      LKeyId := StrToInt64Def(HiChgRegListGrid.CellByName['ReportKey4ChgReg', i].AsString, 0);
+
+      if AIsIncludeAttachFile then
+      begin
+        LCount := GetFileCountFromTaskID(LKeyId, FJHPFileDB4ChgReg);
+
+        if LCount > 0 then
+        begin
+          LUtf8 := GetFiles2JsonAryFromOrmByID(LKeyId, FJHPFileDB4ChgReg);
+          FHiChgRegDocDict.S[KN_CHGREGRPT_FILES] := LUtf8;//'Report_Files': [] = json array임
+        end;
+      end
+      else
+        FHiChgRegDocDict.S[KN_CHGREGRPT_FILES] := '[]';
+
+
+      LDocList.Append(FHiChgRegDocDict.Json);
+    end;
+  end;
+
+  Result := LDocList.Json;
 end;
 
 function TChgRegListF.GetHiconReportRecByHcrNo(
@@ -485,7 +699,7 @@ begin
 
   LOrmHiChgRegItem := GetHiChgRegItemByHcrNo(AHcrNo);
   try
-    Result.FReportDetailJsonAry := LOrmHiChgRegItem.GetJsonValues(true, false, soSelect);
+    Result.FReportDetailJsonAry := Utf8ToString(LOrmHiChgRegItem.GetJsonValues(true, false, soSelect));
   finally
     LOrmHiChgRegItem.Free;
   end;
@@ -494,6 +708,23 @@ end;
 function TChgRegListF.GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
 begin
   Result := 'HMS-' + g_HiRptKind2.ToString(hrkCHR) + '-' + IntToStr(AYear) + '-' + IntToStr(ASerialNo);// + '-' + g_HiRptCategory.ToString(hrcIAS)
+end;
+
+function TChgRegListF.GetRowIdxFromGridByKeyId(const ARpgKeyId, AChgRegRptNo: string): integer;
+var
+  i: integer;
+begin
+  Result := -1;
+
+  for i := 0 to HiChgRegListGrid.RowCount - 1 do
+  begin
+    if (HiChgRegListGrid.CellsByName['ReportKey4ChgReg',i] = ARpgKeyId) and
+      (HiChgRegListGrid.CellsByName['ChgRegRptNo',i] = AChgRegRptNo) then
+    begin
+      Result := i;
+      Break;
+    end;
+  end;
 end;
 
 procedure TChgRegListF.GetSearchCondRec(var ARec: THiRptMgrSearchCondRec);
@@ -560,6 +791,7 @@ begin
   else
   begin
     LUtf8 := GetJsonFromSelectedRow(HiChgRegListGrid);
+    LUtf8 := ReplaceStrValue2StatusFromJson(LUtf8);
   end;
 
   //"저장" 버튼을 누르면 True
@@ -593,6 +825,33 @@ begin
     HiChgRegItemEdit(HiChgRegListGrid.SelectedRow);
 end;
 
+procedure TChgRegListF.HiChgRegListGridMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  LFileName: string;
+begin
+//  if (DragDetectPlus(TWinControl(Sender).Handle, Point(X,Y))) then
+  if (HiChgRegListGrid.SelectedCount > 0) and (DragDetectPlus(TWinControl(Sender))) then
+  begin
+    if HiChgRegListGrid.SelectedRow = -1 then
+      exit;
+
+    TVirtualFileStreamDataFormat(DataFormatAdapter2.DataFormat).FileNames.Clear;
+    LFileName := IntToStr(TimeLogFromDateTime(now)) + HICHGREG_FILE_EXT;
+    TVirtualFileStreamDataFormat(DataFormatAdapter2.DataFormat).FileNames.Add(LFileName);
+
+    DropEmptySource1.Execute;
+  end;
+end;
+
+procedure TChgRegListF.LoadChgRegFromJson2Grid(AJson: RawUtf8; ARow: integer);
+var
+  LVar: variant;
+begin
+  LVar := _JSON(AJson);
+  LoadChgRegVar2Grid(LVar, ARow);
+end;
+
 procedure TChgRegListF.LoadChgRegJson2Grid(AVar: Variant; ARow: integer);
 begin
   if ARow = -1 then
@@ -604,6 +863,96 @@ begin
   end
   else
     SetNxGridRowFromVar(HiChgRegListGrid, ARow, AVar);
+end;
+
+procedure TChgRegListF.LoadChgRegListFromDocDict2Grid;
+begin
+  if HiChgRegListGrid.RowCount > 0 then
+    HiChgRegListGrid.ClearRows;
+
+  LoadChgRegListFromJsonAry2Grid(FHiChgRegDocDict.S[KN_CHGREGRPT]);
+end;
+
+procedure TChgRegListF.LoadChgRegListFromDocList2Grid;
+var
+  LDict: IDocDict;
+  LUtf8: RawUtf8;
+  LRow: integer;
+  i: integer;
+  LVar: variant;
+begin
+  if HiChgRegListGrid.RowCount > 0 then
+    HiChgRegListGrid.ClearRows;
+
+  for i := 0 to FHiChgRegDocList.Len - 1 do
+  begin
+    LUtf8 := FHiChgRegDocList.Item[i];
+    LDict := DocDict(LUtf8);
+    LVar := _JSON(LDict.S[KN_CHGREGRPT]);
+    LoadChgRegJson2Grid(LVar);
+  end;
+end;
+
+procedure TChgRegListF.LoadChgRegListFromJsonAry2Grid(AJson: RawUtf8);
+var
+  LList: IDocList;
+  LDict: IDocDict;
+  LUtf8: RawUtf8;
+  LRow: integer;
+  i: integer;
+begin
+  LList := DocList(AJson);
+
+  for i := 0 to LList.Len - 1 do
+  begin
+    LUtf8 := LList.Item[i];
+    LDict := DocDict(LUtf8);
+    LRow := GetRowIdxFromGridByKeyId(LDict.S['ReportKey4ChgReg'], LDict.S['ChgRegRptNo']);
+    LUtf8 := LDict.Json;
+
+    LoadChgRegFromJson2Grid(LUtf8, LRow);
+  end;
+end;
+
+procedure TChgRegListF.LoadChgRegListFromRawByteString(
+  const ARaw: RawByteString);
+var
+  LContent: string;
+begin
+  ClearChgRegDocList();
+
+  LContent := MakeBase64ToString(ARaw);
+
+  FHiChgRegDocList := DocList(StringToUtf8(LContent));
+
+  LoadChgRegListFromDocList2Grid();
+end;
+
+procedure TChgRegListF.LoadChgRegVar2Grid(AVar: variant; ARow: integer);
+begin
+  if ARow = -1 then
+  begin
+    if TDocVariantData(AVar).IsArray then
+      AddNextGridRowsFromVariant2(HiChgRegListGrid, AVar)
+    else
+      AddNextGridRowFromVariant(HiChgRegListGrid, AVar, True);
+  end
+  else
+    SetNxGridRowFromVar(HiChgRegListGrid, ARow, AVar);
+end;
+
+procedure TChgRegListF.LoadHiChgRegList2GridFromFile;
+var
+  LRaw: RawByteString;
+begin
+  OpenDialog1.InitialDir := 'c:\temp';
+  OpenDialog1.Filter := 'Report Files|*.hirpt|All Files|*.*';
+
+  if OpenDialog1.Execute then
+  begin
+    LRaw := StringFromFile(OpenDialog1.FileName);
+    LoadChgRegListFromRawByteString(LRaw);
+  end;
 end;
 
 procedure TChgRegListF.MakeHCRReportBySelected;
@@ -641,7 +990,131 @@ begin
 
   LJsonAry := LDocList.Json;
 
-  MakeChangeRegisterReport(LJsonAry);
+  MakeChangeRegisterReport_Async(LJsonAry);
+//  ShowMessage('Change Register Report is created.');
+end;
+
+procedure TChgRegListF.MakeZipFileFromSelected(AIsIncludeAttachFile: Boolean);
+var
+  LStr: string;
+  LUtf8: RawUtf8;
+begin
+  LUtf8 := GetHiChgRegList2JsonAryFromSelected();
+  LStr := MakeRawUTF8ToBin64(LUtf8);
+
+  MakeZipFileFromString(Utf8ToString(LStr));
+end;
+
+procedure TChgRegListF.MakeZipFileFromString(const AContent: string;
+  AFileName: string);
+begin
+  if AFileName = '' then
+  begin
+    AFileName := 'c:\temp\' + FormatDateTime('yyyymmddhhnnss', now) + HICHGREG_FILE_EXT; //'.hichg';
+  end;
+
+  FileFromString(AContent, AFileName);
+
+  ShowMessage('Report List is saved to [' + AFileName + ']');
+end;
+
+procedure TChgRegListF.OnGetStream(
+  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
+  out AStream: IStream);
+var
+  Stream: TMemoryStream;
+  Data: AnsiString;
+  LUtf8: RawUtf8;
+begin
+  Stream := TMemoryStream.Create;
+  try
+    AStream := nil;
+
+    LUtf8 := GetHiChgRegList2JsonAryFromSelected();
+
+    if LUtf8 = '' then
+      exit;
+
+    LUtf8 := MakeRawUTF8ToBin64(LUtf8);
+
+    Stream.Write(PChar(LUtf8)^, Length(LUtf8));
+    AStream := TFixedStreamAdapter.Create(Stream, soOwned);
+  except
+    Stream.Free;
+    raise;
+  end;
+end;
+
+function TChgRegListF.ReplaceStatusValue2StrFromJson(AJson: RawUtf8): RawUtf8;
+var
+  LStr: string;
+  LDict: IDocDict;
+begin
+  Result := '';
+
+  LDict := DocDict(AJson);
+  LStr := LDict.S['OpenStatus'];
+  LDict.S['OpenStatus'] := g_HiRptOpenStatus.ToString(StrToIntDef(LStr,0));
+  LStr := LDict.S['Distinction'];
+  LDict.S['Distinction'] := g_HiRptDistinction.ToString(StrToIntDef(LStr,0));
+
+  Result := LDict.Json;
+end;
+
+function TChgRegListF.ReplaceStatusValue2StrFromJsonAry(AJson: RawUtf8): RawUtf8;
+var
+  LObj: IDocObject;
+  LList, LList2: IDOcList;
+begin
+  Result := '';
+
+  LList := DocList(AJson);
+  LList2 := DocList('[]');
+
+  for LObj in LList do
+  begin
+    AJson := LObj.Json;
+    AJson := ReplaceStatusValue2StrFromJson(AJson);
+    LList2.Append(AJson);
+  end;
+
+  Result := LList2.ToString();//jsonHumanReadable
+end;
+
+function TChgRegListF.ReplaceStrValue2StatusFromJson(AJson: RawUtf8): RawUtf8;
+var
+  LStr: string;
+  LDict: IDocDict;
+begin
+  Result := '';
+  LDict := DocDict(AJson);
+
+  LStr := LDict.S['OpenStatus'];
+  LDict.I['OpenStatus'] := g_HiRptOpenStatus.ToOrdinal(LStr);
+  LStr := LDict.S['Distinction'];
+  LDict.I['Distinction'] := g_HiRptDistinction.ToOrdinal(LStr);
+
+  Result := LDict.Json;
+end;
+
+function TChgRegListF.ReplaceStrValue2StatusFromJsonAry(AJson: RawUtf8): RawUtf8;
+var
+  LObj: IDocObject;
+  LList, LList2: IDOcList;
+begin
+  Result := '';
+
+  LList := DocList(AJson);
+  LList2 := DocList('[]');
+
+  for LObj in LList do
+  begin
+    AJson := LObj.Json;
+    AJson := ReplaceStrValue2StatusFromJson(AJson);
+    LList2.Append(AJson);
+  end;
+
+  Result := LList2.ToString();
 end;
 
 procedure TChgRegListF.SaveastoDFM1Click(Sender: TObject);
@@ -663,6 +1136,11 @@ begin
   finally
     LStrList.Free;
   end;
+end;
+
+procedure TChgRegListF.SetEnable4SaveDBBtn;
+begin
+  btn_Save2DB.Enabled := FHiChgRegDocDict.Len > 0;
 end;
 
 procedure TChgRegListF.SetSrchCondHdrFromDict(ADict: IDocDict);
