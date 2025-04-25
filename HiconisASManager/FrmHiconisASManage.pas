@@ -60,7 +60,7 @@ type
     AeroButton1: TAeroButton;
     WorkKindCB: TComboBox;
     ClaimNoEdit: TEdit;
-    PORNoEdit: TEdit;
+    MatPORNoEdit: TEdit;
     DisplayFinalCheck: TCheckBox;
     Button1: TButton;
     TaskTab: TAdvOfficeTabSet;
@@ -207,6 +207,9 @@ type
     WorkSummaryEdit: TEdit;
     JvLabel18: TJvLabel;
     EmailDescEdit: TEdit;
+    BitBtn5: TBitBtn;
+    BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -279,6 +282,9 @@ type
     procedure N11Click(Sender: TObject);
     procedure grid_ReqSelectCell(Sender: TObject; ACol, ARow: Integer);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -444,6 +450,7 @@ type
 //    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
     procedure DisplayTask2GridByPorNo(const APorNo: string);
+    procedure DisplayTask2GridByMatPorNo(const AMatPorNo: string);
     procedure DisplayTask2GridByMaterialCode(const AMaterialCode: string);
     procedure DisplayTask2GridByMaterialName(const AMaterialName: string);
     procedure LoadTaskVar2Grid(AVar: TOrmHiconisASTask; AGrid: TNextGrid;
@@ -952,7 +959,7 @@ begin
   ClaimStatusCombo.ItemIndex := -1;
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
-  PORNoEdit.Text := '';
+  MatPORNoEdit.Text := '';
   MaterialCodeEdit.Text := '';
   OrderNoEdit.Text := '';
   ClaimNoEdit.Text := '';
@@ -1075,8 +1082,7 @@ begin
     FClaimNo := Trim(ClaimNoEdit.Text);
 //    FQtnNo := QtnNoEdit.Text;
     FOrderNo := Trim(OrderNoEdit.Text);
-//    FPoNo := PONoEdit.Text;
-    FPorNo := PorNoEdit.Text;
+    FMatPorNo := MatPorNoEdit.Text;
     FMaterialCode := Trim(MaterialCodeEdit.Text);
     FMaterialName := MaterialNameEdit.Text;
 
@@ -1689,7 +1695,7 @@ begin
   ShipNameEdit.Text := '';
   CustomerCombo.Text := '';
 //  PONoEdit.Text := '';
-  PorNoEdit.Text := '';
+  MatPorNoEdit.Text := '';
   MaterialCodeEdit.Text := '';
   MaterialNameEdit.Text := '';
   ClaimNoEdit.Text := '';
@@ -2003,6 +2009,21 @@ end;
 procedure THiconisAsManageF.BitBtn4Click(Sender: TObject);
 begin
   ClipboardCopyOrPaste2AdvEditBtn(ShippingNoEdit);
+end;
+
+procedure THiconisAsManageF.BitBtn5Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MatPORNoEdit);
+end;
+
+procedure THiconisAsManageF.BitBtn6Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MaterialCodeEdit);
+end;
+
+procedure THiconisAsManageF.BitBtn7Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MaterialNameEdit);
 end;
 
 procedure THiconisAsManageF.ShowToDoListFromCollect(AToDoCollect: TpjhToDoItemCollection);
@@ -2456,6 +2477,39 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.DisplayTask2GridByMatPorNo(const AMatPorNo: string);
+var
+  LMaterialDetail: TSQLMaterialDetail;
+  LSQLGSTask: TOrmHiconisASTask;
+begin
+  LMaterialDetail := GetMaterialDetailFromIDNMatPorNo(0, AMatPorNo);
+  try
+    if LMaterialDetail.IsUpdate then
+    begin
+      LMaterialDetail.FillRewind;
+
+      grid_Req.BeginUpdate;
+      try
+        grid_Req_ClearRows;
+
+        while LMaterialDetail.FillOne do
+        begin
+          LSQLGSTask := GetLoadTask(LMaterialDetail.TaskID);
+          try
+            LoadTaskVar2Grid(LSQLGSTask, grid_Req);
+          finally
+            LSQLGSTask.Free;
+          end;
+        end;//while
+      finally
+        grid_Req.EndUpdate;
+      end;
+    end;
+  finally
+    LMaterialDetail.Free;
+  end;
+end;
+
 procedure THiconisAsManageF.DisplayTask2GridByPorNo(const APorNo: string);
 var
   LMaterial4Project: TSQLMaterial4Project;
@@ -2539,13 +2593,24 @@ begin
   LWhere := '';
   ConstArray := CreateConstArray([]);
   try
-    if ASearchCondRec.FPorNo <> '' then
+//    if ASearchCondRec.FPorNo <> '' then
+//    begin
+//      if MessageDlg('PorNo로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
+//        '그래도 진행 하시겠습니까?' + #13#10 +
+//        '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+//      begin
+//        DisplayTask2GridByPorNo(ASearchCondRec.FPorNo);
+//        exit;
+//      end;
+//    end;
+
+    if ASearchCondRec.FMatPorNo <> '' then
     begin
-      if MessageDlg('PorNo로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
+      if MessageDlg('MatPorNo로 검색하는 경우 다른 검색 조건이 무시 됩니다.' + #13#10 +
         '그래도 진행 하시겠습니까?' + #13#10 +
         '"No" 를 선택하면 PorNo 조건을 무시합니다.' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
       begin
-        DisplayTask2GridByPorNo(ASearchCondRec.FPorNo);
+        DisplayTask2GridByMatPorNo(ASearchCondRec.FMatPorNo);
         exit;
       end;
     end;

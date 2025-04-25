@@ -20,7 +20,7 @@ object HiConReportEditF: THiConReportEditF
     Top = 249
     Width = 621
     Height = 374
-    ActivePage = TabSheet3
+    ActivePage = TabSheet5
     Align = alClient
     TabOrder = 2
     TabWidth = 120
@@ -268,9 +268,9 @@ object HiConReportEditF: THiConReportEditF
       object ModifyItems: TAdvOfficeCheckGroup
         Tag = 13
         Left = 122
-        Top = 50
+        Top = 46
         Width = 468
-        Height = 54
+        Height = 64
         Hint = #48320#44221#49324#54637
         Version = '1.3.8.5'
         Color = clBtnFace
@@ -608,6 +608,9 @@ object HiConReportEditF: THiConReportEditF
             Left = 484
             ExplicitLeft = 484
           end
+          inherited AddButton: TAdvGlowButton
+            ExplicitTop = 4
+          end
           inherited ApplyButton: TAdvGlowButton
             Left = 353
             ExplicitLeft = 353
@@ -615,7 +618,7 @@ object HiConReportEditF: THiConReportEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800A00410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800A40410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

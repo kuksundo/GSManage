@@ -471,6 +471,7 @@ object ChgRegListF: TChgRegListF
       Top = 70
       Width = 112
       Height = 21
+      Alignment = taCenter
       ImeName = 'Microsoft IME 2010'
       TabOrder = 4
     end
@@ -1635,7 +1636,7 @@ object ChgRegListF: TChgRegListF
       Position = 17
       SortType = stAlphabetic
     end
-    object ChgRegDate: TNxNumberColumn
+    object ChgRegDate: TNxTextColumn
       Alignment = taCenter
       DefaultValue = '0'
       Font.Charset = DEFAULT_CHARSET
@@ -1653,11 +1654,9 @@ object ChgRegListF: TChgRegListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 18
-      SortType = stNumeric
-      Increment = 1.000000000000000000
-      Precision = 0
+      SortType = stAlphabetic
     end
-    object ChgRegCloseDate: TNxNumberColumn
+    object ChgRegCloseDate: TNxTextColumn
       Alignment = taCenter
       DefaultValue = '0'
       Font.Charset = DEFAULT_CHARSET
@@ -1675,9 +1674,7 @@ object ChgRegListF: TChgRegListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 19
-      SortType = stNumeric
-      Increment = 1.000000000000000000
-      Precision = 0
+      SortType = stAlphabetic
     end
     object Plan_ClosePIC: TNxTextColumn
       Alignment = taCenter
@@ -1816,7 +1813,7 @@ object ChgRegListF: TChgRegListF
       Position = 26
       SortType = stAlphabetic
     end
-    object ChgRegOpenDate: TNxNumberColumn
+    object ChgRegOpenDate: TNxTextColumn
       Alignment = taCenter
       DefaultValue = '0'
       Font.Charset = DEFAULT_CHARSET
@@ -1834,12 +1831,10 @@ object ChgRegListF: TChgRegListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 27
-      SortType = stNumeric
+      SortType = stAlphabetic
       Visible = False
-      Increment = 1.000000000000000000
-      Precision = 0
     end
-    object ChgRegTestDate: TNxNumberColumn
+    object ChgRegTestDate: TNxTextColumn
       Alignment = taCenter
       DefaultValue = '0'
       Font.Charset = DEFAULT_CHARSET
@@ -1857,12 +1852,10 @@ object ChgRegListF: TChgRegListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 28
-      SortType = stNumeric
+      SortType = stAlphabetic
       Visible = False
-      Increment = 1.000000000000000000
-      Precision = 0
     end
-    object ChgRegModifyDate: TNxNumberColumn
+    object ChgRegModifyDate: TNxTextColumn
       Alignment = taCenter
       DefaultValue = '0'
       Font.Charset = DEFAULT_CHARSET
@@ -1880,10 +1873,8 @@ object ChgRegListF: TChgRegListF
       Options = [coCanClick, coCanInput, coDisableMoving, coEditorAutoSelect, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 29
-      SortType = stNumeric
+      SortType = stAlphabetic
       Visible = False
-      Increment = 1.000000000000000000
-      Precision = 0
     end
     object RegisteredBy: TNxTextColumn
       Alignment = taCenter
@@ -1892,7 +1883,7 @@ object ChgRegListF: TChgRegListF
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Header.Caption = #46321#47197#51088
+      Header.Caption = 'Reflectioin To'
       Header.Alignment = taCenter
       Header.Font.Charset = DEFAULT_CHARSET
       Header.Font.Color = clWindowText

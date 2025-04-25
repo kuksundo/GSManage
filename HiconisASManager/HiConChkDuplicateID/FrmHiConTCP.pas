@@ -20,7 +20,8 @@ uses
   IdGlobal, IdHTTP, UnitTaskDialogMB,
   UnitChkDupIdData, HtmlParser, UnitTRegExUtil, UnitHtmlUtil, Kit, UnitHiconMariaDBUtil,
   UnitHiConJsonUtil, UnitHiconMPMData, UnitHiconTCPIniConfig,
-  FrmHiConTCPConfig
+  FrmHiConTCPConfig, AdvNavBar, Vcl.ComCtrls, JvExComCtrls, JvComCtrls,
+  JvCheckTreeView, JvBaseDlg, JvSelectDirectory
   ;
 
 type
@@ -44,14 +45,6 @@ type
     PngBitBtn1: TPngBitBtn;
     PngBitBtn2: TPngBitBtn;
     Splitter2: TSplitter;
-    Panel3: TPanel;
-    Panel4: TPanel;
-    IPAddrGrid: TNextGrid;
-    RES_NAME: TNxTextColumn;
-    PMPM_PIP: TNxTextColumn;
-    PMPM_SIP: TNxTextColumn;
-    Port: TNxTextColumn;
-    BitBtn4: TBitBtn;
     Panel5: TPanel;
     TaskTab: TAdvOfficeTabSet;
     IPGridPopup: TPopupMenu;
@@ -65,7 +58,6 @@ type
     LoadDupIdCheckResultFile1: TMenuItem;
     ShowProgress1: TMenuItem;
     CheckConnection1: TMenuItem;
-    BitBtn3: TBitBtn;
     N4: TMenuItem;
     N5: TMenuItem;
     InfluxDB1: TMenuItem;
@@ -93,7 +85,6 @@ type
     AutoLogonEnabled1: TMenuItem;
     GetTagFromSVG1: TMenuItem;
     gzTest1: TMenuItem;
-    DESCRIPTION: TNxTextColumn;
     MariaDB1: TMenuItem;
     InfluxDB2: TMenuItem;
     AccessDB1: TMenuItem;
@@ -231,6 +222,84 @@ type
     cf2: TMenuItem;
     reboot2: TMenuItem;
     CommandList1: TMenuItem;
+    AdvNavBar1: TAdvNavBar;
+    AdvNavBarPanel1: TAdvNavBarPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    BitBtn4: TBitBtn;
+    BitBtn3: TBitBtn;
+    IPAddrGrid: TNextGrid;
+    RES_NAME: TNxTextColumn;
+    PMPM_PIP: TNxTextColumn;
+    PMPM_SIP: TNxTextColumn;
+    Port: TNxTextColumn;
+    DESCRIPTION: TNxTextColumn;
+    AdvNavBarPanel2: TAdvNavBarPanel;
+    ResourceListTV: TJvCheckTreeView;
+    Panel7: TPanel;
+    MaintenanceSrchEdit: TEdit;
+    Panel8: TPanel;
+    RadioButton1: TRadioButton;
+    RadioButton3: TRadioButton;
+    lnetgroup1: TMenuItem;
+    lnetdevice1: TMenuItem;
+    aetag1: TMenuItem;
+    hexdec1: TMenuItem;
+    floatconv1: TMenuItem;
+    doubleconv1: TMenuItem;
+    hexconvert1: TMenuItem;
+    idconvert1: TMenuItem;
+    Report1: TMenuItem;
+    channel1: TMenuItem;
+    trend1: TMenuItem;
+    viewfunc1: TMenuItem;
+    channelstr1: TMenuItem;
+    channeldump1: TMenuItem;
+    StatusLogic1: TMenuItem;
+    quality1: TMenuItem;
+    pstate2: TMenuItem;
+    lstat1: TMenuItem;
+    redundant2: TMenuItem;
+    iocomm1: TMenuItem;
+    infcomm2: TMenuItem;
+    comStatus1: TMenuItem;
+    iover1: TMenuItem;
+    emuio1: TMenuItem;
+    viewComStatus1: TMenuItem;
+    viewPortConf2: TMenuItem;
+    setComMsg1: TMenuItem;
+    viewComMsg1: TMenuItem;
+    viewInfLog2: TMenuItem;
+    lua1: TMenuItem;
+    viewAccessLog1: TMenuItem;
+    viewCommandLog1: TMenuItem;
+    viewErrorLog1: TMenuItem;
+    viewLogicLog1: TMenuItem;
+    viewSOELog1: TMenuItem;
+    viewifconfig1: TMenuItem;
+    viewCaninfo1: TMenuItem;
+    viewtop1: TMenuItem;
+    viewSOERTULog1: TMenuItem;
+    refresh2: TMenuItem;
+    dmesg2: TMenuItem;
+    help2: TMenuItem;
+    ngconfig1: TMenuItem;
+    ndconfig1: TMenuItem;
+    SaveToifcfg1: TMenuItem;
+    FromPrimaryIP1: TMenuItem;
+    FromSecondaryIP1: TMenuItem;
+    N10: TMenuItem;
+    Download1: TMenuItem;
+    Upload1: TMenuItem;
+    ifcfgethxFromSelectedIP1: TMenuItem;
+    GetFBListbyFBName1: TMenuItem;
+    BackupServer1: TMenuItem;
+    N11: TMenuItem;
+    SetDDrive1: TMenuItem;
+    Windows2: TMenuItem;
+    GetFileVersionsFromFolder1: TMenuItem;
+    GetFileVersionsFromFolder2: TMenuItem;
+    JvSelectDirectory1: TJvSelectDirectory;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -304,6 +373,16 @@ type
     procedure rundiag1Click(Sender: TObject);
     procedure retainmap1Click(Sender: TObject);
     procedure CommandList1Click(Sender: TObject);
+    procedure appdown1Click(Sender: TObject);
+    procedure FromPrimaryIP1Click(Sender: TObject);
+    procedure FromSecondaryIP1Click(Sender: TObject);
+    procedure ifcfgethxFromSelectedIP1Click(Sender: TObject);
+    procedure GetFBListbyFBName1Click(Sender: TObject);
+    procedure channeldump1Click(Sender: TObject);
+    procedure SetDDrive1Click(Sender: TObject);
+    procedure Config1Click(Sender: TObject);
+    procedure GetFileVersionsFromFolder2Click(Sender: TObject);
+    procedure All1Click(Sender: TObject);
   private
     FHiconTCPIniConfig: THiconTCPIniConfig;
     FHiconTCPIniFileName: string;
@@ -352,6 +431,8 @@ type
 
     procedure GetRetentionPoliciesBySelectedIpList(AIpAddrList: string);
     function AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
+
+    function SetICMSRootFolderByHullNoFromBackupServer(const ARootFolder, AHullNo: string): string;
 
     procedure GetNetTimeServiceStatus2Grid();
 
@@ -403,6 +484,9 @@ type
     function GetQueryJsonFromSrcByInfTag(ARec: TTagSearchRec): string;
     function GetModuleTypeFromDBByTagName(ATagName: string): string;
 //    procedure SetVersionMPMList2GridByTagText(AIpAddr, ATagText: string);
+
+    function SetComputerNameNIPAddrFromJson(const AJsonAry: string): Boolean;
+    function SetIpAddrFromEthAdaptorListForm(const AIpAddr: string): Boolean;
   public
     procedure InitVar;
     procedure DestroyVar;
@@ -423,7 +507,7 @@ type
     procedure GetIdFromMPM_Async(ARec: TIpListRec);
     procedure GetIdsFromIpListDic;
     procedure GetIdsFromIpSelected;
-    function GetChannelStrUrlFromIpRec(AIpAddr: string): string;
+    function GetIpListRecFromSelected: TIpListRec;
 
     procedure GetCommandListFromIpSelected;
     procedure SetCommandList2GridFromJsonAry(AIpAddr: string; AJsonAry: string);
@@ -474,6 +558,10 @@ type
     procedure GetRetainMapFromIpSelected;
     procedure SetRetainMapList2GridFromJsonAry(AIpAddr: string; AJsonAry: string);
 
+    procedure GetChannelDumpFromIpSelected;
+    procedure SetChannelDump2GridFromJsonList(const AJsonList: string);
+    procedure SetChannelDumpColumn2Grid();
+
     //Web->Maintenance->cf 화면에서 submit 버튼 누른 후 반환 되는 Html을 Grid에 표시함
     procedure SetCFRec2GridByTagText(const AHtml: string);
 
@@ -493,10 +581,20 @@ type
     procedure DisplayDuplicatedAddr();
     procedure SetVisibleAllGridRow(AIsShow: Boolean);
 
+    procedure CreateNSaveIfCfgEthFromSelectedIp(const AFromPrimaryIp: Boolean = True);
+
+    procedure SetMenuItemEnableFromJsonAryByCaption(const ARootMenuItem: TMenuItem; const AJsonAry: string);
+
     function GetPortPrintDebug(AIpAddr, APortName: string): string;
     function GetJsonFromMPMByFileName(AIpAddrList, AJsonFileName: string): string;
     procedure Log(const AMsg: string; const AMsgKind: integer=1);
     procedure ShowTD(const ATDRec: TMsgBox);
+
+    procedure GetFileVersionsFromFolder();
+    procedure GetAllMPMFileVersion2GridFromSelected();
+    procedure GetAllMPMFileVersion2Grid(AIpList: string);
+    procedure SetSWVersionRec2Grid(const ARec: THiConSWVersionRec);
+    procedure SetNextGridColumn4SWVersionRec();
   end;
 
 var
@@ -509,10 +607,11 @@ uses System.TimeSpan, System.Diagnostics, PJEnvVars, UnitMakeHiconDBUtil,
   UnitCryptUtil3, pingsend, UnitHiConInfluxDBUtil, UnitNICUtil, UnitServiceUtil,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
   UnitJsonUtil, sevenzip, UnitHiconOWSUtil, UnitCopyData, UnitHiConMPMWebUtil,
-  UnitHiConMPMFileUtil, UnitElfReader, UnitHiConMPMWebInfUtil,
+  UnitHiConMPMFileUtil, UnitElfReader, UnitHiConMPMWebInfUtil, UnitMenuItemUtil,
+  UnitLanUtil2, UnitSystemUtil2,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
   FrmResPortInfo4INFTag, FrmNextGrid, FrmSearchModuleByTagName, FrmLogInWithIPAddr,
-  FrmHiConCFInput, FrmHiConMPMRestore
+  FrmHiConCFInput, FrmHiConMPMRestore, FrmHiConMPMAppDown, FrmEthernetAdaptorList
   ;
 
 {$R *.dfm}
@@ -583,6 +682,11 @@ begin
 //  LList.Free;
 end;
 
+procedure THiconisTCPF.All1Click(Sender: TObject);
+begin
+  GetAllMPMFileVersion2GridFromSelected();
+end;
+
 function THiconisTCPF.AlterRetentionPoliciesBySelectedIpList(AParam: string): string;
 var
   LIpAddr, LIpAddrList, LIpAddrList2, LDuration, LShardDuration, LFailIpList: string;
@@ -647,6 +751,15 @@ begin
 
   if AlterRetentionPoliciesBySelectedIpList(LParam) <> '' then
     ;
+end;
+
+procedure THiconisTCPF.appdown1Click(Sender: TObject);
+var
+  LIpAddr: string;
+begin
+  //';'로 구분됨
+  LIpAddr := GetSelectedIpAddrList();
+  CreateHiConMPMAppDownForm(LIpAddr);
 end;
 
 procedure THiconisTCPF.ApplyConfigChanged;
@@ -722,6 +835,11 @@ begin
   //';'로 구분됨
   LIpAddr := GetSelectedIpAddrList();
   THiConMPMWeb.CFCmd2MPM(LIpAddr);
+end;
+
+procedure THiconisTCPF.channeldump1Click(Sender: TObject);
+begin
+  GetChannelDumpFromIpSelected();
 end;
 
 function THiconisTCPF.CheckAcoAutoRunIsCorrect: string;
@@ -930,6 +1048,34 @@ begin
 
 end;
 
+procedure THiconisTCPF.Config1Click(Sender: TObject);
+var
+  LResult, LJsonAry: string;
+begin
+  LResult := THiConSystemDB.CheckComputerNameNIPAddrFromDB();
+
+  if LResult = '' then
+  begin
+    if MessageDlg('컴퓨터 이름과 IP 주소가 system.accdb 내용과 다릅니다.' + #13#10 +
+      'DB 내용을 확인 하시겠습니까?' , mtConfirmation, [mbYes, mbNo],0) = mrYes then
+    begin
+      if ShowIPAddressListForm(LJsonAry) = mrYes then
+      begin
+        SetComputerNameNIPAddrFromJson(LJsonAry);
+      end;
+    end;
+  end
+  else
+  begin
+    ShowMessage(LResult);
+  end;
+end;
+
+procedure THiconisTCPF.CreateNSaveIfCfgEthFromSelectedIp(const AFromPrimaryIp: Boolean);
+begin
+
+end;
+
 procedure THiconisTCPF.DestroyVar;
 begin
   FIpAddrList4ThisComputer.Free;
@@ -1116,6 +1262,36 @@ begin
   InitVar;
 end;
 
+procedure THiconisTCPF.FromPrimaryIP1Click(Sender: TObject);
+var
+  LIpRec: TIpListRec;
+begin
+  LIpRec := GetIpListRecFromSelected();
+
+  if LIpRec.PMPM_PIP <> '' then
+  begin
+    if SaveDialog1.Execute then
+    begin
+      THiConMPMFile.CreateNSaveIfCfgEthFileByIpAddr(LIpRec.PMPM_PIP, SaveDialog1.FileName);
+    end;
+  end;
+end;
+
+procedure THiconisTCPF.FromSecondaryIP1Click(Sender: TObject);
+var
+  LIpRec: TIpListRec;
+begin
+  LIpRec := GetIpListRecFromSelected();
+
+  if LIpRec.PMPM_SIP <> '' then
+  begin
+    if SaveDialog1.Execute then
+    begin
+      THiConMPMFile.CreateNSaveIfCfgEthFileByIpAddr(LIpRec.PMPM_SIP, SaveDialog1.FileName);
+    end;
+  end;
+end;
+
 function THiconisTCPF.GetCOMTgzNPortNameFromTgzByInfTag(
   AInfTagName: string): string;
 var
@@ -1139,6 +1315,11 @@ begin
   LStr := StringReplace(LStr, #13, '', [rfReplaceAll]);
   LStr := StringReplace(LStr, #10, '', [rfReplaceAll]);
   Result := '{' + LStr;
+end;
+
+procedure THiconisTCPF.GetFBListbyFBName1Click(Sender: TObject);
+begin
+  CreateSrchModuleByTagForm(FHiconTCPIniConfig);
 end;
 
 procedure THiconisTCPF.GetFBVerFromIpSelected;
@@ -1255,6 +1436,30 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.GetFileVersionsFromFolder;
+var
+  LStrList: TStringList;
+begin
+  LStrList := nil;
+
+  if JvSelectDirectory1.Execute then
+    LStrList := THiConOWS.GetFileListWithVersionFromFolder(JvSelectDirectory1.Directory);
+
+  if not Assigned(LStrList) then
+    exit;
+
+  if LStrList.Count > 0 then
+    Log(LStrList.Text);
+
+  if Assigned(LStrList) then
+    FreeAndNil(LStrList);
+end;
+
+procedure THiconisTCPF.GetFileVersionsFromFolder2Click(Sender: TObject);
+begin
+  GetFileVersionsFromFolder();
+end;
+
 function THiconisTCPF.GetHiconisIp4ThisComputer: string;
 begin
   Result := GetHiconisPrimaryIP4ThisComputer();
@@ -1297,86 +1502,90 @@ end;
 
 function THiconisTCPF.GetIdFromMPM(ARec: TIpListRec): integer;
 var
-  LCon: RawByteString;
-  LUrl, LIpAddr: string;
+  LHtml: String;
+//  LUrl, LIpAddr: string;
 begin
   if ARec.PMPM_PIP = '127.0.0.1' then
     exit;
 
-  LIpAddr := ARec.PMPM_PIP;
-
-  Result := PingHost(LIpAddr);
-
-  if Result = -1 then
-  begin
-    Log('Host not connected : <' + LIpAddr + '>', 1);
-    exit;
-  end;
-
-  LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-
-  if LCon = '' then
-  begin
-    LIpAddr := ARec.PMPM_SIP;
-    LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
-    LCon := HttpGet(LUrl);
-
-    if LCon <> '' then
-    begin
-      ConsoleMemo.Lines.Clear;
-      ConsoleMemo.Lines.Text := LCon;
-      SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
-    end;
-  end
-  else
-  begin
-    ConsoleMemo.Lines.Clear;
-    ConsoleMemo.Lines.Text := LCon;
-    SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
-  end;
+  LHtml := THiConMPMWeb.GetChannelStrFromMPM(ARec.PMPM_PIP);
+  LHtml := THiConMPMWeb.GetChannelStr2StrListFromHtml(ARec.PMPM_PIP, LHtml);
+  SetIdList2GridByTagText(ARec.PMPM_PIP, LHtml);
+//
+//  LIpAddr := ARec.PMPM_PIP;
+//
+//  Result := PingHost(LIpAddr);
+//
+//  if Result = -1 then
+//  begin
+//    Log('Host not connected : <' + LIpAddr + '>', 1);
+//    exit;
+//  end;
+//
+//  LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
+//
+//  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+//
+//  if LCon = '' then
+//  begin
+//    LIpAddr := ARec.PMPM_SIP;
+//    LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
+//    LCon := HttpGet(LUrl);
+//
+//    if LCon <> '' then
+//    begin
+//      ConsoleMemo.Lines.Clear;
+//      ConsoleMemo.Lines.Text := LCon;
+//      SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+//    end;
+//  end
+//  else
+//  begin
+//    ConsoleMemo.Lines.Clear;
+//    ConsoleMemo.Lines.Text := LCon;
+//    SetIdList2GridByTagText(LIpAddr, ConsoleMemo.Lines.Text);
+//  end;
 end;
 
 procedure THiconisTCPF.GetIdFromMPM_Async(ARec: TIpListRec);
-var
-  LIpAddr: string;
-  LCon: RawByteString;
+//var
+//  LIpAddr: string;
+//  LCon: RawByteString;
 begin
-  if ARec.PMPM_PIP = '127.0.0.1' then
-    exit;
-
-  LIpAddr := ARec.PMPM_PIP;
-
-  Parallel.Async(
-    procedure (const task: IOmniTask)
-    var
-      LHttp: TIdHttp;
-      Lurl, LQuery, LFullUrl: string;
-    begin
-      LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
-      LCon := HttpGet(LUrl);
-
-      if LCon = '' then
-      begin
-        LIpAddr := ARec.PMPM_SIP;
-        LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
-        LCon := HttpGet(LUrl);
-      end;
-    end,
-
-    Parallel.TaskConfig.OnMessage(Self).OnTerminated(
-      procedure
-      begin
-        if LCon <> '' then
-        begin
-          ConsoleMemo.Lines.Clear;
-          ConsoleMemo.Lines.Text := LCon;
-          SetIdList2GridByTagText(LIpAddr, LCon);
-        end;
-      end
-    )
-  );
+//  if ARec.PMPM_PIP = '127.0.0.1' then
+//    exit;
+//
+//  LIpAddr := ARec.PMPM_PIP;
+//
+//  Parallel.Async(
+//    procedure (const task: IOmniTask)
+//    var
+//      LHttp: TIdHttp;
+//      Lurl, LQuery, LFullUrl: string;
+//    begin
+//      LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
+//      LCon := HttpGet(LUrl);
+//
+//      if LCon = '' then
+//      begin
+//        LIpAddr := ARec.PMPM_SIP;
+//        LUrl := GetChannelStrUrlFromIpRec(LIpAddr);
+//        LCon := HttpGet(LUrl);
+//      end;
+//    end,
+//
+//    Parallel.TaskConfig.OnMessage(Self).OnTerminated(
+//      procedure
+//      begin
+//        if LCon <> '' then
+//        begin
+//          ConsoleMemo.Lines.Clear;
+//          ConsoleMemo.Lines.Text := LCon;
+//          SetIdList2GridByTagText(LIpAddr, LCon);
+//        end;
+//      end
+//    )
+//  );
 end;
 
 procedure THiconisTCPF.GetIdsFromIpListDic;
@@ -1389,7 +1598,6 @@ begin
   FIpNDupIdList.Clear;
 
   for i := 0 to FIpAddrDic.Count - 1 do
-//  for LIpListRec in FIpAddrDic do
   begin
     LIpListRec := FIpAddrDic.Value[i];
 //    GetIdFromMPM(LIpListRec);
@@ -1438,6 +1646,27 @@ function THiconisTCPF.GetIpListRecByResName(AResName: string): TIpListRec;
 begin
   if not FIpAddrDic.TryGetValue(AResName, Result) then
     Result := Default(TIpListRec);
+end;
+
+function THiconisTCPF.GetIpListRecFromSelected: TIpListRec;
+var
+  i: integer;
+begin
+  Result := Default(TIpListRec);
+
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      Result.RES_NAME := IPAddrGrid.CellsByName['RES_NAME', i];
+      Result.PMPM_PIP := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      Result.PMPM_SIP := IPAddrGrid.CellsByName['PMPM_SIP', i];
+      Result.DESCRIPTION := IPAddrGrid.CellsByName['DESCRIPTION', i];
+
+      Break;
+    end;
+  end;
+
 end;
 
 procedure THiconisTCPF.GetJsonFile1Click(Sender: TObject);
@@ -2190,9 +2419,52 @@ begin
   end;
 end;
 
-function THiconisTCPF.GetChannelStrUrlFromIpRec(AIpAddr: string): string;
+procedure THiconisTCPF.GetAllMPMFileVersion2Grid(AIpList: string);
+var
+  LStr: string;
+  LResult, LHtml, LDesc, LHirsVer, LLogicVer: string;
 begin
-  Result := 'http://' + AIpAddr + '/channelstr';
+  while AIpList <> '' do
+  begin
+    LStr := StrToken(AIpList, ';');
+    LHtml := THiConMPMWeb_Inf.GetVersionFromCOM(LStr);
+    THiConMPMWeb_Inf.GetVersion2SWRecfFromVersionHtml(LHtml, FHiConSWVersionRec);
+    //hirs, logic version 가져옴
+    LHtml := THiConMPMWeb.GetLVerFromMPM(LStr);
+    THiConMPMWeb.GetLVerListFromHtml(LHtml, LDesc, LHirsVer, LLogicVer);
+    FHiConSWVersionRec.FHirs := LHirsVer;
+    FHiConSWVersionRec.FLogic := LLogicVer;
+    FHiConSWVersionRec.FIpAddr := LStr;
+    SetSWVersionRec2Grid(FHiConSWVersionRec);
+  end;
+end;
+
+procedure THiconisTCPF.GetAllMPMFileVersion2GridFromSelected;
+var
+  LIpAddrList: string;
+begin
+  //';'로 구분됨
+  LIpAddrList := GetSelectedIpAddrList();
+  GetAllMPMFileVersion2Grid(LIpAddrList);
+end;
+
+procedure THiconisTCPF.GetChannelDumpFromIpSelected;
+var
+  i: integer;
+  LIp, LHtml: string;
+begin
+  for i := 0 to IPAddrGrid.RowCount - 1 do
+  begin
+    if IPAddrGrid.Row[i].Selected then
+    begin
+      LIp := IPAddrGrid.CellsByName['PMPM_PIP', i];
+      LHtml := THiConMPMWeb.GetChannelDumpFromMPM(LIp);
+      LHtml := THiConMPMWeb.GetChannelDump2JsonListFromHtml(LIp, LHtml);
+      SetChannelDump2GridFromJsonList(LHtml);
+      ConsoleMemo.Lines.Clear;
+      ConsoleMemo.Lines.Text := LHtml;
+    end;
+  end;
 end;
 
 procedure THiconisTCPF.GetCommandListFromIpSelected;
@@ -2244,6 +2516,21 @@ begin
 //    HtmlParser.Free
   end;
 
+end;
+
+procedure THiconisTCPF.ifcfgethxFromSelectedIP1Click(Sender: TObject);
+var
+  LIpRec: TIpListRec;
+begin
+  LIpRec := GetIpListRecFromSelected();
+
+  if LIpRec.PMPM_PIP <> '' then
+  begin
+    if SaveDialog1.Execute then
+    begin
+      THiConMPMWeb.AppUpMPM(LIpRec.PMPM_PIP, SaveDialog1.FileName, '/home/sysconfig/');
+    end;
+  end;
 end;
 
 procedure THiconisTCPF.ImportFuncCodeFromxls1Click(Sender: TObject);
@@ -2432,6 +2719,10 @@ begin
     //UnitHiConMPMWebUtil.THiConMPMWeb.GetCommandFromMPM_Async 이 보내는 결과 메세지
     13: begin
       SetCommandList2GridFromJsonAry(FCurrentIpAddr, AMsg);
+    end;
+    //UnitHiConMPMWebUtil.THiConMPMWeb.GetCommandFromMPM_Async 이 보내는 결과 메세지
+    14: begin
+      SetIdList2GridByTagText(FCurrentIpAddr, AMsg);
     end;
   end;
 end;
@@ -2857,10 +3148,123 @@ begin
   end;
 end;
 
+procedure THiconisTCPF.SetChannelDump2GridFromJsonList(const AJsonList: string);
+var
+  LChDumpDict: IKeyValue<string, string>;
+  LCsv: string;
+  i, LRow: integer;
+begin
+  LChDumpDict := THiConMPMWeb.GetEmptyChannelDumpDict();
+  LChDumpDict.Data.LoadFromJson(StringToUtf8(AJsonList));
+
+  NextGrid1.BeginUpdate;
+  try
+    SetChannelDumpColumn2Grid();
+
+    for i := 0 to LChDumpDict.Count - 1 do
+    begin
+      LRow := NextGrid1.AddRow();
+      LCsv := LChDumpDict.Value[i];
+      LCsv := LChDumpDict.Key[i] + ',' + LCsv;
+  //    NextGrid1.CellsByName['BaseAddr', LRow] :=  LChDumpDict.Key[i];
+      AddNextGridRowFromCsv(NextGrid1, LRow, LCsv);
+    end;
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+procedure THiconisTCPF.SetChannelDumpColumn2Grid;
+var
+  LnxTextColumn: TnxTextColumn;
+begin
+  with NextGrid1 do
+  begin
+    ClearRows();
+    Columns.Clear();
+
+    Columns.Add(TnxIncrementColumn,'No.');
+
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'Base Addr'));
+    LnxTextColumn.Name := 'BaseAddr';
+//    LnxTextColumn.Options := [coCanClick,coCanInput,coEditing,coDisableMoving,coEditorAutoSelect,coPublicUsing,coShowTextFitHint];
+
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'Block'));
+    LnxTextColumn.Name := 'Block';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'0'));
+    LnxTextColumn.Name := '_0';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'1'));
+    LnxTextColumn.Name := '_1';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'2'));
+    LnxTextColumn.Name := '_2';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'3'));
+    LnxTextColumn.Name := '_3';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'4'));
+    LnxTextColumn.Name := '_4';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'5'));
+    LnxTextColumn.Name := '_5';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'6'));
+    LnxTextColumn.Name := '_6';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'7'));
+    LnxTextColumn.Name := '_7';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'8'));
+    LnxTextColumn.Name := '_8';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'9'));
+    LnxTextColumn.Name := '_9';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'A'));
+    LnxTextColumn.Name := 'A';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'B'));
+    LnxTextColumn.Name := 'B';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'C'));
+    LnxTextColumn.Name := 'C';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'D'));
+    LnxTextColumn.Name := 'D';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'E'));
+    LnxTextColumn.Name := 'E';
+    LnxTextColumn := TnxTextColumn(Columns.Add(TnxTextColumn,'F'));
+    LnxTextColumn.Name := 'F';
+  end;
+end;
+
 procedure THiconisTCPF.SetCommandList2GridFromJsonAry(AIpAddr,
   AJsonAry: string);
 begin
+  SetMenuItemEnableFromJsonAryByCaption(Web1, AJsonAry);
 
+  NextGrid1.BeginUpdate;
+  try
+    NextGrid1.ClearRows();
+    NextGrid1.Columns.Clear();
+
+    AddNextGridRowsFromJsonAry(NextGrid1, StringToUtf8(AJsonAry), True, False);
+  finally
+    NextGrid1.EndUpdate();
+  end;
+end;
+
+function THiconisTCPF.SetComputerNameNIPAddrFromJson(const AJsonAry: string): Boolean;
+var
+  LDocDict: IDocDict;
+  LDocList: IDocList;
+  LComputerName, LIpAddr: string;
+begin
+  Result := False;
+  LDocList := DocList(StringToUtf8(AJsonAry));
+
+  if LDocList.Len = 0 then
+    exit;
+
+  LDocDict := LDocList.D[0];
+
+  LComputerName := LDocDict.S['RES_NAME'];
+  LIpAddr := LDocDict.S['PMPM_PIP'];
+
+  OpenSettings_ComputerName_Modern();
+//  OpenSettings_ComputerName_Classic();
+//  Result := SetComputerNameStr(LComputerName);
+
+//  if Result then
+    Result := SetIpAddrFromEthAdaptorListForm(LIpAddr);
 end;
 
 procedure THiconisTCPF.SetConfig;
@@ -2910,6 +3314,26 @@ begin
     LIp := IPAddrGrid.CellsByName['PMPM_PIP', AIdx];
     SetGridByConnectStatusByIp(AIdx, LIp);
   end;
+end;
+
+procedure THiconisTCPF.SetDDrive1Click(Sender: TObject);
+var
+  LParam,
+  LRootDir,
+  LHullNo: string;
+begin
+  LParam := CreateTwoInputEdit('Set ICMS Root Folder','Root Folder','D:\','Hull No','');
+
+  LRootDir := StrToken(LParam, ';');
+  LRootDir := StrToken(LRootDir, '\');
+  LRootDir := StrToken(LRootDir, ':');
+  LHullNo := StrToken(LParam, ';');
+
+
+  LParam := SetICMSRootFolderByHullNoFromBackupServer(LRootDir, LHullNo);
+
+  if LParam <> '' then
+    ShowMessage(LParam);
 end;
 
 procedure THiconisTCPF.SetFBVerList2GridByTagText(AIpAddr, ATagText: string);
@@ -2968,6 +3392,12 @@ begin
   NextGridFromDocList(NextGrid1, LList);
 end;
 
+function THiconisTCPF.SetICMSRootFolderByHullNoFromBackupServer(
+  const ARootFolder, AHullNo: string): string;
+begin
+  Result := THiConSystemDB.SetDDriveByHullNoUsingSubstOnVM(AHullNo, ARootFolder);
+end;
+
 procedure THiconisTCPF.SetIdList2Grid(AIpAddr: string);
 begin
   if TaskTab.ActiveTabIndex = 0 then//전체
@@ -2987,7 +3417,7 @@ var
   LIdDic: TIDDic;
 begin
   LStrList := TStringList.Create;
-  LStrList.Text := ExtractTextInsideGivenTagEx('pre', ATagText);
+  LStrList.Text := ATagText;
   NextGrid1.BeginUpdate;
   try
     SetNextGridColumn4DupTagId();
@@ -3089,6 +3519,20 @@ begin
     end;//while
   finally
     NextGrid1.EndUpdate();
+  end;
+end;
+
+function THiconisTCPF.SetIpAddrFromEthAdaptorListForm(
+  const AIpAddr: string): Boolean;
+var
+  LJson: string;
+begin
+  if ShowEthernetAdaptorListForm(LJson) = mrYes then
+  begin
+    if LJson <> '' then
+    begin
+
+    end;
   end;
 end;
 
@@ -3282,6 +3726,60 @@ begin
   SetLVerList2Grid(AIpAddr, LDesc, LHirsVer, LLogicVer);
 end;
 
+procedure THiconisTCPF.SetMenuItemEnableFromJsonAryByCaption(
+  const ARootMenuItem: TMenuItem; const AJsonAry: string);
+var
+  LList: IDocList;
+  LVar: variant;
+  LDict: IDocObject;
+  LStr, LStr2: string;
+  LMenuItem: TMenuItem;
+begin
+  LList := DocList(AJsonAry);
+
+  for LVar in LList do
+  begin
+    LStr := LVar;
+    LDict := DocDict(LStr);
+    LStr := LDict.S['parent'];
+    LStr2 := LDict.S['name'];
+
+    if POS('DB Information', LStr) > 0 then
+      LMenuItem := DBInfo1
+    else
+    if POS('ACONIS-NX Information', LStr) > 0 then
+      LMenuItem := MPMInfo1
+    else
+    if POS('RUN State', LStr) > 0 then
+      LMenuItem := RunState1
+    else
+    if POS('RTU Information', LStr) > 0 then
+      LMenuItem := RunInfo1
+    else
+    if POS('View Log', LStr) > 0 then
+      LMenuItem := ViewLog1
+    else
+    if POS('Utilities', LStr) > 0 then
+      LMenuItem := Utilities1
+    else
+    if POS('Others', LStr) > 0 then
+      LMenuItem := Other1
+    else
+    if POS('Maintenance', LStr) > 0 then
+      LMenuItem := Maintenance1
+    else
+    if POS('Interface', LStr) > 0 then
+      LMenuItem := Interfaces1
+    else
+      LMenuItem := nil;
+
+    LMenuItem.Caption := LStr;
+
+    SetMenuItemEnableByCaption(LMenuItem, LStr2);
+  end;
+
+end;
+
 procedure THiconisTCPF.SetNextGridColumn4DupTagId;
 var
   LDoc: variant;
@@ -3359,6 +3857,21 @@ begin
   AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
 end;
 
+procedure THiconisTCPF.SetNextGridColumn4SWVersionRec;
+var
+  LDoc: variant;
+begin
+  TDocVariant.New(LDoc);
+
+  TDocVariantData(LDoc).Value['IPAddr'] := 'IP Addr';
+  TDocVariantData(LDoc).Value['Hirs'] := 'hirs';
+  TDocVariantData(LDoc).Value['Logic'] := 'logic';
+  TDocVariantData(LDoc).Value['Hiscm_Im'] := 'hiscm_im';
+  TDocVariantData(LDoc).Value['Interface_a'] := 'interface_a';
+
+  AddNextGridColumnFromVariant(NextGrid1, LDoc, False, True, True);
+end;
+
 procedure THiconisTCPF.SetNextGridColumn4VersionIntf;
 var
   LDoc: variant;
@@ -3382,6 +3895,28 @@ begin
 
   LList := DocList(AJsonAry);
   NextGridFromDocList(NextGrid1, LList);
+end;
+
+procedure THiconisTCPF.SetSWVersionRec2Grid(const ARec: THiConSWVersionRec);
+var
+  LRow: integer;
+begin
+  NextGrid1.BeginUpdate;
+  try
+    NextGrid1.ClearRows();
+    NextGrid1.Columns.Clear();
+
+    SetNextGridColumn4SWVersionRec();
+
+    LRow := NextGrid1.AddRow();
+    NextGrid1.CellsByName['IPAddr', LRow] := ARec.FIpAddr;
+    NextGrid1.CellsByName['Hirs', LRow] := ARec.FHirs;
+    NextGrid1.CellsByName['Logic', LRow] := ARec.FLogic;
+    NextGrid1.CellsByName['Hiscm_Im', LRow] := ARec.FHiscm_Im;
+    NextGrid1.CellsByName['Interface_a', LRow] := ARec.FInterface_a;
+  finally
+    NextGrid1.EndUpdate();
+  end;
 end;
 
 //procedure THiconisTCPF.SetNextGridColumn4VersionMPM;

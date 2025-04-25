@@ -1,9 +1,8 @@
-program HiConTCP;
+program FBLogic;
 
 uses
   Vcl.Forms,
   mormot.db.raw.sqlite3.static,
-  FrmHiConTCP in 'FrmHiConTCP.pas' {HiconisTCPF},
   FrmIpList in 'FrmIpList.pas' {IPListF},
   FrmInputIpAddress in '..\..\..\..\Common\Form\FrmInputIpAddress.pas',
   UnitChkDupIdData in 'UnitChkDupIdData.pas',
@@ -15,14 +14,12 @@ uses
   UnitAnimationThread in '..\..\..\..\Common\Dom\UnitAnimationThread.pas',
   FrmElapsedTime in '..\..\..\..\Common\Form\FrmElapsedTime.pas' {ElapsedTimeF},
   UnitHiConInfluxDBUtil in 'UnitHiConInfluxDBUtil.pas',
-  FrmTagInputEdit in '..\..\Common\FrmTagInputEdit.pas' {TagEditF},
   UnitNICUtil in '..\..\..\..\Common\UnitNICUtil.pas',
   UnitHiconMariaDBUtil in '..\UnitHiconMariaDBUtil.pas',
   UnitHiConJsonUtil in 'UnitHiConJsonUtil.pas',
   UnitHiconMPMData in '..\UnitHiconMPMData.pas',
   FrmTwoInputEdit in '..\..\..\..\Common\Form\FrmTwoInputEdit.pas' {TwoInputEditF},
   FrmHiConTCPConfig in 'FrmHiConTCPConfig.pas' {HiConTCPConfigF},
-  FrmResPortInfo4INFTag in 'FrmResPortInfo4INFTag.pas' {ResPortInfo4INFTagF},
   FrmNextGrid in '..\..\..\..\Common\Form\FrmNextGrid.pas',
   FrmSearchModuleByTagName in 'FrmSearchModuleByTagName.pas' {SrchModuleByTagF},
   UnitHiconDBData in '..\UnitHiconDBData.pas',
@@ -39,27 +36,24 @@ uses
   UnitRegAppUtil in '..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas',
   UnitOLEVarUtil in '..\..\..\..\Common\UnitOLEVarUtil.pas',
   UnitLanUtil2 in '..\..\..\..\Common\UnitLanUtil2.pas',
-  FrmHiConCFInput in 'FrmHiConCFInput.pas' {CFInputF},
-  FrmHiConMPMRestore in 'FrmHiConMPMRestore.pas' {HiConMPMRestoreF},
   UnitHiConMPMWebInfUtil in 'UnitHiConMPMWebInfUtil.pas',
   UnitMenuItemUtil in '..\..\..\..\Common\UnitMenuItemUtil.pas',
-  FrmHiConMPMAppDown in 'FrmHiConMPMAppDown.pas' {HiConMPMAppDownF},
-  FrmHiConMPMAppUp in 'FrmHiConMPMAppUp.pas' {HiConMPMAppUpF},
   FrmHiCONFBLogic in 'FrmHiCONFBLogic.pas' {HiCONFBLogicF},
   UnitSQLUtil in '..\..\..\..\Common\UnitSQLUtil.pas',
   UnitDynamicFormManager in '..\..\..\..\Common\UnitDynamicFormManager.pas',
-  UnitIpHelper in '..\..\..\..\Common\UnitIpHelper.pas',
-  FrmEthernetAdaptorList in '..\..\..\..\Common\Form\FrmEthernetAdaptorList.pas' {EtherAdaptorF};
+  FrmTagInputEdit in '..\..\Common\FrmTagInputEdit.pas' {TagEditF},
+  UnitControlMoveResize in '..\..\..\..\Common\UnitControlMoveResize.pas',
+  GpCommandLineParser in '..\..\..\..\..\..\..\project\OpenSrc\lib\GpDelphiUnit\src\GpCommandLineParser.pas';
 
 {$R *.res}
 
-//{51C38D1E-7304-4CDB-82FE-365B23A49649}=Prod Code -> Version Info -> InternalName에 Encrypted로 저장됨
+//{C0F5DD8A-BEA6-4666-826C-6F4A45E606B9}=Prod Code -> Version Info -> InternalName에 Encrypted로 저장됨
 //UnitCryptUtil2.EncryptString_Syn3()를 이용하여 암호화 함
-//Encrypted: g3hwVr4cMXsdkmV/GWcDabv273kmtoJPJvN+tvPQl1EgBb1Ki0GH4nM/lNWxHe1N
+//Encrypted: 37OO333NvHzZRzjjztCSwBHCxJivxybdg/1PLN1CGNpROcUdpu+8p+bajn/WtKwh
 
 begin
-//  if not UnitRegAppUtil.TgpAppSigInfo.CheckRegByAppSigUsingRegistry('') then
-//    exit;
+  if not UnitRegAppUtil.TgpAppSigInfo.CheckRegByAppSigUsingRegistry('') then
+    exit;
 
 //  if not TLogin4OTP.ShowLogin then
 //    exit;
@@ -67,6 +61,6 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(THiconisTCPF, HiconisTCPF);
+  Application.CreateForm(THiCONFBLogicF, HiCONFBLogicF);
   Application.Run;
 end.

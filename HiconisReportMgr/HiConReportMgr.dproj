@@ -70,7 +70,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=V/uf2QBX+5/ZcDZmMVFkYzhTUDJtQ2dlQ2pEWjFDOEZlVmFEMnVqb3JHRGRXNWlVL3AzUUpjYWVEaHRha09CYlJOZkt2R0R4a0VBSUdsVFJpM010UHhSbVk3RGRuLzdQQy9MWCtQWEQrUXRCS2JIei9nL05vRTR0VzdEWXduYldzbnhMWGVUWnpqeVFudnNhVzdKdThGdElXeUdidDJzK3VZUmdEc1JyeW9TZFF1dVhCQjc1dzhpY1o5UkNQVXhNWGh2YlNFM2xydjc4VjhjU2ZZVjFhRjJxQ1pCQ1cxWEF4d3NIY3B2VnQwWnNKNi9saXdyTT0=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=Rjmn9QBGOaf1cDZmMVFkYzhTUDJtQ2dlQ2pEWjFDOEZlWGFEMnVqb3JHRGRXNWlVL3AzUXppb2t4cFZSTzBPeWwyVm93bG12WmVsb1NGMkkrU1c2Vy9VVkhKR0dsR0lXeDg5Y1pQZHVtU1hUTmRWL3ViRVNGd2dCRlVWQ3Z0djhoS3o1TGZTOEdteWJja2hZZUJGM2YzUkExNEQ3RFU1TWhuYVlQYU50VGh1NFA3OGlDU3N6c1ZFeXU2Z1BISTFkRUhvTFlQTWdGd3FxMDB2anBHSFRydUhNTktNTzRVWjRNRnV3cTRGQWh5TjZWVWZVa3MrZnBlSURpYnF4OTRNeWJVaEREdHRUa29pWGhXUjhaVXJmeThrTDV1TDhkaGNTY3VQS1d1emc2UW5NNHBJTTdlZ05MZFlrV20wUFZsTUIyRy9pbEZxTTQ=</VerInfo_Keys>
         <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <DCC_Define>DEF_CRYPT_ALL;USE_REGCODE;USE_SIGORM;$(DCC_Define)</DCC_Define>

@@ -11,6 +11,21 @@ uses SysUtils, Classes, Generics.Collections,
   ;
 
 type
+  THiConDeliveryInfoRec = packed record
+    ShippingNo,
+    DeliveryAddress,
+    Measurement,
+    DeliveryKind,
+    NumOfPkg,
+    NetWeight,
+    GrossWeight
+    :string;
+    ReqDeliveryDate,
+    ReqArriveDate
+    : TTimeLog;
+  end;
+
+
   TSQLMaterial4Project = class(TSQLRecord)
   private
     fTaskID: TID;

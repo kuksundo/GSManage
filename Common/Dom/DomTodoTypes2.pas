@@ -31,7 +31,7 @@ type
     FEntryId,
     FStoreId : TOutLookID;
   protected
-    procedure AssignTo(Source: TSynPersistent); override;
+    procedure AssignTo(Source: TSynPersistent);
   published
     property EntryId: TOutLookID read FEntryId write FEntryId;
     property StoreId: TOutLookID read FStoreId write FStoreId;
@@ -42,7 +42,7 @@ type
     FEntryId,
     FStoreId : TOutLookID;
   protected
-    procedure AssignTo(Source: TSynPersistent); override;
+    procedure AssignTo(Source: TSynPersistent);
   published
     property EntryId: TOutLookID read FEntryId write FEntryId;
     property StoreId: TOutLookID read FStoreId write FStoreId;
@@ -93,7 +93,7 @@ type
 
     FAlarmTime: TDateTime; //Alarm을 발생 시켜야할 시각
   protected
-    procedure AssignTo(Source: TSynPersistent); override;
+    procedure AssignTo(Source: TSynPersistent);
   public
     procedure AssignTodoAppointment(aTodoAppointment: TTodoAppointment);
     procedure AssignTodoEmail(aTodoEmail: TTodoEmail);

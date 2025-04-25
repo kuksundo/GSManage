@@ -3,7 +3,7 @@ object MaterialDetailF: TMaterialDetailF
   Top = 0
   Hint = 'Text'
   Caption = 'MaterialDetailF'
-  ClientHeight = 356
+  ClientHeight = 421
   ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel25: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 45
+    Top = 69
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -45,7 +45,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel17: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 78
+    Top = 102
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -72,7 +72,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel18: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 171
+    Top = 195
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -99,7 +99,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel1: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 140
+    Top = 164
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -126,7 +126,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel29: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 232
+    Top = 256
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -158,7 +158,7 @@ object MaterialDetailF: TMaterialDetailF
     Height = 25
     Alignment = taCenter
     AutoSize = False
-    Caption = 'POR No.'
+    Caption = 'Proj POR No.'
     Color = 14671839
     Enabled = False
     FrameColor = clGrayText
@@ -181,7 +181,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel3: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 262
+    Top = 286
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -208,7 +208,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel4: TJvLabel
     AlignWithMargins = True
     Left = 7
-    Top = 109
+    Top = 133
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -235,7 +235,7 @@ object MaterialDetailF: TMaterialDetailF
   object JvLabel5: TJvLabel
     AlignWithMargins = True
     Left = 8
-    Top = 200
+    Top = 224
     Width = 100
     Height = 25
     Alignment = taCenter
@@ -259,9 +259,63 @@ object MaterialDetailF: TMaterialDetailF
     HotTrackFont.Name = #47569#51008' '#44256#46357
     HotTrackFont.Style = []
   end
+  object JvLabel6: TJvLabel
+    AlignWithMargins = True
+    Left = 8
+    Top = 38
+    Width = 100
+    Height = 25
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Mat POR No.'
+    Color = 14671839
+    FrameColor = clGrayText
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = #47569#51008' '#44256#46357
+    Font.Style = [fsBold]
+    Layout = tlCenter
+    ParentColor = False
+    ParentFont = False
+    RoundedFrame = 3
+    Transparent = True
+    HotTrackFont.Charset = ANSI_CHARSET
+    HotTrackFont.Color = clWindowText
+    HotTrackFont.Height = -13
+    HotTrackFont.Name = #47569#51008' '#44256#46357
+    HotTrackFont.Style = []
+  end
+  object JvLabel7: TJvLabel
+    AlignWithMargins = True
+    Left = 8
+    Top = 317
+    Width = 100
+    Height = 25
+    Alignment = taCenter
+    AutoSize = False
+    Caption = #44256#51109#54408' '#51060#47492
+    Color = 14671839
+    FrameColor = clGrayText
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = #47569#51008' '#44256#46357
+    Font.Style = [fsBold]
+    Layout = tlCenter
+    ParentColor = False
+    ParentFont = False
+    RoundedFrame = 3
+    Transparent = True
+    HotTrackFont.Charset = ANSI_CHARSET
+    HotTrackFont.Color = clWindowText
+    HotTrackFont.Height = -13
+    HotTrackFont.Name = #47569#51008' '#44256#46357
+    HotTrackFont.Style = []
+  end
   object MaterialName: TEdit
     Left = 136
-    Top = 79
+    Top = 103
     Width = 174
     Height = 21
     Hint = 'Text'
@@ -271,7 +325,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object NeedCount: TEdit
     Left = 114
-    Top = 173
+    Top = 197
     Width = 92
     Height = 21
     Hint = 'Text'
@@ -281,7 +335,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object UnitPrice: TEdit
     Left = 114
-    Top = 142
+    Top = 166
     Width = 92
     Height = 21
     Hint = 'Text'
@@ -291,7 +345,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object NeedDate: TDateTimePicker
     Left = 114
-    Top = 233
+    Top = 257
     Width = 89
     Height = 24
     Hint = 'Date'
@@ -303,7 +357,7 @@ object MaterialDetailF: TMaterialDetailF
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 317
+    Top = 382
     Width = 335
     Height = 36
     Margins.Left = 0
@@ -311,7 +365,6 @@ object MaterialDetailF: TMaterialDetailF
     Align = alBottom
     Rounding = 4
     TabOrder = 4
-    ExplicitTop = 266
     object btn_Close: TAeroButton
       AlignWithMargins = True
       Left = 268
@@ -342,7 +395,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object PORNo: TEdit
     Left = 114
-    Top = 9
+    Top = 8
     Width = 195
     Height = 21
     Hint = 'Text'
@@ -353,7 +406,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object CreateDate: TDateTimePicker
     Left = 114
-    Top = 263
+    Top = 287
     Width = 89
     Height = 24
     Hint = 'Date'
@@ -364,7 +417,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object MaterialCode: TAdvEditBtn
     Left = 136
-    Top = 45
+    Top = 69
     Width = 173
     Height = 21
     Hint = 'Text'
@@ -423,7 +476,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object IsReclaim: TCheckBox
     Left = 230
-    Top = 175
+    Top = 184
     Width = 97
     Height = 17
     Caption = 'Is Reclaim'
@@ -431,7 +484,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object BitBtn3: TBitBtn
     Left = 110
-    Top = 44
+    Top = 68
     Width = 25
     Height = 25
     Glyph.Data = {
@@ -466,7 +519,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object BitBtn1: TBitBtn
     Left = 111
-    Top = 79
+    Top = 103
     Width = 25
     Height = 25
     Glyph.Data = {
@@ -500,9 +553,9 @@ object MaterialDetailF: TMaterialDetailF
     OnClick = BitBtn1Click
   end
   object PlateNo: TEdit
-    Left = 111
-    Top = 110
-    Width = 198
+    Left = 137
+    Top = 134
+    Width = 173
     Height = 21
     Hint = 'Text'
     Alignment = taCenter
@@ -511,7 +564,7 @@ object MaterialDetailF: TMaterialDetailF
   end
   object IsPOR: TCheckBox
     Left = 230
-    Top = 152
+    Top = 161
     Width = 97
     Height = 17
     Caption = 'Is POR'
@@ -519,12 +572,99 @@ object MaterialDetailF: TMaterialDetailF
   end
   object CurQty: TEdit
     Left = 114
-    Top = 202
+    Top = 226
     Width = 92
     Height = 21
     Hint = 'Text'
     Alignment = taCenter
     ImeName = 'Microsoft IME 2010'
     TabOrder = 13
+  end
+  object MatPORNo: TEdit
+    Left = 136
+    Top = 40
+    Width = 173
+    Height = 21
+    Hint = 'Text'
+    Alignment = taCenter
+    ImeName = 'Microsoft IME 2010'
+    TabOrder = 14
+  end
+  object FaultyPartName: TMemo
+    Left = 114
+    Top = 312
+    Width = 195
+    Height = 64
+    TabOrder = 15
+  end
+  object BitBtn2: TBitBtn
+    Left = 111
+    Top = 38
+    Width = 25
+    Height = 25
+    Glyph.Data = {
+      36030000424D3603000000000000360000002800000010000000100000000100
+      1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFF7B4A0C99753D936E36936E36936E36956E37936E
+      37936E379B783F653300FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC3AF8FFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA98953FFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFC3AF8FFFFFFFEFEBE1F1ECE4F1ECE8F1EDE2EEEA
+      DDEDE8DFFFFFFF9A753DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC6B290FF
+      FFFFF2EFE7F3F0EAF3F0EAF3F0EAF7F1EDF3F1EAFFFFFF9A753D8F672BB69870
+      B09267B09267B09369A68252C1AC8AFFFFFFF2EFE7F3F0EAF3F2EBF6F2ECFAF3
+      F1F9F2EDFFFFFF9A753DCBB899FFFFFFFFFFFFFFFFFFFFFFFFFFFEFFBAA27BFF
+      FFFFF2EEE6F2EDE8F6EFECF9F8F1FBFBF6F5EFE9FFFFFF9C7742C4AF8EFFFFFF
+      EFEAE3F1ECE7F2F0E9EDEADDBFA984FFFFFFF6F3EAFAF7F3F9F8F8F9FBFAF7F5
+      F2EBE3D9F6F6F49A733AC4AF8CFFFFFFF2EDE7F3F0EAF3F2ECF3EDE7C2AD8FFF
+      FFFFF8FAF5F9F9FBFBFBFDF8F7F1EEEDE6E4DBD3E8DFD4926C2FC4AF8CFFFFFF
+      F2EDE7F3F0E8F7F3EDF6F1EBC7B292FFFFFFF8F8F8F9FBFBF9FAF3F1EEE3DED2
+      C3C7B095C9B4938C6324C2AD8AFFFFFFF3EBE6F6F0EBF9F4F3FAF9F1C8B599FF
+      FFFFF8FAFBF9FAF6F2ECE2E4D9CAD0BFA7ECE3DCB5966B815309CBBBA0FFFFFF
+      F7F7EEFBF9F9FBFBFDF6F6F2C9B99DFFFFFFFAFAF7F2EDE5E3D9D0D1BDA2C5AE
+      90EAE6E1B89E73FFFFFFCEBEA3FFFFFFF8F8F7F9F9FFFCFDFCEFEBDFC9B798FF
+      FFFFF9F8F6EAE0D5D6CBB5C7AF8B9B783A9F7F4CFFFFFFFFFFFFD2C3A8FFFFFF
+      F8F8FAFAFAF7FBFAF3C9B499C5B090C0A584C0A584C0A584B79B70A789548A62
+      20FFFFFFFFFFFFFFFFFFD1BFA6FFFFFFF9FBF9F2EEEAEBE3DACAB598F1EAE5B6
+      996C9C773BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD4C9B3FFFFFF
+      FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    TabOrder = 16
+    OnClick = BitBtn2Click
+  end
+  object BitBtn4: TBitBtn
+    Left = 111
+    Top = 133
+    Width = 25
+    Height = 25
+    Glyph.Data = {
+      36030000424D3603000000000000360000002800000010000000100000000100
+      1800000000000003000000000000000000000000000000000000FFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFF7B4A0C99753D936E36936E36936E36956E37936E
+      37936E379B783F653300FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC3AF8FFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA98953FFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFC3AF8FFFFFFFEFEBE1F1ECE4F1ECE8F1EDE2EEEA
+      DDEDE8DFFFFFFF9A753DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC6B290FF
+      FFFFF2EFE7F3F0EAF3F0EAF3F0EAF7F1EDF3F1EAFFFFFF9A753D8F672BB69870
+      B09267B09267B09369A68252C1AC8AFFFFFFF2EFE7F3F0EAF3F2EBF6F2ECFAF3
+      F1F9F2EDFFFFFF9A753DCBB899FFFFFFFFFFFFFFFFFFFFFFFFFFFEFFBAA27BFF
+      FFFFF2EEE6F2EDE8F6EFECF9F8F1FBFBF6F5EFE9FFFFFF9C7742C4AF8EFFFFFF
+      EFEAE3F1ECE7F2F0E9EDEADDBFA984FFFFFFF6F3EAFAF7F3F9F8F8F9FBFAF7F5
+      F2EBE3D9F6F6F49A733AC4AF8CFFFFFFF2EDE7F3F0EAF3F2ECF3EDE7C2AD8FFF
+      FFFFF8FAF5F9F9FBFBFBFDF8F7F1EEEDE6E4DBD3E8DFD4926C2FC4AF8CFFFFFF
+      F2EDE7F3F0E8F7F3EDF6F1EBC7B292FFFFFFF8F8F8F9FBFBF9FAF3F1EEE3DED2
+      C3C7B095C9B4938C6324C2AD8AFFFFFFF3EBE6F6F0EBF9F4F3FAF9F1C8B599FF
+      FFFFF8FAFBF9FAF6F2ECE2E4D9CAD0BFA7ECE3DCB5966B815309CBBBA0FFFFFF
+      F7F7EEFBF9F9FBFBFDF6F6F2C9B99DFFFFFFFAFAF7F2EDE5E3D9D0D1BDA2C5AE
+      90EAE6E1B89E73FFFFFFCEBEA3FFFFFFF8F8F7F9F9FFFCFDFCEFEBDFC9B798FF
+      FFFFF9F8F6EAE0D5D6CBB5C7AF8B9B783A9F7F4CFFFFFFFFFFFFD2C3A8FFFFFF
+      F8F8FAFAFAF7FBFAF3C9B499C5B090C0A584C0A584C0A584B79B70A789548A62
+      20FFFFFFFFFFFFFFFFFFD1BFA6FFFFFFF9FBF9F2EEEAEBE3DACAB598F1EAE5B6
+      996C9C773BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD4C9B3FFFFFF
+      FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    TabOrder = 17
+    OnClick = BitBtn4Click
   end
 end

@@ -21,7 +21,6 @@ type
     SystemDBEdit: TEdit;
     BitBtn3: TBitBtn;
     Splitter1: TSplitter;
-    Button1: TButton;
     BitBtn1: TBitBtn;
     PopupMenu1: TPopupMenu;
     SelectFromTAGNAMEField1: TMenuItem;
@@ -38,15 +37,19 @@ type
     TableCombo: TComboBox;
     Label7: TLabel;
     FieldCombo: TComboBox;
-    Button2: TButton;
+    N1: TMenuItem;
+    ShowFBLogic1: TMenuItem;
+    ShowFBDefaultInfoByFBName1: TMenuItem;
+    BitBtn6: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure TagInfoGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure SelectFromTAGNAMEField1Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
+    procedure ShowFBDefaultInfoByFBName1Click(Sender: TObject);
+    procedure ShowFBLogic1Click(Sender: TObject);
   private
     procedure WMCopyData(var Msg: TMessage); message WM_COPYDATA;
 
@@ -57,18 +60,26 @@ type
     function GetDBNameFromForm(): string;
     //DATA_TYPE,IN_OUT,SYS_TYPE 필드를 Desc로 대체함
     function UpdateDBValue2HumanReadable(const ATagInfoJsonAry: RawUtf8): RawUtf8;
+    function GetTagNameFromGridBySelected(): string;
   protected
-    procedure ProcessAsyncResult(const AMsg: string; const AMsgKind: integer);
+    procedure ProcessAsyncResult(const AMsg: string; const ARowCount, AMsgKind: integer);
+    procedure ShowOrHideHullNoComp(const AIsShow: Boolean);
   public
     FHiconTCPIniConfig: THiconTCPIniConfig;
+    FJsonResult: RawUtf8;
+    FIsReturnDblClick: Boolean; //Grid를 Dbl Click할 경우 Tag Name을 반환함
+    FSelectedTagName,
+    FSelectedOrgTagName: string;
   end;
 
 function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
+function CreateSrchTagForm(var ATagName, ADBFileName: string;
+  const AIsReturnDblClick: Boolean=False): string;
 
 implementation
 
 uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells, UnitCopyData,
-  FrmJHPWaitForm;
+  FrmJHPWaitForm, FrmHiCONFBLogic;
 
 {$R *.dfm}
 
@@ -94,8 +105,8 @@ begin
       TagNameEdit.Text := ATagName;
 
 
-      if FileExists('D:\ACONIS-NX\DB\system_bak.accdb') then
-        SystemDBEdit.Text := 'D:\ACONIS-NX\DB\system_bak.accdb'
+      if FileExists(DEFAULT_SYS_BAK_DB_NAME) then
+        SystemDBEdit.Text := DEFAULT_SYS_BAK_DB_NAME
       else
         SystemDBEdit.Text := GetDBNameFromForm();
 
@@ -103,6 +114,46 @@ begin
       if ShowModal = mrOK then
       begin
       end;
+    end;
+  finally
+    FreeAndNil(SrchModuleByTagF);
+  end;
+end;
+
+function CreateSrchTagForm(var ATagName, ADBFileName: string;
+  const AIsReturnDblClick: Boolean): string;
+var
+  SrchModuleByTagF: TSrchModuleByTagF;
+  LModalResult: integer;
+begin
+  Result := '';
+
+  SrchModuleByTagF := TSrchModuleByTagF.Create(nil);
+  try
+    with SrchModuleByTagF do
+    begin
+      ShowOrHideHullNoComp(False);
+
+      if ADBFileName = '' then
+        ADBFileName := DEFAULT_SYS_BAK_DB_NAME;
+
+      SystemDBEdit.Text := ADBFileName;
+      TagNameEdit.Text := ATagName;
+      FIsReturnDblClick := AIsReturnDblClick;
+
+      BitBtn1Click(nil);
+
+      LModalResult := ShowModal;
+
+      if LModalResult = mrOK then//Grid를 Double Click 한 경우
+      begin
+        ADBFileName := SystemDBEdit.Text;
+        ATagName := FSelectedTagName;//GetTagNameFromGridBySelected();
+        Result := FSelectedOrgTagName;
+      end
+      else
+      if LModalResult = mrYes then //Close 버튼을 누른 경우
+        ADBFileName := SystemDBEdit.Text;
     end;
   finally
     FreeAndNil(SrchModuleByTagF);
@@ -136,11 +187,6 @@ end;
 procedure TSrchModuleByTagF.BitBtn5Click(Sender: TObject);
 begin
   SystemDBEdit.Text := GetDBNameFromForm();
-end;
-
-procedure TSrchModuleByTagF.Button1Click(Sender: TObject);
-begin
-  Close;
 end;
 
 function TSrchModuleByTagF.CheckRequiredInput4Search: Boolean;
@@ -177,8 +223,7 @@ end;
 
 function TSrchModuleByTagF.GetTagInfoFromDB2Grid(ATagName: string): Boolean;
 var
-  LUtf8: RawUtf8;
-  LDBNameFullPath: string;
+  LDBNameFullPath, LTableName: string;
   LResult: integer;
 begin
   if CheckRequiredInput4Search() then
@@ -198,9 +243,23 @@ begin
       exit;
     end;
 
-//    LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(ATagName, 'VAR_NAME', LDBNameFullPath);
-    //결과는 WM_COPYDATA 로 반환 됨
-    LResult := THiConSystemDB.GetTagInfo2JsonByTableName_Async(Handle, ATagName, TableCombo.Text, FieldCombo.Text, LDBNameFullPath);
+    LTableName := TableCombo.Text;
+
+    if LTableName = 'FUNCTION' then //Function Block Default 정보 테이블
+    begin
+      FJsonResult := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable_Async(Handle, ATagName, LDBNameFullPath);
+//      LUtf8 := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable(ATagName, LDBNameFullPath);
+//
+//      if LUtf8 <> '' then
+//      begin
+//        LoadTagInfoFromJsonAry2Grid(LUtf8);
+//      end;
+    end
+    else
+    begin
+      //결과는 WM_COPYDATA 로 반환 됨
+      LResult := THiConSystemDB.GetTagInfo2JsonByTableName_Async(Handle, ATagName, LTableName, FieldCombo.Text, LDBNameFullPath);
+    end;
 
     //VAR_NAME 필드에 없으면 TAG_NAME 필드에서 검색함
 //    if LUtf8 = '' then
@@ -214,13 +273,29 @@ begin
 //    begin
 //      LoadTagInfoFromJsonAry2Grid(LUtf8);
 //    end;
+  end
+  else
+    EventWaitHide();
+end;
+
+function TSrchModuleByTagF.GetTagNameFromGridBySelected: string;
+begin
+  Result := '';
+
+  if TagInfoGrid.SelectedRow <> -1 then
+  begin
+    if IsExistNextGridColumnName(TagInfoGrid, 'TAG_NAME') then
+      Result := TagInfoGrid.CellsByName['TAG_NAME', TagInfoGrid.SelectedRow];
   end;
 end;
 
 function TSrchModuleByTagF.IsTagNameColumnByIndex(const ACol: integer): Boolean;
+var
+  LColName: string;
 begin
-  Result := (TagInfoGrid.Columns.Column['TAG_NAME'].Index <> ACol) or
-            (TagInfoGrid.Columns.Column['VAR_NAME'].Index <> ACol);
+  LColName := TagInfoGrid.Columns.Item[ACol].Name;
+
+  Result := (LColName <> 'TAG_NAME') or (LColName <> 'VAR_NAME');
 end;
 
 procedure TSrchModuleByTagF.LoadTagInfoFromJsonAry2Grid(
@@ -243,14 +318,31 @@ begin
 end;
 
 procedure TSrchModuleByTagF.ProcessAsyncResult(const AMsg: string;
-  const AMsgKind: integer);
+  const ARowCount, AMsgKind: integer);
 begin
   case AMsgKind of
     //THiConSystemDB.GetTagInfo2JsonByTableName_Async 결과 처리
     1: begin
       if AMsg <> '' then
       begin
-        LoadTagInfoFromJsonAry2Grid(StringToUtf8(AMsg));
+        FJsonResult := StringToUtf8(AMsg);
+
+        //Data 갯수가 1개이면
+        if ARowCount = 1 then
+        begin
+          FSelectedTagName := THiConSystemDB.GetTagNameFromJsonAryOfMAPPINGTable(FJsonResult);
+          ModalResult := mrOK;
+        end
+        else if ARowCount > 1 then
+          LoadTagInfoFromJsonAry2Grid(FJsonResult);
+      end;
+    end;
+    //THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable_Async 결과 처리
+    2: begin
+      if AMsg <> '' then
+      begin
+        FJsonResult := StringToUtf8(AMsg);
+        LoadTagInfoFromJsonAry2Grid(FJsonResult);
       end;
     end;
   end;
@@ -260,10 +352,10 @@ end;
 
 procedure TSrchModuleByTagF.SelectFromTAGNAMEField1Click(Sender: TObject);
 var
-  LUtf8: RawUtf8;
   LPoint: TPoint;
   LTagName: string;
   LCell: TCell;
+  LRowCount: integer;
 begin
   if TagInfoGrid.SelectedRow = -1 then
     exit;
@@ -277,29 +369,77 @@ begin
 
     LTagName := LCell.AsString;
 
-    if LUtf8 = '' then
-      LUtf8 := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(LTagName, 'TAG_NAME', SystemDBEdit.Text);
+    FJsonResult := THiConSystemDB.GetTagInfo2JsonAryFromMAPPINGTable(LTagName, 'TAG_NAME', LRowCount, SystemDBEdit.Text);
 
-    if LUtf8 <> '' then
+    if FJsonResult <> '' then
     begin
-      LoadTagInfoFromJsonAry2Grid(LUtf8);
+      LoadTagInfoFromJsonAry2Grid(FJsonResult);
     end;
   end;
 end;
 
-procedure TSrchModuleByTagF.TagInfoGridCellDblClick(Sender: TObject; ACol,
-  ARow: Integer);
+procedure TSrchModuleByTagF.ShowFBDefaultInfoByFBName1Click(Sender: TObject);
+var
+  LFBName: string;
+begin
+  if TagInfoGrid.SelectedRow = -1 then
+    exit;
+
+  if TableCombo.Text = 'FUNCTION' then
+  begin
+    LFBName := TagInfoGrid.CellsByName['FUNC_NAME', TagInfoGrid.SelectedRow];
+    CreateNShowHiCONFBLogicForm(LFBName, FJsonResult, '');
+  end
+  else
+    ShowMessage('This feature is only for "FUNCION" Tabel');
+end;
+
+procedure TSrchModuleByTagF.ShowFBLogic1Click(Sender: TObject);
 var
   LTagName: string;
+begin
+  if IsExistNextGridColumnName(TagInfoGrid, 'TAG_NAME') then
+  begin
+    LTagName := TagInfoGrid.CellsByName['TAG_NAME', TagInfoGrid.SelectedRow];
+
+    if LTagName <> '' then
+      CreateNShowHiCONFBLogicForm(LTagName, '', SystemDBEdit.Text);
+  end;
+end;
+
+procedure TSrchModuleByTagF.ShowOrHideHullNoComp(const AIsShow: Boolean);
+begin
+  Label3.Visible := AIsShow;
+  Label4.Visible := AIsShow;
+  Label5.Visible := AIsShow;
+
+  HullNoEdit.Visible := AIsShow;
+  BaseDirEdit.Visible := AIsShow;
+  EquipKindCombo.Visible := AIsShow;
+
+  BitBtn2.Visible := AIsShow;
+  BitBtn4.Visible := AIsShow;
+  BitBtn5.Visible := AIsShow;
+end;
+
+procedure TSrchModuleByTagF.TagInfoGridCellDblClick(Sender: TObject; ACol,
+  ARow: Integer);
 begin
   if ARow = -1 then
     exit;
 
   if IsTagNameColumnByIndex(ACol) then
   begin
-    LTagName := TagInfoGrid.Cells[ACol, ARow];
+    FSelectedOrgTagName := '';
+    FSelectedTagName := TagInfoGrid.Cells[ACol, ARow];
 
-    GetTagInfoFromDB2Grid(LTagName);
+    if IsExistNextGridColumnName(TagInfoGrid, 'ORG_TAG') then
+      FSelectedOrgTagName := TagInfoGrid.CellsByName['ORG_TAG', ARow];
+
+    if FIsReturnDblClick then
+      ModalResult := mrOK
+    else
+      GetTagInfoFromDB2Grid(FSelectedTagName);
   end;
 end;
 
@@ -340,10 +480,15 @@ end;
 procedure TSrchModuleByTagF.WMCopyData(var Msg: TMessage);
 var
   LMsg: string;
+//  LRec : TRecToPass;
+  LRowCount: integer;
 begin
+//  LRec := PRecToPass(PCopyDataStruct(Msg.LParam)^.lpData)^;
+//  SetString(LMsg, PChar(@LRec.StrMsg), Length(LRec.StrMsg));
   LMsg := PChar(PCopyDataStruct(Msg.LParam)^.lpData);
+  LRowCount := PCopyDataStruct(Msg.LParam)^.dwData;
 
-  ProcessAsyncResult(LMsg, Msg.WParam);
+  ProcessAsyncResult(LMsg, LRowCount, Msg.WParam);
 end;
 
 end.

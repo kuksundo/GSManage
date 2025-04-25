@@ -36,9 +36,17 @@ type
     IsPOR: TCheckBox;
     JvLabel5: TJvLabel;
     CurQty: TEdit;
+    JvLabel6: TJvLabel;
+    MatPORNo: TEdit;
+    FaultyPartName: TMemo;
+    JvLabel7: TJvLabel;
+    BitBtn2: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure MaterialCodeClickBtn(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -108,9 +116,19 @@ begin
   ClipboardCopyOrPaste2AdvEditBtn(MaterialName);
 end;
 
+procedure TMaterialDetailF.BitBtn2Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(MatPORNo);
+end;
+
 procedure TMaterialDetailF.BitBtn3Click(Sender: TObject);
 begin
   ClipboardCopyOrPaste2AdvEditBtn(MaterialCode);
+end;
+
+procedure TMaterialDetailF.BitBtn4Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(PlateNo);
 end;
 
 procedure TMaterialDetailF.LoadMaterialDetailVar2Form(AVar: variant);

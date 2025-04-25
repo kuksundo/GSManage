@@ -40,6 +40,7 @@ type
     class function GetHiscm_imVersionFromRunDiagHtml(AIpAddr, AHtml: string): string;
 
     class function GetVersionFromCOM_Async(AIpAddr: string): string;
+    class function GetVersionFromCOM(AIpAddr: string): string;
     class function GetVersionUrlFromIpAddr(AIpAddr: string): string;
     class function GetVersion2JsonAryFromVersionHtml(AIpAddr, AHtml: string): string;
     class function GetVersion2SWRecfFromVersionHtml(const AHtml: string; out ASWVersionRec: THiConSWVersionRec): integer;
@@ -188,6 +189,14 @@ begin
   Result := 'http://' + AIpAddr + ':8000/rundiag';
 end;
 
+class function THiConMPMWeb_Inf.GetVersionFromCOM(AIpAddr: string): string;
+var
+  Lurl: string;
+begin
+  LUrl := GetVersionUrlFromIpAddr(AIpAddr);
+  Result := HttpGet(LUrl, nil, False, nil, 5000);
+end;
+
 class function THiConMPMWeb_Inf.GetVersionFromCOM_Async(
   AIpAddr: string): string;
 var
@@ -198,7 +207,7 @@ begin
   Parallel.Async(
     procedure (const task: IOmniTask)
     var
-      Lurl, LQuery, LFullUrl: string;
+      LQuery, LFullUrl: string;
     begin
       AIpAddr := StrToken(AIpAddr, ';');
 
@@ -208,9 +217,7 @@ begin
         exit;
       end;
 
-      LUrl := GetVersionUrlFromIpAddr(AIpAddr);
-
-      LCon := HttpGet(LUrl, nil, False, nil, 5000);
+      LCon := GetVersionFromCOM(AIpAddr)
     end,
 
     Parallel.TaskConfig.OnMessage(nil).OnTerminated(

@@ -14,7 +14,7 @@ uses
   mormot.core.unicode,
 
   UnitHiconisMasterRecord, AeroButtons, UnitElecServiceData2, UnitHiASMaterialRecord,
-  CommonData2, UnitHiASIniConfig
+  CommonData2, UnitHiASIniConfig, Vcl.Menus
   ;
 
 type
@@ -80,6 +80,8 @@ type
     DirectInputReqNo: TEdit;
     BitBtn3: TBitBtn;
     BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn4: TBitBtn;
 
     procedure FormCreate(Sender: TObject);
     procedure PngSpeedButton1Click(Sender: TObject);
@@ -89,6 +91,8 @@ type
     procedure PngSpeedButton3Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     procedure InitEnum;
     procedure InitCombo;
@@ -96,6 +100,7 @@ type
     FTaskID: TID;
     FHiASIniConfig: THiASIniConfig;
     FCurrentASFN: string; //현재 작성중인 문서 파일 이름
+    FProNo4PrjIsChanged: Boolean; //PORNo가 변경 되면 True - MaterialDetail DB에 반영하기 위함
 
     procedure LoadMaterialOrm2Form(AOrm: TSQLMaterial4Project);
     procedure LoadMaterialOrmFromForm(AOrm: TSQLMaterial4Project);
@@ -113,13 +118,14 @@ var
 implementation
 
 uses UnitNextGridUtil2, UnitRttiUtil2, FrmASMaterialDetailEdit, UnitMakeReport2,
-  UnitMiscUtil, UnitStringUtil, UnitAdvCompUtil, UnitFileInfoUtil;
+  UnitMiscUtil, UnitStringUtil, UnitAdvCompUtil, UnitFileInfoUtil;//, UnitMacroListClass2;
 
 {$R *.dfm}
 
 function DisplayMaterial2EditForm(var ADoc: variant; var AHiASIniConfig: THiASIniConfig): Boolean;
 var
   LASMaterialF: TASMaterialF;
+  LPorNo4Prj: string;
 begin
   LASMaterialF := TASMaterialF.Create(nil);
   try
@@ -137,12 +143,18 @@ begin
 
       SetHiASIniConfig(AHiASIniConfig);
       FTaskID := ADoc.TaskID;
+      LPorNo4Prj := PORNo.Text;
+      FProNo4PrjIsChanged := False;
 
       //"저장" 버튼을 누른 경우
       if ShowModal = mrOK then
       begin
+        if (LPorNo4Prj <> '') and (LPorNo4Prj <> PORNo.Text) then
+          FProNo4PrjIsChanged := True;
+
         LoadMaterialVarFromForm(ADoc);
 
+        AHiASIniConfig.FPorNo4PrjIsChanged := FProNo4PrjIsChanged;
         Result := True;
       end;
     end;
@@ -187,9 +199,19 @@ begin
   ClipboardCopyOrPaste2AdvEditBtn(PORNo);
 end;
 
+procedure TASMaterialF.BitBtn2Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(ShippingNo);
+end;
+
 procedure TASMaterialF.BitBtn3Click(Sender: TObject);
 begin
   ClipboardCopyOrPaste2AdvEditBtn(MaterialName);
+end;
+
+procedure TASMaterialF.BitBtn4Click(Sender: TObject);
+begin
+  ClipboardCopyOrPaste2AdvEditBtn(Measurement);
 end;
 
 procedure TASMaterialF.Button1Click(Sender: TObject);

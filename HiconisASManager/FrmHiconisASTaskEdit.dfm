@@ -2,7 +2,7 @@ object TaskEditF: TTaskEditF
   Left = 0
   Top = 0
   Caption = 'Task Edit Form'
-  ClientHeight = 683
+  ClientHeight = 699
   ClientWidth = 607
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object TaskEditF: TTaskEditF
     Left = 0
     Top = 273
     Width = 607
-    Height = 368
+    Height = 384
     ActivePage = TabSheet5
     Align = alClient
     TabOrder = 0
@@ -31,7 +31,7 @@ object TaskEditF: TTaskEditF
       ImageIndex = 4
       DesignSize = (
         599
-        337)
+        353)
       object JvLabel36: TJvLabel
         AlignWithMargins = True
         Left = 16
@@ -327,9 +327,9 @@ object TaskEditF: TTaskEditF
       object EtcContentMemo: TMemo
         Left = 122
         Top = 248
-        Width = 431
-        Height = 142
-        Anchors = [akLeft, akTop, akBottom]
+        Width = 468
+        Height = 100
+        Anchors = [akLeft, akTop, akRight, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
         ImeMode = imSHanguel
@@ -385,8 +385,9 @@ object TaskEditF: TTaskEditF
       object ClaimReasonMemo: TMemo
         Left = 123
         Top = 126
-        Width = 431
+        Width = 467
         Height = 107
+        Anchors = [akLeft, akTop, akRight]
         BevelInner = bvNone
         BevelKind = bkFlat
         ImeMode = imSHanguel
@@ -437,7 +438,7 @@ object TaskEditF: TTaskEditF
         Left = 3
         Top = 3
         Width = 92
-        Height = 331
+        Height = 347
         Align = alLeft
         Alignment = taCenter
         AutoSize = False
@@ -467,12 +468,12 @@ object TaskEditF: TTaskEditF
         Left = 98
         Top = 0
         Width = 501
-        Height = 337
+        Height = 353
         Align = alClient
         TabOrder = 0
         object Panel2: TPanel
           Left = 1
-          Top = 298
+          Top = 314
           Width = 499
           Height = 38
           Align = alBottom
@@ -562,7 +563,7 @@ object TaskEditF: TTaskEditF
           Left = 1
           Top = 1
           Width = 499
-          Height = 297
+          Height = 313
           Margins.Left = 40
           Margins.Top = 0
           Touch.InteractiveGestures = [igPan, igPressAndTap]
@@ -1343,7 +1344,7 @@ object TaskEditF: TTaskEditF
         Left = 0
         Top = 33
         Width = 599
-        Height = 304
+        Height = 320
         Touch.InteractiveGestures = [igPan, igPressAndTap]
         Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
         Align = alClient
@@ -1621,13 +1622,53 @@ object TaskEditF: TTaskEditF
           Position = 13
           SortType = stAlphabetic
         end
+        object MatPORNo: TNxTextColumn
+          Alignment = taCenter
+          DefaultWidth = 120
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = 'Mat POR No'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 14
+          SortType = stAlphabetic
+          Width = 120
+        end
+        object FaultyPartName: TNxTextColumn
+          Alignment = taCenter
+          DefaultWidth = 120
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Header.Caption = 'Faulty Part Name'
+          Header.Alignment = taCenter
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          ParentFont = False
+          Position = 15
+          SortType = stAlphabetic
+          Width = 120
+        end
       end
     end
     object TabSheet1: TTabSheet
       Caption = #44256#44061#51221#48372
       DesignSize = (
         599
-        337)
+        353)
       object JvLabel12: TJvLabel
         AlignWithMargins = True
         Left = 19
@@ -1929,7 +1970,7 @@ object TaskEditF: TTaskEditF
         Left = 122
         Top = 166
         Width = 458
-        Height = 153
+        Height = 169
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -1969,7 +2010,7 @@ object TaskEditF: TTaskEditF
         Left = 122
         Top = 276
         Width = 458
-        Height = 136
+        Height = 152
         Anchors = [akLeft, akTop, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
@@ -2494,7 +2535,7 @@ object TaskEditF: TTaskEditF
   object CurvyPanel1: TCurvyPanel
     AlignWithMargins = True
     Left = 0
-    Top = 644
+    Top = 660
     Width = 607
     Height = 36
     Margins.Left = 0
@@ -2578,8 +2619,6 @@ object TaskEditF: TTaskEditF
       Caption = 'Claim '#44288#47532
       TabOrder = 5
       OnClick = AeroButton6Click
-      ExplicitLeft = 69
-      ExplicitTop = -1
     end
     object AeroButton8: TAeroButton
       Left = 0
@@ -2591,8 +2630,6 @@ object TaskEditF: TTaskEditF
       Caption = 'Claim '#46321#47197
       TabOrder = 6
       OnClick = AeroButton8Click
-      ExplicitLeft = -6
-      ExplicitTop = -1
     end
   end
   object CurvyPanel2: TCurvyPanel
@@ -3477,7 +3514,7 @@ object TaskEditF: TTaskEditF
     Left = 163
     Top = 512
     Bitmap = {
-      494C010130009800200610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010130009800340610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5384,7 +5421,7 @@ object TaskEditF: TTaskEditF
     Left = 200
     Top = 512
     Bitmap = {
-      494C010110001400F40210001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010110001400080310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6131,6 +6168,24 @@ object TaskEditF: TTaskEditF
       OnClick = HullNoClaimNo1Click
     end
     object N25: TMenuItem
+      Caption = '-'
+    end
+    object N27: TMenuItem
+      Caption = #44397#45236#50868#49569#51032#47280#49436
+      object N29: TMenuItem
+        Caption = #54840#49440#51221#48372' '#51077#47141
+        OnClick = N29Click
+      end
+      object N30: TMenuItem
+        Caption = #49569#54408#51648' '#51221#48372' '#51077#47141' ('#52636#54616#51648#49884#48264#54840')'
+        OnClick = N30Click
+      end
+      object N31: TMenuItem
+        Caption = #49569#54408#51648' '#51221#48372' '#51077#47141' (-)'
+        OnClick = N31Click
+      end
+    end
+    object N28: TMenuItem
       Caption = '-'
     end
     object Claim1: TMenuItem

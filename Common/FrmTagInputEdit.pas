@@ -28,6 +28,7 @@ type
   end;
 
   function CreateTagInputEdit(const ACaption, ALabel, ADefault, ALabel2, ADefault2: string): string;
+
 var
   TagEditF: TTagEditF;
 

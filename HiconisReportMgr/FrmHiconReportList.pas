@@ -1,4 +1,12 @@
 unit FrmHiconReportList;
+(*
+HiCONIS Report Manager 1.0.0
+
+Description:
+Change log:
+ Version 1.0.0 (23 April 2025):
+  - First version by GP.
+*)
 
 interface
 
@@ -200,7 +208,8 @@ type
     procedure HiRptListGridMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
-    FAppSigInfoJson: string;
+    FAppSigInfoJson,
+    FAppFilePath: string;
     FCLO4HiRptMgr: TCLO4HiRptMgr;
     FJHPFileDB4HiRpt: TRestClientDB;
     FJHPFileDB4HiRptModel: TOrmModel;
@@ -275,6 +284,10 @@ type
     procedure DeleteReportByReportKey(const ARptKey: TTimeLog);
     procedure DeleteReportListByReportKey(const ARptKey: TTimeLog);
     procedure DeleteWorkItemByReportKey(const ARptKey: TTimeLog);
+
+    procedure CreateLockFile();
+    function CheckIfLockFileExist(): Boolean;
+    procedure DeleteLockFile();
   public
     procedure DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
     procedure MakeReportBySelected(const ACommissionRptKind: integer; AWorkCode: string='');
@@ -660,6 +673,11 @@ begin
   MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
 end;
 
+function THiConReportListF.CheckIfLockFileExist: Boolean;
+begin
+  Result := FileExists(FAppFilePath + HICON_RPT_LOCK_FILE_NAME);
+end;
+
 function THiConReportListF.CheckRptDocDictExist: Boolean;
 begin
   if FRptDocDict.Len > 0 then
@@ -732,6 +750,11 @@ begin
   end;
 end;
 
+procedure THiConReportListF.CreateLockFile;
+begin
+  FileFromString('', FAppFilePath + HICON_RPT_LOCK_FILE_NAME);
+end;
+
 procedure THiConReportListF.CreateNewTask1Click(Sender: TObject);
 begin
   HiRptEdit();
@@ -740,6 +763,11 @@ end;
 procedure THiConReportListF.D1Click(Sender: TObject);
 begin
   MakeReportBySelected(Ord(hcrkSummaryByCode), TMenuItem(Sender).Hint);
+end;
+
+procedure THiConReportListF.DeleteLockFile;
+begin
+  DeleteFile(FAppFilePath + HICON_RPT_LOCK_FILE_NAME);
 end;
 
 procedure THiConReportListF.DeleteReportByReportKey(const ARptKey: TTimeLog);
@@ -797,6 +825,8 @@ begin
   FJHPFileDB4HiRptModel.Free;
   FJHPFileDB4HiRpt.Free;
   FCLO4HiRptMgr.Free;
+
+  DeleteLockFile();
 end;
 
 procedure THiConReportListF.DisplayReportList2Grid(const ARec: THiRptMgrSearchCondRec);
@@ -1079,6 +1109,16 @@ end;
 
 procedure THiConReportListF.FormCreate(Sender: TObject);
 begin
+  FAppFilePath := ExtractFilePath(Application.ExeName);
+
+  if CheckIfLockFileExist() then
+  begin
+    ShowMessage('DB is in use!');
+    Halt(0);
+  end
+  else
+    CreateLockFile();
+
   InitVar();
 end;
 

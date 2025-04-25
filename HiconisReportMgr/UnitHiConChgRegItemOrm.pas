@@ -108,6 +108,7 @@ type
 
   procedure DeleteHiChgRegItemFromDBByRptKey(const AKeyID: TTimeLog);
   procedure DeleteHiChgRegItemByChgRegRptNo(const AHcrNo: string);
+  function DeleteHiChgRegItemByRptKeyNChgRegRptNo(const AKeyID: TTimeLog; const AHcrNo: string): Boolean;
 
 var
   g_HiChgRegItemDB: TRestClientURI;
@@ -350,6 +351,11 @@ end;
 procedure DeleteHiChgRegItemByChgRegRptNo(const AHcrNo: string);
 begin
   g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ChgRegRptNo = ?', [AHcrNo]);
+end;
+
+function DeleteHiChgRegItemByRptKeyNChgRegRptNo(const AKeyID: TTimeLog; const AHcrNo: string): Boolean;
+begin
+  Result := g_HiChgRegItemDB.Delete(TOrmHiChgRegItem, 'ReportKey4ChgReg = ? AND ChgRegRptNo = ?', [AKeyID, AHcrNo]);
 end;
 
 initialization

@@ -68,6 +68,7 @@ type
   end;
 
   THiConSWVersionRec = packed record
+    FIpAddr,
     FHirs,
     FLogic,
     FHirs_Wdt,

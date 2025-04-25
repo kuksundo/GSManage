@@ -93,11 +93,6 @@ type
     Open_PIC:TnxTextColumn;
     Test_PIC:TnxTextColumn;
     Close_PIC:TnxTextColumn;
-    ChgRegDate:TnxNumberColumn;
-    ChgRegOpenDate:TnxNumberColumn;
-    ChgRegTestDate:TnxNumberColumn;
-    ChgRegCloseDate:TnxNumberColumn;
-    ChgRegModifyDate:TnxNumberColumn;
     SetColCaptionFromList1: TMenuItem;
     Involves: TNxTextColumn;
     DeleteHCRReport1: TMenuItem;
@@ -117,6 +112,11 @@ type
     DropEmptySource1: TDropEmptySource;
     DataFormatAdapter2: TDataFormatAdapter;
     OpenDialog1: TOpenDialog;
+    ChgRegDate: TNxTextColumn;
+    ChgRegCloseDate: TNxTextColumn;
+    ChgRegOpenDate: TNxTextColumn;
+    ChgRegTestDate: TNxTextColumn;
+    ChgRegModifyDate: TNxTextColumn;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -163,9 +163,11 @@ type
     procedure LoadChgRegJson2Grid(AVar: Variant; ARow: integer=-1);
 
     function GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
+    function GetNewChgRegRptNoByHullNo(AHullNo, ASerialNo: string): string;
 
     procedure DeleteHCRReportFromSelectedGrid();
     procedure DeleteHCRReportByChgRegRptNo(const AChgRegRptNo: RawUTF8);
+    procedure DeleteHCRReportByReportKeyNChgRegRptNo(const ARptKey: TTimeLog; const AChgRegRptNo: RawUTF8);
     procedure MakeHCRReportBySelected();
 
     function GetHiconReportRecByHcrNo(const AHcrNo: string): THiconReportRec;
@@ -205,7 +207,7 @@ implementation
 
 uses UnitDFMUtil, UnitNextGridUtil2, UnitComboBoxUtil, JHP.Util.Bit32Helper,
   UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHGSSerialRecord2,
-  UnitHiConReportMakeUtil, UnitBase64Util2, UnitDragUtil,
+  UnitHiConReportMakeUtil, UnitBase64Util2, UnitDragUtil, UnitmORMotUtil2,
   FrmHiChangeRegisterEdit;
 
 {$R *.dfm}
@@ -248,9 +250,16 @@ function TChgRegListF.AddHiChgRegListGridRowsFromJsonAry(AJsonAry: RawUtf8;
   AIsAddColumn, AIsClearRow: Boolean): integer;
 var
   LJson: RawUtf8;
+  i: integer;
+  LColumn: TnxCustomColumn;
 begin
   LJson := ReplaceStatusValue2StrFromJsonAry(AJsonAry);
   AddNextGridRowsFromJsonAry(HiChgRegListGrid, LJson, AIsAddColumn);
+
+  LColumn := HiChgRegListGrid.ColumnByName['ChgRegRptNo'];
+  LJson := HiChgRegListGrid.CellsByName['ChgRegRptNo', HiChgRegListGrid.RowCount - 1];
+  i := GetColumnWidthByTextLength(HiChgRegListGrid, LColumn, LJson);
+  LColumn.Width := i;
 end;
 
 procedure TChgRegListF.btn_CloseClick(Sender: TObject);
@@ -334,9 +343,23 @@ begin
   end;
 end;
 
+procedure TChgRegListF.DeleteHCRReportByReportKeyNChgRegRptNo(
+  const ARptKey: TTimeLog; const AChgRegRptNo: RawUTF8);
+var
+  LMsg: string;
+begin
+  if DeleteHiChgRegItemByRptKeyNChgRegRptNo(ARptKey, AChgRegRptNo) then
+    LMsg := 'Successful'
+  else
+    LMsg := 'Fail';
+
+  ShowMessage('Delete for Change Register Report [' + AChgRegRptNo + '] is ' + LMsg);
+end;
+
 procedure TChgRegListF.DeleteHCRReportFromSelectedGrid;
 var
   LRptKey: TTimeLog;
+  LChgRegRptNo: RawUtf8;
 begin
   if HiChgRegListGrid.SelectedRow = -1 then
     exit;
@@ -346,9 +369,10 @@ begin
     exit;
 
   LRptKey := StrToInt64Def(HiChgRegListGrid.CellsByName['ReportKey4ChgReg', HiChgRegListGrid.SelectedRow],0);
-  DeleteHCRReportByReportKey(LRptKey);
+  LChgRegRptNo := HiChgRegListGrid.CellsByName['ChgRegRptNo', HiChgRegListGrid.SelectedRow];
+  DeleteHCRReportByReportKeyNChgRegRptNo(LRptKey, LChgRegRptNo);
 
-  ShowMessage('Reoprt 삭제가 완료 되었습니다.');
+//  ShowMessage('Reoprt 삭제가 완료 되었습니다.');
 
   btn_SearchClick(nil);
 end;
@@ -705,6 +729,11 @@ begin
   end;
 end;
 
+function TChgRegListF.GetNewChgRegRptNoByHullNo(AHullNo, ASerialNo: string): string;
+begin
+  Result := 'HMS-' + g_HiRptKind2.ToString(hrkCHR) + '-' + AHullNo + '-' + ASerialNo;// + '-' + g_HiRptCategory.ToString(hrcIAS)
+end;
+
 function TChgRegListF.GetNewChgRegRptNoBySerial(AYear, ASerialNo: integer): string;
 begin
   Result := 'HMS-' + g_HiRptKind2.ToString(hrkCHR) + '-' + IntToStr(AYear) + '-' + IntToStr(ASerialNo);// + '-' + g_HiRptCategory.ToString(hrcIAS)
@@ -779,9 +808,11 @@ begin
       LSerial := GetNextHGSSerialFromProductType(LYear, Ord(hrkCHR));
 
       LOrmHiChgRegItem.ReportKey4ChgReg := FReportKey4ChgReg;
-      LOrmHiChgRegItem.ChgRegRptNo := GetNewChgRegRptNoBySerial(LYear, LSerial);
+//      LOrmHiChgRegItem.ChgRegRptNo := GetNewChgRegRptNoBySerial(LYear, LSerial);
+      LOrmHiChgRegItem.ChgRegRptNo := GetNewChgRegRptNoByHullNo(HullNoEdit.Text, '001');
       LOrmHiChgRegItem.ChgRegDate := TimeLogFromDateTime(now);
       LOrmHiChgRegItem.ChgRegModifyDate := TimeLogFromDateTime(now);
+      LOrmHiChgRegItem.ChgRegRptAuthorID := ClassSocietyEdit.Text;
 
       LUtf8 := LOrmHiChgRegItem.GetJsonValues(true, true, soSelect);
     finally
@@ -853,7 +884,13 @@ begin
 end;
 
 procedure TChgRegListF.LoadChgRegJson2Grid(AVar: Variant; ARow: integer);
+var
+  LUtf8: RawUtf8;
 begin
+  LUtf8 := AVar;
+  LUtf8 := ReplaceStatusValue2StrFromJson(LUtf8);
+  AVar := _JSON(LUtf8);
+
   if ARow = -1 then
   begin
     if TDocVariantData(AVar).IsArray then
@@ -1049,6 +1086,8 @@ function TChgRegListF.ReplaceStatusValue2StrFromJson(AJson: RawUtf8): RawUtf8;
 var
   LStr: string;
   LDict: IDocDict;
+  LTimeLog: TTimeLog;
+//  LDate: TDate;
 begin
   Result := '';
 
@@ -1057,6 +1096,26 @@ begin
   LDict.S['OpenStatus'] := g_HiRptOpenStatus.ToString(StrToIntDef(LStr,0));
   LStr := LDict.S['Distinction'];
   LDict.S['Distinction'] := g_HiRptDistinction.ToString(StrToIntDef(LStr,0));
+
+  LTimeLog := LDict.I['ChgRegDate'];
+  LStr := GetDateStrFromTimeLog(LTimeLog);
+  LDict.S['ChgRegDate'] := LStr;
+
+  LTimeLog := LDict.I['ChgRegOpenDate'];
+  LStr := GetDateStrFromTimeLog(LTimeLog);
+  LDict.S['ChgRegOpenDate'] := LStr;
+
+  LTimeLog := LDict.I['ChgRegTestDate'];
+  LStr := GetDateStrFromTimeLog(LTimeLog);
+  LDict.S['ChgRegTestDate'] := LStr;
+
+  LTimeLog := LDict.I['ChgRegCloseDate'];
+  LStr := GetDateStrFromTimeLog(LTimeLog);
+  LDict.S['ChgRegCloseDate'] := LStr;
+
+  LTimeLog := LDict.I['ChgRegModifyDate'];
+  LStr := GetDateStrFromTimeLog(LTimeLog);
+  LDict.S['ChgRegModifyDate'] := LStr;
 
   Result := LDict.Json;
 end;
@@ -1093,6 +1152,21 @@ begin
   LDict.I['OpenStatus'] := g_HiRptOpenStatus.ToOrdinal(LStr);
   LStr := LDict.S['Distinction'];
   LDict.I['Distinction'] := g_HiRptDistinction.ToOrdinal(LStr);
+
+  LStr := LDict.S['ChgRegDate'];
+  LDict.I['ChgRegDate'] := GetTimeLogFromStr(LStr);
+
+  LStr := LDict.S['ChgRegOpenDate'];
+  LDict.I['ChgRegOpenDate'] := GetTimeLogFromStr(LStr);
+
+  LStr := LDict.S['ChgRegTestDate'];
+  LDict.I['ChgRegTestDate'] := GetTimeLogFromStr(LStr);
+
+  LStr := LDict.S['ChgRegCloseDate'];
+  LDict.I['ChgRegCloseDate'] := GetTimeLogFromStr(LStr);
+
+  LStr := LDict.S['ChgRegModifyDate'];
+  LDict.I['ChgRegModifyDate'] := GetTimeLogFromStr(LStr);
 
   Result := LDict.Json;
 end;
@@ -1147,7 +1221,9 @@ procedure TChgRegListF.SetSrchCondHdrFromDict(ADict: IDocDict);
 begin
   HullNoEdit.Text := ADict['HullNo'];
   ShipNameEdit.Text := ADict['ShipName'];
-  ProjNoEdit.Text := ADict['ProjectNo'];;
+  ProjNoEdit.Text := ADict['ProjectNo'];
+  ClassSocietyEdit.Text := ADict['ClassSociety'];
+
 //  ClassSocietyEdit.Text := '';
 //  ReportAuthorIDEdit.Text := '';
 //

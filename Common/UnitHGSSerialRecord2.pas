@@ -16,6 +16,9 @@ type
     fLastSerialNo
     : integer;
 
+    FDBIsInUse //동시에 두개의 프로그램에서 접근하는 것 방지함
+    :Boolean;
+
     fUpdateDate: TTimeLog;
   public
     FIsUpdate: Boolean;

@@ -30,12 +30,14 @@ type
     FromResourceDB1: TMenuItem;
     FromServerDB1: TMenuItem;
     DESCRIPTION: TNxTextColumn;
+
+    procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FromResourceDB1Click(Sender: TObject);
     procedure FromServerDB1Click(Sender: TObject);
     procedure AdvToolButton1Click(Sender: TObject);
+    procedure IPAddrGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
   private
     FIpAddr, FPort, FName: string;
 
@@ -43,7 +45,7 @@ type
   public
     FIpAddrDic: IKeyValue<string, TIpListRec>;
 
-    function GetIpList2JsonFromGrid(): string;
+    function GetIpList2JsonFromGrid(const ASelectedOnly: Boolean=False): string;
     function GetIPListFromJson(AJson: string): IList<TIpListRec>;
   end;
 
@@ -68,14 +70,16 @@ begin
   try
     with IPListF do
     begin
-      FIpAddrDic.Data.LoadFromJson(StringToUtf8(AJson));
-      LJson := Utf8ToString(GetIPListJsonFromIpList(FIpAddrDic));
-
-      SetIpListFromJson2Grid(LJson, IPAddrGrid);
+      if AJson <> '' then
+      begin
+        FIpAddrDic.Data.LoadFromJson(StringToUtf8(AJson));
+        LJson := Utf8ToString(GetIPListJsonFromIpList(FIpAddrDic));
+        SetIpListFromJson2Grid(LJson, IPAddrGrid);
+      end;
 
       Result := ShowModal;
 
-      if Result = mrOK then
+      if Result = mrOK then //OK ButtonÀ» ´­·¯¼­ ÆûÀ» ´ÝÀº °æ¿ì
       begin
         LJson := GetIpList2JsonFromGrid();
         LList := GetIPListFromJson(LJson);
@@ -87,6 +91,11 @@ begin
           FIpAddrDic.Add(LRec.RES_NAME, LRec);
         end;
         AJson := FIpAddrDic.Data.SaveToJson();
+      end
+      else
+      if Result = mrYes then //Grid¸¦ Double ClickÇÏ¿© ÆûÀ» ´ÝÀº °æ¿ì
+      begin
+        AJson := GetIpList2JsonFromGrid(True);
       end;
     end;
   finally
@@ -167,11 +176,11 @@ begin
   GetIpListFromDB('Server');
 end;
 
-function TIPListF.GetIpList2JsonFromGrid: string;
+function TIPListF.GetIpList2JsonFromGrid(const ASelectedOnly: Boolean): string;
 var
   LVar: variant;
 begin
-  LVar := NextGrid2Variant(IPAddrGrid);
+  LVar := NextGrid2Variant(IPAddrGrid, False, True, ASelectedOnly);
   Result := Utf8ToString(LVar);
 end;
 
@@ -196,4 +205,10 @@ begin
   Result.Data.LoadFromJson(AJson);
 end;
 
+procedure TIPListF.IPAddrGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
+begin
+  ModalResult := mrYes;
+end;
+
 end.
+

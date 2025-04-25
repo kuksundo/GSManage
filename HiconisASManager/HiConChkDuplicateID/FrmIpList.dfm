@@ -205,8 +205,10 @@ object IPListF: TIPListF
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Align = alClient
     Caption = ''
+    Options = [goHeader, goSelectFullRow]
     TabOrder = 2
     TabStop = True
+    OnCellDblClick = IPAddrGridCellDblClick
     object RES_NAME: TNxTextColumn
       Alignment = taCenter
       Font.Charset = DEFAULT_CHARSET

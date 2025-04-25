@@ -8,8 +8,9 @@ uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Classes, Vcl.Co
   IdGlobal, IdHTTP,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
   OtlSync,
-  mormot.core.base, mormot.core.os, mormot.core.text, mormot.net.client,
-  mormot.core.collections, mormot.core.variants, mormot.core.json,
+  mormot.core.base, mormot.core.os, mormot.core.text, mormot.net.client, mormot.core.unicode,
+  mormot.core.collections, mormot.core.variants, mormot.core.json, mormot.core.buffers,
+  ArrayHelper,
   UnitChkDupIdData, UnitHiconMPMData
   ;
 
@@ -47,14 +48,22 @@ type
     : string;
   end;
 
+ THiConMPMWeb_ChDumpInfo = packed record
+   Block,Use,Change,Tm: string;
+ end;
+
   THiConMPMWeb = class
   private
+    //key: '0000' - address, Value: '00,00,00...' - csv value(16개)
+    class var FChannelDumpDict: IKeyValue<string, string>;//TArrayRecord
+
     class function GetMPMNameFromHtml(AHtml: string): string; static;
+    class function GetHtmlByHttpGetByUrl(AUrl: string): string;
   public
     class var FHirsVersion: string;
     class var FMPMWebHeader: THiConMPMWeb_Header;
 
-    ///DB Information Command
+    ///DB Information Command ==================================================
     class function GetHeaderFromMPM_Async(AIpAddr: string): string;
     class function GetHeaderFromMPM(AIpAddr: string): string;
     class function GetHeaderUrlFromIpAddr(AIpAddr: string): string;
@@ -103,7 +112,20 @@ type
 
     class function GetVersionIntfUrlFromIpRec(AIpAddr: string): string;
 
-    ///Maintenance Command
+    ///ACONIS-NX Information Command =====================================================
+    class function GetChannelStrFromMPM_Async(ARec: TIpListRec): integer;
+    class function GetChannelStrFromMPM(AIpAddr: string): string;
+    class function GetChannelStrUrlFromIpAddr(AIpAddr: string): string;
+    class function GetChannelStr2StrListFromHtml(AIpAddr, AHtml: string): string;
+
+    class function GetChannelDumpFromMPM_Async(ARec: TIpListRec): integer;
+    class function GetChannelDumpFromMPM(AIpAddr: string): string;
+    class function GetChannelDumpUrlFromIpAddr(AIpAddr: string): string;
+    class function GetChannelDump2JsonListFromHtml(AIpAddr, AHtml: string): string;
+    class function GetEmptyChannelDumpDict: IKeyValue<string, string>;
+    class function GetChannelDumpRecFromHtml(AChInfoText: string): THiConMPMWeb_ChDumpInfo;
+
+    ///Maintenance Command =====================================================
 
     //AIpAddrList: ';'로 구분됨
     class function BackupMPM(AIpAddrList: string): string;
@@ -135,9 +157,21 @@ type
 
     //AIpAddrList: ';'로 구분됨
     //ABakupFileName: 'MPM11P.tgz'
-    class function AppUpMPM(AIpAddrList, ABakupFileName: string): string;
+    class function AppUpMPM(AIpAddr, AUpFileNameFullPath, AServerPath: string): string;
     //AIpAddr: IP 한개임
-    class function AppUpMPMAsync(AIpAddr, ABakupFileName: string): string;
+    class function AppUpMPMAsync(AIpAddr, AUpFileNameFullPath, AServerPath: string): string;
+
+    //AIpAddrList: ';'로 구분됨
+    //ADownLoadFileName: 'hirs'
+    class function AppDownMPM(AIpAddrList, ADownLoadFileWithPath: string): string;
+    //AIpAddr: IP 한개임
+    class function AppDownMPMAsync(AIpAddr, ADownLoadFileWithPath: string): string;
+    //Web->Apply Button 누른 후 가져온 Html
+    class function GetAppDownApply2HtmlFromMPM(AIpAddr, ADownLoadFileWithPath: string): string;
+    //Web->Apply Button 누른 후 가져온 Html로 부터 데이터 추출(FILE/Size)
+    class function GetAppDownApplyDataNUrlFromHtml(AIpAddr, AHtml: string; var ADownloadUrl: string): string;
+    //Web->Apply 후 DownLoad Button 누른 후 가져온 Html
+    class function GetAppDownDownLoad2HtmlFromMPM(AIpAddr, AHtml: string): string;
 
     //AIpAddrList: ';'로 구분됨
     class function CFCmd2MPM(AIpAddrList: string): string;
@@ -162,14 +196,67 @@ uses UnitCopyData, pingsend, UnitHtmlUtil, UnitStringUtil, UnitLanUtil2,
 
 { THiConMPMWeb }
 
-class function THiConMPMWeb.AppUpMPM(AIpAddrList,
-  ABakupFileName: string): string;
+class function THiConMPMWeb.AppDownMPM(AIpAddrList,
+  ADownLoadFileWithPath: string): string;
+var
+  LIpAddr, LHtml, LStr: string;
+begin
+  while AIpAddrList <> '' do
+  begin
+    LIpAddr := StrToken(AIpAddrList, ';');
+
+    LHtml := THiConMPMWeb.GetAppDownApply2HtmlFromMPM(LIpAddr, ADownLoadFileWithPath);
+//    LStr := THiConMPMWeb.GetAppDownApplyDataNUrlFromHtml(LHtml);
+    LHtml := THiConMPMWeb.GetAppDownDownLoad2HtmlFromMPM(LIpAddr, LHtml);
+
+//    if CreateCFInputForm(LRec) = mrOk then
+//    begin
+//      CFCmd2MPMAsync(LIpAddr, LRec);
+//    end;
+  end;//while
+end;
+
+class function THiConMPMWeb.AppDownMPMAsync(AIpAddr,
+  ADownLoadFileWithPath: string): string;
 begin
 
 end;
 
+class function THiConMPMWeb.AppUpMPM(AIpAddr,
+  AUpFileNameFullPath, AServerPath: string): string;
+var
+  LHttp: THttpClientSocket;
+  LMultiPart: THttpMultiPartStream;
+  Lurl: string;
+  LResult: integer;
+  LContent: RawByteString;
+begin
+  if not FileExists(AUpFileNameFullPath) then
+    exit;
+
+  LContent := StringFromFile(AUpFileNameFullPath);
+
+  AUpFileNameFullPath := ExtractFileName(AUpFileNameFullPath);
+
+  LMultiPart := THttpMultiPartStream.Create();
+  try
+    LMultiPart.AddFileContent('dir', '', AServerPath); ///home/app/'
+    LMultiPart.AddFileContent('&', AUpFileNameFullPath, LContent, 'application/octet-stream'); ///home/app/'
+    LMultiPart.Flush();
+
+    LHttp := THttpClientSocket.Open(AIpAddr, '');//, nlTcp, 5000, False);
+    try
+      LResult := LHttp.Post('/appup', LMultiPart, LMultiPart.MultipartContentType);
+    finally
+      LHttp.Free();
+    end;
+  finally
+    LMultiPart.Free;
+  end;
+end;
+
 class function THiConMPMWeb.AppUpMPMAsync(AIpAddr,
-  ABakupFileName: string): string;
+  AUpFileNameFullPath, AServerPath: string): string;
 begin
 
 end;
@@ -430,6 +517,69 @@ begin
   end;
 end;
 
+class function THiConMPMWeb.GetAppDownApply2HtmlFromMPM(AIpAddr,
+  ADownLoadFileWithPath: string): string;
+var
+  LHttp: TIdHttp;
+  Lurl: string;
+  LQuery: RawUtf8;
+begin
+  LHttp := TIdHttp.Create(nil);
+  try
+    LUrl := 'http://' + AIpAddr + '/appdown';
+    LQuery := 'file=' + UrlEncode(StringToUtf8(ADownLoadFileWithPath));
+    LQuery := LQuery + '&' + UrlEncode('&') + '=Apply';
+    LQuery := LUrl + '?' + LQuery;
+    Result := LHttp.Get(LQuery);
+  finally
+    LHttp.Free;
+  end;
+end;
+
+class function THiConMPMWeb.GetAppDownApplyDataNUrlFromHtml(AIpAddr, AHtml: string;
+  var ADownloadUrl: string): string;
+var
+  LHttp: TIdHttp;
+  LStr, LText, LFN: string;
+  LQuery: RawUtf8;
+begin
+  LStr := ExtractTextInsideGivenTagEx('td', AHtml);
+  LText := ExtractTextInsideGivenTagEx('form', LStr);
+  LStr := ExtractTagAndTextInsideGivenTagEx('form', LStr);
+  LFN := GetAttrValueInHtmlTagByAttrName(LStr, 'action', ''''); /// LFN := /home/app/hirs
+  LQuery := UrlEncode('&') + '=Download';
+  ADownloadUrl := 'http://' + AIpAddr + LFN + '?' + LQuery;
+  Result := LText;
+end;
+
+class function THiConMPMWeb.GetAppDownDownLoad2HtmlFromMPM(AIpAddr,
+  AHtml: string): string;
+var
+  LHttp: TIdHttp;
+  Lurl, LFN, LStr: string;
+  LStream: TMemoryStream;
+begin
+  LHttp := TIdHttp.Create(nil);
+  try
+    LFN := GetAppDownApplyDataNUrlFromHtml(AIpAddr, AHtml, LUrl);
+    StrToken(LFN, '/');
+    LFN := StrToken(LFN, #10);
+    LFN := StringReplace(LFN, '/', '_', [rfReplaceAll]);
+//    Result := LHttp.Get(LUrl);
+
+    LStream := TMemoryStream.Create;
+    try
+      LHttp.Get(LUrl, LStream);
+      LFN := 'c:\temp\' + LFN;
+      LStream.SaveToFile(LFN);
+    finally
+      LStream.Free;
+    end;
+  finally
+    LHttp.Free;
+  end;
+end;
+
 class function THiConMPMWeb.GetCF2HtmlFromMPM(AIpAddr: string): string;
 var
   LCon: RawByteString;
@@ -452,21 +602,178 @@ begin
   Result := 'http://' + AIpAddr + '/cf';
 end;
 
-class function THiConMPMWeb.GetCommandFromMPM(AIpAddr: string): string;
+class function THiConMPMWeb.GetChannelDump2JsonListFromHtml(AIpAddr,
+  AHtml: string): string;
 var
-  Lurl: string;
+  LHtml, LTr, LTd, LKey, LCsv: string;
+  LStartRow, i, j, LIdx: integer;
+  LChDumpDict: IKeyValue<string, string>;
+  LChInfoRec: THiConMPMWeb_ChDumpInfo;
+//  LAryRec: TArrayRecord<string>;
 begin
   Result := '';
 
-  if PingHost(AIpAddr) = -1 then
+  LChDumpDict := GetEmptyChannelDumpDict();
+
+  LHtml := ExtractTextInsideGivenTagEx('table', AHtml);
+
+  LStartRow := 4;
+  LTr := ExtractTextInsideGivenTagNth('tr', LHtml, LStartRow-1);
+
+  while LTr <> '' do
   begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
+    LChInfoRec := GetChannelDumpRecFromHtml(LTr);
+
+    for i := 0 to 15 do
+    begin
+      LTr := ExtractTextInsideGivenTagNth('tr', LHtml, LStartRow + i);
+
+      if LTr = '' then
+        Continue;
+
+      LCsv := LChInfoRec.Block;
+
+      for j := 1 to 18 do
+      begin
+        LTd := ExtractTextInsideGivenTagNth('td', LTr, j);
+
+        if LTd = '' then
+          Continue;
+
+        if j = 1 then //Key
+        begin
+//          LAryRec := TArrayRecord<string>.Create(16);
+          LKey := Ltd;
+        end
+        else
+        if j > 2 then //공란은 건너 뜀(j = 2)
+        begin
+          if LCsv = '' then
+            LCsv := Ltd
+          else
+            LCsv := LCsv + ',' + Ltd;
+        end;
+      end; //for j
+
+      LChDumpDict.Add(LKey, LCsv);
+//        Result := IntToStr(FChannelDumpDict.Count);
+    end;//for i
+
+    LStartRow := LStartRow + 15 + 2;
+    //block0, use:1, change:0, time:-207826588 를 Read
+    LTr := ExtractTextInsideGivenTagNth('tr', LHtml, LStartRow - 1);
+  end;//while
+
+  if LChDumpDict.Count > 0 then
+    Result := LChDumpDict.Data.SaveToJson();// + ' => ' + IntToStr(FChannelDumpDict.Count);
+end;
+
+class function THiConMPMWeb.GetChannelDumpFromMPM(AIpAddr: string): string;
+var
+  LUrl: string;
+begin
+  if AIpAddr = '127.0.0.1' then
     exit;
-  end;
+
+  LUrl := GetChannelDumpUrlFromIpAddr(AIpAddr);
+  Result := GetHtmlByHttpGetByUrl(LUrl);
+end;
+
+class function THiConMPMWeb.GetChannelDumpFromMPM_Async(
+  ARec: TIpListRec): integer;
+begin
+
+end;
+
+class function THiConMPMWeb.GetChannelDumpRecFromHtml(
+  AChInfoText: string): THiConMPMWeb_ChDumpInfo;
+var
+  LStr: string;
+begin
+  LStr := ExtractTextInsideGivenTagEx('td', AChInfoText);
+//block0, use:1, change:0, time:-207826588
+  LStr := StringReplace(LStr, 'block', '', [rfReplaceAll]);
+  LStr := StringReplace(LStr, 'use:', '', [rfReplaceAll]);
+  LStr := StringReplace(LStr, 'change:', '', [rfReplaceAll]);
+  LStr := StringReplace(LStr, 'time:', '', [rfReplaceAll]);
+
+  Result.Block := StrToken(LStr, ',');
+  Result.Use := StrToken(LStr, ',');
+  Result.Change := StrToken(LStr, ',');
+  Result.Tm := StrToken(LStr, ',');
+end;
+
+class function THiConMPMWeb.GetChannelDumpUrlFromIpAddr(
+  AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/channeldump';
+end;
+
+class function THiConMPMWeb.GetChannelStr2StrListFromHtml(AIpAddr,
+  AHtml: string): string;
+begin
+  Result := ExtractTextInsideGivenTagEx('pre', AHtml);
+end;
+
+class function THiConMPMWeb.GetChannelStrFromMPM(AIpAddr: string): string;
+var
+  LUrl: string;
+begin
+  if AIpAddr = '127.0.0.1' then
+    exit;
+
+  LUrl := GetChannelStrUrlFromIpAddr(AIpAddr);
+  Result := GetHtmlByHttpGetByUrl(LUrl);
+end;
+
+class function THiConMPMWeb.GetChannelStrFromMPM_Async(
+  ARec: TIpListRec): integer;
+var
+  LIpAddr: string;
+  LResult: string;
+begin
+  Parallel.Async(
+    procedure (const task: IOmniTask)
+    begin
+      if ARec.PMPM_PIP = '127.0.0.1' then
+        exit;
+
+      LIpAddr := ARec.PMPM_PIP;
+      LResult := GetChannelStrFromMPM(LIpAddr);
+
+      if LResult <> '' then
+      begin
+        LResult := GetChannelStr2StrListFromHtml(LIpAddr, LResult);
+      end;
+    end,
+
+    Parallel.TaskConfig.OnMessage(nil).OnTerminated(
+      procedure
+      begin
+        if LResult <> '' then
+        begin
+          TGPCopyData.Log2CopyData(LIpAddr, 2, msgHandle4CopyData);
+          TGPCopyData.Log2CopyData(LResult, 14, msgHandle4CopyData);
+        end;
+      end
+    )
+  );
+end;
+
+class function THiConMPMWeb.GetChannelStrUrlFromIpAddr(AIpAddr: string): string;
+begin
+  Result := 'http://' + AIpAddr + '/channelstr';
+end;
+
+class function THiConMPMWeb.GetCommandFromMPM(AIpAddr: string): string;
+var
+  LUrl: string;
+begin
+  if AIpAddr = '127.0.0.1' then
+    exit;
 
   LUrl := GetCommandUrlFromIpAddr(AIpAddr);
-
-  Result := HttpGet(LUrl, nil, False, nil, 5000);
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetCommandFromMPM_Async(AIpAddr: string): string;
@@ -517,7 +824,7 @@ class function THiConMPMWeb.GetCommandList2JsonAryFromHtml(AIpAddr,
 var
   LList: IDocList;
   LDict: IDocDict;
-  LStr, Ltr, Lli, LParent, Ltd: string;
+  LStr, LStr2, Ltr, Lli, LParent, Ltd: string;
   i, j: integer;
 begin
   LList := DocList('[]');
@@ -546,14 +853,16 @@ begin
 
       while Lli <> '' do
       begin
-        LDict.S['parent'] := ExtractTextInsideGivenTagEx('a', Lli);
+        LDict.S['parent'] := LParent;
         LDict.S['name'] := ExtractTextInsideGivenTagEx('a', Lli);
-        LDict.S['url'] := GetAttrValueInHtmlTagByAttrName(Lli, 'href', '"');
-        LDict.S['desc'] := LDict.S['name'];
-        inc(j);
-        Lli := ExtractTextInsideGivenTagNth('li', Ltd, j);
+        LDict.S['url'] := 'http://' + AIpAddr + '/' + GetAttrValueInHtmlTagByAttrName(Lli, 'href', '"');
+        LStr2 := GetAttrValueInHtmlTagByAttrName(Lli, 'onMouseOver', '"');
+        LDict.S['desc'] := ExtractTextBetweenDelim(LStr2, '''', '''');
         LList.Append(LDict.Json);
         LDict.Clear();
+
+        inc(j);
+        Lli := ExtractTextInsideGivenTagNth('li', Ltd, j);
       end;
     end;
 
@@ -569,24 +878,25 @@ begin
   Result := 'http://' + AIpAddr + '/command';
 end;
 
+class function THiConMPMWeb.GetEmptyChannelDumpDict: IKeyValue<string, string>;
+begin
+  if not Assigned(FChannelDumpDict) then
+    FChannelDumpDict := Collections.NewKeyValue<string, string>
+  else
+    FChannelDumpDict.Clear;
+
+  Result := FChannelDumpDict;
+end;
+
 class function THiConMPMWeb.GetFBVerFromMPM(AIpAddr: string): string;
 var
-  LCon: RawByteString;
   LUrl: string;
 begin
   if AIpAddr = '127.0.0.1' then
     exit;
 
-  if PingHost(AIpAddr) = -1 then
-  begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
-    exit;
-  end;
-
   LUrl := GetFBVerUrlFromMPM(AIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-  Result := LCon;
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetFBVerFromMPM_Async(
@@ -646,19 +956,13 @@ end;
 
 class function THiConMPMWeb.GetHeaderFromMPM(AIpAddr: string): string;
 var
-  Lurl: string;
+  LUrl: string;
 begin
-  Result := '';
-
-  if PingHost(AIpAddr) = -1 then
-  begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
+  if AIpAddr = '127.0.0.1' then
     exit;
-  end;
 
   LUrl := GetHeaderUrlFromIpAddr(AIpAddr);
-
-  Result := HttpGet(LUrl, nil, False, nil, 5000);
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetHeaderFromMPM_Async(AIpAddr: string): string;
@@ -729,21 +1033,32 @@ begin
   );
 end;
 
-class function THiConMPMWeb.GetLMPMFromMPM(AIpAddr: string): string;
+class function THiConMPMWeb.GetHtmlByHttpGetByUrl(AUrl: string): string;
 var
   LCon: RawByteString;
-  LUrl: string;
+  LIpAddr: string;
 begin
-  if PingHost(AIpAddr) = -1 then
+  LIpAddr := ExtractHostFromUrl(AUrl);
+
+  if PingHost(LIpAddr) = -1 then
   begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
+    TGPCopyData.Log2CopyData('Host not connected : <' + LIpAddr + '>', 1, msgHandle4CopyData);
     exit;
   end;
 
-  LUrl := GetLMPMUrlFromIpRec(AIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
+  LCon := HttpGet(AUrl, nil, False, nil, 5000);
   Result := LCon;
+end;
+
+class function THiConMPMWeb.GetLMPMFromMPM(AIpAddr: string): string;
+var
+  LUrl: string;
+begin
+  if AIpAddr = '127.0.0.1' then
+    exit;
+
+  LUrl := GetLMPMUrlFromIpRec(AIpAddr);
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetLMPMFromMPM_Async(ARec: TIpListRec): integer;
@@ -1045,19 +1360,13 @@ end;
 
 class function THiConMPMWeb.GetLVerFromMPM(AIpAddr: string): string;
 var
-  LCon: RawByteString;
   LUrl: string;
 begin
-  if PingHost(AIpAddr) = -1 then
-  begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
+  if AIpAddr = '127.0.0.1' then
     exit;
-  end;
 
   LUrl := GetLVerUrlFromIpRec(AIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-  Result := LCon;
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetLVerFromMPM_Async(ARec: TIpListRec): integer;
@@ -1144,22 +1453,13 @@ end;
 
 class function THiConMPMWeb.GetRetainMapFromMPM(AIpAddr: string): string;
 var
-  LCon: RawByteString;
   LUrl: string;
 begin
   if AIpAddr = '127.0.0.1' then
     exit;
 
-  if PingHost(AIpAddr) = -1 then
-  begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
-    exit;
-  end;
-
   LUrl := GetRetainMapUrlFromMPM(AIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-  Result := LCon;
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetRetainMapFromMPM_Async(
@@ -1233,22 +1533,13 @@ end;
 
 class function THiConMPMWeb.GetVersionFromMPM(AIpAddr: string): string;
 var
-  LCon: RawByteString;
   LUrl: string;
 begin
   if AIpAddr = '127.0.0.1' then
     exit;
 
-  if PingHost(AIpAddr) = -1 then
-  begin
-    TGPCopyData.Log2CopyData('Host not connected : <' + AIpAddr + '>', 1, msgHandle4CopyData);
-    exit;
-  end;
-
   LUrl := GetVersionUrlFromMPM(AIpAddr);
-
-  LCon := HttpGet(LUrl, nil, False, nil, 5000);
-  Result := LCon;
+  Result := GetHtmlByHttpGetByUrl(LUrl);
 end;
 
 class function THiConMPMWeb.GetVersionFromMPM_Async(ARec: TIpListRec): integer;

@@ -3,7 +3,7 @@
         <ProjectGuid>{CF32D4E2-93AD-4FA6-A58B-03D9BF93CA1C}</ProjectGuid>
         <ProjectVersion>15.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>HiConTCP.dpr</MainSource>
+        <MainSource>FBLogic.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -89,10 +89,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=g3hwVr4cMXsdkmV/GWcDabv273kmtoJPJvN+tvPQl1EgBb1Ki0GH4nM/lNWxHe1N;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=37OO333NvHzZRzjjztCSwBHCxJivxybdg/1PLN1CGNpROcUdpu+8p+bajn/WtKwh;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=c1xYFgBzXFgWcDZmMVFkYzhTUDJtQ2dlQ2pEWjFDOEZiU2E2U3ZnMDNIVDkyd3pBdTRHeFBOV1UvV3YvbnQxWlZnRVV4eVpYclRvUk5tS0Yzb1UrSnBYWS84RHZUN0dNRWE0T0IwaStmQ2I3RzFJVVc2TGVoVHlaRGMxdm84Y2hEdlZydFJFRm5NZTdlaFl1Q2k0RklOUkE4TTZwSjVFb29SUS81YVVnUUpCOVRHaVhyK0xrY1BwL1Ara2R6VHFYQ1BVd3ozeUNqSlhXSmF2TkN2a0NEM1FKRWppSGRidXlaTVVQMXl2Tmg3NERDQjRXSHFLS2x5VEVhdXU1K2dCcWxnbXdncTFMNmlRV0FMV3pFRGxEY2VKUTZJaFU3ampRbk50NDVlYWpha2ZUeDVzWlEvbXM9</VerInfo_Keys>
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <DCC_Define>DEF_CRYPT_ALL;$(DCC_Define)</DCC_Define>
+        <DCC_Define>DEF_CRYPT_ALL;DEF_MAIN;USE_SIGFROMREGISTRY;$(DCC_Define)</DCC_Define>
         <DCC_DcuOutput>Y:\pjh\Dcu\Win64\$(MSBuildProjectName)</DCC_DcuOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>E:\pjh\Dev\Lang\Delphi\Project\GSManage\Bin\</DCC_ExeOutput>
@@ -109,10 +109,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="FrmHiConTCP.pas">
-            <Form>HiconisTCPF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="FrmIpList.pas">
             <Form>IPListF</Form>
             <FormType>dfm</FormType>
@@ -132,10 +128,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="UnitHiConInfluxDBUtil.pas"/>
-        <DCCReference Include="..\..\Common\FrmTagInputEdit.pas">
-            <Form>TagEditF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitNICUtil.pas"/>
         <DCCReference Include="..\UnitHiconMariaDBUtil.pas"/>
         <DCCReference Include="UnitHiConJsonUtil.pas"/>
@@ -146,10 +138,6 @@
         </DCCReference>
         <DCCReference Include="FrmHiConTCPConfig.pas">
             <Form>HiConTCPConfigF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="FrmResPortInfo4INFTag.pas">
-            <Form>ResPortInfo4INFTagF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Common\Form\FrmNextGrid.pas">
@@ -179,35 +167,20 @@
         <DCCReference Include="..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitOLEVarUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitLanUtil2.pas"/>
-        <DCCReference Include="FrmHiConCFInput.pas">
-            <Form>CFInputF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="FrmHiConMPMRestore.pas">
-            <Form>HiConMPMRestoreF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="UnitHiConMPMWebInfUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitMenuItemUtil.pas"/>
-        <DCCReference Include="FrmHiConMPMAppDown.pas">
-            <Form>HiConMPMAppDownF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="FrmHiConMPMAppUp.pas">
-            <Form>HiConMPMAppUpF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="FrmHiCONFBLogic.pas">
             <Form>HiCONFBLogicF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitSQLUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitDynamicFormManager.pas"/>
-        <DCCReference Include="..\..\..\..\Common\UnitIpHelper.pas"/>
-        <DCCReference Include="..\..\..\..\Common\Form\FrmEthernetAdaptorList.pas">
-            <Form>EtherAdaptorF</Form>
+        <DCCReference Include="..\..\Common\FrmTagInputEdit.pas">
+            <Form>TagEditF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\..\..\..\Common\UnitControlMoveResize.pas"/>
+        <DCCReference Include="..\..\..\..\..\..\..\project\OpenSrc\lib\GpDelphiUnit\src\GpCommandLineParser.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -276,7 +249,7 @@
                     <VersionInfoKeys Name="theme"/>
                 </VersionInfoKeys>
                 <Source>
-                    <Source Name="MainSource">HiConTCP.dpr</Source>
+                    <Source Name="MainSource">FBLogic.dpr</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>

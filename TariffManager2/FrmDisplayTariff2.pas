@@ -148,7 +148,7 @@ end;
 procedure TDisplayTariffF.FormCreate(Sender: TObject);
 begin
   Fsg := TSimpleGraphicCell.Create;
-  TariffGrid.AddInterfacedCell(0, 0, Fsg);
+  TariffGrid.AddInterfacedCell(0, 0, System.Classes.TInterfacedPersistent(Fsg));
 end;
 
 procedure TDisplayTariffF.InitGrid(AGrid: TAdvStringGrid);

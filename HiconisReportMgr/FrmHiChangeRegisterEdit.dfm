@@ -191,7 +191,7 @@ object HiChgRegItemF: THiChgRegItemF
     Top = 253
     Width = 609
     Height = 347
-    ActivePage = SubConTS
+    ActivePage = TabSheet5
     Align = alClient
     TabOrder = 1
     TabWidth = 120
@@ -337,9 +337,9 @@ object HiChgRegItemF: THiChgRegItemF
       object Involves: TAdvOfficeCheckGroup
         Tag = 13
         Left = 122
-        Top = 51
+        Top = 47
         Width = 468
-        Height = 76
+        Height = 84
         Hint = #48320#44221#54637#47785
         Version = '1.3.8.5'
         Color = clBtnFace
@@ -352,9 +352,9 @@ object HiChgRegItemF: THiChgRegItemF
       object ReqSrc: TAdvOfficeCheckGroup
         Tag = 13
         Left = 123
-        Top = 6
+        Top = 3
         Width = 468
-        Height = 35
+        Height = 38
         Hint = #48320#44221#50836#44396#52376
         Version = '1.3.8.5'
         Color = clBtnFace
@@ -978,6 +978,9 @@ object HiChgRegItemF: THiChgRegItemF
             Left = 472
             ExplicitLeft = 472
           end
+          inherited AddButton: TAdvGlowButton
+            ExplicitTop = 4
+          end
           inherited ApplyButton: TAdvGlowButton
             Left = 341
             ExplicitLeft = 341
@@ -985,7 +988,7 @@ object HiChgRegItemF: THiChgRegItemF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C010130009800CC0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800D80410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -2813,7 +2816,7 @@ object HiChgRegItemF: THiChgRegItemF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = #51089#49457#51088'ID'
+      Caption = #49440#44553
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -2975,7 +2978,7 @@ object HiChgRegItemF: THiChgRegItemF
       Height = 25
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Registerd By'
+      Caption = 'Reflection To'
       Color = 14671839
       FrameColor = clGrayText
       Font.Charset = ANSI_CHARSET
@@ -3040,6 +3043,7 @@ object HiChgRegItemF: THiChgRegItemF
       Height = 21
       Hint = #51089#49457#51088' ID'
       Alignment = taCenter
+      Enabled = False
       ImeName = 'Microsoft IME 2010'
       TabOrder = 0
     end

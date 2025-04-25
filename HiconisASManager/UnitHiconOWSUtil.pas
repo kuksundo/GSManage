@@ -3,6 +3,7 @@ unit UnitHiconOWSUtil;
 interface
 
 uses System.SysUtils, Vcl.Forms, Vcl.Dialogs, Registry, Windows, Classes,
+   mormot.core.base, mormot.core.unicode, mormot.core.variants,
   UnitHiconMariaDBUtil;
 
 type
@@ -13,6 +14,13 @@ type
     class function GetOWSEncryptedAdminPasswd(): string;
     class function CheckDefaultHiconisFolderExist(): Boolean;
     class function CheckAccessDBEngineInstalledFromRegistry(): Boolean;
+
+    class function CheckComputerNameNIPAddrFromSVRList(const ASVRList: RawUtf8): string;
+    class function GetServerNameNIPAddrFromSVRList(const ASVRList, ASvrName, AIPAddr: RawUtf8): string;
+
+    //ADriveName : 'D:\'
+    class function GetFileListWithVersionFromFolder(ADriveName: string=''): TStringList;
+
     //AccessDB Engine용 File
     class function CheckMsoFileNotExistFromRegistry(): Boolean;
     class function CheckMariaDBInstalledFromService(): Boolean;
@@ -26,7 +34,8 @@ type
 
 implementation
 
-uses UnitSystemUtil, UnitServiceUtil, UnitCryptUtil3;
+uses UnitSystemUtil, UnitServiceUtil, UnitCryptUtil3, UnitLanUtil, UnitCopyData,
+  UnitFileInfoUtil, UnitFolderUtil2;
 
 { THiConOWS }
 
@@ -60,6 +69,19 @@ class function THiConOWS.CheckAdminAutoLogin: Boolean;
 begin
   //HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\AutoAdminLogon = '1' 여부 확인
   Result := IsWindowsAdminAutoLoginEnabled();
+end;
+
+class function THiConOWS.CheckComputerNameNIPAddrFromSVRList(
+  const ASVRList: RawUtf8): string;
+var
+  LComputerName, LIPAddr: RawUtf8;
+begin
+  Result := '';
+  LComputerName := StringToUtf8(GetComputerNameStr());
+  LIPAddr := StringToUtf8(GetIpAddressFromHostName());
+  TGPCopyData.Log2CopyData('Name = ' + LComputerName + #13#10 + 'IP Addr = ' + LIPAddr, 1, msgHandle4CopyData);
+
+  Result := GetServerNameNIPAddrFromSVRList(ASVRList, LComputerName, LIPAddr);
 end;
 
 class function THiConOWS.CheckDataBaseExistOnMariaDByName(const AHostIp, APort,
@@ -153,6 +175,45 @@ begin
   end;
 end;
 
+class function THiConOWS.GetFileListWithVersionFromFolder(
+  ADriveName: string): TStringList;
+var
+  LStrList: TStringList;
+  LFolderName: string;
+begin
+  Result := TStringList.Create;
+
+  if ADriveName = '' then
+    ADriveName := 'D:\';
+
+  if not IsRootFolder(ADriveName) then
+    exit;
+
+  LFolderName := ADriveName + 'ACONIS-NX\BIN\';
+  LStrList := GetFileVersionListByPJVerInfoFromFolder(LFolderName);
+  try
+    Result.AddStrings(LStrList);
+  finally
+    LStrList.Free;
+  end;
+
+  LFolderName := ADriveName + 'ACONIS-NX\rtu\logic\';
+  LStrList := GetFileVersionListByPJVerInfoFromFolder(LFolderName);
+  try
+    Result.AddStrings(LStrList);
+  finally
+    LStrList.Free;
+  end;
+
+  LFolderName := ADriveName + 'ACONIS-NX\rtu\logic\fbdll\';
+  LStrList := GetFileVersionListByPJVerInfoFromFolder(LFolderName);
+  try
+    Result.AddStrings(LStrList);
+  finally
+    LStrList.Free;
+  end;
+end;
+
 class function THiConOWS.GetMariaDBEncryptedRootPasswd: string;
 begin
   //Encrypt : MakeEncrypNBase64String
@@ -208,6 +269,34 @@ begin
   //Encrypt : MakeEncrypNBase64String
   //DeCrypt : MakeUnBase64NDecryptString
   Result := 'kRA9igCRED2KdE8zYWN0RTBaZnl3Ym12STVGVVhMZz09'; //"hhiaconis"
+end;
+
+class function THiConOWS.GetServerNameNIPAddrFromSVRList(const ASVRList,
+  ASvrName, AIPAddr: RawUtf8): string;
+var
+  LDocList: IDocList;
+  LDocDict: IDocDict;
+begin
+  Result := '';
+  LDocList := DocList(ASVRList);
+
+  for LDocDict in LDocList do
+  begin
+    if ASvrName = '' then
+    begin
+      Result := LDocDict.S['RES_NAME'] + ';' + LDocDict.S['PMPM_PIP'];
+      Break;
+    end;
+
+    if LDocDict.S['RES_NAME'] = ASvrName then
+    begin
+      if LDocDict.S['PMPM_PIP'] = AIpAddr then
+      begin
+        Result := ASvrName + ';' + AIpAddr;
+        Break;
+      end;
+    end;
+  end;
 end;
 
 end.

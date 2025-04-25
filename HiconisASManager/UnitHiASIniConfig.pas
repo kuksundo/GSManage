@@ -31,6 +31,7 @@ type
     : string;
   public
     FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject, FPrice, FAgentDetail, FComissionCompany, FPlace, FServiceDate: string;
+    FPorNo4PrjIsChanged: Boolean;
   published
     //Section Name, Key Name, Default Key Value  (Control.hint = SectionName;KeyName 으로 저장 함)
     [JHPIni('EMail','My Employee ID','A379042','1', tkString)]

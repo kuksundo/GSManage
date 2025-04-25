@@ -290,6 +290,13 @@ type
     IsPor: TNxCheckBoxColumn;
     CurQty: TNxTextColumn;
     AddtoStockMaterialDB1: TMenuItem;
+    MatPORNo: TNxTextColumn;
+    N27: TMenuItem;
+    N28: TMenuItem;
+    N29: TMenuItem;
+    N30: TMenuItem;
+    N31: TMenuItem;
+    FaultyPartName: TNxTextColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AeroButton1Click(Sender: TObject);
@@ -359,6 +366,9 @@ type
     procedure HullNoClaimNo1Click(Sender: TObject);
     procedure N26Click(Sender: TObject);
     procedure AeroButton6Click(Sender: TObject);
+    procedure N29Click(Sender: TObject);
+    procedure N30Click(Sender: TObject);
+    procedure N31Click(Sender: TObject);
   private
     FTaskJson,
     FMatDeliveryInfoJson //자재 배송 정보 저장(Json)
@@ -408,6 +418,13 @@ type
     function GetPorNoFromJson(const AJson: string): string;
     procedure ExecMacro_ClaimManage();
     procedure ExecMacro_ClaimRegister();
+
+    procedure ExecMacro_DomesticTransportRequest_VesselInfo_Input();
+    procedure ExecMacro_DomesticTransportRequest_DeliveryInfo_Input(const AUseShippingNo: Boolean);
+    procedure ExecMacro_DomesticTransportRequest_ProductInfo_Input();
+
+    function GetDeliveryInfoRecFromJson(const AJson: string): THiConDeliveryInfoRec;
+    procedure GetPartNPORListFromMatGrid(var APartList, APORList: string);
   public
     FTask,
     FEmailDisplayTask: TOrmHiconisASTask;
@@ -473,6 +490,7 @@ type
       AMaterial: TSQLMaterial4Project; ARow: integer);
     procedure LoadTaskForm2MaterialDetailNSave2DB(AForm: TTaskEditF; ATaskID: TID = 0);
     procedure LoadTaskForm2Material4ProjectNSave2DB(ATaskID: TID);
+    procedure ChangePorNo2Grid(const APorNo: string; const ARow: integer);
 
     procedure LoadMaterial2Form(AMaterial: TSQLMaterial4Project; AForm: TTaskEditF);
     procedure LoadTaskForm2Material(AForm: TTaskEditF;
@@ -1381,6 +1399,11 @@ begin
   CauseSW1.Tag := ShowCheckGrp4Claim(Ord(ctkCauseSW), CauseSW1.Tag);
 end;
 
+procedure TTaskEditF.ChangePorNo2Grid(const APorNo: string; const ARow: integer);
+begin
+  MaterialGrid.CellsByName['PORNo', ARow] := APorNo;
+end;
+
 function TTaskEditF.CheckDocCompanySelection(ASOR: Doc_ServiceOrder_Rec):Boolean;
 begin
   Result := True;
@@ -1711,6 +1734,20 @@ begin
     FSQLGSFiles.Free;
 end;
 
+function TTaskEditF.GetDeliveryInfoRecFromJson(
+  const AJson: string): THiConDeliveryInfoRec;
+var
+  LDoc: variant;
+begin
+  Result := Default(THiConDeliveryInfoRec);
+
+  LDoc := _JSON(StringToUtf8(FMatDeliveryInfoJson));
+  Result.DeliveryAddress := LDoc.DeliveryAddress;
+  Result.ShippingNo := LDoc.ShippingNo;
+  Result.ReqDeliveryDate := LDoc.ReqDeliveryDate;
+  Result.ReqArriveDate := LDoc.ReqArriveDate;
+end;
+
 function TTaskEditF.GetFileFromDropDataFormat(
   AFormat: TVirtualFileStreamDataFormat):TFileStream;
 var
@@ -1748,6 +1785,25 @@ begin
   begin
     LSalesProcess := g_SalesProcess.ToType(ASalesProcess);
     Result := g_SalesProcess.ToString(LSalesProcess);
+  end;
+end;
+
+procedure TTaskEditF.GetPartNPORListFromMatGrid(var APartList,
+  APORList: string);
+var
+  i: integer;
+begin
+  for i := 0 to MaterialGrid.RowCount - 1 do
+  begin
+    if APORList <> '' then
+      APORList := APORList + #13#10;
+
+    APORList := APORList + MaterialGrid.CellsByName['MatPORNo', i];
+
+    if APartList <> '' then
+      APartList := APartList + #13#10;
+
+    APartList := APartList + MaterialGrid.CellsByName['MaterialName', i];
   end;
 end;
 
@@ -2023,6 +2079,104 @@ begin
     LMacroM.ExecuteActItemList();
   finally
     ShowMessage('Claim 등록 입력 완료!');
+    LRoot.Free;
+  end;
+end;
+
+procedure TTaskEditF.ExecMacro_DomesticTransportRequest_DeliveryInfo_Input(const AUseShippingNo: Boolean);
+var
+  LRoot: TMacroManagements;
+  LMacroM: TMacroManagement;
+  LPath, LStr, LPartList, LPorList: string;
+  LIdx: integer;
+  LDeliveryInfoRec: THiConDeliveryInfoRec;
+begin
+  SetCurrentDir(ExtractFilePath(Application.ExeName));
+//  LPath := 'E:\pjh\Dev\Lang\Delphi\Project\RPA\MacroManage\mcr\';
+  LPath := '.\mcr\';
+  LRoot := TMacroManagements.Create;
+  try
+    if FMatDeliveryInfoJson <> '' then
+    begin
+      LDeliveryInfoRec := GetDeliveryInfoRecFromJson(FMatDeliveryInfoJson);
+
+      if AUseShippingNo then
+        LStr := '- 출하지시번호 : '  + #13#10 + LDeliveryInfoRec.ShippingNo + #13#10
+      else
+        LStr := '- 보관처 : '  + #13#10 + GDC_ADDRESS_HAN + #13#10;
+    end;
+
+    GetPartNPORListFromMatGrid(LPartList, LPorList);
+    LStr := LStr + '- 품목 : ' + LPartList;
+    LStr := LStr + '- POR No : ' + LPorList;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-보관처이동.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    LMacroM.AddTypeMsgMacro2ActItemList(LStr);
+    LMacroM.AddWaitMacro2ActItemList(2000);
+    LMacroM.ExecuteActItemList();
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-도착지이동.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    LMacroM.AddTypeMsgMacro2ActItemList(LDeliveryInfoRec.DeliveryAddress);
+    LMacroM.AddWaitMacro2ActItemList(2000);
+    LMacroM.ExecuteActItemList();
+
+//    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-운송요청일자이동.mcr');
+//    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+  finally
+    ShowMessage('DeliveryInfo 입력 완료!');
+    LRoot.Free;
+  end;
+end;
+
+procedure TTaskEditF.ExecMacro_DomesticTransportRequest_ProductInfo_Input;
+begin
+
+end;
+
+procedure TTaskEditF.ExecMacro_DomesticTransportRequest_VesselInfo_Input;
+var
+  LRoot: TMacroManagements;
+  LMacroM: TMacroManagement;
+  LPath: string;
+  LIdx: integer;
+begin
+  SetCurrentDir(ExtractFilePath(Application.ExeName));
+//  LPath := 'E:\pjh\Dev\Lang\Delphi\Project\RPA\MacroManage\mcr\';
+  LPath := '.\mcr\';
+  LRoot := TMacroManagements.Create;
+  try
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-호선명이동.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+
+    if ShipNameEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(ShipNameEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-호선번호이동.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    if HullNoEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(HullNoEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+
+    LIdx := LRoot.AddMacro2RootFromJsonFile(LPath + '국내운송의뢰서-공사번호이동.mcr');
+    LMacroM := LRoot.FMacroManageList.Items[LIdx];
+    if OrderNoEdit.Text <> '' then
+    begin
+      LMacroM.AddTypeMsgMacro2ActItemList(OrderNoEdit.Text);
+      LMacroM.AddWaitMacro2ActItemList(2000);
+      LMacroM.ExecuteActItemList();
+    end;
+  finally
+    ShowMessage('VesselInfo 입력 완료!');
     LRoot.Free;
   end;
 end;
@@ -2623,6 +2777,9 @@ begin
       try
         if Row[LRow].Visible then
         begin
+          if FHiASIniConfig.FPorNo4PrjIsChanged then
+            ChangePorNo2Grid(PORNoEdit.Text, LRow);
+
           LoadMatGridRow2MaterialDetailOrm(AForm.MaterialGrid, LRow, LMatDetail);
 
           if LMatDetail.IsUpdate then
@@ -3154,6 +3311,21 @@ end;
 procedure TTaskEditF.N26Click(Sender: TObject);
 begin
   SendCmd4CreateMail(TMenuItem(Sender).Tag);
+end;
+
+procedure TTaskEditF.N29Click(Sender: TObject);
+begin
+  ExecMacro_DomesticTransportRequest_VesselInfo_Input();
+end;
+
+procedure TTaskEditF.N30Click(Sender: TObject);
+begin
+  ExecMacro_DomesticTransportRequest_DeliveryInfo_Input(True);
+end;
+
+procedure TTaskEditF.N31Click(Sender: TObject);
+begin
+  ExecMacro_DomesticTransportRequest_DeliveryInfo_Input(False);
 end;
 
 procedure TTaskEditF.N3Click(Sender: TObject);

@@ -13,6 +13,7 @@ const
   KN_REPORT_FILES = 'Report_Files';
   KN_CHGREGRPT = 'ChgRegRpt';
   KN_CHGREGRPT_FILES = 'ChgRegRpt_Files';
+  HICON_RPT_LOCK_FILE_NAME = 'HiconRptMagLock.pjh';
 
 type
   THiconReportRec = packed record
@@ -87,7 +88,7 @@ const
     ('',
      'COM',
      'SVR',
-     'CHR',
+     'HICR',
      '');
 {$ENDREGION}
 
@@ -184,12 +185,12 @@ const
 {$REGION 'R_HiRptInitiatedDuring'}
 type
   THiRptInitiatedDuring = (
-    hridHWEng, hridSWProd, hridCommissioning, hridFinal);
+    hridHWEng, hridSWProd, hridCommissioning, hridAS, hridFinal);
 
 const
   R_HiRptInitiatedDuring : array[Low(THiRptInitiatedDuring)..High(THiRptInitiatedDuring)] of string =
     (
-      'HW ENGINEERING', 'SW PRODUCTION', 'COMMISSIONING',
+      'HW ENGINEERING', 'SW PRODUCTION', 'COMMISSIONING', 'A/S',
      '');
 {$ENDREGION}
 

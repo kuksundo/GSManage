@@ -5,6 +5,10 @@ interface
 uses System.Classes, UnitEnumHelper, FSMClass_Dic, FSMState, Vcl.StdCtrls,
   JHP.Util.Bit32Helper;
 
+const
+  GDC_ADDRESS_HAN = '울산광역시 남구 신두왕로 50' + #13#10 + '글로벌디지털센터' + #13#10 + '박정현 책임' + #13#10 + 'REL: 052-204-5280';
+  GDC_ADDRESS_ENG = 'GDC 2F, 50 Sinduwang-ro, Nam-Gu, Ulsan, Korea, 44776';
+
 type
   TQueryDateType = (qdtNull,
     qdtMaterialOrder, qdtClaimRecvDate, qdtClaimInputDate, qdtClaimReadyDate,
@@ -22,7 +26,7 @@ type
     FFrom, FTo: TDateTime;
     FQueryDate: TQueryDateType;
     FHullNo, FShipName, FCustomer, FProdType, FSubject,
-    FPorNo, FMaterialCode, FShippingNo, FWorkSummary, FMaterialName: string;
+    FMaterialCode, FShippingNo, FWorkSummary, FMaterialName, FMatPorNo: string; //FPorNo,
     FCurWork, FBefAft, FWorkKind,
     FClaimServiceKind, FClaimStatus, FClaimCatetory, FClaimLocation, FClaimKind,
     FClaimCauseHW, FClaimCauseSW: integer;
@@ -245,19 +249,19 @@ const
     '자재 - 해외운송의뢰서 작성 완료 및 품의',
     '자재 - 국내운송의뢰서 품의 완료',
     '자재 - 해외운송의뢰서 품의 완료',
-    '자재- 배송 Tag 수신(BMEA-조선기자재창고 입고시 필요)',
-    '자재- 포장정보 수신 From 물류부(해외 운송시 CIPL 작성시 필요)',
-    '자재- 국내택배예약(우체국택배)',
-    '자재- 국내택배전표처리',
-    '자재- 해외택배예약(Fedex)',
-    '자재- 해외택배전표처리',
-    '자재- Commercial Invoice & Price List(CIPL) 작성 완료',
-    '자재- 송장 입수 완료 From 물류부',
-    '자재- 송장+CIPL 송부 To 고객',
-    '자재- 국내송품완료',
-    '자재- 해외송품완료',
-    '자재- Pick-up 요청 To 물류부(Reclaim 자재)',
-    '자재- 자재수신확인 From 고객',
+    '자재 - 배송 Tag 수신(BMEA-조선기자재창고 입고시 필요)',
+    '자재 - 포장정보 수신 From 물류부(해외 운송시 CIPL 작성시 필요)',
+    '자재 - 국내택배예약(우체국택배)',
+    '자재 - 국내택배전표처리',
+    '자재 - 해외택배예약(Fedex)',
+    '자재 - 해외택배전표처리',
+    '자재 - Commercial Invoice & Price List(CIPL) 작성 완료',
+    '자재 - 송장 입수 완료 From 물류부',
+    '자재 - 송장+CIPL 송부 To 고객',
+    '자재 - 국내송품완료',
+    '자재 - 해외송품완료',
+    '자재 - Pick-up 요청 To 물류부(Reclaim 자재)',
+    '자재 - 자재수신확인 From 고객',
     'Claim 종료 수신 From 고객',
 
     'Claim 종료',
@@ -300,17 +304,17 @@ const
     '자재 - 해외운송의뢰서 작성',
     '자재 - 국내운송의뢰서 품의 결재 요청',
     '자재 - 해외운송의뢰서 품의 결재 요청',
-    '자재- 배송 Tag 요청 To 호선 담당자',
+    '자재 - 배송 Tag 요청 To 호선 담당자',
     '자재 - 포장정보 요청 To 물류부',
-    '자재- 국내택배예약(우체국택배)',
-    '자재- 국내택배전표처리 요청',
-    '자재- 해외택배예약(Fedex)',
-    '자재- 해외택배전표처리 요청',
-    '자재- Commercial Invoice & Price List(CIPL) 작성',
-    '자재- 송장 요청 To 물류부',
-    '자재- 송장+CIPL 송부 To 고객',
-    '자재- 국내송품',
-    '자재- 해외송품',
+    '자재 - 국내택배예약(우체국택배)',
+    '자재 - 국내택배전표처리 요청',
+    '자재 - 해외택배예약(Fedex)',
+    '자재 - 해외택배전표처리 요청',
+    '자재 - Commercial Invoice & Price List(CIPL) 작성',
+    '자재 - 송장 요청 To 물류부',
+    '자재 - 송장+CIPL 송부 To 고객',
+    '자재 - 국내송품',
+    '자재 - 해외송품',
     '자재- Pick-up 요청 To 물류부(Reclaim 자재)',
     'Claim 종료 요청 To 고객',
     '자재수신확인 요청 To 고객',

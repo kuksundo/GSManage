@@ -149,6 +149,9 @@ begin
       PageControl1.ActivePageIndex := 0;
       JHPFileFr4ChgRegItem.LoadFiles2GridByTaskID(ARptKey);
 
+      //작성자 ID 대신에 선급 정보를 보여줌
+      ChgRegRptAuthorID.Text := VesselInfoFr.ClassSociety.Text;
+
       while True do
       begin
         Result := ShowModal;
