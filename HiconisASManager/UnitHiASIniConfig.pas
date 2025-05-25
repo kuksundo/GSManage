@@ -30,6 +30,8 @@ type
     FASDocBaseDir     //AS용 문서(CIPL/Shipping Mark/인수증/공사완료확인서) 저장 폴더
     : string;
   public
+    class var FRegAppInfoB64: string;
+
     FHullNo, FShipName, FProjNo, FClaimNo, FText, FSubject, FPrice, FAgentDetail, FComissionCompany, FPlace, FServiceDate: string;
     FPorNo4PrjIsChanged: Boolean;
   published

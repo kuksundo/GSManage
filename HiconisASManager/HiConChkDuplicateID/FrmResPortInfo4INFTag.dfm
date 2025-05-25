@@ -2,7 +2,7 @@ object ResPortInfo4INFTagF: TResPortInfo4INFTagF
   Left = 0
   Top = 0
   Caption = 'ResPortInfo4INFTagF'
-  ClientHeight = 394
+  ClientHeight = 351
   ClientWidth = 297
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -329,11 +329,12 @@ object ResPortInfo4INFTagF: TResPortInfo4INFTagF
   end
   object Panel2: TPanel
     Left = 0
-    Top = 330
+    Top = 287
     Width = 297
     Height = 64
     Align = alBottom
     TabOrder = 7
+    ExplicitTop = 330
     object BitBtn1: TBitBtn
       Left = 48
       Top = 16

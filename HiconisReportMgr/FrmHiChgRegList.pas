@@ -207,7 +207,7 @@ implementation
 
 uses UnitDFMUtil, UnitNextGridUtil2, UnitComboBoxUtil, JHP.Util.Bit32Helper,
   UnitExcelUtil,  UnitHiConChgRegItemOrm, UnitHiConReportListOrm, UnitHGSSerialRecord2,
-  UnitHiConReportMakeUtil, UnitBase64Util2, UnitDragUtil, UnitmORMotUtil2,
+  UnitHiConReportMakeUtil, UnitBase64Util2, UnitDragUtil, UnitmORMotUtil2, UnitComponentUtil,
   FrmHiChangeRegisterEdit;
 
 {$R *.dfm}

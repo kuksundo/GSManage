@@ -40,6 +40,7 @@ object SrchModuleByTagF: TSrchModuleByTagF
     TabOrder = 0
     TabStop = True
     OnCellDblClick = TagInfoGridCellDblClick
+    ExplicitTop = 111
   end
   object Panel1: TPanel
     Left = 0
@@ -399,11 +400,11 @@ object SrchModuleByTagF: TSrchModuleByTagF
   end
   object OpenDialog1: TOpenDialog
     Left = 8
-    Top = 88
+    Top = 128
   end
   object PopupMenu1: TPopupMenu
     Left = 40
-    Top = 88
+    Top = 128
     object SelectFromTAGNAMEField1: TMenuItem
       Caption = 'Select From TAG_NAME Field'
       OnClick = SelectFromTAGNAMEField1Click
@@ -418,6 +419,13 @@ object SrchModuleByTagF: TSrchModuleByTagF
     object ShowFBDefaultInfoByFBName1: TMenuItem
       Caption = 'Show FB Default Info By FB Name'
       OnClick = ShowFBDefaultInfoByFBName1Click
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object ShowINFInfoFromSelected1: TMenuItem
+      Caption = 'Show INF Info From Selected'
+      OnClick = ShowINFInfoFromSelected1Click
     end
   end
 end

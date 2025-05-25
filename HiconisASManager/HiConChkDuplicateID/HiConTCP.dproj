@@ -97,7 +97,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>E:\pjh\Dev\Lang\Delphi\Project\GSManage\Bin\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;E:\pjh\vcl\OnGuard\source;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\TSmBios\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\magwmi;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;E:\pjh\vcl\OnGuard\source;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\TSmBios\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\magwmi;E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiconFBLogic;E:\pjh\project\common\Forms\TFormAbout;E:\pjh\project\common\Forms\TFormAbout\Helper3delite;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\GpDelphiUnit\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -197,15 +197,15 @@
             <Form>HiConMPMAppUpF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="FrmHiCONFBLogic.pas">
-            <Form>HiCONFBLogicF</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitSQLUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitDynamicFormManager.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitIpHelper.pas"/>
         <DCCReference Include="..\..\..\..\Common\Form\FrmEthernetAdaptorList.pas">
             <Form>EtherAdaptorF</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\HiconFBLogic\FrmHiCONFBLogic.pas">
+            <Form>HiCONFBLogicF</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

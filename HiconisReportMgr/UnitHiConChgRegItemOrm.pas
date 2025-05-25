@@ -101,6 +101,8 @@ type
   function GetHiChgRegItemJsonAryByReportKey(const AKeyID: TTimeLog): variant;
   function GetHiChgRegItemCountByReportKey(const AKeyID: TTimeLog): integer;
 
+  function CheckIfExistHiChgRegItemByReportNHcrNo(const AReportKey, AHcrNo: string): Boolean;
+
   procedure AddHiChgRegItemFromVariant(AVar: variant; AOnlyAdd: Boolean);
   procedure AddHiChgRegItemFromVarAry(AJsonAry: variant; AOnlyAdd: Boolean=False);
   procedure AddOrUpdateHiChgRegItem(AOrm: TOrmHiChgRegItem; AOnlyAdd: Boolean=false);
@@ -244,6 +246,21 @@ begin
   LOrm := g_HiChgRegItemDB.ExecuteList([],'select ReportKey4ChgReg from ' + TOrmHiChgRegItem.SQLTableName + ' where ReportKey4ChgReg = ' + IntToStr(AKeyID));
   try
     Result := LOrm.RowCount;
+  finally
+    LOrm.Free;
+  end;
+end;
+
+function CheckIfExistHiChgRegItemByReportNHcrNo(const AReportKey, AHcrNo: string): Boolean;
+var
+  LRptKey: TTimeLog;
+  LOrm: TOrmHiChgRegItem;
+begin
+  LRptKey := StrToInt64(AReportKey);
+
+  LOrm := GetHiChgRegItemByReportNHcrNo(LRptKey, AHcrNo);
+  try
+    Result := LOrm.IsUpdate;
   finally
     LOrm.Free;
   end;

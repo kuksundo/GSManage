@@ -37,7 +37,6 @@ type
     AeroButton1: TAeroButton;
     SelectMailBtn: TAeroButton;
     CancelMailSelectBtn: TAeroButton;
-    ImageList16x16: TImageList;
     AeroButton4: TAeroButton;
     PopupMenu1: TPopupMenu;
     N1: TMenuItem;
@@ -101,7 +100,6 @@ type
     DropEmptyTarget1: TDropEmptyTarget;
     DataFormatAdapterTarget: TDataFormatAdapter;
     DataFormatAdapter1: TDataFormatAdapter;
-    Imglist16x16: TImageList;
     ServiceOrder1: TMenuItem;
     oCustomer1: TMenuItem;
     Korean1: TMenuItem;
@@ -614,6 +612,7 @@ var
   LID: TID;
   LVar: variant;
   LDoc: IDocDict;
+  LTaskID: string;
 begin
   Result := -1;
   LVar := null;
@@ -755,8 +754,7 @@ begin
           begin
             //ClaimNo가 이미 존재하면 건너뜀
             if CheckExistHullNoClaimNo(LTaskEditF.HullNoEdit.Text,
-                                      LTaskEditF.OrderNoEdit.Text,
-                                      LTaskEditF.ClaimNoEdit.Text) then
+                                      LTaskEditF.ClaimNoEdit.Text, LTaskID) then
             begin
               ShowMessage('동일한 ClaimNo가 이미 존재 합니다.');
               continue;
@@ -1198,12 +1196,14 @@ end;
 procedure TTaskEditF.BitBtn1Click(Sender: TObject);
 begin
 //  Content2Clipboard(HullNoEdit.Text);
+  HullNoEdit.Text := RemoveSpace2String(HullNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(HullNoEdit);
 end;
 
 procedure TTaskEditF.BitBtn2Click(Sender: TObject);
 begin
 //  Content2Clipboard(OrderNoEdit.Text);
+  OrderNoEdit.Text := RemoveSpace2String(OrderNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
 end;
 
@@ -1214,6 +1214,7 @@ end;
 
 procedure TTaskEditF.BitBtn4Click(Sender: TObject);
 begin
+  ShipNameEdit.Text := Trim(ShipNameEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(ShipNameEdit);
 end;
 

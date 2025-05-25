@@ -41,6 +41,8 @@ type
     ShowFBLogic1: TMenuItem;
     ShowFBDefaultInfoByFBName1: TMenuItem;
     BitBtn6: TBitBtn;
+    N2: TMenuItem;
+    ShowINFInfoFromSelected1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn3Click(Sender: TObject);
@@ -50,13 +52,13 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure ShowFBDefaultInfoByFBName1Click(Sender: TObject);
     procedure ShowFBLogic1Click(Sender: TObject);
+    procedure ShowINFInfoFromSelected1Click(Sender: TObject);
   private
     procedure WMCopyData(var Msg: TMessage); message WM_COPYDATA;
 
     function CheckRequiredInput4Search(): Boolean;
     function IsTagNameColumnByIndex(const ACol: integer): Boolean;
     function GetTagInfoFromDB2Grid(ATagName: string=''): Boolean;
-    procedure LoadTagInfoFromJsonAry2Grid(const ATagInfoJsonAry: RawUtf8);
     function GetDBNameFromForm(): string;
     //DATA_TYPE,IN_OUT,SYS_TYPE 필드를 Desc로 대체함
     function UpdateDBValue2HumanReadable(const ATagInfoJsonAry: RawUtf8): RawUtf8;
@@ -70,15 +72,21 @@ type
     FIsReturnDblClick: Boolean; //Grid를 Dbl Click할 경우 Tag Name을 반환함
     FSelectedTagName,
     FSelectedOrgTagName: string;
+
+    procedure LoadTagInfoFromJsonAry2Grid(const ATagInfoJsonAry: RawUtf8);
+    procedure SetDBInfo2Form(const ADBFileName, ATableName, AFieldName, ATagName: string);
   end;
 
 function CreateSrchModuleByTagForm(AConfig: THiconTCPIniConfig; const ATagName: string=''): string;
 function CreateSrchTagForm(var ATagName, ADBFileName: string;
-  const AIsReturnDblClick: Boolean=False): string;
+  ATableName, AFieldName: string; const AIsReturnDblClick: Boolean=False): string;
+function DisplayTagInfo2SrchTagFormByJsonAry(ATagName, ADBFileName, ATableName, AFieldName: string;
+  AJsonAry: RawUtf8): string;
 
 implementation
 
-uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells, UnitCopyData,
+uses UnitComponentUtil, UnitHiconSystemDBUtil, UnitNextGridUtil2, NxCells,
+  UnitCopyData, UnitHiconMPMData,
   FrmJHPWaitForm, FrmHiCONFBLogic;
 
 {$R *.dfm}
@@ -110,7 +118,6 @@ begin
       else
         SystemDBEdit.Text := GetDBNameFromForm();
 
-
       if ShowModal = mrOK then
       begin
       end;
@@ -121,7 +128,7 @@ begin
 end;
 
 function CreateSrchTagForm(var ATagName, ADBFileName: string;
-  const AIsReturnDblClick: Boolean): string;
+  ATableName, AFieldName: string;  const AIsReturnDblClick: Boolean): string;
 var
   SrchModuleByTagF: TSrchModuleByTagF;
   LModalResult: integer;
@@ -138,10 +145,15 @@ begin
         ADBFileName := DEFAULT_SYS_BAK_DB_NAME;
 
       SystemDBEdit.Text := ADBFileName;
+
+      if ATableName <> '' then
+        TableCombo.Text := ATableName;
+
+      if AFieldName <> '' then
+        FieldCombo.Text := AFieldName;
+
       TagNameEdit.Text := ATagName;
       FIsReturnDblClick := AIsReturnDblClick;
-
-      BitBtn1Click(nil);
 
       LModalResult := ShowModal;
 
@@ -154,6 +166,39 @@ begin
       else
       if LModalResult = mrYes then //Close 버튼을 누른 경우
         ADBFileName := SystemDBEdit.Text;
+    end;
+  finally
+    FreeAndNil(SrchModuleByTagF);
+  end;
+end;
+
+function DisplayTagInfo2SrchTagFormByJsonAry(ATagName, ADBFileName, ATableName, AFieldName: string;
+  AJsonAry: RawUtf8): string;
+var
+  SrchModuleByTagF: TSrchModuleByTagF;
+begin
+  SrchModuleByTagF := TSrchModuleByTagF.Create(nil);
+  try
+    with SrchModuleByTagF do
+    begin
+      ShowOrHideHullNoComp(False);
+
+      if ADBFileName = '' then
+        ADBFileName := DEFAULT_SYS_BAK_DB_NAME;
+
+      SystemDBEdit.Text := ADBFileName;
+
+      if ATableName <> '' then
+        TableCombo.Text := ATableName;
+
+      if AFieldName <> '' then
+        FieldCombo.Text := AFieldName;
+
+      TagNameEdit.Text := ATagName;
+
+      LoadTagInfoFromJsonAry2Grid(AJsonAry);
+
+      ShowModal;
     end;
   finally
     FreeAndNil(SrchModuleByTagF);
@@ -323,15 +368,24 @@ begin
   case AMsgKind of
     //THiConSystemDB.GetTagInfo2JsonByTableName_Async 결과 처리
     1: begin
-      if AMsg <> '' then
+      if AMsg = '' then
       begin
+        if FIsReturnDblClick then
+          ModalResult := mrOK;
+      end
+      else begin
         FJsonResult := StringToUtf8(AMsg);
 
         //Data 갯수가 1개이면
         if ARowCount = 1 then
         begin
-          FSelectedTagName := THiConSystemDB.GetTagNameFromJsonAryOfMAPPINGTable(FJsonResult);
-          ModalResult := mrOK;
+          if FIsReturnDblClick then
+          begin
+            FSelectedTagName := THiConSystemDB.GetTagNameFromJsonAryOfMAPPINGTable(FJsonResult);
+            ModalResult := mrOK;
+          end
+          else
+            LoadTagInfoFromJsonAry2Grid(FJsonResult);
         end
         else if ARowCount > 1 then
           LoadTagInfoFromJsonAry2Grid(FJsonResult);
@@ -378,6 +432,15 @@ begin
   end;
 end;
 
+procedure TSrchModuleByTagF.SetDBInfo2Form(const ADBFileName, ATableName, AFieldName,
+  ATagName: string);
+begin
+  SystemDBEdit.Text := ADBFileName;
+  TableCombo.Text := ATableName;
+  FieldCombo.Text := AFieldName;
+  TagNameEdit.Text := ATagName;
+end;
+
 procedure TSrchModuleByTagF.ShowFBDefaultInfoByFBName1Click(Sender: TObject);
 var
   LFBName: string;
@@ -405,6 +468,31 @@ begin
     if LTagName <> '' then
       CreateNShowHiCONFBLogicForm(LTagName, '', SystemDBEdit.Text);
   end;
+end;
+
+procedure TSrchModuleByTagF.ShowINFInfoFromSelected1Click(Sender: TObject);
+var
+  LStr, LColName: string;
+  LTagSearchRec: TTagSearchRec;
+begin
+  if TagInfoGrid.SelectedRow = -1 then
+    exit
+  else
+  begin
+    LColName := TagInfoGrid.Columns.Item[TagInfoGrid.SelectedColumn].Name;
+
+    if (LColName = 'TAG_NAME') or (LColName = 'VAR_NAME') or (LColName = 'ORG_TAG') then
+      LStr := TagInfoGrid.CellsByName[LColName, TagInfoGrid.SelectedRow];
+  end;
+
+  if LStr = '' then
+    exit;
+
+  LTagSearchRec := GetTagSearchRecFromTagInfoEditForm(LStr);
+
+  LStr := GetResNPtcJsonNameFromSrcByInfTag(LTagSearchRec);
+
+  CreateNShowDateSeletForm(LStr);
 end;
 
 procedure TSrchModuleByTagF.ShowOrHideHullNoComp(const AIsShow: Boolean);

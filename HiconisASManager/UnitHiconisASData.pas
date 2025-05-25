@@ -48,13 +48,6 @@ type
               dtClaimReport,
               dtFinal);
 
-  TContainData4Mail = (cdmNone,
-    cdmClaimReport, cdmServiceReport, cdmInvoiceFromSubCon,
-    cdmFinal
-  );
-
-  TContainData4Mails = set of TContainData4Mail;
-
   THiconisASState = (hassNull,
     hassNewClaimRecv, //Claim 접수
     hassNewClaimRegistered, //Claim 등록
@@ -199,11 +192,6 @@ const
 
   R_GSDocType : array[Low(THiASDocType)..High(THiASDocType)] of string =
     ('', 'Claim Report', '');
-
-  R_ContainData4Mail : array[Low(TContainData4Mail)..High(TContainData4Mail)] of string =
-    ('',
-      'Claim Report', 'Service Report', 'Invoice <- SubCon',
-    '');
 
 //  R_ASServiceType : array[Low(TASServiceType)..High(TASServiceType)] of string =
 //    (
@@ -441,7 +429,6 @@ var
   g_QueryDateType: TLabelledEnum<TQueryDateType>;
   g_HiASFindCondition: TLabelledEnum<THiASFindCondition>;
   g_GSDocType: TLabelledEnum<THiASDocType>;
-  g_ContainData4Mail: TLabelledEnum<TContainData4Mail>;
 //  g_ASServiceType: TLabelledEnum<TASServiceType>;
   g_HiconisASState: TLabelledEnum<THiconisASState>;
   g_HiconisASTrigger: TLabelledEnum<THiconisASTrigger>;
@@ -487,7 +474,6 @@ initialization
 //  g_SalesProcess.InitArrayRecord(R_SalesProcess);
 //  g_SalesProcessType.InitArrayRecord(R_SalesProcessType);
 //  g_ProcessDirection.InitArrayRecord(R_ProcessDirection);
-//  g_ContainData4Mail.InitArrayRecord(R_ContainData4Mail);
 //  g_EngineerAgency.InitArrayRecord(R_EngineerAgency);
 //  g_GSInvoiceItemType.InitArrayRecord(R_GSInvoiceItemType);
 //  g_CalcInvoiceMethod.InitArrayRecord(R_CalcInvoiceMethod);

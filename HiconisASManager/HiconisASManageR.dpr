@@ -34,7 +34,6 @@ uses
   UnitOutlookUtil2 in '..\..\..\Common\UnitOutlookUtil2.pas',
   UnitOLControlWorker in '..\..\RPA\Outlook\Util\UnitOLControlWorker.pas',
   FrameOLEmailList4Ole in '..\..\..\Common\Frame\FrameOLEmailList4Ole.pas' {OutlookEmailListFr: TFrame},
-  FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas',
   FrmSerialCommConfig in '..\..\..\..\..\..\project\util\MacroManagement\FrmSerialCommConfig.pas' {SerialCommConfigF},
   UnitNameEdit in '..\..\..\..\..\..\project\util\MacroManagement\UnitNameEdit.pas' {NameEditF},
   UnitHiASMaterialRecord in 'UnitHiASMaterialRecord.pas',
@@ -59,20 +58,34 @@ uses
   UnitAdvCompUtil in '..\..\..\Common\UnitAdvCompUtil.pas',
   UnitHiASUtil in 'UnitHiASUtil.pas',
   UnitHiASStockMaterialRecord in 'UnitHiASStockMaterialRecord.pas',
-  FrmASStockMaterialEdit in 'FrmASStockMaterialEdit.pas' {Form1};
+  FrmASStockMaterialEdit in 'FrmASStockMaterialEdit.pas' {Form1},
+  FrmStringsEdit in '..\..\..\..\..\..\project\common\Forms\FrmStringsEdit.pas' {pjhStringsEditorDlg},
+  FrmHiASDataModule in 'FrmHiASDataModule.pas' {DataModule1: TDataModule},
+  UnitRegAppUtil in '..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas';
 
 {$R *.res}
+
+//{5E15E479-98C6-4425-8CEC-4869071EDE92}=Prod Code -> Version Info -> InternalName에 Encrypted로 저장됨
+//UnitCryptUtil2.EncryptString_Syn3()를 이용하여 암호화 함
+//Encrypted: O4WEZNR3ut97oYddXEsdMGdlgNADH2NJdHpHFL2PpWmKzzJAORrracYayO6fCBGK
 
 const
   IM_ROOT_NAME_4_WS = 'root';
   IM_PORT_NAME_4_WS = '710';
 
 begin
+{$IFDEF USE_SIGFROMREGISTRY}
+  if UnitRegAppUtil.TgpAppSigInfo.CheckRegByAppSigUsingRegistry('') <> -1 then
+    exit;
+
+  THiASIniConfig.FRegAppInfoB64 := TgpAppSigInfo.GetAppSigInfo2Base64ByRegPath('');
+{$ENDIF}
+
   ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THiconisAsManageF, HiconisAsManageF);
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TDataModule1, DataModule1);
   //  GAManageF.Caption := GAManageF.Caption + ' (For Technical Sales Team)';
 //  GAManageF.TDTF.SetNetworkInfo(IM_ROOT_NAME_4_WS,IM_PORT_NAME_4_WS, Application.ExeName);
   Application.Run;

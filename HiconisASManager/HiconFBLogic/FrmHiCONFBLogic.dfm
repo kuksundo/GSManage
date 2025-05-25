@@ -129,6 +129,7 @@ object HiCONFBLogicF: THiCONFBLogicF
     TabOrder = 1
     TabStop = True
     OnCellDblClick = FBInfoGridCellDblClick
+    OnKeyDown = FBInfoGridKeyDown
     OnMouseDown = FBInfoGridMouseDown
     OnSelectCell = FBInfoGridSelectCell
     object InputTagList: TNxMemoColumn
@@ -196,6 +197,7 @@ object HiCONFBLogicF: THiCONFBLogicF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = [fsBold, fsUnderline]
       Header.ParentFont = False
+      Options = [coCanClick, coCanInput, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 2
       SortType = stAlphabetic
@@ -218,6 +220,7 @@ object HiCONFBLogicF: THiCONFBLogicF
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = [fsBold]
       Header.ParentFont = False
+      Options = [coCanClick, coCanInput, coPublicUsing, coShowTextFitHint]
       ParentFont = False
       Position = 3
       SortType = stAlphabetic
@@ -570,6 +573,25 @@ object HiCONFBLogicF: THiCONFBLogicF
       Caption = 'Open Logic'
       OnClick = OpenLogic1Click
     end
+    object OpenLogicToNewexe1: TMenuItem
+      Caption = 'Open Logic To New exe'
+      OnClick = OpenLogicToNewexe1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object ShowFieldInfo1: TMenuItem
+      Caption = 'Show Field Info'
+      Enabled = False
+      OnClick = ShowFieldInfo1Click
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object About1: TMenuItem
+      Caption = 'About...'
+      OnClick = About1Click
+    end
   end
   object PopupMenu2: TPopupMenu
     Left = 56
@@ -577,6 +599,10 @@ object HiCONFBLogicF: THiCONFBLogicF
     object MenuItem1: TMenuItem
       Caption = 'Open Logic'
       OnClick = MenuItem1Click
+    end
+    object OpenLogicToNewexe2: TMenuItem
+      Caption = 'Open Logic To New exe'
+      OnClick = OpenLogicToNewexe2Click
     end
   end
   object JvCaptionButton1: TJvCaptionButton
@@ -682,7 +708,7 @@ object HiCONFBLogicF: THiCONFBLogicF
     Left = 96
     Top = 384
     Bitmap = {
-      494C0101030008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000C8C7C600FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -820,5 +846,18 @@ object HiCONFBLogicF: THiCONFBLogicF
       000000000000000000000000E007000000000000F81F000000000000FC3F0000
       00000000FC3F000000000000FE7F000000000000000000000000000000000000
       000000000000}
+  end
+  object FormAbout1: TFormAbout
+    Copyright = #51060' '#54532#47196#44536#47016#51008' '#51200#51089#51088#51032' '#54728#46973#50630#51060' '#49324#50857#51012' '#44552#54633#45768#45796
+    Email = 'kuksundo@gmail.com'
+    FontProgramName.Charset = DEFAULT_CHARSET
+    FontProgramName.Color = clSilver
+    FontProgramName.Height = -19
+    FontProgramName.Name = 'Verdana'
+    FontProgramName.Style = [fsBold]
+    FontLinksColor = clNavy
+    FontVersionColor = clBlack
+    Left = 56
+    Top = 424
   end
 end

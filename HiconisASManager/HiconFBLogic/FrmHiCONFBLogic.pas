@@ -5,11 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, AdvMenus, NxScrollControl,
-  NxCustomGridControl, NxCustomGrid, NxGrid, Vcl.StdCtrls, Vcl.Buttons, ClipBrd,
+  NxCustomGridControl, NxCustomGrid, NxGrid, Vcl.StdCtrls, Vcl.Buttons, ClipBrd, shellapi,
   AdvToolBtn, Vcl.ExtCtrls, JvExControls, JvLabel, NxColumns, NxColumnClasses, NxCells,
   mormot.core.base, mormot.core.variants, Vcl.ComCtrls, JvExComCtrls,
   JvStatusBar, SBPro, NxCollection, Vcl.ImgList, PngImageList, JvComponentBase,
-  JvCaptionButton, UnitControlMoveResize;
+  JvCaptionButton, UnitControlMoveResize, UnitFBLogicCLO, FormAboutDefs, EasterEgg;
 
 type
   THiCONFBLogicF = class(TForm)
@@ -45,8 +45,16 @@ type
     OutputTagList_Desc: TNxTextColumn;
     TagDesc: TNxTextColumn;
     NxIncrementColumn1: TNxIncrementColumn;
+    OpenLogicToNewexe1: TMenuItem;
+    N1: TMenuItem;
+    ShowFieldInfo1: TMenuItem;
+    OpenLogicToNewexe2: TMenuItem;
+    N2: TMenuItem;
+    About1: TMenuItem;
+    FormAbout1: TFormAbout;
 
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure BitBtn1Click(Sender: TObject);
     procedure FBInfoGridMouseDown(Sender: TObject; Button: TMouseButton;
@@ -59,14 +67,23 @@ type
     procedure TagNameEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure OpenLogic1Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure TagListGridSelectCell(Sender: TObject; ACol, ARow: Integer);
     procedure FBInfoGridCellDblClick(Sender: TObject; ACol, ARow: Integer);
     procedure FBInfoGridSelectCell(Sender: TObject; ACol, ARow: Integer);
+    procedure OpenLogicToNewexe1Click(Sender: TObject);
+    procedure ShowFieldInfo1Click(Sender: TObject);
+    procedure OpenLogicToNewexe2Click(Sender: TObject);
+    procedure About1Click(Sender: TObject);
+    procedure FBInfoGridKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FDBFileName: string;
     FMousePoint: TPoint;
     FControlMoverResizer: TControlMoverResizer;
+    FCLO4FBLogic: TCLO4FBLogic;
+    FEgg: TEasternEgg;
+
+    procedure OnEasterEgg(msg: string);
 
     function GetRowIdxByIndexNoFromGrid(const AIndexNo: integer; out AIsInField: Boolean): integer;
     procedure SetDBFileName2Statusbar(const ADBFileName: string);
@@ -78,26 +95,38 @@ type
     procedure ShowTagList2Grid(const AColName: string);
     procedure MoveTagListPanel2CellPos(const ANxCell: TCell);
     procedure AddTagListNChId2Grid(const ATagList, ATagListChId, ATagDescList: string);
-    procedure ShowFBLogicFromForm(ATagName: string; const AToNewForm: Boolean);
-    procedure SetFGLogic2Grid(ATagName: string; ATagInfoJsonAry: RawUtf8; ADBFileName: string);
+    //ATableName: MAPPING_TABLE or CONNECTION
+    procedure ShowFBLogicFromForm(ATagName, ATableName, AFieldName: string; const AToNewForm: Boolean);
+    procedure SetFBLogic2Grid(ATagName: string; ATagInfoJsonAry: RawUtf8; ADBFileName: string);
     function GetTagDescByTagNameFromDescList(const ATagName,
       ATagDescList: string): string;
 
+    procedure ShowCardInfoByTagName(const ATagName: string);
+    procedure ShowFBLogic2NewExe(const ATagName: string);
+
     //Function Name이 NX-로 시작하거나 CARD 이면 MAPPING_TABLE의 TAG_NAME으로 부터 FB IO 정보를 가져옴
     function GetIsCardModeFromFBName(const AFBName: string): Boolean;
+    function GetFieldTagNameFromSelected(): string;
   public
     procedure SetDBFileName(const ADBFileName: string);
+    //AFBTypeName : Function Block 종류
+    //FBTagName: Function Block Tag Name
+    function FBStructure2GridByName(const AFBTypeName, AFBTagName, ADBFileName: string): Boolean;
     //AFBInfoJsonAry : FUNCTION Table에서 가져옴
-    procedure FBInfo2GridFromJsonAry(const AFBInfoJsonAry: RawUtf8; const AIsCardMode: Boolean);
+    procedure FBStructure2GridFromJsonAry(const AFBInfoJsonAry: RawUtf8; const AIsCardMode: Boolean);
     //ATagInfoJsonAry : MAPPING_TABLE에서 가져옴
     //ORG_TAG Field Value가 같은 Tag List 임
     procedure TagInfo2GridFromJsonAry(ATagInfoJsonAry: RawUtf8; ADBFileName: string='');
     //만약 2개이상의 Tag List가 존재하면 Srch Form에서 Double Click한 Tag Name만 반환 함
 //    function GetOneTagNameFromMappingTableBySrchForm(ATagName, ADBFileName: string): string;
     procedure SetTagListCount2Grid();
-    //FBInfoGrid의 각 채널의 TagName으로 VAR_NAME을 검색하여 각 채널에 할당함
+    //FBInfoGrid의 각 채널의 TagName으로 MAPPING_TABLE에서 VAR_NAME을 검색하여 각 채널에 할당함
     //복수개 Tag가 할당된 채널을 찾아서 Tag List를 채워 줌
-    procedure SetVarNameList2GridByVarNameFromTagList(const ADBFileName: string);
+    procedure SetVarNameList2GridByTagListFromMappingTable(const ADBFileName: string);
+    //FBInfoGrid의 FBName 으로 CONNECTION에서 ORG_TAG를 검색하여 각 채널에 할당함
+    //복수개 Tag가 할당된 채널을 찾아서 Tag List를 채워 줌
+    procedure SetVarNameList2GridByOrgTagFromConnection(const ADBFileName: string);
+    //Grid에 복수개의 Description과 ChId를 채워 줌
     procedure SetVarNameList2GridFromJsonAry(const ATagColName, ADescColName, LChIdColName: string;
       const ARow: integer; const AJsonAry: RawUtf8);
   end;
@@ -144,7 +173,7 @@ begin
           AFBInfoJsonAry := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable(AFBName, LRowCount, ADBFileName);
 
         LIsCardMode := GetIsCardModeFromFBName(AFBName);
-        FBInfo2GridFromJsonAry(AFBInfoJsonAry, LIsCardMode);
+        FBStructure2GridFromJsonAry(AFBInfoJsonAry, LIsCardMode);
       end;
       ShowModal;
     end;
@@ -202,12 +231,17 @@ begin
 
   with LHiCONFBLogicF do
   begin
-    SetFGLogic2Grid(ATagName, ATagInfoJsonAry, ADBFileName);
+    SetFBLogic2Grid(ATagName, ATagInfoJsonAry, ADBFileName);
     Show;
   end;
 end;
 
 { THiCONFBLogicF }
+
+procedure THiCONFBLogicF.About1Click(Sender: TObject);
+begin
+  FormAbout1.Show(False);
+end;
 
 procedure THiCONFBLogicF.AddTagListNChId2Grid(const ATagList,
   ATagListChId, ATagDescList: string);
@@ -254,18 +288,18 @@ end;
 
 procedure THiCONFBLogicF.BitBtn1Click(Sender: TObject);
 begin
-  ShowFBLogicFromForm('', False);
+  ShowFBLogicFromForm('', '', '', False);
 //  CreateSrchTagForm(TagNameEdit.Text, FDBFileName);
 end;
 
-procedure THiCONFBLogicF.FBInfo2GridFromJsonAry(const AFBInfoJsonAry: RawUtf8;
+procedure THiCONFBLogicF.FBStructure2GridFromJsonAry(const AFBInfoJsonAry: RawUtf8;
   const AIsCardMode: Boolean);
 var
   LDocDict: IDocDict;
   LDocList: IDocList;
   LRow, LInOut, LInRow, LOutRow: integer;
   LIsUpdateFBName: boolean;
-  LFieldName: string;
+  LFieldName, LFuncName, LOrgTagName: string;
 begin
   LIsUpdateFBName := False;
 
@@ -282,16 +316,24 @@ begin
       begin
         if FBInfoGrid.Columns.Column['FBName'].Header.Caption = 'FB Name' then
         begin
-          FBInfoGrid.Columns.Column['FBName'].Header.Caption := Utf8ToString(LDocDict.S['FUNC_NAME']);
-
+          LFuncName := Utf8ToString(LDocDict.S['FUNC_NAME']);
+          FBInfoGrid.Columns.Column['FBName'].Header.Caption  := LFuncName;
+          LOrgTagName := Utf8ToString(LDocDict.S['ORG_TAG']);
           LIsUpdateFBName := True;
         end;
       end;
 
       LFieldName := LDocDict.S['FIELD_NAME'];
 
+      if LFieldName = '' then
+        Continue;
+
       if AIsCardMode then
-        LFieldName := strTokenRev(LFieldName, '_');
+      begin
+        LFieldName := GetSubStringAfter(LOrgTagName, LFieldName);
+        TrimLeftChar(LFieldName, '_');
+      end;
+//        LFieldName := strTokenRev(LFieldName, '_')
 
       LInOut := LDocDict.I['IN_OUT'];
 
@@ -337,7 +379,7 @@ begin
   if FBInfoGrid.SelectedRow = -1 then
     exit;
 
-  if (ACol <> 0) and (ACol <> 4)then
+  if (ACol <> 0) and (ACol <> 2) and (ACol <> 4) then
     exit;
 
   LStr := FBInfoGrid.Cells[ACol, ARow];
@@ -345,9 +387,21 @@ begin
   if LStr <> '' then
   begin
     LStr := FBInfoGrid.Columns.Item[ACol].Name;
-    ShowTagList2Grid(LStr);
-//    ShowTagList2Grid('InputTagList');
+
+    if LStr = 'FBName' then
+    begin
+      LStr := FBInfoGrid.CellsByName[LStr, FBInfoGrid.SelectedRow];
+      ShowCardInfoByTagName(LStr);
+    end
+    else
+      ShowTagList2Grid(LStr);
   end;
+end;
+
+procedure THiCONFBLogicF.FBInfoGridKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  FEgg.CheckKeydown(Key, Shift);
 end;
 
 procedure THiCONFBLogicF.FBInfoGridMouseDown(Sender: TObject;
@@ -362,11 +416,16 @@ procedure THiCONFBLogicF.FBInfoGridSelectCell(Sender: TObject; ACol,
 var
   LStr: string;
 begin
+  ShowFieldInfo1.Enabled := ACol in [1,3];
+
   if FBInfoGrid.SelectedRow = -1 then
     exit;
 
-  if (ACol <> 0) and (ACol <> 2) and (ACol <> 4) then
+  if not (ACol in [0,1,2,3,4]) then
     exit;
+
+//  if (ACol <> 0) and (ACol <> 2) and (ACol <> 4) then
+//    exit;
 
   LStr := FBInfoGrid.Cells[ACol, ARow];
 
@@ -383,6 +442,39 @@ begin
   end;
 end;
 
+function THiCONFBLogicF.FBStructure2GridByName(const AFBTypeName,
+  AFBTagName, ADBFileName: string): Boolean;
+var
+  LnxCustomColumn: TnxCustomColumn;
+  LFBInfoJsonAry: RawUtf8;
+  LRowCount: integer;
+begin
+  //Function Name이 NX-로 시작하거나 CARD 이거나 INF 이면(Result = TRUE)
+  //MAPPING_TABLE의 TAG_NAME으로 부터 FB IO 정보를 가져옴
+  //그 외는
+  Result := GetIsCardModeFromFBName(AFBTypeName);
+
+  if (Result) or (AFBTypeName = 'INF') then
+  begin
+    LFBInfoJsonAry := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromMAPPINGTable(AFBTagName, LRowCount, ADBFileName);
+  end
+  else
+    LFBInfoJsonAry := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable(AFBTypeName, LRowCount, ADBFileName);
+
+  if LFBInfoJsonAry = '' then
+  begin
+    ShowMessage('There is no Function Block Info.');
+  end
+  else
+  begin
+    FBStructure2GridFromJsonAry(LFBInfoJsonAry, Result);
+
+    FBInfoGrid.CellsByName['FBName', 0] := AFBTagName;
+    LnxCustomColumn := FBInfoGrid.ColumnByName['FBName'];
+    LnxCustomColumn.Width := GetColumnWidthByTextLength(FBInfoGrid, LnxCustomColumn, AFBTagName);
+  end;
+end;
+
 procedure THiCONFBLogicF.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   FControlMoverResizer.Free;
@@ -391,7 +483,14 @@ end;
 procedure THiCONFBLogicF.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if Self = Application.MainForm then
-    g_GPFormManager.CloseAllForms
+  begin
+    g_GPFormManager.CloseAllForms;
+
+    if Assigned(FCLO4FBLogic) then
+      FreeAndNil(FCLO4FBLogic);
+
+    FEgg.Free;
+  end
   else
     g_GPFormManager.DestroyForm(Handle);
 end;
@@ -405,10 +504,23 @@ begin
 end;
 
 procedure THiCONFBLogicF.FormShow(Sender: TObject);
+var
+  LMsg: string;
 begin
   if Application.MainForm = Self then
   begin
+    FEgg := TEasternEgg.Create('Reg', [ssCtrl], 'REGINFO', Self, OnEasterEgg);
     ImageList1.GetIcon(2, Icon);
+
+    if TCLO4FBLogic.CommandLineParse(FCLO4FBLogic, LMsg) then
+    begin
+      if FCLO4FBLogic.TagName <> '' then
+      begin
+        TagNameEdit.Text := FCLO4FBLogic.TagName;
+        FDBFileName := FCLO4FBLogic.FDBName;
+        BitBtn1Click(nil);
+      end;
+    end;
   end;
 end;
 
@@ -427,9 +539,21 @@ end;
 //  end;
 //end;
 
+function THiCONFBLogicF.GetFieldTagNameFromSelected: string;
+begin
+  Result := '';
+
+  if FBInfoGrid.SelectedRow = -1 then
+    exit;
+
+//  Result := FBInfoGrid.CellsByName['FBName', 0] + '_' +
+//  Result := FBInfoGrid.ColumnByName['FBName'].Header.Caption + '_' +
+    Result := FBInfoGrid.Cells[FBInfoGrid.SelectedColumn, FBInfoGrid.SelectedRow];
+end;
+
 function THiCONFBLogicF.GetIsCardModeFromFBName(const AFBName: string): Boolean;
 begin
-  Result := (Pos('NX-', AFBName) > 0) or (AFBName = 'CARD');
+  Result := (Pos('NX-', AFBName) > 0) or (AFBName = 'CARD');// or (AFBName = 'INF');
 end;
 
 function THiCONFBLogicF.GetRowIdxByIndexNoFromGrid(
@@ -510,7 +634,8 @@ begin
     exit;
 
   LTagName := TagListGrid.CellsByName['TagName', TagListGrid.SelectedRow];
-  CreateNShowHiCONFBLogicForm(LTagName, '', FDBFileName);
+  ShowFBLogicFromForm(LTagName, '', '', True);
+//  CreateNShowHiCONFBLogicForm(LTagName, '', FDBFileName);
 end;
 
 procedure THiCONFBLogicF.MoveTagListPanel2CellPos(const ANxCell: TCell);
@@ -530,6 +655,12 @@ begin
   TagListPanel.Visible := True;
 end;
 
+procedure THiCONFBLogicF.OnEasterEgg(msg: string);
+begin
+  FormAbout1.LicenseText.Text := TCLO4FBLogic.FRegAppInfoB64;
+  About1Click(nil);
+end;
+
 procedure THiCONFBLogicF.OpenLogic1Click(Sender: TObject);
 var
   LTagName: string;
@@ -542,8 +673,37 @@ begin
   begin
     LTagName := FBInfoGrid.Cells[FBInfoGrid.SelectedColumn, FBInfoGrid.SelectedRow];
     LTagName := StringReplace(LTagName, '->', '', [rfReplaceAll]);
-    ShowFBLogicFromForm(LTagName, True);
+    ShowFBLogicFromForm(LTagName, '', '', True);
   end;
+end;
+
+procedure THiCONFBLogicF.OpenLogicToNewexe1Click(Sender: TObject);
+var
+  LTagName: string;
+begin
+  if FBInfoGrid.SelectedRow = -1 then
+    exit;
+
+  if (FBInfoGrid.Columns.Item[FBInfoGrid.SelectedColumn].Name = 'InputTagList') or
+    (FBInfoGrid.Columns.Item[FBInfoGrid.SelectedColumn].Name = 'OutputTagList') then
+  begin
+    LTagName := FBInfoGrid.Cells[FBInfoGrid.SelectedColumn, FBInfoGrid.SelectedRow];
+    LTagName := StringReplace(LTagName, '->', '', [rfReplaceAll]);
+
+    ShowFBLogic2NewExe(LTagName);
+  end;
+end;
+
+procedure THiCONFBLogicF.OpenLogicToNewexe2Click(Sender: TObject);
+var
+  LTagName: string;
+begin
+  if TagListGrid.SelectedRow = -1 then
+    exit;
+
+  LTagName := TagListGrid.CellsByName['TagName', TagListGrid.SelectedRow];
+
+  ShowFBLogic2NewExe(LTagName);
 end;
 
 procedure THiCONFBLogicF.OutputTagListButtonClick(Sender: TObject);
@@ -569,28 +729,82 @@ begin
   StatusBarPro1.Panels[3].Text := ADesc;
 end;
 
-procedure THiCONFBLogicF.ShowFBLogicFromForm(ATagName: string; const AToNewForm: Boolean);
+procedure THiCONFBLogicF.ShowCardInfoByTagName(const ATagName: string);
+var
+  LJsonAry: RawUtf8;
+  LRowCount: integer;
+  SrchModuleByTagF: TSrchModuleByTagF;
+begin
+  LJsonAry := THiConSystemDB.GetTagInfo2JsonAryFromTableName(ATagName, 'CODE', 'IOC', LRowCount, FDBFileName);
+
+  SrchModuleByTagF := TSrchModuleByTagF.Create(nil);
+  try
+    with SrchModuleByTagF do
+    begin
+      SetDBInfo2Form(FDBFileName, 'IOC', 'CODE', ATagName);
+      LoadTagInfoFromJsonAry2Grid(LJsonAry);
+
+      if ShowModal = mrOK then
+      begin
+      end;
+    end;//with
+  finally
+    FreeAndNil(SrchModuleByTagF);
+  end;
+end;
+
+procedure THiCONFBLogicF.ShowFBLogic2NewExe(const ATagName: string);
+var
+  Params: string;
+begin
+  if ATagName = '' then
+    exit;
+
+  Params := '/tn=' + ATagName + ' /db="' + FDBFileName + '"';
+  ShellExecute(Application.Handle, 'open', PChar(Application.ExeName),
+                    PChar(Params), '', SW_SHOWNORMAL);
+end;
+
+procedure THiCONFBLogicF.ShowFBLogicFromForm(ATagName, ATableName, AFieldName: string; const AToNewForm: Boolean);
 var
   LOrgTagName: string;
 begin
   if ATagName = '' then
     ATagName := TagNameEdit.Text;
 
+  RemoveSpace2String(ATagName);
+
   if ATagName <> '' then
   begin
-    LOrgTagName := CreateSrchTagForm(ATagName, FDBFileName, True);
+    if Pos('%', ATagName) > 0 then
+      LOrgTagName := CreateSrchTagForm(ATagName, FDBFileName, ATableName, AFieldName, True);
 
     if ATagName <> '' then
     begin
       if AToNewForm then
         CreateNShowHiCONFBLogicForm(ATagName, '', FDBFileName)
       else
-        SetFGLogic2Grid(ATagName, '', FDBFileName);
+        SetFBLogic2Grid(ATagName, '', FDBFileName);
     end;
   end;
 end;
 
-procedure THiCONFBLogicF.SetFGLogic2Grid(ATagName: string;
+procedure THiCONFBLogicF.ShowFieldInfo1Click(Sender: TObject);
+var
+  LTagName, LFuncName, LWhere: string;
+  LRowCount: integer;
+  LJsonAry: RawUtf8;
+begin
+  LTagName := GetFieldTagNameFromSelected();
+  LFuncName := FBInfoGrid.ColumnByName['FBName'].Header.Caption;
+  LWhere := 'FUNC_NAME = "' + LFuncName + '" and FIELD_NAME = "' + LTagName + '"';
+
+  LJsonAry := THiConSystemDB.GetFBInfo2JsonAryByWhereCondFromFUNCTIONTable(LFuncName, LWhere, LRowCount, FDBFileName);
+
+  DisplayTagInfo2SrchTagFormByJsonAry(LTagName, FDBFileName, 'FUNCTION', 'TAG_NAME', LJsonAry);
+end;
+
+procedure THiCONFBLogicF.SetFBLogic2Grid(ATagName: string;
   ATagInfoJsonAry: RawUtf8; ADBFileName: string);
 var
   LRowCount: integer;
@@ -607,15 +821,19 @@ begin
     TagNameEdit.Text := ATagName;
 
     if ATagInfoJsonAry = '' then
-      ATagInfoJsonAry := THiConSystemDB.GetVar2JsonAryByOrgTagFromMAPPINGTable(ATagName, LRowCount, ADBFileName);
+    begin
+      ATagInfoJsonAry := THiConSystemDB.GetVar2JsonAryByOrgTagFromMAPPINGTable(ATagName, LRowCount, ADBFileName)
+    end;
 
     if LRowCount = 0 then
     begin
-    
+
     end
     else
+    begin
       //OrgTag로 조회한 JsonAry에는 각 채널에 Var Name이 한개씩만 할당됨
-      TagInfo2GridFromJsonAry(ATagInfoJsonAry, ADBFileName);
+      TagInfo2GridFromJsonAry(ATagInfoJsonAry, ADBFileName)
+    end;
   end;
 end;
 
@@ -650,7 +868,125 @@ begin
   end;
 end;
 
-procedure THiCONFBLogicF.SetVarNameList2GridByVarNameFromTagList(const ADBFileName: string);
+procedure THiCONFBLogicF.SetVarNameList2GridByOrgTagFromConnection(
+  const ADBFileName: string);
+var
+  i, j, LRowCount: integer;
+  LTagList, LTagList_Desc, LTagList_ChId, LTag_Desc, LTag_ChId,
+  LIOTagList, LTagName, LInTagName, LOutTagName: string;
+  LQryResult: RawUtf8;
+  LDocDict: IDocDict;
+  LDocList, LDocList2: IDocList;
+  LCell: TCell;
+begin
+  LTagName := FBInfoGrid.CellsByName['FBName', 0];
+
+  if LTagName = '' then
+    exit;
+
+  LQryResult := THiConSystemDB.GetVar2JsonAryByOrgTagFromConnectionTable(LTagName, LRowCount, ADBFileName);
+
+  if LQryResult = '' then
+    exit;
+
+  LDocList := DocList(LQryResult);
+  LDocList2 := DocList('[]');
+
+  FBInfoGrid.BeginUpdate;
+  try
+    for i := 0 to FBInfoGrid.RowCount - 1 do
+    begin
+      LIOTagList := FBInfoGrid.CellsByName['InputTagList', i];
+
+      //Grid의 InputTagList Column이 공란인 경우에만 InputTagList에 VAR_NAME을 저장함
+      if LIOTagList = '' then
+      begin
+        LInTagName := FBInfoGrid.CellsByName['InTagName', i];
+
+        if LInTagName <> '' then
+        begin
+          LDocList2.Clear;
+          LDocList2 := LDocList.Filter('TAG_NAME=', LInTagName);
+          LTagList := '';
+          LTagList_Desc := '';
+          LTagList_ChId := '';
+
+          for LDocDict in LDocList2 do
+          begin
+            LTagName := Utf8ToString(LDocDict.S['T00']);
+            LTagList := LTagList + LTagName + #13#10;
+
+            if THiConSystemDB.GetTagDescNChIDByTagNameFromMAPPINGTable(LTagName, LTag_Desc, LTag_ChId, ADBFileName) then
+            begin
+              LTagList_Desc := LTagList_Desc + LTag_Desc + #13#10;
+              LTagList_ChId := LTagList_ChId + LTag_ChId + #13#10;
+            end;
+          end;
+
+          if LTagList <> '' then
+          begin
+            strTokenRev(LTagList, #13);
+            FBInfoGrid.CellsByName['InputTagList', i] := LTagList;
+            strTokenRev(LTagList_Desc, #13);
+            FBInfoGrid.CellsByName['InputTagList_Desc', i] := LTagList_Desc;
+            strTokenRev(LTagList_ChId, #13);
+            FBInfoGrid.CellsByName['InputTagList_ChId', i] := LTagList_ChId;
+
+            LCell := FBInfoGrid.CellByName['InputTagList', i];
+            LCell.Color := clBlack;
+            LCell.TextColor := clGreen;
+          end;
+        end;
+      end;//if LIOTagList = ''
+
+      LIOTagList := FBInfoGrid.CellsByName['OutputTagList', i];
+
+      //Grid의 OutputTagList Column이 공란인 경우에만 OutputTagList에 VAR_NAME을 저장함
+      if LIOTagList = '' then
+      begin
+        LOutTagName := FBInfoGrid.CellsByName['OutTagName', i];
+
+        if LOutTagName <> '' then
+        begin
+          LDocList2.Clear;
+          LDocList2 := LDocList.Filter('TAG_NAME=', LOutTagName);
+          LTagList := '';
+          LTagList_Desc := '';
+          LTagList_ChId := '';
+
+          for LDocDict in LDocList2 do
+          begin
+            LTagList := LTagList + Utf8ToString(LDocDict.S['T00']) + #13#10;
+
+            if THiConSystemDB.GetTagDescNChIDByTagNameFromMAPPINGTable(LTagName, LTag_Desc, LTag_ChId, ADBFileName) then
+            begin
+              LTagList_Desc := LTagList_Desc + LTag_Desc + #13#10;
+              LTagList_ChId := LTagList_ChId + LTag_ChId + #13#10;
+            end;
+          end;
+
+          if LTagList <> '' then
+          begin
+            strTokenRev(LTagList, #13);
+            FBInfoGrid.CellsByName['OutputTagList', i] := LTagList;
+            strTokenRev(LTagList_Desc, #13);
+            FBInfoGrid.CellsByName['OutputTagList_Desc', i] := LTagList_Desc;
+            strTokenRev(LTagList_ChId, #13);
+            FBInfoGrid.CellsByName['OutputTagList_ChId', i] := LTagList_ChId;
+
+            LCell := FBInfoGrid.CellByName['OutputTagList', i];
+            LCell.Color := clBlack;
+            LCell.TextColor := clYellow;
+          end;
+        end;
+      end;//if LIOTagList = ''
+    end;
+  finally
+    FBInfoGrid.EndUpdate();
+  end;
+end;
+
+procedure THiCONFBLogicF.SetVarNameList2GridByTagListFromMappingTable(const ADBFileName: string);
 var
   i, LRowCount: integer;
   LTagList, LTagName: string;
@@ -752,13 +1088,11 @@ procedure THiCONFBLogicF.TagInfo2GridFromJsonAry(ATagInfoJsonAry: RawUtf8; ADBFi
 var
   LDocDict: IDocDict;
   LDocList: IDocList;
-  LFBInfoJsonAry: RawUtf8;
-  LFBName, LVarName, LTagList_Desc, LFieldName,
+  LFBName, LVarName, LTagList_Desc, LFieldName, //LFBName2,
   LOrgTagName, LTagList, LChId, LDesc: string;
-  LFieldIdx, LRowIdx, LInOut, LRowCount: integer;
-  LIsUpdateFBName, LIsInField: boolean;
+  LFieldIdx, LRowIdx, LInOut: integer;
+  LIsUpdateFBName, LIsInField: boolean; //
   LCell: TCell;
-  LnxCustomColumn: TnxCustomColumn;
   LIsCardMode: Boolean; //실제 HiCONIS IO Module은 Field Name을 달리 표현함
 begin
   if ADBFileName = '' then
@@ -775,30 +1109,25 @@ begin
     for LDocDict in LDocList do
     begin
       LDesc := Utf8ToString(LDocDict.S['DESCRIPTION']);
+      LFBName:= Utf8ToString(LDocDict.S['FUNC_NAME']);
 
-      if not LIsUpdateFBName then
+      if LFBName = 'INF' then
       begin
-        Caption := LDesc;
-        Update;
-        LFBName:= Utf8ToString(LDocDict.S['FUNC_NAME']);
-        LOrgTagName := Utf8ToString(LDocDict.S['ORG_TAG']);
 
-        //Function Name이 NX-로 시작하거나 CARD 이면 MAPPING_TABLE의 TAG_NAME으로 부터 FB IO 정보를 가져옴
-        LIsCardMode := GetIsCardModeFromFBName(LFBName);
-
-        if LIsCardMode then
+      end
+      else
+      begin
+        if not LIsUpdateFBName then
+  //      if LFBName <> LFBName2 then
         begin
-          LFBInfoJsonAry := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromMAPPINGTable(LOrgTagName, LRowCount, ADBFileName);
-        end
-        else
-          LFBInfoJsonAry := THiConSystemDB.GetFBInfo2JsonAryByFBNameFromFUNCTIONTable(LFBName, LRowCount, ADBFileName);
+  //        LFBName2 := LFBName;
+          Caption := LDesc;
+          Update;
+          LOrgTagName := Utf8ToString(LDocDict.S['ORG_TAG']);
 
-        FBInfo2GridFromJsonAry(LFBInfoJsonAry, LIsCardMode);
-
-        FBInfoGrid.CellsByName['FBName', 0] := LOrgTagName;
-        LnxCustomColumn := FBInfoGrid.ColumnByName['FBName'];
-        LnxCustomColumn.Width := GetColumnWidthByTextLength(FBInfoGrid, LnxCustomColumn, LOrgTagName);
-        LIsUpdateFBName := True;
+          LIsCardMode := FBStructure2GridByName(LFBName, LOrgTagName, ADBFileName);
+          LIsUpdateFBName := True;
+        end;
       end;
 
       //한개의 Channel에 복수 개의 VarName이 설정되었는지 검사
@@ -824,6 +1153,7 @@ begin
 
         if LInOut = 0 then //Input 인 경우
         begin
+          FBInfoGrid.CellsByName['InTagName', LRowIdx] := LOrgTagName + '_' + FBInfoGrid.CellsByName['InField', LRowIdx];
           LCell := FBInfoGrid.CellByName['InField', LRowIdx];
           LCell.Color := clBlack;
           LCell.TextColor := clLime;
@@ -851,11 +1181,12 @@ begin
             FBInfoGrid.CellsByName['InputTagList_ChId', LRowIdx] := LChId;
 
             FBInfoGrid.CellsByName['InputTagList_Desc', LRowIdx] := LTagList_Desc + LDesc;
-            FBInfoGrid.CellsByName['InTagName', LRowIdx] := LOrgTagName + '_' + FBInfoGrid.CellsByName['InField', LRowIdx];
           end;
         end
         else  //Output 인 경우
         begin
+          FBInfoGrid.CellsByName['OutTagName', LRowIdx] := LOrgTagName + '_' + FBInfoGrid.CellsByName['OutField', LRowIdx];
+
           LCell := FBInfoGrid.CellByName['OutField', LRowIdx];
           LCell.Color := clBlack;
           LCell.TextColor := clYellow;
@@ -884,14 +1215,16 @@ begin
             FBInfoGrid.CellsByName['OutputTagList_ChId', LRowIdx] := LChId;
 
             FBInfoGrid.CellsByName['OutputTagList_Desc', LRowIdx] := LTagList_Desc + LDesc;
-            FBInfoGrid.CellsByName['OutTagName', LRowIdx] := LOrgTagName + '_' + FBInfoGrid.CellsByName['OutField', LRowIdx];
           end;
         end;
       end;
     end;//for
 
     //각 채널에 복수개가 할당된 채널은 VAR_NAME(InputTagList/OutputTagList)으로 다시 조회하여 Grid에 표시함
-    SetVarNameList2GridByVarNameFromTagList(ADBFileName);
+//    SetVarNameList2GridByTagListFromMappingTable(ADBFileName);
+    //각 채널에 복수개가 할당된 채널은 CONNECTION의 TAG_NAME(InputTagList/OutputTagList)으로 다시 조회하여 Grid에 표시함
+    //MAPPING_TABLE에는 자동으로 할당되는 VAR_NAME이 없고 CONNECTION에는 존재함
+    SetVarNameList2GridByOrgTagFromConnection(ADBFileName);
     SetTagListCount2Grid();
   finally
     FBInfoGrid.EndUpdate();
@@ -924,7 +1257,7 @@ procedure THiCONFBLogicF.TagNameEditKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_RETURN then
   begin
-    ShowFBLogicFromForm('', False);
+    ShowFBLogicFromForm('', '', '', False);
   end;
 end;
 

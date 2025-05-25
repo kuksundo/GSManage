@@ -2170,7 +2170,9 @@ begin
       else
         LDBName := ARec.FBaseDir + 'D_Drive\ACONIS-NX\DB\system_bak.accdb';
     end;
-    2: LDBName := 'D:\ACONIS-NX\DB\system_bak.accdb';
+    2: begin
+      LDBName := 'D:\ACONIS-NX\DB\system_bak.accdb';
+    end;
   end;
 
   LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName, LDBName);
@@ -2190,8 +2192,6 @@ begin
   //"RESOURCE":"COM01402","SLOT":83,"DIR":1,"TYPE":1,"ADDR":1003,"SUB_POS":0,
   //"FTYPE":"1","Port":"Port4","IPAddr1":"10.8.1.213","IPAddr2":"11.8.1.213"}
   Result := LDict.Json;
-
-  CreateNShowDateSeletForm(Result);
 end;
 
 procedure THiconisTCPF.GetRetainMapFromIpSelected;
@@ -3110,6 +3110,8 @@ begin
   LTagSearchRec := GetTagSearchRecFromTagInfoEditForm(LStr);
 
   LStr := GetResNPtcJsonNameFromSrcByInfTag(LTagSearchRec);
+
+  CreateNShowDateSeletForm(LStr);
 end;
 
 procedure THiconisTCPF.SetCFRec2GridByTagText(const AHtml: string);

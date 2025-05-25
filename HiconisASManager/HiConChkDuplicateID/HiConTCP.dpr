@@ -45,11 +45,11 @@ uses
   UnitMenuItemUtil in '..\..\..\..\Common\UnitMenuItemUtil.pas',
   FrmHiConMPMAppDown in 'FrmHiConMPMAppDown.pas' {HiConMPMAppDownF},
   FrmHiConMPMAppUp in 'FrmHiConMPMAppUp.pas' {HiConMPMAppUpF},
-  FrmHiCONFBLogic in 'FrmHiCONFBLogic.pas' {HiCONFBLogicF},
   UnitSQLUtil in '..\..\..\..\Common\UnitSQLUtil.pas',
   UnitDynamicFormManager in '..\..\..\..\Common\UnitDynamicFormManager.pas',
   UnitIpHelper in '..\..\..\..\Common\UnitIpHelper.pas',
-  FrmEthernetAdaptorList in '..\..\..\..\Common\Form\FrmEthernetAdaptorList.pas' {EtherAdaptorF};
+  FrmEthernetAdaptorList in '..\..\..\..\Common\Form\FrmEthernetAdaptorList.pas' {EtherAdaptorF},
+  FrmHiCONFBLogic in '..\HiconFBLogic\FrmHiCONFBLogic.pas' {HiCONFBLogicF};
 
 {$R *.res}
 

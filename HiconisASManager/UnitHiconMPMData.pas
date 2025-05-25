@@ -455,7 +455,7 @@ function GetModbusAddrByInBlkAddr(ACheckMemRange: TCheckMemRange): string;
 function CheckIfAddrInRange4ModbusByInBlkAddr(AFnCode, AStAddr, ACount, AInBlkAddr, ATagInBlkAddr, ATagSubPos: string): Boolean;
 function GetCheckMemRangeRec(AFnCode, AStAddr, ACount, AInBlkAddr, ATagInBlkAddr, ATagSubPos: string): TCheckMemRange;
 
-function GetTagSearchRecFromTagInfoEditForm(AIpAddr: string=''): TTagSearchRec;
+function GetTagSearchRecFromTagInfoEditForm(AIpOrDir: string=''): TTagSearchRec;
 
 implementation
 
@@ -1428,13 +1428,13 @@ begin
   end;
 end;
 
-function GetTagSearchRecFromTagInfoEditForm(AIpAddr: string): TTagSearchRec;
+function GetTagSearchRecFromTagInfoEditForm(AIpOrDir: string): TTagSearchRec;
 var
   LStr: string;
 begin
   Result := Default(TTagSearchRec);
 
-  LStr := CreateTagInputEdit('','','','',AIpAddr);
+  LStr := CreateTagInputEdit('','','','',AIpOrDir);
 
   Result.FTagName := strToken(LStr, ';');
   Result.FSrcKind := StrTointDef(strToken(LStr, ';'), 0);

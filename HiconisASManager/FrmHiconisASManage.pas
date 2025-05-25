@@ -9,7 +9,8 @@ uses
   NxCustomGrid, NxGrid, AdvOfficeTabSet, Vcl.StdCtrls, Vcl.ComCtrls,
   AdvGroupBox, AdvOfficeButtons, AeroButtons, JvExControls, JvLabel,
   CurvyControls, System.SyncObjs, DateUtils, Vcl.Menus, AdvEdit, AdvEdBtn, AdvToolBtn,
-  Vcl.Mask, JvExMask, JvToolEdit, JvCombobox, Vcl.Buttons,
+  Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit, JvCombobox, Vcl.Buttons,
+  System.Rtti,
   OtlCommon, OtlComm, OtlTaskControl, OtlContainerObserver, otlTask, OtlParallel,
 
   mormot.core.base, mormot.rest.client, mormot.orm.core, mormot.rest.http.server,
@@ -20,18 +21,18 @@ uses
 
   VarRecUtils, TimerPool, JHP.Util.Bit32Helper,
   CommonData2, UnitOLDataType, UnitGenericsStateMachine_pjh,//FSMClass_Dic, FSMState,
-  Vcl.ExtCtrls, UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig, FrmTodoList,
+  UnitTodoCollect2, UnitElecMasterData,//FrmInqManageConfig, FrmTodoList,
   UnitHiconisMasterRecord, FrmHiconisASTaskEdit, UnitElecServiceData2, UnitMakeReport2,
   UnitHiASSubConRecord, UnitHiASMaterialRecord, UnitToDoList,
   UnitUserDataRecord2, SBPro, UnitOLEmailRecord2,//UnitIniConfigSetting2
 
-  System.Rtti,
   DragDropInternet,DropSource,DragDropFile,DragDropFormats, DragDrop, DropTarget,
   UnitHiconisASWSInterface, thundax.lib.actions_pjh,
-  UnitMAPSMacro2, UnitWorker4OmniMsgQ,
+  UnitMAPSMacro2, UnitWorker4OmniMsgQ, UnitCopyData,
 
   UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord,
-  UnitHiconisASData, UnitHiconisDI16RecallRec
+  UnitHiconisASData, UnitOutLookDataType, UnitHiconisDI16RecallRec,
+  JvComponentBase, JvCaptionButton, FormAboutDefs, EasterEgg
   ;
 
 type
@@ -93,8 +94,6 @@ type
     Importance: TNxTextColumn;
     ClaimStatus: TNxTextColumn;
     StatusBarPro1: TStatusBarPro;
-    imagelist24x24: TImageList;
-    ImageList16x16: TImageList;
     PopupMenu1: TPopupMenu;
     Mail1: TMenuItem;
     Create1: TMenuItem;
@@ -131,7 +130,6 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     N5: TMenuItem;
-    ImageList32x32: TImageList;
     DropEmptyTarget1: TDropEmptyTarget;
     DataFormatAdapterOutlook: TDataFormatAdapter;
     DropEmptySource1: TDropEmptySource;
@@ -210,6 +208,12 @@ type
     BitBtn5: TBitBtn;
     BitBtn6: TBitBtn;
     BitBtn7: TBitBtn;
+    ool1: TMenuItem;
+    ShowEmailListForm1: TMenuItem;
+    JvCaptionButton1: TJvCaptionButton;
+    FormAbout1: TFormAbout;
+    Help1: TMenuItem;
+    About1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -285,10 +289,14 @@ type
     procedure BitBtn6Click(Sender: TObject);
     procedure BitBtn7Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
+    procedure ShowEmailListForm1Click(Sender: TObject);
+    procedure JvCaptionButton1Click(Sender: TObject);
+    procedure About1Click(Sender: TObject);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
     FDBMsgQueue: TOmniMessageQueue;
+    FEgg: TEasternEgg;
 //    FIPCMQCommandOLEmail: TOmniMessageQueue; FTaskEditConfig.IPCMQCommandOLEmail로 대체함
     FHiASIniConfig: THiASIniConfig;
     FHiASIniFileName: string;
@@ -317,7 +325,8 @@ type
     FOLAppointmentQueue: TOmniMessageQueue;
 
     FOLCmdSenderHandle: THandle;//OLControlWorker의 Respond값을 전달하기 위한 Handle
-    FOLMailListFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
+    FOLEmailListFormDisplayed, //True = FrmOLEmailList.TOLEmailListF ShowModal
+    FHiASTaskEditFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
     FHiASDI16RecallDict: THiASDI16RecallDict;
 
     procedure InitEnum;
@@ -326,6 +335,8 @@ type
     procedure OnInitOutlookTimer(Sender : TObject; Handle : Integer;
             Interval : Cardinal; ElapsedTime : LongInt);
     procedure OnWorkerResult(var Msg: TMessage); message MSG_RESULT;
+    procedure OnOLEmailListFormClose(var Msg: TMessage); message MSG_OLEMAILLISTF_CLOSE;
+    procedure WMCopyData(var Msg: TMessage); message WM_COPYDATA;
 
     procedure ProcessCommand(ARespond: string);
     //Macro에서 ExecFunction으로 FunctionName을 주면 아래의 public란 Procedure에서
@@ -401,6 +412,10 @@ type
     function GetTaskIdFromGridBySelected: TID;
     function GetDirectInputReqNoFromBySeleced: string;//자재직투입요청 번호 반환
     function GetEmailSubjectFromGridBySelected: string;//이메일 제목을 반환
+    procedure ShowEmailListForm();
+    //Result : HullNo and ClaimNo가 Grid에 존재하면 True
+    function GetIDListNRowByHullNoNClaimNoFromGrid(AHullNo, AClaimNo: string;
+      out AIdList: TIDList; out ARow: integer): Boolean;
 
     procedure ProcessPasteEvent(ATxt: string);
     function GetUserList: TStrings;
@@ -411,6 +426,9 @@ type
     procedure SendCmd4CreateMail(AMailType: integer);
 
     procedure AssignHull2RecFromForm(AHiASIniConfig: THiASIniConfig);
+
+    function UpdateJsonAryIfClaimNoIsExistInDB(const AJsonAry: string): string;
+    procedure OnEasterEgg(msg: string);
   public
     //메일을 이동시킬 폴더 리스트,
     //HGS Task/Send Folder Name 2 IPC 메뉴에 의해 OL으로 부터 수신함
@@ -447,7 +465,6 @@ type
     procedure FillInUserList;
 
     function GetTask: TOrmHiconisASTask;
-//    procedure DisplayTaskInfo2EditForm(const ATaskID: integer); overload;
     procedure DisplayTaskInfo2Grid(ASearchCondRec: TSearchCondRec; AFromRemote: Boolean = False);
     procedure DisplayTask2GridByPorNo(const APorNo: string);
     procedure DisplayTask2GridByMatPorNo(const AMatPorNo: string);
@@ -510,7 +527,7 @@ uses ClipBrd, System.RegularExpressions,//UnitIPCModule2,
 
   Vcl.ogutil, UnitDragUtil, FrmOLEmailList, UnitCommonFormUtil, UnitDateUtil,
   FrmEditTariff2, UnitGSTariffRecord2, UnitComboBoxUtil,//UnitCmdExecService,
-  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect, UnitOutLookDataType,
+  FrmDisplayTariff2, OLMailWSCallbackInterface2, FrmFileSelect,
   UnitHiASMaterialDetailRecord, UnitImportFromXls, UnitHiASMaterialCodeRecord,
   UnitIPCMsgQUtil, UnitHiASOLUtil, UnitVesselMasterRecord2, FrmSearchVessel2,
   UnitAdvCompUtil, UnitHiASUtil, UnitArrayUtil;
@@ -826,12 +843,84 @@ begin
   ShowTodoListFormFromDBByGridRow(grid_Req.SelectedRow);
 end;
 
+function THiconisAsManageF.UpdateJsonAryIfClaimNoIsExistInDB(
+  const AJsonAry: string): string;
+var
+  LUtf8: RawUtf8;
+  LDocList, LResultList: IDocList;
+  LDocDict: IDocDict;
+  LHullNo, LClaimNo, LTaskID: string;
+begin
+  LResultList := DocList('[]');
+  LDocList := DocList('[]');
+  LDocDict := DocDict('{}');
+
+  LDocList := DocList(AJsonAry);
+
+  for LDocDict in LDocList.Objects do
+  begin
+    LHullNo := LDocDict.S['HullNo'];
+    LClaimNo := LDocDict.S['ClaimNo'];
+    LDocDict.B['ExistInDB'] := CheckExistHullNoClaimNo(LHullNo, LClaimNo, LTaskID);
+    LDocDict.S['TaskID'] := LTaskID;
+
+    LResultList.AppendDoc(LDocDict);
+  end;
+
+  Result := LResultList.Json;
+end;
+
 procedure THiconisAsManageF.ViewTariff1Click(Sender: TObject);
 var
   LDoc: variant;
 begin
   LDoc := LoadGSTariff2VariantFromCompanyCodeNYear('0001056374', YearOf(now));
   DisplayTariff(LDoc);
+end;
+
+procedure THiconisAsManageF.WMCopyData(var Msg: TMessage);
+var
+  LMsg: string;
+  LTask: TOrmHiconisASTask;
+  LResult: integer;
+  LHullNo, LClaimNo: string;
+  LIDList: TIDList;
+  LRow: integer;
+begin
+  LMsg := PRecToPass(PCopyDataStruct(Msg.LParam)^.lpData)^.StrMsg;
+  LHullNo := StrToken(LMsg, ';');
+  LClaimNo := LMsg;
+
+  if GetIDListNRowByHullNoNClaimNoFromGrid(LHullNo, LClaimNo, LIDList, LRow) then
+  begin
+    ShowTaskFormFromDB(LIDList, LRow);
+  end
+  else
+  begin
+    LTask:= GetTaskFromHullNoNClaimNo(LHullNo, LClaimNo);
+    try
+      if LTask.IsUpdate then
+      begin
+        LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,'', FTaskEditConfig, FHiASIniConfig);
+        //Task Edit Form에서 "저장" 버튼을 누른 경우
+        if LResult = mrOK then
+        begin
+          FHiASTaskEditFormDisplayed := False;
+          LoadTaskVar2Grid(LTask, grid_Req);
+          FTaskEditConfig.IsAllowUpdateHullNo2Grid := False;
+        end;
+      end;
+    finally
+      if Assigned(LTask) then
+        FreeAndNil(LTask);
+    end;
+  end;
+end;
+
+procedure THiconisAsManageF.OnEasterEgg(msg: string);
+begin
+  FormAbout1.LicenseText.Text := THiASIniConfig.FRegAppInfoB64;
+  About1Click(nil);
 end;
 
 procedure THiconisAsManageF.OnGetStream(
@@ -857,6 +946,12 @@ begin
   InitOutlook();
 end;
 
+procedure THiconisAsManageF.OnOLEmailListFormClose(var Msg: TMessage);
+begin
+  FOLEmailListFormDisplayed := False;
+  ShowEmailListForm1.Enabled := True;
+end;
+
 procedure THiconisAsManageF.OnWorkerResult(var Msg: TMessage);
 var
   LMsg  : TOmniMessage;
@@ -872,7 +967,8 @@ begin
 
     //TaskEdit Form이 ShowModal 되었을 때만 IPCMQ2RespondOLEmail.Enqueue 실행
     //아래 조건이 없으면 IPCMQ2RespondOLEmail.Enqueue 때문에 Q에 데이터가 쌓임
-    if FOLMailListFormDisplayed or (LMsg.MsgID = Ord(olrkAddObject)) then
+    if FHiASTaskEditFormDisplayed or FOLEmailListFormDisplayed or
+      (LMsg.MsgID = Ord(olrkAddObject)) then
       if FTaskEditConfig.IPCMQ2RespondOLEmail.Enqueue(LMsg) then
         SendMessage(FOLCmdSenderHandle, MSG_RESULT, 0, 0)
   end;
@@ -1548,6 +1644,7 @@ begin
   if (Shift = [ssCtrl]) and ((Key = Ord('V')) or (Key = Ord('v'))  ) then
     ProcessPasteEvent(ClipBoard.AsText);
 //    ShowMessage(ClipBoard.AsText);
+  FEgg.CheckKeydown(Key, Shift);
 end;
 
 procedure THiconisAsManageF.grid_ReqSelectCell(Sender: TObject; ACol,
@@ -1728,6 +1825,19 @@ begin
   MakeInvoice(grid_Req.SelectedRow);
 end;
 
+procedure THiconisAsManageF.JvCaptionButton1Click(Sender: TObject);
+begin
+  if JvCaptionButton1.Down then
+    JvCaptionButton1.ImageIndex := 48
+  else
+    JvCaptionButton1.ImageIndex := 47;
+
+  if JvCaptionButton1.Down then
+    FormStyle := fsStayOnTop
+  else
+    FormStyle := fsNormal;
+end;
+
 procedure THiconisAsManageF.KeyIn_CompanyCode;
 var
   LCode: string;
@@ -1819,6 +1929,27 @@ begin
   Clipboard.AsText := grid_Req.CellsByName['HullNo',grid_Req.SelectedRow];
 end;
 
+function THiconisAsManageF.GetIDListNRowByHullNoNClaimNoFromGrid(AHullNo,
+  AClaimNo: string; out AIdList: TIDList; out ARow: integer): Boolean;
+var
+  i: integer;
+begin
+  Result := False;
+  AIdList := nil;
+
+  for i := 0 to grid_Req.RowCount - 1 do
+  begin
+    if (grid_Req.CellsByName['HullNo', i] = AHullNo) and
+      (grid_Req.CellsByName['ClaimNo', i] = AClaimNo) then
+    begin
+      AIdList := TIDList(grid_Req.Row[i].Data);
+      ARow := i;
+
+      Result := True;
+    end;
+  end;
+end;
+
 function THiconisAsManageF.GetIsRemote(var ARemoteAddr: string): Boolean;
 begin
   Result := False;
@@ -1841,17 +1972,10 @@ begin
 
 end;
 
-//procedure THiconisAsManageF.DisplayTaskInfo2EditForm(const ATaskID: integer);
-//var
-//  LTask: TOrmHiconisASTask;
-//begin
-//  LTask:= CreateOrGetLoadTask(ATaskID);
-//  try
-//    FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,null, FTaskEditConfig);
-//  finally
-//    FreeAndNil(LTask);
-//  end;
-//end;
+procedure THiconisAsManageF.About1Click(Sender: TObject);
+begin
+  FormAbout1.Show(False);
+end;
 
 procedure THiconisAsManageF.AddFolderListFromOL(AFolder: string);
 begin
@@ -1967,6 +2091,16 @@ begin
               LOLMailRec.FSenderHandle := Self.Handle;
               msg.MsgData := TOmniValue.FromRecord(LOLMailRec);
             end;
+            olcCheckExistClaimNoInDB: begin
+            //FrameOLEmailList4Ole.grid_Email의 HullNo+ClaimNo가 HiconisASManageR.db3에 존재하는지 Check함
+              LOLRespondRec := msg.MsgData.ToRecord<TOLRespondRec>;
+              //OLCommand 보낸 FormHandle 저장
+              FOLCmdSenderHandle := LOLRespondRec.FSenderHandle;
+              LOLRespondRec.FSenderHandle := Self.Handle;
+              LOLRespondRec.FMsg := UpdateJsonAryIfClaimNoIsExistInDB(LOLRespondRec.FMsg);
+
+              msg.MsgData := TOmniValue.FromRecord(LOLRespondRec);
+            end;
           end;
 
           if not FCommandQueue.Enqueue(TOmniMessage.Create(msg.MsgID, msg.MsgData)) then
@@ -1992,12 +2126,14 @@ end;
 procedure THiconisAsManageF.BitBtn1Click(Sender: TObject);
 begin
 //  Content2Clipboard(HullNoEdit.Text);
+  HullNoEdit.Text := RemoveSpace2String(HullNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(HullNoEdit);
 end;
 
 procedure THiconisAsManageF.BitBtn2Click(Sender: TObject);
 begin
 //  Content2Clipboard(OrderNoEdit.Text);
+  OrderNoEdit.Text := RemoveSpace2String(OrderNoEdit.Text);
   ClipboardCopyOrPaste2AdvEditBtn(OrderNoEdit);
 end;
 
@@ -2237,8 +2373,12 @@ begin
   SetCurrentDir(ExtractFilePath(Application.ExeName));
   DOC_DIR := ExtractFilePath(Application.ExeName) + '\db\files\';
   FFolderListFromOL := TStringList.Create;
+
+  FEgg := TEasternEgg.Create('Reg', [ssCtrl], 'REGINFOAS', Self, OnEasterEgg);
+
   if FileExists('.\'+FOLDER_LIST_FILE_NAME) then
     FFolderListFromOL.LoadFromFile('.\'+FOLDER_LIST_FILE_NAME);
+
   FTempJsonList := TStringList.Create;
   FUserList := TStringList.Create;
   FToDoCollect := TpjhToDoItemCollection.Create(TpjhTodoItem);
@@ -2251,6 +2391,7 @@ begin
 
 //  FSettings := TConfigSettings.create(FIniFileName);
   GetLocalIP(-1, FUserList);
+
   for i := 0 to FUserList.Count - 1 do
   begin
     LStr := FUserList.Strings[i];
@@ -2311,7 +2452,7 @@ begin
 //    else
 //      LVar := null;
 
-    FOLMailListFormDisplayed := True;
+    FHiASTaskEditFormDisplayed := True;
     LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask, nil, AJson, FTaskEditConfig, FHiASIniConfig);
 //    end
 //    else
@@ -2319,7 +2460,7 @@ begin
 
   if LResult = mrOK then
   begin
-    FOLMailListFormDisplayed := False;
+    FHiASTaskEditFormDisplayed := False;
 
     if not LTask.IsUpdate then
       LoadTaskVar2Grid(LTask, grid_Req);
@@ -3056,6 +3197,9 @@ procedure THiconisAsManageF.FormCreate(Sender: TObject);
 var
   LPort: integer;
 begin
+  //SendCopyData4함수를 허용하기 위해 초기화 함
+  UnitCopyData.UnitCopyDataInit(Name, Handle);
+
   FProgMode := 0;
   SetCurrentDir(ExtractFilePath(Application.ExeName));
   (DataFormatAdapter2.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
@@ -3101,6 +3245,7 @@ end;
 
 procedure THiconisAsManageF.FormDestroy(Sender: TObject);
 begin
+  FEgg.Free;
   FHiASIniConfig.Free;
 
   StopOLControlWorker();
@@ -3141,19 +3286,19 @@ begin
   LTask:= CreateOrGetLoadTask(AIDList.fTaskId);
   LTask.TaskID := LTask.ID;
   try
-    FOLMailListFormDisplayed := True;
+    FHiASTaskEditFormDisplayed := True;
+    FTaskEditConfig.IsAllowUpdateHullNo2Grid := True;
     LResult := FrmHiconisASTaskEdit.DisplayTaskInfo2EditForm(LTask,nil,'', FTaskEditConfig, FHiASIniConfig);
     //Task Edit Form에서 "저장" 버튼을 누른 경우
     if LResult = mrOK then
     begin
-      FOLMailListFormDisplayed := False;
+      FHiASTaskEditFormDisplayed := False;
       LoadTaskVar2Grid(LTask, grid_Req, ARow);
+      FTaskEditConfig.IsAllowUpdateHullNo2Grid := False;
     end;
   finally
-
     if Assigned(LTask) then
       FreeAndNil(LTask);
-
   end;
 end;
 
@@ -3656,6 +3801,42 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.ShowEmailListForm;
+var
+//  LViewMailListF: TOLEmailListF;
+  LOLEmailSrchRec: TOLEmailSrchRec;
+begin
+//  LViewMailListF := TOLEmailListF.Create(nil);
+  try
+    FTaskEditConfig.IsAllowUpdateHullNo2Grid := False;
+    LOLEmailSrchRec.FTaskEditConfig := FTaskEditConfig;
+
+    LOLEmailSrchRec.fOwnerFormHandle := Self.Handle;
+    LOLEmailSrchRec.FHiconisASManageMode := True;
+    LOLEmailSrchRec.AutoMoveCBCheck := False;
+    LOLEmailSrchRec.SaveToDBButtonEnable := False;
+    LOLEmailSrchRec.CloseButtonEnable := False;
+
+    FOLEmailListFormDisplayed := True;
+
+    CreateNShowOLEmailListForm(LOLEmailSrchRec);
+
+    ShowEmailListForm1.Enabled := False;
+
+//    if LViewMailListF.ShowModal = mrOK then
+//    begin
+//    end;
+  finally
+//    FOLEmailListFormDisplayed := False;
+//    LViewMailListF.Free;
+  end;
+end;
+
+procedure THiconisAsManageF.ShowEmailListForm1Click(Sender: TObject);
+begin
+  ShowEmailListForm();
+end;
+
 procedure THiconisAsManageF.ShowEmailListFormFromData(ARow: integer);
 var
   LTask: TOrmHiconisASTask;
@@ -3671,8 +3852,8 @@ begin
   try
     LOLEmailSrchRec.FTaskID := LTask.TaskID;
     LOLEmailSrchRec.FProjectNo := LTask.Order_No;
-    LOLEmailSrchRec.FHullNo := LTask.HullNo;
-    LOLEmailSrchRec.FClaimNo := LTask.ClaimNo;
+    LOLEmailSrchRec.FHullNo := RemoveSpace2String(LTask.HullNo);
+    LOLEmailSrchRec.FClaimNo := RemoveSpace2String(LTask.ClaimNo);
     LOLEmailSrchRec.FTaskEditConfig := FTaskEditConfig;
 
     TTaskEditF.ShowEMailListFromTask(LTask, LOLEmailSrchRec, '', '', '');

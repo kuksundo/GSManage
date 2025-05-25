@@ -108,6 +108,8 @@ type
     function CheckRequiredInput4Report(): TWinControl;
     function CheckExistHangulInput4Report(): TWinControl;
     function CheckInputLengthOver4Report(): TWinControl;
+
+    function CheckChgRegRptNoIsDuplicatedFromDB(): Boolean;
   public
     procedure SetVesselInfo2FormByRptKey(const ARptKey: TTimeLog);
     //TagNo=10번대: 0, 20번대: 1...
@@ -191,6 +193,14 @@ begin
             Continue;
           end;
 
+          //보고서 번호가 중복이면 True
+          if CheckChgRegRptNoIsDuplicatedFromDB() then
+          begin
+            ShowMessage('동일한 보고서 번호가 이미 존재 합니다.');
+            ActiveControl := ChgRegRptNo;
+            Continue;
+          end;
+
           LJson := GetCompNameValue2JsonFromFormByClassType(LHiChgRegItemF);
 
           if not AFromDocDict then
@@ -229,6 +239,28 @@ begin
   finally
     LStrList.Free;
   end;
+end;
+
+function THiChgRegItemF.CheckChgRegRptNoIsDuplicatedFromDB: Boolean;
+var
+  LRptKey, LRptNo: string;
+begin
+  Result := True;
+
+  LRptNo := ChgRegRptNo.Text;
+
+  if LRptNo = '' then
+    exit;
+
+  LRptKey := ReportKey4ChgReg.Text;
+
+  if LRptKey = '' then
+    exit;
+
+  if CheckIfExistHiChgRegItemByReportNHcrNo(LRptKey, LRptNo) then
+    exit;
+
+  Result := False;
 end;
 
 function THiChgRegItemF.CheckExistHangulInput4Report: TWinControl;

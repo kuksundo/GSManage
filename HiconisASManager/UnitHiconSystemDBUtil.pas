@@ -33,10 +33,12 @@ type
     class function GetServerNameNIPAddrFromDB(const ADBFileName: string=''): string;
 
     class function GetTagInfo2JsonByTableName_Async(AFormHandle: THandle; ATagName: string; ATableName, AFieldName: string; ADBFileName: string=''): integer;
+    class function GetTagInfo2JsonAryFromTableName(ATagName, AWhereFieldName, ATableName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2JsonAryFromMAPPINGTable(ATagName, AWhereFieldName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2JsonAryFromTAGMSTTable(ATagName, AWhereFieldName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
     class function GetTagInfo2JsonAryFromINFTable(ATagName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
 
+    class function GetTagDescNChIDByTagNameFromMAPPINGTable(ATagName: string; out ADesc, AChId: string; ADBFileName: string=''): Boolean;
     class function GetOrgTagNameFromMAPPINGTable(ATagName: string; ADBFileName: string=''): RawUtf8;
     //MAPPINGTable에서 조회한 결과값(JsonAry)에서 ARow 행의 TAG_NAME을 반환함
     class function GetTagNameFromJsonAryOfMAPPINGTable(const AJsonAry: RawUtf8; const ARow: integer=0): RawUtf8;
@@ -45,8 +47,13 @@ type
     //MAPPING_TABLE->VAR_NAME이 TAG_NAME과 같은 Tag List를 반환 함
     class function GetVar2JsonAryByVarNameFromMAPPINGTable(ATagName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
 
+    class function GetOrgTagNameFromCONNECTIONTable(ATagName: string; ADBFileName: string=''): RawUtf8;
+    class function GetVar2JsonAryByOrgTagFromConnectionTable(ATagName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
+
     class function GetFBInfo2JsonAryByFBNameFromFUNCTIONTable(AFBName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
     class function GetFBInfo2JsonAryByFBNameFromFUNCTIONTable_Async(AFormHandle: THandle; AFBName: string; ADBFileName: string=''): RawUtf8;
+    //AWhere 조건에 만족하는 FB Info를 JsonAry로 반환 함
+    class function GetFBInfo2JsonAryByWhereCondFromFUNCTIONTable(AFBName, AWhere: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
 
     class function GetFBInfo2JsonAryByFBNameFromMAPPINGTable(AFBName: string; out ARowCount: integer; ADBFileName: string=''): RawUtf8;
 
@@ -72,7 +79,8 @@ type
 
 implementation
 
-uses UnitCopyData, UnitSQLUtil, UnitProcessUtil, UnitSystemUtil, UnitLanUtil, UnitHiconOWSUtil;
+uses UnitCopyData, UnitSQLUtil, UnitProcessUtil, UnitSystemUtil, UnitLanUtil,
+  UnitJsonUtil, UnitHiconOWSUtil;
 
 { THiConSystemDB }
 
@@ -230,6 +238,16 @@ begin
   Result := GetList2JsonFromDB(LQuery, ARowCount, ADBFileName);
 end;
 
+class function THiConSystemDB.GetFBInfo2JsonAryByWhereCondFromFUNCTIONTable(
+  AFBName, AWhere: string; out ARowCount: integer;
+  ADBFileName: string): RawUtf8;
+var
+  LQuery: string;
+begin
+  LQuery := 'select * from FUNCTION where ' + AWhere;
+  Result := GetList2JsonFromDB(LQuery, ARowCount, ADBFileName);
+end;
+
 class function THiConSystemDB.GetHistoryStationInfo2JsonFromDB(
   ADBFileName: string): RawUtf8;
 var
@@ -348,27 +366,32 @@ begin
   end;
 end;
 
+class function THiConSystemDB.GetOrgTagNameFromCONNECTIONTable(ATagName,
+  ADBFileName: string): RawUtf8;
+var
+  LQuery, LWhereCond: string;
+  LRowCount: integer;
+  LResult: RawUtf8;
+begin
+  Result := '';
+  LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
+  LQuery := 'select TOP 1 ORG_TAG from CONNECTION where TAG_NAME ' + LWhereCond;// limit 1';
+  LResult := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+  Result := GetFieldValueFromJsonAry(LResult, 'ORG_TAG');
+end;
+
 class function THiConSystemDB.GetOrgTagNameFromMAPPINGTable(ATagName,
   ADBFileName: string): RawUtf8;
 var
   LQuery, LWhereCond: string;
   LRowCount: integer;
   LResult: RawUtf8;
-  LDocDict: IDocDict;
-  LDocList: IDocList;
 begin
   Result := '';
   LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
   LQuery := 'select TOP 1 ORG_TAG from MAPPING_TABLE where TAG_NAME ' + LWhereCond;// limit 1';
   LResult := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
-
-  LDocList := DocList(LResult);
-
-  if LDocList.Len > 0 then
-  begin
-    LDocDict := DocDict(LDocList.S[0]);
-    Result := LDocDict.S['ORG_TAG'];
-  end;
+  Result := GetFieldValueFromJsonAry(LResult, 'ORG_TAG');
 end;
 
 class function THiConSystemDB.GetResourceList2JsonFromDB(
@@ -444,6 +467,22 @@ begin
   Result := LDict2.Json;
 end;
 
+class function THiConSystemDB.GetTagDescNChIDByTagNameFromMAPPINGTable(
+  ATagName: string; out ADesc, AChId: string; ADBFileName: string): Boolean;
+var
+  LQuery, LWhereCond: string;
+  LRowCount: integer;
+  LResult: RawUtf8;
+begin
+  Result := False;
+  LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
+  LQuery := 'select TOP 1 DESCRIPTION, CH_ID from MAPPING_TABLE where TAG_NAME ' + LWhereCond;// limit 1';
+  LResult := GetList2JsonFromDB(LQuery, LRowCount, ADBFileName);
+  ADesc := GetFieldValueFromJsonAry(LResult, 'DESCRIPTION');
+  AChId := GetFieldValueFromJsonAry(LResult, 'CH_ID');
+  Result := True;
+end;
+
 class function THiConSystemDB.GetTagInfo2JsonAryFromINFTable(ATagName: string;
   out ARowCount: integer; ADBFileName: string): RawUtf8;
 var
@@ -472,6 +511,17 @@ var
 begin
   LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
   LQuery := 'select TAG_NAME, DESCRIPTION, RESOURCE, RES_ID, CH_ID, DATA_TYPE, ORG_TAG, IN_OUT, INDEX_NO, FUNC_NAME, VAR_NAME, SYS_TYPE from MAPPING_TABLE where ' + AWhereFieldName + LWhereCond;//' Like "%' + ATagName + '%"';
+  Result := GetList2JsonFromDB(LQuery, ARowCount, ADBFileName);
+end;
+
+class function THiConSystemDB.GetTagInfo2JsonAryFromTableName(ATagName,
+  AWhereFieldName, ATableName: string; out ARowCount: integer;
+  ADBFileName: string): RawUtf8;
+var
+  LQuery, LWhereCond: string;
+begin
+  LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
+  LQuery := 'select * from ' + ATableName + ' where ' + AWhereFieldName + LWhereCond;//' Like "%' + ATagName + '%"';
   Result := GetList2JsonFromDB(LQuery, ARowCount, ADBFileName);
 end;
 
@@ -508,6 +558,10 @@ begin
       if ATableName = 'INF' then
       begin
         LResult := GetTagInfo2JsonAryFromINFTable(ATagName, LRowCount, ADBFileName);
+      end
+      else
+      begin
+        LResult := GetTagInfo2JsonAryFromTableName(ATagName, AFieldName, ATableName, LRowCount, ADBFileName);
       end;
     end,
 
@@ -570,6 +624,18 @@ begin
     LDocDict := DocDict(LDocList.S[ARow]);
     Result := LDocDict.S['TAG_NAME'];
   end;
+end;
+
+class function THiConSystemDB.GetVar2JsonAryByOrgTagFromConnectionTable(
+  ATagName: string; out ARowCount: integer; ADBFileName: string): RawUtf8;
+var
+  LQuery, LWhereCond: string;
+  LResult: RawUtf8;
+begin
+//  LQuery := 'select distinct TAG_NAME, DESCRIPTION, RESOURCE, RES_ID, CH_ID, DATA_TYPE, ORG_TAG, IN_OUT, INDEX_NO, FUNC_NAME, VAR_NAME, SYS_TYPE from MAPPING_TABLE where VAR_NAME = "' + ATagName + '"'; // + '" and VAR_NAME <> "" and VAR_NAME IS NOT NULL';
+  LWhereCond := GetSQLWhereConditionByFieldName(ATagName);
+  LQuery := 'select * from [CONNECTION] where ORG_TAG ' + LWhereCond + ' order by TAG_NAME, T00'; //group by TAG_NAME
+  Result := GetList2JsonFromDB(LQuery, ARowCount, ADBFileName);
 end;
 
 class function THiConSystemDB.GetVar2JsonAryByOrgTagFromMAPPINGTable(ATagName: string;

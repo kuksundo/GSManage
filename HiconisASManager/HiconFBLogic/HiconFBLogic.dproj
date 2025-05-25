@@ -3,7 +3,7 @@
         <ProjectGuid>{CF32D4E2-93AD-4FA6-A58B-03D9BF93CA1C}</ProjectGuid>
         <ProjectVersion>15.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>FBLogic.dpr</MainSource>
+        <MainSource>HiconFBLogic.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -88,8 +88,9 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <Debugger_RunParams>/a</Debugger_RunParams>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=37OO333NvHzZRzjjztCSwBHCxJivxybdg/1PLN1CGNpROcUdpu+8p+bajn/WtKwh;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=c1xYFgBzXFgWcDZmMVFkYzhTUDJtQ2dlQ2pEWjFDOEZiU2E2U3ZnMDNIVDkyd3pBdTRHeFBOV1UvV3YvbnQxWlZnRVV4eVpYclRvUk5tS0Yzb1UrSnBYWS84RHZUN0dNRWE0T0IwaStmQ2I3RzFJVVc2TGVoVHlaRGMxdm84Y2hEdlZydFJFRm5NZTdlaFl1Q2k0RklOUkE4TTZwSjVFb29SUS81YVVnUUpCOVRHaVhyK0xrY1BwL1Ara2R6VHFYQ1BVd3ozeUNqSlhXSmF2TkN2a0NEM1FKRWppSGRidXlaTVVQMXl2Tmg3NERDQjRXSHFLS2x5VEVhdXU1K2dCcWxnbXdncTFMNmlRV0FMV3pFRGxEY2VKUTZJaFU3ampRbk50NDVlYWpha2ZUeDVzWlEvbXM9</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=37OO333NvHzZRzjjztCSwBHCxJivxybdg/1PLN1CGNpROcUdpu+8p+bajn/WtKwh;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=QCjXuABAKNe4cDZmMVFkYzhTUDJtQ2dlQ2pEWjFDOEZaWGFEMnVqb3JHRGRXNWlVL3AzUWZTWGdWTjZVazBBRUREczc0N0JuK1NyaXVUcVRQenVhSDMrVDRWamFST2V0L2J2bGIzaHp6OHhaVFV1S3lGeFNVQ0RiQmlZUktWOTBiWWNyeEZlcGhJRE41MW03N2FYdW91encyOG5CQit3djB1MHVsR1pvS2Z1ZW4xS1FKUmJyMHVpbmlTWUg2OWxUaEtIaHJYM2JlYkMwbEtQYnJJaTdUUzVWdjY3UzZMbXNpNUFYZTFqcTJZYmNFMXFtUkdMcjBZZDlMcVArUjZHcU1XSW5zMzdJL1ArTCtxbzRZZXdoK2Q3cHowR1hPRVBPQzJGUUZtcElVZjNZSUZSUnROV0tjc3VMc2pPcHhFR25Zc0pJVXBzS09XKzlEYkFhQ2pmSmZzamlFdENYeXRDQVVqYjFSeks2aFRIYzVrQTVEenE0WTN1ZGQrbm9SSmwvTXNYTDcvTlZhZmJ3Wk5lNkJVM3QvV1F6YUtuNy82bXNXQ3JqWUZIcGRnMExLOWQzUnVmWT0=</VerInfo_Keys>
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <DCC_Define>DEF_CRYPT_ALL;DEF_MAIN;USE_SIGFROMREGISTRY;$(DCC_Define)</DCC_Define>
@@ -97,7 +98,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>E:\pjh\Dev\Lang\Delphi\Project\GSManage\Bin\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;E:\pjh\vcl\OnGuard\source;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\TSmBios\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\magwmi;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\core;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\crypt;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\db;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\ddd;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\lib;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\misc;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\net;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\orm;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\rest;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\mORMot2-master\src\soa;E:\pjh\Dev\Lang\Delphi\Common;E:\pjh\project\common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\delphi-html-parser-main;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\melander;E:\pjh\Dev\Lang\Delphi\NoGitHub\Util;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\synapse-master;E:\pjh\project\common\Forms;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Delphi-WindowsServiceUtils-main\src;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\DelphiDabbler\dd-envvars;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\Abbrevia 5.2\source;E:\pjh\vcl\OnGuard\source;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\TSmBios\Common;E:\pjh\Dev\Lang\Delphi\NoGitHub\RegCodeManager2\Common;E:\pjh\Dev\Lang\Delphi\OpenSrc\lib\magwmi;E:\pjh\Dev\Lang\Delphi\Project\GSManage\HiconisASManager\HiConChkDuplicateID;E:\pjh\project\common\Forms\TFormAbout;E:\pjh\project\common\Forms\TFormAbout\Helper3delite;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -109,78 +110,69 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="FrmIpList.pas">
+        <DCCReference Include="..\HiConChkDuplicateID\FrmIpList.pas">
             <Form>IPListF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\Common\Form\FrmInputIpAddress.pas">
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="UnitChkDupIdData.pas"/>
+        <DCCReference Include="..\..\..\..\Common\Form\FrmInputIpAddress.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitChkDupIdData.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitTRegExUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitHtmlUtil.pas"/>
-        <DCCReference Include="UnitHiConTCPWorker.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConTCPWorker.pas"/>
         <DCCReference Include="..\..\..\..\NoGitHub\Util\UnitCryptUtil3.pas"/>
         <DCCReference Include="..\UnitHiconSystemDBUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\Dom\UnitAnimationThread.pas"/>
         <DCCReference Include="..\..\..\..\Common\Form\FrmElapsedTime.pas">
             <Form>ElapsedTimeF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="UnitHiConInfluxDBUtil.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConInfluxDBUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitNICUtil.pas"/>
         <DCCReference Include="..\UnitHiconMariaDBUtil.pas"/>
-        <DCCReference Include="UnitHiConJsonUtil.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConJsonUtil.pas"/>
         <DCCReference Include="..\UnitHiconMPMData.pas"/>
         <DCCReference Include="..\..\..\..\Common\Form\FrmTwoInputEdit.pas">
             <Form>TwoInputEditF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="FrmHiConTCPConfig.pas">
+        <DCCReference Include="..\HiConChkDuplicateID\FrmHiConTCPConfig.pas">
             <Form>HiConTCPConfigF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\Common\Form\FrmNextGrid.pas">
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="FrmSearchModuleByTagName.pas">
+        <DCCReference Include="..\..\..\..\Common\Form\FrmNextGrid.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\FrmSearchModuleByTagName.pas">
             <Form>SrchModuleByTagF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\UnitHiconDBData.pas"/>
         <DCCReference Include="..\UnitHiconOWSUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\Form\FrmLogInWithIPAddr.pas">
             <Form>LogInWithIPAddrF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="UnitHiConFuncCodeOrm.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConFuncCodeOrm.pas"/>
         <DCCReference Include="..\UnitMakeHiconDBUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\Form\FrmJHPWaitForm.pas">
             <Form>WaitForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="UnitHiConMPMWebUtil.pas"/>
-        <DCCReference Include="UnitHiConMPMFileUtil.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConMPMWebUtil.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConMPMFileUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitElfReader.pas"/>
         <DCCReference Include="..\..\..\..\OpenSrc\lib\DelphiDabbler\dd-versioninfo\PJVersionInfo.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitWMIUtil.pas"/>
         <DCCReference Include="..\..\..\..\NoGitHub\RegCodeManager2\Common\UnitRegAppUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitOLEVarUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitLanUtil2.pas"/>
-        <DCCReference Include="UnitHiConMPMWebInfUtil.pas"/>
+        <DCCReference Include="..\HiConChkDuplicateID\UnitHiConMPMWebInfUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitMenuItemUtil.pas"/>
         <DCCReference Include="FrmHiCONFBLogic.pas">
             <Form>HiCONFBLogicF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitSQLUtil.pas"/>
         <DCCReference Include="..\..\..\..\Common\UnitDynamicFormManager.pas"/>
         <DCCReference Include="..\..\Common\FrmTagInputEdit.pas">
             <Form>TagEditF</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Common\UnitControlMoveResize.pas"/>
         <DCCReference Include="..\..\..\..\..\..\..\project\OpenSrc\lib\GpDelphiUnit\src\GpCommandLineParser.pas"/>
+        <DCCReference Include="UnitFBLogicCLO.pas"/>
+        <DCCReference Include="..\..\..\..\Common\UnitFileInfoUtil.pas"/>
+        <DCCReference Include="..\..\..\..\OpenSrc\lib\mORMot2-master\src\core\mormot.core.base.pas"/>
+        <DCCReference Include="..\..\..\..\OpenSrc\lib\mORMot2-master\src\core\mormot.core.os.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -249,7 +241,7 @@
                     <VersionInfoKeys Name="theme"/>
                 </VersionInfoKeys>
                 <Source>
-                    <Source Name="MainSource">FBLogic.dpr</Source>
+                    <Source Name="MainSource">HiconFBLogic.dpr</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl190.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
