@@ -2975,4 +2975,11 @@ object HiconisAsManageF: THiconisAsManageF
     Left = 56
     Top = 312
   end
+  object DropTextTarget1: TDropTextTarget
+    DragTypes = [dtCopy, dtLink]
+    OnDrop = DropTextTarget1Drop
+    WinTarget = 0
+    Left = 216
+    Top = 296
+  end
 end

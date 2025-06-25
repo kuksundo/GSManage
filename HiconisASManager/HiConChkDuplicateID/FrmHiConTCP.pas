@@ -300,6 +300,8 @@ type
     GetFileVersionsFromFolder1: TMenuItem;
     GetFileVersionsFromFolder2: TMenuItem;
     JvSelectDirectory1: TJvSelectDirectory;
+    SaveFileNameList2ctemp1: TMenuItem;
+    N12: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -383,6 +385,7 @@ type
     procedure Config1Click(Sender: TObject);
     procedure GetFileVersionsFromFolder2Click(Sender: TObject);
     procedure All1Click(Sender: TObject);
+    procedure SaveFileNameList2ctemp1Click(Sender: TObject);
   private
     FHiconTCPIniConfig: THiconTCPIniConfig;
     FHiconTCPIniFileName: string;
@@ -461,10 +464,6 @@ type
     //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
     //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
     function GetTgzNPtcJsonNameFromTgzByInfTag(AInfTagName: string): string;
-    //Result: {"Resource":"COM011110"/"MPM11", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
-    //       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
-    //       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
-    function GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
     //이 함수는 COMxx.tgz 파일만 검색함
     //AInfTagName: INF_로 시작하는 Tag Name
     //Result: {"COM":"COM011110.tgz", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
@@ -591,6 +590,7 @@ type
     procedure ShowTD(const ATDRec: TMsgBox);
 
     procedure GetFileVersionsFromFolder();
+    procedure GetOWSFileVersions2GridFromFolderPath(AFolderPath: string='');
     procedure GetAllMPMFileVersion2GridFromSelected();
     procedure GetAllMPMFileVersion2Grid(AIpList: string);
     procedure SetSWVersionRec2Grid(const ARec: THiConSWVersionRec);
@@ -608,7 +608,7 @@ uses System.TimeSpan, System.Diagnostics, PJEnvVars, UnitMakeHiconDBUtil,
   UnitSystemUtil, UnitXMLUtil, getIp, UnitHiconSystemDBUtil, UnitGZipJclUtil,
   UnitJsonUtil, sevenzip, UnitHiconOWSUtil, UnitCopyData, UnitHiConMPMWebUtil,
   UnitHiConMPMFileUtil, UnitElfReader, UnitHiConMPMWebInfUtil, UnitMenuItemUtil,
-  UnitLanUtil2, UnitSystemUtil2,
+  UnitLanUtil2, UnitSystemUtil2, UnitFileSearchUtil,
   FrmIpList, FrmElapsedTime, FrmTwoInputEdit, FrmStringsEdit, FrmTagInputEdit,
   FrmResPortInfo4INFTag, FrmNextGrid, FrmSearchModuleByTagName, FrmLogInWithIPAddr,
   FrmHiConCFInput, FrmHiConMPMRestore, FrmHiConMPMAppDown, FrmEthernetAdaptorList
@@ -2047,6 +2047,16 @@ begin
 //  AddNextGridRowFromVariant(NextGrid1, LVar, True);
 end;
 
+procedure THiconisTCPF.GetOWSFileVersions2GridFromFolderPath(AFolderPath: string);
+var
+  LIpAddrList: string;
+begin
+  if AFolderPath = '' then
+    AFolderPath := 'D:\ACONIS-NX\';
+
+//  GetOWSFileVersions2GridByIPAddr(LIpAddrList);
+end;
+
 function THiconisTCPF.GetPortJsonContentsFromSrcByInfTag(
   AInfTagName: string; ASrcKind: TTagSearchRec): string;
 var
@@ -2146,52 +2156,6 @@ begin
 //  LPtcJson := GetPtcJsonContentsFromTgzByCOMNPortJson(LStr);
 //  Result := GetQueryJsonFromPortNPtcJson(LTagInfoJson, LPortIntfJson, LPtcJson);
 //  Result := GetQueryJsonFromResourceNPortNameByTagInfo(LTagInfoJson, LResNPortJson);
-end;
-
-function THiconisTCPF.GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
-var
-  LStr, LPortName, LResName, LIPAddr, LDBName: string;
-  LDict: IDocDict;
-begin
-//  LBaseDir := DOWNLOAD_FULL_PATH;
-
-  Result := '';
-
-  if ARec.FTagName = '' then
-    exit;
-
-  case ARec.FSrcKind of
-    0,1: begin
-      if ARec.FBaseDir = '' then
-      begin
-        ShowMessage('Base Dir should be "Z:\HiCONIS\HullNo_ICMS"');
-        exit;
-      end
-      else
-        LDBName := ARec.FBaseDir + 'D_Drive\ACONIS-NX\DB\system_bak.accdb';
-    end;
-    2: begin
-      LDBName := 'D:\ACONIS-NX\DB\system_bak.accdb';
-    end;
-  end;
-
-  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName, LDBName);
-  LPortName := GetResNPortNameByInfTagInfo(LStr, ARec);//GetResNPortName2JsonByInfTagInfo(LStr, ARec);
-  LResName := StrToken(LPortName, ';');
-  LIPAddr := GetIpAddrByResNameFromBackup(LResName, ARec.FBaseDir);
-
-  LDict := DocDict(LStr);
-  LDict.S['FTYPE'] := LDict.S['TYPE'];
-
-  LDict.S['Resource'] := LResName;
-  LDict.S['Port'] := LPortName;
-  LDict.S['IPAddr1'] := StrToken(LIPAddr, ';');
-  LDict.S['IPAddr2'] := LIPAddr;
-
-  //{"TAG_NAME":"INF_SCR_ENG10_701","DESCRIPTION":"M/E LOW SULFUR FUEL SUPPLIED",
-  //"RESOURCE":"COM01402","SLOT":83,"DIR":1,"TYPE":1,"ADDR":1003,"SUB_POS":0,
-  //"FTYPE":"1","Port":"Port4","IPAddr1":"10.8.1.213","IPAddr2":"11.8.1.213"}
-  Result := LDict.Json;
 end;
 
 procedure THiconisTCPF.GetRetainMapFromIpSelected;
@@ -3078,6 +3042,22 @@ begin
   begin
 //    ShowMessage('File is saved successfully => ' + LFileName);
     ShowMessage('Duplicated ID 검사가 완료 되었습니다.' + #13#10 + 'Duplicated ID 건수 : [' + LResultRec.DupIdCount + ']');
+  end;
+end;
+
+procedure THiconisTCPF.SaveFileNameList2ctemp1Click(Sender: TObject);
+var
+  LStrList: TStringList;
+begin
+  if JvSelectDirectory1.Execute then
+  begin
+    LStrList := GetFileListFromFolder(JvSelectDirectory1.Directory, '*.*', False);
+    try
+      LStrList.SaveToFile('c:\temp\HiconFileList.txt');
+      ShowMessage('File List is saved to "c:\temp\HiconFileList.txt"');
+    finally
+      LStrList.Free;
+    end;
   end;
 end;
 

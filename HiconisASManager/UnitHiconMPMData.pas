@@ -2,7 +2,7 @@ unit UnitHiconMPMData;
 
 interface
 
-uses System.Classes, System.SysUtils, UnitEnumHelper,
+uses System.Classes, System.SysUtils, UnitEnumHelper, Dialogs,
   mormot.core.variants, mormot.core.unicode, mormot.core.json, mormot.core.base;
 
 const
@@ -426,6 +426,10 @@ function GetResNPortName2JsonByTagInfoFromTgzBackup(AInfRec: TTagInfoRec_INF; AR
 function GetResNPortName2JsonByTagInfoFromOnline(AInfRec: TTagInfoRec_INF; ARec: TTagSearchRec): string;
 function GetTgzNPtcJsonNameByTagInfo(AJson, ABaseDir: string): string;
 
+//Result: {"Resource":"COM011110"/"MPM11", "Port":"ptc04.json", "PortValueInf":{...},"BaseDir": "full path"}
+//       MPM11.tgz의 interface.json에 SlotNo가 존재하면 "Resource" = "MPM11" 그렇지 않고 "COM011xx.tgz"에 존재하면 아래 내용처럼
+//       COM011xx.tgz Name = ASlotNo값이 interface.json->"PORTx"->"InfADDR" 값과 일치해야 함
+function GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
 function GetResNPortNameByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
 //Result: COM01110;10.8.1.11;Port4
 function GetResPortIPAddrByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;
@@ -1133,6 +1137,52 @@ begin
   //COM011xx.tgz에서 검색
   if Result = '' then
     Result := GetCOMTgzNPortNameByMPMNameWithSlotNo(LMPMName, LSlotNo, ABaseDir);
+end;
+
+function GetResNPtcJsonNameFromSrcByInfTag(ARec: TTagSearchRec): string;
+var
+  LStr, LPortName, LResName, LIPAddr, LDBName: string;
+  LDict: IDocDict;
+begin
+//  LBaseDir := DOWNLOAD_FULL_PATH;
+
+  Result := '';
+
+  if ARec.FTagName = '' then
+    exit;
+
+  case ARec.FSrcKind of
+    0,1: begin
+      if ARec.FBaseDir = '' then
+      begin
+        ShowMessage('Base Dir should be "Z:\HiCONIS\HullNo_ICMS"');
+        exit;
+      end
+      else
+        LDBName := ARec.FBaseDir + 'D_Drive\ACONIS-NX\DB\system_bak.accdb';
+    end;
+    2: begin
+      LDBName := 'D:\ACONIS-NX\DB\system_bak.accdb';
+    end;
+  end;
+
+  LStr := THiConSystemDB.GetTagInfo2JsonFromINFTable(ARec.FTagName, LDBName);
+  LPortName := GetResNPortNameByInfTagInfo(LStr, ARec);//GetResNPortName2JsonByInfTagInfo(LStr, ARec);
+  LResName := StrToken(LPortName, ';');
+  LIPAddr := GetIpAddrByResNameFromBackup(LResName, ARec.FBaseDir);
+
+  LDict := DocDict(LStr);
+  LDict.S['FTYPE'] := LDict.S['TYPE'];
+
+  LDict.S['Resource'] := LResName;
+  LDict.S['Port'] := LPortName;
+  LDict.S['IPAddr1'] := StrToken(LIPAddr, ';');
+  LDict.S['IPAddr2'] := LIPAddr;
+
+  //{"TAG_NAME":"INF_SCR_ENG10_701","DESCRIPTION":"M/E LOW SULFUR FUEL SUPPLIED",
+  //"RESOURCE":"COM01402","SLOT":83,"DIR":1,"TYPE":1,"ADDR":1003,"SUB_POS":0,
+  //"FTYPE":"1","Port":"Port4","IPAddr1":"10.8.1.213","IPAddr2":"11.8.1.213"}
+  Result := LDict.Json;
 end;
 
 function GetResNPortNameByInfTagInfo(ATagInfoJson: string; ARec: TTagSearchRec): string;

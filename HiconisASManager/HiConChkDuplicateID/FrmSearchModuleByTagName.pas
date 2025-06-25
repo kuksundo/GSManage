@@ -472,7 +472,7 @@ end;
 
 procedure TSrchModuleByTagF.ShowINFInfoFromSelected1Click(Sender: TObject);
 var
-  LStr, LColName: string;
+  LTagName, LColName: string;
   LTagSearchRec: TTagSearchRec;
 begin
   if TagInfoGrid.SelectedRow = -1 then
@@ -482,17 +482,17 @@ begin
     LColName := TagInfoGrid.Columns.Item[TagInfoGrid.SelectedColumn].Name;
 
     if (LColName = 'TAG_NAME') or (LColName = 'VAR_NAME') or (LColName = 'ORG_TAG') then
-      LStr := TagInfoGrid.CellsByName[LColName, TagInfoGrid.SelectedRow];
+      LTagName := TagInfoGrid.CellsByName[LColName, TagInfoGrid.SelectedRow];
   end;
 
-  if LStr = '' then
+  if LTagName = '' then
     exit;
 
-  LTagSearchRec := GetTagSearchRecFromTagInfoEditForm(LStr);
+  LTagSearchRec := GetTagSearchRecFromTagInfoEditForm(LTagName);
 
-  LStr := GetResNPtcJsonNameFromSrcByInfTag(LTagSearchRec);
+  LTagName := GetResNPtcJsonNameFromSrcByInfTag(LTagSearchRec);
 
-  CreateNShowDateSeletForm(LStr);
+//  CreateNShowDateSeletForm(LStr);
 end;
 
 procedure TSrchModuleByTagF.ShowOrHideHullNoComp(const AIsShow: Boolean);

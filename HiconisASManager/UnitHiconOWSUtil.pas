@@ -20,6 +20,10 @@ type
 
     //ADriveName : 'D:\'
     class function GetFileListWithVersionFromFolder(ADriveName: string=''): TStringList;
+    //AFileNameList: List에 있는 FileName애 대한 Version을 JsonAry로 반환 함
+    class function GetFileVersions2JsonAryFromStrList(AFileNameList: TStringList): string;
+    //Version Check할 OWS File Name List(FullPath) :.exe .dll
+    class function GetFileNameListWithFullPath: TStringList;
 
     //AccessDB Engine용 File
     class function CheckMsoFileNotExistFromRegistry(): Boolean;
@@ -35,7 +39,7 @@ type
 implementation
 
 uses UnitSystemUtil, UnitServiceUtil, UnitCryptUtil3, UnitLanUtil, UnitCopyData,
-  UnitFileInfoUtil, UnitFolderUtil2;
+  UnitFileInfoUtil, UnitFolderUtil2, UnitFileUtil2;
 
 { THiConOWS }
 
@@ -212,6 +216,34 @@ begin
   finally
     LStrList.Free;
   end;
+end;
+
+class function THiConOWS.GetFileNameListWithFullPath: TStringList;
+begin
+  Result := TStringList.Create;
+
+//  Result.Add('D:\ACONIS-NX\BIN\AcoAutoRun-Nx.bat');
+//  Result.Add('D:\ACONIS-NX\BIN\AcoisMW.ini');
+//  Result.Add('D:\ACONIS-NX\BIN\ACONISSM.dll');
+//  Result.Add('D:\ACONIS-NX\BIN\ACONIS_Remote_Definiton.xml');
+//  Result.Add('D:\ACONIS-NX\BIN\ACSHist.dll');
+//  Result.Add('D:\ACONIS-NX\BIN\ACSHistSync.ini');
+//  Result.Add('D:\ACONIS-NX\BIN\alarm01.wav');
+//  Result.Add('D:\ACONIS-NX\BIN\AlarmProc.exe');
+//  Result.Add('D:\ACONIS-NX\BIN\AcoAutoRun-Nx.bat');
+//  Result.Add('D:\ACONIS-NX\BIN\AcoAutoRun-Nx.bat');
+//  Result.Add('D:\ACONIS-NX\BIN\AcoAutoRun-Nx.bat');
+//
+//  Result.Add('D:\ACONIS-NX\HiView+\GBuilder\builder.exe');
+//  Result.Add('D:\ACONIS-NX\HiView+\GBuilder\builder.exe');
+//  Result.Add('D:\ACONIS-NX\HiView+\GBuilder\builder.exe');
+//  Result.Add('D:\ACONIS-NX\HiView+\GBuilder\builder.exe');
+end;
+
+class function THiConOWS.GetFileVersions2JsonAryFromStrList(
+  AFileNameList: TStringList): string;
+begin
+  Result := UnitFileUtil2.GetFileVersion2JsonAryByPJVerInfoFromList(AFileNameList);
 end;
 
 class function THiConOWS.GetMariaDBEncryptedRootPasswd: string;

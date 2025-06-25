@@ -32,7 +32,7 @@ uses
 
   UnitOLControlWorker, UnitHiASIniConfig, FrmHiASManageConfig, UnitHiASProjectRecord,
   UnitHiconisASData, UnitOutLookDataType, UnitHiconisDI16RecallRec,
-  JvComponentBase, JvCaptionButton, FormAboutDefs, EasterEgg
+  JvComponentBase, JvCaptionButton, FormAboutDefs, EasterEgg, DragDropText, UnitOLDragDropRecord
   ;
 
 type
@@ -214,6 +214,7 @@ type
     FormAbout1: TFormAbout;
     Help1: TMenuItem;
     About1: TMenuItem;
+    DropTextTarget1: TDropTextTarget;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -292,6 +293,8 @@ type
     procedure ShowEmailListForm1Click(Sender: TObject);
     procedure JvCaptionButton1Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
+    procedure DropTextTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
   private
     FPJHTimerPool: TPJHTimerPool;
     FStopEvent    : TEvent;
@@ -328,6 +331,8 @@ type
     FOLEmailListFormDisplayed, //True = FrmOLEmailList.TOLEmailListF ShowModal
     FHiASTaskEditFormDisplayed: Boolean;//True = TTaskEditF Form ShowModal
     FHiASDI16RecallDict: THiASDI16RecallDict;
+
+    FOLEmail_DragDropText: TOLEmail_DragSourceDataFormat;
 
     procedure InitEnum;
     procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
@@ -686,11 +691,11 @@ begin
   if not Assigned(AVar) then
     exit;
 
-  AVar.NumOfEMails := GetEmailCountFromTaskID(AVar.TaskID);
+  AVar.NumOfEMails := GetEmailCountFromTaskID(AVar.ID);
 //  AVar.EmailSubject := LSubject;
   AVar.TaskID := AVar.ID;
 
-  LoadGSTask2Grid(AVar, AGrid, ARow);
+  LoadGSTask2Grid(AVar, AGrid, ARow);
 end;
 
 procedure THiconisAsManageF.Location1Click(Sender: TObject);
@@ -3116,6 +3121,23 @@ begin
   end;
 end;
 
+procedure THiconisAsManageF.DropTextTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+begin
+  // Determine if we got our custom format.
+  if (FOLEmail_DragDropText.HasData) then
+  begin
+//    FOLEmail_DragDropText.OLED;
+
+    case FOLEmail_DragDropText.DataKind of
+      1: begin
+//        if ssCtrl in FOLEmail_DragDropText.OLED.FShiftState then
+//        else
+      end;
+    end;
+  end;
+end;
+
 procedure THiconisAsManageF.EditTariff1Click(Sender: TObject);
 begin
   DisplayTariffEditF;
@@ -3850,7 +3872,7 @@ begin
 
   LTask := CreateOrGetLoadTask(LID);
   try
-    LOLEmailSrchRec.FTaskID := LTask.TaskID;
+    LOLEmailSrchRec.FTaskID := LTask.ID;
     LOLEmailSrchRec.FProjectNo := LTask.Order_No;
     LOLEmailSrchRec.FHullNo := RemoveSpace2String(LTask.HullNo);
     LOLEmailSrchRec.FClaimNo := RemoveSpace2String(LTask.ClaimNo);

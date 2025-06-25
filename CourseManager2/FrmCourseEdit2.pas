@@ -39,7 +39,6 @@ type
     JvLabel5: TJvLabel;
     TrainDaysEdit: TEdit;
     TargetGroupEdit: TEdit;
-    GSFileFrame: TJHPFileListFrame;
     procedure FormCreate(Sender: TObject);
   private
     FGSFileDBName,
@@ -74,44 +73,44 @@ var
   LSQLHGSCurriculumRecord: TSQLHGSCurriculumRecord;
   LDoc: variant;
 begin
-  LCourseEditF := TCourseEditF.Create(nil);
-  try
-    LCourseEditF.GSFileFrame.InitDragDrop;
-    LCourseEditF.GSFileFrame.AddButton.Align :=alLeft;
-    LCourseEditF.GSFileFrame.ApplyButton.Visible := False;
-    LCourseEditF.GSFileFrame.CloseButton.Visible := False;
-
-    if (ASubject = '') and (ACourseName = '') then
-      LSQLHGSCurriculumRecord := TSQLHGSCurriculumRecord.Create
-    else
-      LSQLHGSCurriculumRecord := GetHGSCurriculumFromSubject(ASubject,ACourseName);
-
-    try
-      LCourseEditF.GetCourseDetailFromCurriculumRecord(LSQLHGSCurriculumRecord);
-
-      if AAttachPageView then
-        LCourseEditF.AdvOfficePage1.ActivePageIndex := 1
-      else
-        LCourseEditF.AdvOfficePage1.ActivePageIndex := 0;
-
-      Result := LCourseEditF.ShowModal;
-
-      if Result = mrOK then
-      begin
-        if LCourseEditF.LoadCourseDetail2CurriculumRecordFromForm(LSQLHGSCurriculumRecord) then
-        begin
-          AddOrUpdateHGSCurriculum(LSQLHGSCurriculumRecord);
-          LCourseEditF.SaveGSFile2DB;
-
-          ShowMessage('Data Save Is OK!');
-        end;
-      end;
-    finally
-      LSQLHGSCurriculumRecord.Free;
-    end;
-  finally
-    LCourseEditF.Free;
-  end;
+//  LCourseEditF := TCourseEditF.Create(nil);
+//  try
+//    LCourseEditF.GSFileFrame.InitDragDrop;
+//    LCourseEditF.GSFileFrame.AddButton.Align :=alLeft;
+//    LCourseEditF.GSFileFrame.ApplyButton.Visible := False;
+//    LCourseEditF.GSFileFrame.CloseButton.Visible := False;
+//
+//    if (ASubject = '') and (ACourseName = '') then
+//      LSQLHGSCurriculumRecord := TSQLHGSCurriculumRecord.Create
+//    else
+//      LSQLHGSCurriculumRecord := GetHGSCurriculumFromSubject(ASubject,ACourseName);
+//
+//    try
+//      LCourseEditF.GetCourseDetailFromCurriculumRecord(LSQLHGSCurriculumRecord);
+//
+//      if AAttachPageView then
+//        LCourseEditF.AdvOfficePage1.ActivePageIndex := 1
+//      else
+//        LCourseEditF.AdvOfficePage1.ActivePageIndex := 0;
+//
+//      Result := LCourseEditF.ShowModal;
+//
+//      if Result = mrOK then
+//      begin
+//        if LCourseEditF.LoadCourseDetail2CurriculumRecordFromForm(LSQLHGSCurriculumRecord) then
+//        begin
+//          AddOrUpdateHGSCurriculum(LSQLHGSCurriculumRecord);
+//          LCourseEditF.SaveGSFile2DB;
+//
+//          ShowMessage('Data Save Is OK!');
+//        end;
+//      end;
+//    finally
+//      LSQLHGSCurriculumRecord.Free;
+//    end;
+//  finally
+//    LCourseEditF.Free;
+//  end;
 end;
 
 { TCourseEditF }
@@ -154,18 +153,18 @@ procedure TCourseEditF.GetCourseFileList2FileGrid(const AFileDBName: string);
 begin
   InitJHPFileClient(AFileDBName);
   try
-    if Assigned(GSFileFrame.FJHPFiles_) then
-      FreeAndNil(GSFileFrame.FJHPFiles_);
-
-    GSFileFrame.FJHPFiles_ := GetJHPFiles;
-    try
-      if GSFileFrame.FJHPFiles_.IsUpdate then
-      begin
-        GSFileFrame.LoadFiles2Grid;
-      end;
-    finally
+//    if Assigned(GSFileFrame.FJHPFiles_) then
 //      FreeAndNil(GSFileFrame.FJHPFiles_);
-    end;
+//
+//    GSFileFrame.FJHPFiles_ := GetJHPFiles;
+//    try
+//      if GSFileFrame.FJHPFiles_.IsUpdate then
+//      begin
+//        GSFileFrame.LoadFiles2Grid;
+//      end;
+//    finally
+////      FreeAndNil(GSFileFrame.FJHPFiles_);
+//    end;
   finally
     DestroyJHPFile;
   end;
@@ -190,7 +189,7 @@ begin
     TargetGroup := TargetGroupEdit.Text;
     CourseFileDBPath := CourseFileDBPathEdit.Text;
     CourseFileDBName := CourseFileDBNameEdit.Text;
-    FileCount := GSFileFrame.fileGrid.RowCount;
+//    FileCount := GSFileFrame.fileGrid.RowCount;
 
     ProductType := g_ShipProductType.ToType(ProductTypeCB.ItemIndex);
     CourseLevel := g_AcademyCourseLevel.ToType(CourseLevelCB.ItemIndex);
@@ -208,16 +207,16 @@ begin
 
   InitJHPFileClient('files\'+CourseFileDBNameEdit.Text);
   try
-    if not Assigned(GSFileFrame.FJHPFiles_) then
-      GSFileFrame.FJHPFiles_ := GetJHPFiles;
-
-    if High(GSFileFrame.FJHPFiles_.Files) >= 0 then
-    begin
-      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
-      g_FileDB.Add(GSFileFrame.FJHPFiles_, true);
-    end
-    else
-      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
+//    if not Assigned(GSFileFrame.FJHPFiles_) then
+//      GSFileFrame.FJHPFiles_ := GetJHPFiles;
+//
+//    if High(GSFileFrame.FJHPFiles_.Files) >= 0 then
+//    begin
+//      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
+//      g_FileDB.Add(GSFileFrame.FJHPFiles_, true);
+//    end
+//    else
+//      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
   finally
     DestroyJHPFile;
   end;

@@ -200,7 +200,7 @@ object CertEditF: TCertEditF
     Width = 826
     Height = 632
     Align = alClient
-    ActivePage = EmailPage
+    ActivePage = CertInfoPage
     ButtonSettings.CloseButtonPicture.Data = {
       424DA20400000000000036040000280000000900000009000000010008000000
       00006C000000C30E0000C30E00000001000000010000427B8400DEEFEF00FFFF
@@ -2736,17 +2736,25 @@ object CertEditF: TCertEditF
         Height = 600
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 8
-        ExplicitTop = 16
+        ExplicitLeft = 2
+        ExplicitTop = 2
+        ExplicitWidth = 820
+        ExplicitHeight = 600
         inherited mailPanel1: TPanel
           Width = 820
           Height = 600
+          ExplicitWidth = 820
+          ExplicitHeight = 600
           inherited tabMail: TTabControl
             Width = 810
             Height = 510
+            ExplicitWidth = 810
+            ExplicitHeight = 510
             inherited StatusBar: TStatusBar
               Top = 487
               Width = 802
+              ExplicitTop = 487
+              ExplicitWidth = 802
             end
             inherited EmailTab: TAdvOfficeTabSet
               Width = 802
@@ -3363,10 +3371,13 @@ object CertEditF: TCertEditF
                   TabAppearance.BackGround.ColorTo = clNone
                   TabAppearance.BackGround.Direction = gdHorizontal
                 end>
+              ExplicitWidth = 802
             end
             inherited grid_Mail: TNextGrid
               Width = 802
               Height = 454
+              ExplicitWidth = 802
+              ExplicitHeight = 454
               inherited TaskID: TNxTextColumn
                 ParentFont = False
               end
@@ -3374,6 +3385,9 @@ object CertEditF: TCertEditF
                 ParentFont = False
               end
               inherited ClaimNo: TNxTextColumn
+                ParentFont = False
+              end
+              inherited ExistInDB: TNxCheckBoxColumn
                 ParentFont = False
               end
               inherited Description: TNxButtonColumn
@@ -3399,21 +3413,27 @@ object CertEditF: TCertEditF
           inherited panMailButtons: TPanel
             Top = 567
             Width = 810
+            ExplicitTop = 567
+            ExplicitWidth = 810
             inherited BitBtn1: TBitBtn
               Left = 721
+              ExplicitLeft = 721
             end
           end
           inherited panProgress: TPanel
             Left = 603
             Top = 545
+            ExplicitLeft = 603
+            ExplicitTop = 545
           end
           inherited Panel1: TPanel
             Width = 810
+            ExplicitWidth = 810
           end
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C01012F009800E80610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C01012F009800F00610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000C0000000010020000000000000C0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -5088,8 +5108,8 @@ object CertEditF: TCertEditF
           ExplicitWidth = 722
           ExplicitHeight = 562
           inherited FileName: TNxTextColumn
-            DefaultWidth = 608
-            Width = 608
+            DefaultWidth = 488
+            Width = 488
           end
         end
         inherited Panel2: TPanel
@@ -5108,7 +5128,7 @@ object CertEditF: TCertEditF
         end
         inherited ImageList16x16: TImageList
           Bitmap = {
-            494C0101300098005C0410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010130009800640410001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             000000000000360000002800000040000000D0000000010020000000000000D0
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -7112,7 +7132,7 @@ object CertEditF: TCertEditF
     Left = 155
     Top = 8
     Bitmap = {
-      494C01012F009800A80610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01012F009800B00610001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -8709,7 +8729,7 @@ object CertEditF: TCertEditF
     Left = 184
     Top = 8
     Bitmap = {
-      494C010113001400880310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010113001400900310001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       000000000000000000000000000000000000FCFCFC00FFFFFF00FFFFFF00FCFC
       FC00FCFCFC00DFDCD8006D654B006F654B006D634B00756B5400887D67006D63

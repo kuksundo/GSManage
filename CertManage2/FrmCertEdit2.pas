@@ -316,7 +316,7 @@ begin
 
       LIsLicense := IsLicenseCheckedFromCertType(LCertType);
 
-                    //      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
+      //      GSFileFrame.InitDragDrop; //자체 타이머에서 실행함
       LStrList := g_HGSCertDocType.GetTypeLabels;
       try
         GSFileFrame.InitDocTypeList2Combo(LStrList);
@@ -1296,14 +1296,11 @@ procedure TCertEditF.GetCertFileList2FileGrid(const AFileDBName: string);
 begin
   InitJHPFileClient(AFileDBName);
   try
-    if Assigned(GSFileFrame.FJHPFiles_) then
-      FreeAndNil(GSFileFrame.FJHPFiles_);
-
-    GSFileFrame.FJHPFiles_ := GetJHPFiles;
+    GSFileFrame.FOrmJHPFile := GetJHPFiles;
     try
-      if GSFileFrame.FJHPFiles_.IsUpdate then
+      if GSFileFrame.FOrmJHPFile.IsUpdate then
       begin
-        GSFileFrame.LoadFiles2Grid;
+        GSFileFrame.LoadFiles2GridByTaskID(-1);
       end;
     finally
 //      FreeAndNil(GSFileFrame.FJHPFiles_);
@@ -2616,21 +2613,24 @@ begin
   if not FileExists(LDBName) then
     exit;
 
-  InitJHPFileClient(LDBName);
-  try
-    if not Assigned(GSFileFrame.FJHPFiles_) then
-      GSFileFrame.FJHPFiles_ := GetJHPFiles;
-
-    if High(GSFileFrame.FJHPFiles_.Files) >= 0 then
-    begin
-      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
-      g_FileDB.Add(GSFileFrame.FJHPFiles_, true);
-    end
-    else
-      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
-  finally
-    DestroyJHPFile;
-  end;
+//  InitJHPFileClient(LDBName);
+//  try
+//    GSFileFrame.FOrmJHPFile := GetJHPFiles;
+//    try
+//      if GSFileFrame.FOrmJHPFile.IsUpdate then
+//      begin
+//        GSFileFrame.LoadFiles2GridByTaskID(-1);
+//
+//    if High(GSFileFrame.FJHPFiles_.Files) >= 0 then
+//    begin
+//      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
+//      g_FileDB.Add(GSFileFrame.FJHPFiles_, true);
+//    end
+//    else
+//      g_FileDB.Delete(TOrmJHPFile, GSFileFrame.FJHPFiles_.ID);
+//  finally
+//    DestroyJHPFile;
+//  end;
 end;
 
 procedure TCertEditF.ScreenActiveControlChange(Sender: TObject);

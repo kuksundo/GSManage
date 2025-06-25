@@ -40,7 +40,6 @@ object SrchModuleByTagF: TSrchModuleByTagF
     TabOrder = 0
     TabStop = True
     OnCellDblClick = TagInfoGridCellDblClick
-    ExplicitTop = 111
   end
   object Panel1: TPanel
     Left = 0

@@ -48,9 +48,8 @@ begin
     if LGSFileListF.ShowModal = mrOK then
     begin
       LGSFileListF.GSFileListFrame.DeleteFileFromGrid2DB();
-//      AGSFileRecsJson := MakeGSFileRecs2JSON(LGSFileListF.GSFileListFrame.FJHPFiles_.Files);
-      AGSFileRecsJson := MakeJHPFileRecs2JSON(LGSFileListF.GSFileListFrame.FJHPFiles_.Files);
-      Result := High(LGSFileListF.GSFileListFrame.FJHPFiles_.Files) + 1;
+//      AGSFileRecsJson := MakeJHPFileRecs2JSON(LGSFileListF.GSFileListFrame.FJHPFiles_.Files);
+//      Result := High(LGSFileListF.GSFileListFrame.FJHPFiles_.Files) + 1;
     end;
   finally
     LGSFileListF.Free;
@@ -74,8 +73,8 @@ begin
   begin
     fileGrid.ClearRows;
 
-    if not Assigned(FJHPFiles_) then
-      FJHPFiles_ := TOrmJHPFile.Create;
+//    if not Assigned(GSFileListFrame.FJHPFileDB4Fr) then
+//      GSFileListFrame.FJHPFileDB4Fr := TOrmJHPFile.Create;
 
     for i := 0 to LDocData.Count - 1 do
     begin

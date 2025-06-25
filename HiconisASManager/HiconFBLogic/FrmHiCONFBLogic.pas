@@ -776,7 +776,7 @@ begin
 
   if ATagName <> '' then
   begin
-    if Pos('%', ATagName) > 0 then
+    if (Pos('%', ATagName) > 0) or (FDBFileName = '') then
       LOrgTagName := CreateSrchTagForm(ATagName, FDBFileName, ATableName, AFieldName, True);
 
     if ATagName <> '' then
@@ -813,6 +813,12 @@ begin
     ADBFileName := FDBFileName
   else
     FDBFileName := ADBFileName;
+
+  if ADBFileName = '' then
+  begin
+    ShowMessage('DB File Name is empty');
+    exit;
+  end;
 
   SetDBFileName2Statusbar(ADBFileName);
 

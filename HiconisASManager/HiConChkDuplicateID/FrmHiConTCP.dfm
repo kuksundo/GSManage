@@ -959,6 +959,13 @@ object HiconisTCPF: THiconisTCPF
       object N1: TMenuItem
         Caption = '-'
       end
+      object SaveFileNameList2ctemp1: TMenuItem
+        Caption = 'Save FileName List 2 Folder'
+        OnClick = SaveFileNameList2ctemp1Click
+      end
+      object N12: TMenuItem
+        Caption = '-'
+      end
       object Close1: TMenuItem
         Caption = 'Close'
       end
@@ -1858,6 +1865,7 @@ object HiconisTCPF: THiconisTCPF
   end
   object IdTCPClient1: TIdTCPClient
     ConnectTimeout = 0
+    IPVersion = Id_IPv4
     Port = 0
     ReadTimeout = -1
     Left = 72
