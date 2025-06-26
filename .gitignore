@@ -1,11 +1,14 @@
 __history/
 Win32/
+Win64/
 Debug/
+Bin/
 *.bpl
 *.dcu
 *.exe
 *.dcp
 *.sqlite
+*.db3
 *.dll
 *.pdf
 *.doc
@@ -14,4 +17,9 @@ Debug/
 *.iif
 *.irf2
 *.rsm
-*.db3
+*.xls
+*.xlsx
+*.xlsm
+*.ods
+.gitignore
+UnitRttiUtil_.pas
