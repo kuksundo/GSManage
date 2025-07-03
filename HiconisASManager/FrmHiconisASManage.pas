@@ -52,7 +52,6 @@ type
     dt_begin: TDateTimePicker;
     dt_end: TDateTimePicker;
     ComboBox1: TComboBox;
-    ClaimStatusCombo: TComboBox;
     CustomerCombo: TComboBox;
     BefAftCB: TComboBox;
     Panel1: TPanel;
@@ -215,6 +214,7 @@ type
     Help1: TMenuItem;
     About1: TMenuItem;
     DropTextTarget1: TDropTextTarget;
+    ClaimStatusCombo: TJvCheckedComboBox;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -1048,7 +1048,7 @@ end;
 procedure THiconisAsManageF.ClaimStatusComboDropDown(Sender: TObject);
 begin
 //  g_ElecProductType.SetType2Combo(ProductTypeCombo);
-  g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
+//  g_ClaimStatus.SetType2Combo(ClaimStatusCombo);
 end;
 
 procedure THiconisAsManageF.ClearFindCond;
@@ -1057,7 +1057,7 @@ begin
   ComboBox1.ItemIndex := -1;
   ClaimServiceKindCB.Items.Text := '';
   CustomerCombo.ItemIndex := -1;
-  ClaimStatusCombo.ItemIndex := -1;
+  ClaimStatusCombo.Items.Text := '';
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
   MatPORNoEdit.Text := '';
@@ -1174,7 +1174,7 @@ begin
     FShipName := Trim(ShipNameEdit.Text);
     FCustomer := Trim(CustomerCombo.Text);
 //    FProdType := ProductTypeCombo.Text;
-    FClaimStatus := ClaimStatusCombo.ItemIndex;
+    FClaimStatus := GetSetFromCheckCombo(ClaimStatusCombo);
 //    FSubject := SubjectEdit.Text;
     FClaimServiceKind := GetSetFromCheckCombo(ClaimServiceKindCB);;//ClaimServiceKindCB.ItemIndex;
     FCurWork :=  g_HiconisASState.ToOrdinal(CurWorkCB.Text);
@@ -1757,6 +1757,13 @@ begin
   finally
     LStrList.Free;
   end;
+
+  LStrList := g_ClaimStatus.GetTypeLabels();
+  try
+    ClaimStatusCombo.Items.Assign(LStrList);
+  finally
+    LStrList.Free;
+  end;
 end;
 
 procedure THiconisAsManageF.InitNetwork;
@@ -1806,13 +1813,12 @@ begin
 //  SubjectEdit.Text := '';
 //  ClaimServiceKindCB.ItemIndex := -1;
   ClaimServiceKindCB.SetUnCheckedAll();// := -1;
-  ClaimStatusCombo.ItemIndex := -1;
+  ClaimStatusCombo.SetUnCheckedAll();//ItemIndex := -1;
 
   OrderNoEdit.Text := '';
   ShippingNoEdit.Text := '';
   ComboBox1.ItemIndex := -1;
 //  ProductTypeCombo.ItemIndex := -1;
-  ClaimStatusCombo.ItemIndex := -1;
 
   CurWorkCB.ItemIndex := -1;
   BefAftCB.ItemIndex := -1;
@@ -2700,7 +2706,7 @@ var
   LFrom, LTo: TTimeLog;
   LpjhBit32: TpjhBit32;
   i: integer;
-  LIsCSKind: Boolean;
+//  LIsCSKind: Boolean;
   Lary: TpjhArray<TID>;
 
   procedure _DisplayTask2Grid;
@@ -2905,10 +2911,26 @@ begin
 
     if ASearchCondRec.FClaimStatus > 0 then
     begin
-      AddConstArray(ConstArray, [ASearchCondRec.FClaimStatus]);
+      LpjhBit32 := ASearchCondRec.FClaimStatus;
+
+      for i := 0 to 31 do
+      begin
+        if LpjhBit32.Bit[i] then
+        begin
+          AddConstArray(ConstArray, [i]);
+
+          if LWhere2 <> '' then
+            LWhere2 := LWhere2 + ' or ';
+          LWhere2 := LWhere2 + ' ClaimStatus = ?';
+        end;
+      end;//for
+
+      if LWhere2 <> '' then
+        LWhere2 := '(' + LWhere2 + ')';
+
       if LWhere <> '' then
         LWhere := LWhere + ' and ';
-      LWhere := LWhere + ' ClaimStatus = ?';
+      LWhere := LWhere + LWhere2;
     end
     else
     begin
@@ -2929,7 +2951,7 @@ begin
       begin
         if LpjhBit32.Bit[i] then
         begin
-          LIsCSKind := True;
+//          LIsCSKind := True;
 
           AddConstArray(ConstArray, [i]);//g_ClaimServiceKind
 

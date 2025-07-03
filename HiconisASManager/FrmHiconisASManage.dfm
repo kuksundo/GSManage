@@ -532,22 +532,6 @@ object HiconisAsManageF: THiconisAsManageF
         OnDropDown = ComboBox1DropDown
       end
     end
-    object ClaimStatusCombo: TComboBox
-      Left = 639
-      Top = 70
-      Width = 109
-      Height = 25
-      Style = csDropDownList
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = #47569#51008' '#44256#46357
-      Font.Style = []
-      ImeName = 'Microsoft IME 2010'
-      ParentFont = False
-      TabOrder = 1
-      OnDropDown = ClaimStatusComboDropDown
-    end
     object CustomerCombo: TComboBox
       Left = 639
       Top = 39
@@ -560,7 +544,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 1
     end
     object BefAftCB: TComboBox
       Left = 679
@@ -575,7 +559,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 2
       Items.Strings = (
         ''
         #51060#51204
@@ -587,7 +571,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 205
       Height = 134
       Align = alRight
-      TabOrder = 4
+      TabOrder = 3
       object btn_Search: TAeroButton
         AlignWithMargins = True
         Left = 3
@@ -648,7 +632,7 @@ object HiconisAsManageF: THiconisAsManageF
       ImeName = 'Microsoft IME 2010'
       ItemIndex = 0
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       Text = #54788#51116#51089#50629
       Items.Strings = (
         #54788#51116#51089#50629
@@ -661,7 +645,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 6
+      TabOrder = 5
       OnKeyPress = HullNoEditKeyPress
     end
     object MatPORNoEdit: TEdit
@@ -670,7 +654,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 128
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 7
+      TabOrder = 6
       OnKeyPress = HullNoEditKeyPress
     end
     object DisplayFinalCheck: TCheckBox
@@ -679,7 +663,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 114
       Height = 17
       Caption = #50756#47308#51089#50629' '#54364#49884
-      TabOrder = 8
+      TabOrder = 7
     end
     object Button1: TButton
       Left = 312
@@ -687,7 +671,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 40
       Height = 25
       Caption = 'Clear'
-      TabOrder = 9
+      TabOrder = 8
       OnClick = Button1Click
     end
     object CurWorkCB: TComboBox
@@ -703,7 +687,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 9
       OnDropDown = CurWorkCBDropDown
     end
     object MaterialCodeEdit: TEdit
@@ -712,7 +696,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 131
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 11
+      TabOrder = 10
       OnKeyPress = HullNoEditKeyPress
     end
     object FindCondCB: TComboBox
@@ -728,7 +712,7 @@ object HiconisAsManageF: THiconisAsManageF
       Font.Style = []
       ImeName = 'Microsoft IME 2010'
       ParentFont = False
-      TabOrder = 12
+      TabOrder = 11
       OnChange = FindCondCBChange
     end
     object ClaimServiceKindCB: TJvCheckedComboBox
@@ -739,7 +723,7 @@ object HiconisAsManageF: THiconisAsManageF
       CapSelectAll = '&Select all'
       CapDeSelectAll = '&Deselect all'
       CapInvertAll = '&Invert all'
-      TabOrder = 13
+      TabOrder = 12
     end
     object HullNoEdit: TAdvEditBtn
       Left = 465
@@ -763,7 +747,7 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 14
+      TabOrder = 13
       Text = ''
       Visible = True
       OnKeyPress = HullNoEditKeyPress
@@ -822,7 +806,7 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 15
+      TabOrder = 14
       Text = ''
       Visible = True
       OnKeyPress = ShipNameEditKeyPress
@@ -881,7 +865,7 @@ object HiconisAsManageF: THiconisAsManageF
       Color = clWindow
       ImeName = 'Microsoft IME 2010'
       ReadOnly = False
-      TabOrder = 16
+      TabOrder = 15
       Text = ''
       Visible = True
       OnKeyPress = OrderNoEditKeyPress
@@ -950,7 +934,7 @@ object HiconisAsManageF: THiconisAsManageF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       PopupMenu = PopupMenu3
-      TabOrder = 17
+      TabOrder = 16
       OnClick = BitBtn1Click
     end
     object BitBtn2: TBitBtn
@@ -985,7 +969,7 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 18
+      TabOrder = 17
       OnClick = BitBtn2Click
     end
     object BitBtn3: TBitBtn
@@ -1020,7 +1004,7 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 19
+      TabOrder = 18
       OnClick = BitBtn3Click
     end
     object BitBtn4: TBitBtn
@@ -1055,7 +1039,7 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 20
+      TabOrder = 19
       OnClick = BitBtn4Click
     end
     object ShippingNoEdit: TEdit
@@ -1065,7 +1049,7 @@ object HiconisAsManageF: THiconisAsManageF
       Height = 21
       CharCase = ecUpperCase
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 21
+      TabOrder = 20
       OnKeyPress = HullNoEditKeyPress
     end
     object MaterialNameEdit: TEdit
@@ -1074,7 +1058,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 131
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 22
+      TabOrder = 21
       OnKeyPress = HullNoEditKeyPress
     end
     object WorkSummaryEdit: TEdit
@@ -1083,7 +1067,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 117
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 23
+      TabOrder = 22
       OnKeyPress = HullNoEditKeyPress
     end
     object EmailDescEdit: TEdit
@@ -1092,7 +1076,7 @@ object HiconisAsManageF: THiconisAsManageF
       Width = 117
       Height = 21
       ImeName = 'Microsoft IME 2010'
-      TabOrder = 24
+      TabOrder = 23
       OnKeyPress = HullNoEditKeyPress
     end
     object BitBtn5: TBitBtn
@@ -1127,7 +1111,7 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 25
+      TabOrder = 24
       OnClick = BitBtn5Click
     end
     object BitBtn6: TBitBtn
@@ -1162,7 +1146,7 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 26
+      TabOrder = 25
       OnClick = BitBtn6Click
     end
     object BitBtn7: TBitBtn
@@ -1197,8 +1181,18 @@ object HiconisAsManageF: THiconisAsManageF
         FCFAF5EDE6DCDCD0C1C0A780A98C59926929FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFC6B293EAE4D9D6C6B3C9BA9CBCA37CA58852926C2BFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 27
+      TabOrder = 26
       OnClick = BitBtn7Click
+    end
+    object ClaimStatusCombo: TJvCheckedComboBox
+      Left = 640
+      Top = 72
+      Width = 111
+      Height = 21
+      CapSelectAll = '&Select all'
+      CapDeSelectAll = '&Deselect all'
+      CapInvertAll = '&Invert all'
+      TabOrder = 27
     end
   end
   object TaskTab: TAdvOfficeTabSet
@@ -2863,7 +2857,6 @@ object HiconisAsManageF: THiconisAsManageF
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropEmptyTarget1Drop
     Target = grid_Req
-    WinTarget = 0
     Left = 212
     Top = 212
   end
@@ -2978,7 +2971,6 @@ object HiconisAsManageF: THiconisAsManageF
   object DropTextTarget1: TDropTextTarget
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropTextTarget1Drop
-    WinTarget = 0
     Left = 216
     Top = 296
   end
